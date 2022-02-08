@@ -9,6 +9,7 @@
   margin: 0 auto;
   font-family: 'Noto Sans KR', sans-serif;
   min-width: 1200px;
+  
 
   .logoimg{
     width: 230px;
@@ -199,13 +200,13 @@
   0%{
   }
   100%{
-    width: 120px;
+    width: 180px;
   }
   }
   @keyframes buttonlineh{
     0%{
     }
     100%{
-      height: 35px;
+      height: 60px;
     }
     }

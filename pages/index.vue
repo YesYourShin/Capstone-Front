@@ -1,13 +1,15 @@
 <template>
     <div class="testbox">
-      <profile/>
+      <Profile/>
+      <Home/>
     </div>
 </template>
 
 <script>
-import profile from '../components/profile.vue';
+import Profile from '../components/profile.vue';
+import Home from '../components/home.vue';
 export default {
-  components: { profile },
+  components: { Profile, Home },
   name: 'CapstoneIndex',
 
   data() {
@@ -30,9 +32,10 @@ export default {
 .testbox{
   width: 100%;
   text-align: center;
-  height: 1000px;
-  border: 3px solid black;
+  height: 100%;
+  min-height: 735px;
   margin-top: 100px;
   background-color: rgba(0, 0, 0, 0.829);
+  display:flex;
 }
 </style>
