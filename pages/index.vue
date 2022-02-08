@@ -31,11 +31,12 @@ export default {
 <style lang="scss" scoped>
 .testbox{
   width: 100%;
-  text-align: center;
-  height: 100%;
-  min-height: 735px;
-  margin-top: 100px;
-  background-color: rgba(0, 0, 0, 0.829);
+  max-width: 1950px;
+  min-width: none;
   display:flex;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 100px;
+  overflow: scroll;
 }
 </style>

@@ -5,6 +5,21 @@
   background-color: black;
   color: white;
   text-align: center;
-  
+  margin-top: 50px;
+  position: relative;
+  .footimg1{
+    position: absolute;
+    width: 100%;
+    bottom: 100px;
+    left: 0;
+    z-index: 1;
+  }
+  .footimg2{
+    position: absolute;
+    width: 460px;
+    bottom: 100px;
+    left: 0;
+    z-index: 1;
+  }
 }
 

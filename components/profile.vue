@@ -47,6 +47,36 @@
           <div class="cance2"></div>
         </div>
       </div>
+
+      <div class="ballbox">
+        <p>???에게 메세지가 도착했습니다.</p>
+        <div class="cance">
+          <div class="cance1"></div>
+          <div class="cance2"></div>
+        </div>
+      </div>
+      <div class="ballbox">
+        <p>???에게 메세지가 도착했습니다.</p>
+        <div class="cance">
+          <div class="cance1"></div>
+          <div class="cance2"></div>
+        </div>
+      </div>
+      <div class="ballbox">
+        <p>???에게 메세지가 도착했습니다.</p>
+        <div class="cance">
+          <div class="cance1"></div>
+          <div class="cance2"></div>
+        </div>
+      </div>
+      <div class="ballbox">
+        <p>???에게 메세지가 도착했습니다.</p>
+        <div class="cance">
+          <div class="cance1"></div>
+          <div class="cance2"></div>
+        </div>
+      </div>
+
       <div class="cancebutton" :click="cance">
       <button>전체 삭제</button>
       </div>

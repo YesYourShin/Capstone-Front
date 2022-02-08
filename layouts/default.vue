@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="main" style="
+    background-color: rgba(0, 0, 0, 0.829);
+    ">
     <Header/>
     <index/>
     <Footer/>
@@ -19,5 +21,4 @@ export default Vue.extend({
 </script>
 
 <style lang="" scoped>
-
 </style>
