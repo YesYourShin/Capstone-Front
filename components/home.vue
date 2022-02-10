@@ -1,18 +1,21 @@
 <template>
   <div class="homebox">
     <div class="bannerbox">
-      <img src="@/assets/pageimg/b1.png" class="b1">
+      <Banner/>
+    </div>
+    <div class="homeprofile">
+      <Profile/>
     </div>
     <div class="readbox">
-      <input type="radio" name="readtab" id="tab1"  checked>
-      <label for="tab1">공지 사항</label>
-      <input type="radio" name="readtab" id="tab2" >
+      <input type="radio" name="readtab" id="tab2" checked>
       <label for="tab2">자유 게시판</label>
+      <input type="radio" name="readtab" id="tab1"  >
+      <label for="tab1">공지 사항</label>
       <input type="radio" name="readtab" id="tab3" >
       <label for="tab3" >인기 게시판</label>
 
       <div class="tabcontent box1">
-        <div class="monttitilebox">
+        <div class="tabtitlebox">
           <p class="mtb1"></p>
           <p class="mtb2">제목</p>
           <p class="mtb3">작성자</p>
@@ -49,7 +52,7 @@
 
       </div>
       <div class="tabcontent box2">
-        <div class="monttitilebox">
+        <div class="tabtitlebox">
           <p class="mtb1"></p>
           <p class="mtb2">제목</p>
           <p class="mtb3">작성자</p>
@@ -65,9 +68,41 @@
           <p class="mtb5">25</p>
           <p class="mtb6">8</p>
         </div>
+        <div class="montpostbox">
+          <p class="mtb1">15</p>
+          <p class="mtb2">[공지] 마피아 게임 일부 오류 안내(수정완료)</p>
+          <p class="mtb3">관리자</p>
+          <p class="mtb4">2022-02-08</p>
+          <p class="mtb5">145</p>
+          <p class="mtb6">58</p>
+        </div>
+        <div class="montpostbox">
+          <p class="mtb1">1</p>
+          <p class="mtb2">[공지] 마피아 게임 일부 오류 안내(수정완료)</p>
+          <p class="mtb3">관리자</p>
+          <p class="mtb4">2022-02-08</p>
+          <p class="mtb5">145</p>
+          <p class="mtb6">58</p>
+        </div>
+        <div class="montpostbox">
+          <p class="mtb1">15</p>
+          <p class="mtb2">[공지] 마피아 게임 일부 오류 안내(수정완료)</p>
+          <p class="mtb3">관리자</p>
+          <p class="mtb4">2022-02-08</p>
+          <p class="mtb5">145</p>
+          <p class="mtb6">58</p>
+        </div>
+        <div class="montpostbox">
+          <p class="mtb1">31</p>
+          <p class="mtb2">[공지] 마피아 게임 일부 오류 안내(수정완료)</p>
+          <p class="mtb3">관리자</p>
+          <p class="mtb4">2022-02-08</p>
+          <p class="mtb5">145</p>
+          <p class="mtb6">58</p>
+        </div>
       </div>
       <div class="tabcontent box3">
-        <div class="monttitilebox">
+        <div class="tabtitlebox">
           <p class="mtb1"></p>
           <p class="mtb2">제목</p>
           <p class="mtb3">작성자</p>
@@ -109,5 +144,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~assets/home.scss'
+@import '~assets/home.scss';
 </style>

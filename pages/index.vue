@@ -1,15 +1,18 @@
 <template>
     <div class="testbox">
-      <Profile/>
+      <Header/>
       <Home/>
+      <Footer/>
     </div>
 </template>
 
 <script>
 import Profile from '../components/profile.vue';
 import Home from '../components/home.vue';
+import Header from '../components/header.vue';
+import Footer from '../components/footer.vue';
 export default {
-  components: { Profile, Home },
+  components: { Profile, Home, Header, Footer },
   name: 'CapstoneIndex',
 
   data() {
@@ -38,5 +41,6 @@ export default {
   text-align: center;
   margin-top: 100px;
   overflow: scroll;
+  position: relative;
 }
 </style>
