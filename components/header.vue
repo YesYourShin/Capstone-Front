@@ -1,7 +1,8 @@
 <template>
   <div id="headermainbox">
+    <NuxtLink to="/">
     <img src="@/assets/pageimg/Logow.png" class="logoimg">
-
+    </NuxtLink>
     <ul id="headerulbox">
       <div class="ulbox">
         <p class="headerlitilte">게임 가이드</p>

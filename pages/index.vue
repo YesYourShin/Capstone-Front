@@ -1,5 +1,5 @@
 <template>
-    <div class="testbox">
+    <div class="indexbox">
       <Header/>
       <Home/>
       <Footer/>
@@ -32,10 +32,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.testbox{
+.indexbox{
   width: 100%;
-  max-width: 1950px;
-  min-width: none;
+  height: 100vh;
   display:flex;
   margin: 0 auto;
   text-align: center;

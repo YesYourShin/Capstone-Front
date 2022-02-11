@@ -8,7 +8,7 @@
     </div>
 
     <div class="profile2">
-      <button class="userlink">Mypage</button>
+      <button class="userlink" ><NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink></button>
       <button class="userlink">Logout</button>
       <p class="userlevel">Lv.250 <span class="username">Mirai0625</span></p>
       <p class="usertext">Mirai1412/Capstone-Front</p>
