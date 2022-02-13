@@ -5,6 +5,29 @@
     </div>
     <div class="homeprofile">
       <Profile/>
+      <div class="guidebox">
+        <div class="guide1">
+          <img src="@/assets/pageimg/ny1.png" class="yimg">
+          <div class="gpbox">
+            <p class="gp1">게임 가이드</p>
+            <p class="gp2">초심자를 위한 보기쉬운 가이드</p>
+          </div>
+        </div>
+        <div class="guide1">
+          <img src="@/assets/pageimg/ny2.png" class="yimg">
+          <div class="gpbox">
+            <p class="gp1">직업&능력</p>
+            <p class="gp2">모든 직업 정보 확인하기</p>
+          </div>
+        </div>
+        <div class="guide1">
+          <img src="@/assets/pageimg/ny3.png" class="yimg">
+          <div class="gpbox">
+            <p class="gp1">고객 서비스</p>
+            <p class="gp2">문의 및 신고</p>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="readbox">
       <input type="radio" name="readtab" id="tab2" checked>
@@ -119,6 +142,9 @@
           <p class="mtb6">64</p>
         </div>
       </div>
+    </div>
+    <div class="topuserbox">
+
     </div>
   </div>
 </template>

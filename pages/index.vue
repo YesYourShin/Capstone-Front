@@ -11,8 +11,9 @@ import Profile from '../components/profile.vue';
 import Home from '../components/home.vue';
 import Header from '../components/header.vue';
 import Footer from '../components/footer.vue';
+import Testbox from '../components/testbox.vue';
 export default {
-  components: { Profile, Home, Header, Footer },
+  components: { Profile, Home, Header, Footer, Testbox },
   name: 'CapstoneIndex',
 
   data() {
@@ -34,12 +35,9 @@ export default {
 <style lang="scss" scoped>
 .indexbox{
   width: 100%;
-  height: 100vh;
-  display:flex;
+  min-width: 1920px;
+  height: 100%;
   margin: 0 auto;
-  text-align: center;
-  margin-top: 100px;
-  overflow: scroll;
   position: relative;
 }
 </style>

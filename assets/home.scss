@@ -2,13 +2,15 @@
 
 .homebox{
   width: 100%;
-  height: 100vh;
+  height: 100%;
   max-width: 1920px;
   min-width: 1106px;
   margin: 0 auto;
   font-family: 'Do Hyeon', sans-serif;
   font-size: 25px;
-  z-index: 5;
+  padding-bottom: 50px;
+  z-index: 8;
+  position: relative;
 
   .bannerbox{
     width: 100%;
@@ -20,15 +22,66 @@
     margin-top: 0;
     margin-left: 0;
     background-color: rgb(73, 73, 73);
+    z-index: 8;
+    background-image: url("@/assets/pageimg/bac.jpg");
+    background-size: 1950px 470px;
+    display: flex;
+    justify-content: space-between;
+
+    .guidebox{
+      width: 1500px;
+      display: flex;
+      justify-content: space-between;
+
+      .guide1{
+        background-color: rgba(206, 206, 206, 0.877);
+        border: 3px solid black;
+        width: 350px;
+        height: 180px;
+        margin: auto;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+
+        .yimg{
+          position: absolute;
+          top: 0;
+          left: 29%;
+          width: 40%;
+        }
+
+        .gpbox{
+          position: absolute;
+          background-color: black;
+          color: white;
+          text-align: center;
+          bottom: 0;
+          width: 100%;
+          height: 80px;
+
+          .gp1{
+            font-size: 35px;
+            line-height: 60px;
+          }
+          .gp2{
+            font-size: 25px;
+            line-height: 10px;
+          }
+        }
+      }
+    }
+
   }
 
   .readbox{
     margin: 0 auto;
     width: 100%;
+    height: 500px;
     display: flex;
     flex-wrap: wrap;
-    padding: 50px 5% 0 26%;
-    height: 500px;
+    padding: 30px 50px;
+    text-align: center;
+    z-index: 6;
 
     .tabcontent{
       display: flex;
@@ -42,6 +95,7 @@
         justify-content: space-between;
         padding-right: 50px;
         margin: 10px 0;
+        padding: 10px 0;
         border-bottom: 1px solid white;
 
         .mtb1{
@@ -73,6 +127,7 @@
         justify-content: space-between;
         padding-right: 50px;
         margin: 10px 0;
+        padding: 10px 0;
         .mtb1{
           width: 80px;
         }
@@ -119,7 +174,6 @@
       height: 380px;
       margin: 0 auto;
       display: none;
-//      border: 2px solid black;
     }
 
   #tab1:checked ~ .box1{
@@ -131,5 +185,11 @@
   #tab3:checked ~ .box3{
     display: block;
   }
+  }
+
+  .topuserbox{
+    border: 3px solid white;
+    height: 300px;
+    margin: 50px 0;
   }
 }
