@@ -1,24 +1,11 @@
 <template>
-  <div class="main" style="
-    background-color: rgba(0, 0, 0, 0.829);
-    ">
-    <Header/>
-    <index/>
-    <Footer/>
+  <div class="main" style="background-color: rgba(0, 0, 0, 0.829)">
+    <Nuxt />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Footer from '../components/footer.vue'
-import Header from '../components/header.vue'
-import index from '../pages/index.vue'
-
-export default Vue.extend({
-  components: { index, Header, Footer },
-
-})
+export default {};
 </script>
 
-<style lang="" scoped>
-</style>
+<style lang="" scoped></style>
