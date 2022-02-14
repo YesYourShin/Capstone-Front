@@ -1,35 +1,74 @@
 <template>
-  <div class="homebox">
-    <div class="bannerbox">
+  <div class="homeBox">
+    <div class="bannerBox">
       <Banner/>
     </div>
-    <div class="homeprofile">
+    <div class="homeProFile">
       <Profile/>
-      <div class="guidebox">
-        <div class="guide1">
-          <img src="@/assets/pageimg/ny1.png" class="yimg">
-          <div class="gpbox">
+      <div class="guideBox">
+        <div class="guides1">
+          <img src="@/assets/homeimg/ny1.png" class="yimg1">
+          <div class="gpBox">
             <p class="gp1">게임 가이드</p>
-            <p class="gp2">초심자를 위한 보기쉬운 가이드</p>
+            <p class="gp2">초심자를 위한 가이드</p>
           </div>
         </div>
-        <div class="guide1">
-          <img src="@/assets/pageimg/ny2.png" class="yimg">
-          <div class="gpbox">
+        <div class="guides2">
+          <img src="@/assets/homeimg/ny2.png" class="yimg2">
+          <div class="gpBox">
             <p class="gp1">직업&능력</p>
             <p class="gp2">모든 직업 정보 확인하기</p>
           </div>
         </div>
-        <div class="guide1">
-          <img src="@/assets/pageimg/ny3.png" class="yimg">
-          <div class="gpbox">
+        <div class="guides3">
+          <img src="@/assets/homeimg/ny3.png" class="yimg3">
+          <div class="gpBox">
             <p class="gp1">고객 서비스</p>
             <p class="gp2">문의 및 신고</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="readbox">
+
+    <div class="rankUserBox">
+      <p class="rankUser">주간 랭크 순위</p>
+      <ul class="rankNumbers">
+        <li class="rankNumber">4</li>
+        <li class="rankNumber">2</li>
+        <li class="rankNumber1">1</li>
+        <li class="rankNumber">3</li>
+        <li class="rankNumber">5</li>
+      </ul>
+
+      <ul class="rankUserImges">
+        <li class="rankUserImg">
+          <img src="@/assets/pageimg/test.jpg">
+        </li>
+        <li class="rankUserImg">
+          <img src="@/assets/pageimg/test.jpg">
+        </li>
+        <li class="rankUserImg">
+          <img src="@/assets/pageimg/test.jpg" class="rankUserImg1">
+        </li>
+        <li class="rankUserImg">
+          <img src="@/assets/pageimg/test.jpg">
+        </li>
+        <li class="rankUserImg">
+          <img src="@/assets/pageimg/test.jpg">
+        </li>
+      </ul>
+
+      <ul class="rankUserNames">
+        <li class="rankUserName">MIRAI0625</li>
+        <li class="rankUserName">MIRAI0625</li>
+        <li class="rankUserName1">MIRAI0625</li>
+        <li class="rankUserName">MIRAI0625</li>
+        <li class="rankUserName">MIRAI0625</li>
+      </ul>
+
+    </div>
+
+    <div class="readBox">
       <input type="radio" name="readtab" id="tab2" checked>
       <label for="tab2">자유 게시판</label>
       <input type="radio" name="readtab" id="tab1"  >
@@ -141,11 +180,8 @@
           <p class="mtb5">135</p>
           <p class="mtb6">64</p>
         </div>
-      </div>
     </div>
-    <div class="topuserbox">
-
-    </div>
+  </div>
   </div>
 </template>
 

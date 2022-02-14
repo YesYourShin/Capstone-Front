@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
 
-.homebox{
+.homeBox{
   width: 100%;
   height: 100%;
   max-width: 1920px;
@@ -12,52 +12,185 @@
   z-index: 8;
   position: relative;
 
-  .bannerbox{
+  .bannerBox{
     width: 100%;
+    height: 350px;
   }
 
-  .homeprofile{
+  .homeProFile{
     width: 100%;
-    height: 206px;
+    max-width: 1920px;
+    min-width: 1920px;
+    height: 186px;
     margin-top: 0;
     margin-left: 0;
     background-color: rgb(73, 73, 73);
     z-index: 8;
-    background-image: url("@/assets/pageimg/bac.jpg");
+    background-image: url("@/assets/homeimg/bac.jpg");
     background-size: 1950px 470px;
     display: flex;
     justify-content: space-between;
 
-    .guidebox{
-      width: 1500px;
-      display: flex;
-      justify-content: space-between;
+    .guideBox{
+      width: 1504px;
+      position: relative;
 
-      .guide1{
-        background-color: rgba(206, 206, 206, 0.877);
-        border: 3px solid black;
-        width: 350px;
-        height: 180px;
+      .guides2{
+        border: 3px solid gray;
+        background-color: rgb(206, 206, 206);
+        width: 330px;
+        height: 160px;
         margin: auto;
         position: relative;
         border-radius: 20px;
         overflow: hidden;
 
-        .yimg{
+        position: absolute;
+        top: 50%;
+        left: 20%;
+        transform: translate(-50%, -50%);
+
+        &:hover{
+          height: 180px;
+          .yimg2{
+            animation: yimg1 0.5s;
+            animation-fill-mode: forwards;
+        }
+        }
+        &:active{
+          height: 160px;
+        }
+
+        .yimg2{
           position: absolute;
-          top: 0;
-          left: 29%;
+          top: -15px;
+          left: 30%;
           width: 40%;
         }
 
-        .gpbox{
+        .gpBox{
+          position: absolute;
+          background-color: black;
+          color: white;
+          text-align: center;
+          border-radius: 0 0 17px 17px;
+          width: 323px;
+          bottom: 0;
+          height: 80px;
+
+          .gp1{
+            font-size: 35px;
+            line-height: 60px;
+          }
+          .gp2{
+            font-size: 25px;
+            line-height: 10px;
+          }
+        }
+      }
+
+
+
+      .guides3{
+        border: 3px solid gray;
+        background-color: rgb(206, 206, 206);
+        width: 330px;
+        height: 160px;
+        margin: auto;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translate(-50%, -50%);
+
+        &:hover{
+          height: 180px;
+          .yimg3{
+            animation: yimg1 0.5s;
+            animation-fill-mode: forwards;
+        }
+        }
+        &:active{
+          height: 160px;
+        }
+
+        .yimg3{
+          position: absolute;
+          top: 0;
+          left: 30%;
+          width: 40%;
+        }
+
+        .gpBox{
           position: absolute;
           background-color: black;
           color: white;
           text-align: center;
           bottom: 0;
-          width: 100%;
+          border-radius: 0 0 17px 17px;
+          width: 323px;
           height: 80px;
+
+          .gp1{
+            font-size: 35px;
+            line-height: 60px;
+          }
+          .gp2{
+            font-size: 25px;
+            line-height: 10px;
+          }
+        }
+      }
+
+
+
+      .guides1{
+        border: 3px solid gray;
+        background-color: rgb(206, 206, 206);
+        width: 330px;
+        height: 160px;
+        margin: auto;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        &:hover{
+          height: 180px;
+
+          .yimg1{
+              animation: yimg1 0.5s;
+              animation-fill-mode: forwards;
+          }
+
+        }
+        &:active{
+          height: 160px;
+        }
+
+        .yimg1{
+          position: absolute;
+          top: 5px;
+          left: 29%;
+          width: 40%;
+        }
+
+        .gpBox{
+          position: absolute;
+          background-color: black;
+          color: white;
+          text-align: center;
+          bottom: 0;
+          height: 80px;
+          border-radius: 0 0 17px 17px;
+          width: 323px;
 
           .gp1{
             font-size: 35px;
@@ -73,13 +206,13 @@
 
   }
 
-  .readbox{
-    margin: 0 auto;
-    width: 100%;
+  .readBox{
+    margin: 0 50px 0 auto;
+    width: 70%;
     height: 500px;
     display: flex;
     flex-wrap: wrap;
-    padding: 30px 50px;
+    padding: 30px 0;
     text-align: center;
     z-index: 6;
 
@@ -147,8 +280,8 @@
           width: 80px;
         }
       }
-
     }
+
 
     input{
       display: none;
@@ -187,9 +320,76 @@
   }
   }
 
-  .topuserbox{
-    border: 3px solid white;
-    height: 300px;
+  .rankUserBox{
+    height: 500px;
     margin: 50px 0;
+    background-color: rgba(0, 0, 0, 0.63);
+    color: white;
+    text-align: center;
+    max-width: 1920px;
+    min-width: 1920px;
+
+    .rankUser{
+      font-size: 50px;
+      margin: 20px 0;
+      padding-top: 50px;
+    }
+
+    ul{
+      width: 100%;
+      margin: 0 auto;
+      font-size: 30px;
+      li{
+        width: 18%;
+        display: inline-block;
+        margin: 0 10px;
+      }
+      .rankNumber1{
+        border-bottom: 3px solid orange;
+        color: orange;
+      }
+      .rankNumber{
+        color: gray;
+        border-bottom: 3px solid gray;
+      }
+    }
+
+    .rankUserImges{
+
+      .rankUserImg{
+
+        img{
+          width: 100px;
+          height: 100px;
+          border-radius: 100%;
+          margin: 50px auto;
+          border: 3px solid white;
+          background-color: white;
+        }
+
+        .rankUserImg1{
+          border: 3px solid orange;
+          background-color: orange;
+        }
+      }
+    }
+
+    .rankUserName{
+      font-size: 50px;
+    }
+    .rankUserName1{
+      color: orange;
+      font-size: 50px;
+    }
+
   }
 }
+
+@keyframes yimg1{
+	0%{
+    left: -100px;
+  }
+	100%{
+    left: 100px;
+  }
+	}

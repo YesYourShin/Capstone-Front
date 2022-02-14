@@ -1,8 +1,8 @@
 <template>
   <div class="footerbox">
     <p>© 2023 by Youngjin College Capstone Project Team.Excellent</p>
-    <img src="@/assets/pageimg/cat.png" class="footimg1">
-    <img src="@/assets/pageimg/pep.png" class="footimg2">
+    <img src="@/assets/footerimg/cat.png" class="footimg1">
+    <img src="@/assets/footerimg/pep.png" class="footimg2">
   </div>
 </template>
 

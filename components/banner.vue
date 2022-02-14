@@ -6,17 +6,17 @@
     <ul class="bannerul">
         <li class="bannerli">
           <div>
-            <a><img src="@/assets/pageimg/b1.png" class="b1"></a>
+            <a><img src="@/assets/bannerimg/b1.png" class="b1"></a>
           </div>
         </li>
         <li class="bannerli">
           <div>
-            <a><img src="@/assets/pageimg/b2.png" class="b2"></a>
+            <a><img src="@/assets/bannerimg/b2.png" class="b2"></a>
           </div>
         </li>
         <li class="bannerli">
           <div>
-            <a><img src="@/assets/pageimg/b3.png" class="b3"></a>
+            <a><img src="@/assets/bannerimg/b3.png" class="b3"></a>
           </div>
         </li>
         <div class="banner-control">

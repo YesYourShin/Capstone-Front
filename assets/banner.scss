@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   width: 100%;
+  height: 350px;
   box-sizing: border-box;
 
   #banner1{
@@ -35,7 +36,7 @@
 
   img{
     width: 100%;
-    height: 400px;
+    height: 350px;
   }
 
   ul,li{
@@ -70,14 +71,14 @@
         }
         .left{
           left: 20px;
-          background-image: url("@/assets/pageimg/t2.png");
+          background-image: url("@/assets/bannerimg/t2.png");
           background-position: center center;
           background-size: 250%;
           background-repeat: no-repeat;
         }
         .right{
           right: 20px;
-          background-image: url("@/assets/pageimg/t1.png");
+          background-image: url("@/assets/bannerimg/t1.png");
           background-position: center center;
           background-size: 250%;
           background-repeat: no-repeat;

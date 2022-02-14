@@ -1,7 +1,7 @@
 <template>
   <div id="headermainbox">
     <NuxtLink to="/">
-    <img src="@/assets/pageimg/Logow.png" class="logoimg">
+    <img src="@/assets/Logow.png" class="logoimg">
     </NuxtLink>
     <ul id="headerulbox">
       <div class="ulbox">

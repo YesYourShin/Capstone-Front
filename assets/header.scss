@@ -8,9 +8,10 @@
   min-width: 1280px;
   z-index: 10;
   position: relative;
+  height: 70px;
 
   .logoimg{
-    width: 180px;
+    width: 150px;
     position: absolute;
     left: 75px;
     top: 7px;
@@ -29,7 +30,7 @@
         display: flex;
         justify-content: left;
         padding-left: 300px;
-        height: 80px;
+        height: 70px;
         font-weight: bold;
         z-index: 10;
         background-color: black;
@@ -38,7 +39,7 @@
         width: 180px;
         font-size: 20px;
         color: white;
-        line-height: 80px;
+        line-height: 70px;
         }
 
         .buttonbox{
@@ -178,11 +179,11 @@
 @keyframes headerul{
 	0%{
     background-color: rgba(211, 198, 198, 0);
-    top: -80px;
+    top: -70px;
   }
 	100%{
     background-color: rgba(0, 0, 0, 0.918);
-    top: 80px;
+    top: 70px;
   }
 	}
 

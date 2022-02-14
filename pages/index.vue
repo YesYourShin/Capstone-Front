@@ -35,7 +35,8 @@ export default {
 <style lang="scss" scoped>
 .indexbox{
   width: 100%;
-  min-width: 1920px;
+  max-width: 1920px;
+  min-width: 1536px;
   height: 100%;
   margin: 0 auto;
   position: relative;
