@@ -20,9 +20,9 @@
       </div> -->
     </div>
     <!-- <div ></div> -->
-    <div class="h-52 bg-gray-300 flex flex-col z-[9999]">
-      <div class="flex-grow"></div>
-      <input class="w-full outline-none" type="text" />
+    <div class="h-52 bg-gray-300 flex flex-col">
+      <div class="flex-grow z-[800]"></div>
+      <input class="w-full outline-none z-[800]" type="text" />
     </div>
   </div>
 </template>
