@@ -12,8 +12,11 @@ import Home from '../components/home.vue';
 import Header from '../components/header.vue';
 import Footer from '../components/footer.vue';
 import Testbox from '../components/testbox.vue';
+
+import Timer from '../components/Timer.vue';
+
 export default {
-  components: { Profile, Home, Header, Footer, Testbox },
+  components: { Profile, Home, Header, Footer, Testbox, Timer },
   name: 'CapstoneIndex',
 
   data() {

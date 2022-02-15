@@ -1,6 +1,5 @@
 <template>
-  <div class="main" style="
-    background-color: rgba(0, 0, 0, 0.829);">
+  <div class="main" style="background-color: rgba(0, 0, 0, 0.829);">
     <Nuxt/>
   </div>
 </template>
