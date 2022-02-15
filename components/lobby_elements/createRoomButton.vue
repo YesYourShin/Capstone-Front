@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="p-2 md:w-40">
+  <div class="p-2 w-40 mr-[70px]">
     <a
       href="#"
       class="flex items-center p-4 bg-blue-200 rounded-lg shadow-xs cursor-pointer hover:bg-blue-500 hover:text-gray-100"

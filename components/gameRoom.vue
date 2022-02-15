@@ -1,8 +1,11 @@
 <template lang="">
   <div class="flex flex-col min-h-screen w-full">
     <div class="flex-grow">
-      <div class="bg-gray-300 flex justify-center items-center">
-        <p>방 제목입니다</p>
+      <div class="flex">
+        <div class="bg-gray-300 flex justify-center items-center">
+          <p>방 제목입니다</p>
+        </div>
+        <sideBar></sideBar>
       </div>
       <div class="px-2 mt-10">
         <div class="flex flex-wrap justify-evenly">
@@ -17,7 +20,7 @@
         </div>
       </div>
       <div class="flex flex-row-reverse px-2">
-        <div class="p-2 w-40 justify-center items-center z-[12]" @click="exit()">
+        <div class="p-2 w-40 justify-center items-center" @click="exit()">
           <div class="flex items-center p-4 bg-yellow-200 rounded-lg shadow-xs cursor-pointer hover:bg-yellow-500 hover:text-gray-100 transition duration-300">
             <p class=" text-lg font-bold mx-auto">
               나가기
@@ -38,9 +41,11 @@
 </template>
 <script>
 import chatBox from "@/components/lobby_elements/chatBox.vue";
+import sideBar from "@/components/lobby_elements/sideBar.vue";
 export default {
   components: {
     chatBox,
+    sideBar,
   },
   methods: {
     exit() {
