@@ -1,0 +1,49 @@
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.5s;
+}
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+}
+
+/* .slideLeft-enter-active
+	{
+		animation: slide-left-in .5s;
+	}
+.slideLeft-leave-active
+	{
+		animation: slide-right-out .5s;
+	}
+.slideLeft-enter {
+  animation: slide-right-out .5s;
+}
+.slideLeft-leave {
+  animation: slide-left-in .5s;
+}
+@keyframes  slide-left-in {
+	0% { transform: translateX(-100vw); }
+	10% { transform: translateX(-75vw); }
+	20% { transform: translateX(-55vw); }
+	30% { transform: translateX(-40vw); }
+	40% { transform: translateX(-30vw); }
+	50% { transform: translateX(-22vw); }
+	60% { transform: translateX(-16vw); }
+	70% { transform: translateX(-12vw); }
+	80% { transform: translateX(-8vw); }
+	90% { transform: translateX(-4vw); }
+	100% { transform: translateX(0vw); }
+}
+@keyframes  slide-right-out {
+	0% { transform: translateX(0); }
+	10% { transform: translateX(1vw); }
+	20% { transform: translateX(3vw); }
+	30% { transform: translateX(10vw); }
+	40% { transform: translateX(25vw); }
+	50% { transform: translateX(50vw); }
+	60% { transform: translateX(75vw); }
+	70% { transform: translateX(90vw); }
+	80% { transform: translateX(97vw); }
+	90% { transform: translateX(99vw); }
+	100% { transform: translateX(100vw); }
+} */
