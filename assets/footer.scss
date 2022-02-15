@@ -1,13 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+
 .footerbox{
   width: 100%;
   position: relative;
   max-width: 1920px;
+  min-width: 840px;
   margin: 0 auto;
   height: 80px;
   line-height: 80px;
   background-color: black;
   color: white;
   text-align: center;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Do Hyeon', sans-serif;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  position: absolute;
+
 
   .footimg1{
     position: absolute;
@@ -20,9 +31,25 @@
   .footimg2{
     position: absolute;
     width: 700px;
-    bottom: 0px;
+    bottom: 55px;
     left: 3%;
     z-index: 2;
   }
+
+  .footerTest1{
+    padding-left: 50px;
+  }
+
+  .footerTest2{
+    display: flex;
+    padding-right: 50px;
+    div{
+      margin: 0 10px;
+      &:hover{
+        color: orange;
+      }
+    }
+  }
+
 }
 

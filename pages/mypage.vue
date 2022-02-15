@@ -1,7 +1,21 @@
 <template>
   <div class="mypagebox">
     <Header/>
-    <p>test</p>
+    <div class="myProfile">
+      <p class="mypageText">MyPage</p>
+      <form action="" method="" class="mypageForm">
+        <div class="mypageInput">
+          <p>이미지 : <input type="text" name="user_img"></p>
+        </div>
+        <div class="mypageInput">
+          <p>닉네임 : <input type="text" name="user_name"></p>
+        </div>
+        <div class="mypageInput">
+          <p>상태 메시지 : <input type="text" name="user_text"></p>
+        </div>
+         <input type="submit" class="rebtn" value="수정">
+      </form>
+    </div>
     <Footer/>
   </div>
 </template>
@@ -30,7 +44,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mypagebox{
-  height: 100vh;
-}
+@import '~assets/mypage.scss';
 </style>

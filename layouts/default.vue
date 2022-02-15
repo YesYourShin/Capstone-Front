@@ -1,6 +1,6 @@
 <template>
   <div class="main" style="
-    background-color: rgba(0, 0, 0, 0.829);">
+    ">
     <Nuxt/>
   </div>
 </template>
@@ -13,5 +13,9 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="" scoped>
+<style>
+html{
+  background-color: rgba(0, 0, 0, 0.76);
+  height: 100%;
+}
 </style>

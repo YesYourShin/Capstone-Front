@@ -207,7 +207,7 @@
   }
 
   .readBox{
-    margin: 0 50px 0 auto;
+    margin: 0 80px 50px auto;
     width: 70%;
     height: 500px;
     display: flex;
@@ -321,9 +321,9 @@
   }
 
   .rankUserBox{
-    height: 500px;
+    height: 400px;
     margin: 50px 0;
-    background-color: rgba(0, 0, 0, 0.63);
+    background-color: rgba(0, 0, 0, 0.589);
     color: white;
     text-align: center;
     max-width: 1920px;
@@ -331,8 +331,8 @@
 
     .rankUser{
       font-size: 50px;
-      margin: 20px 0;
-      padding-top: 50px;
+      margin: 10px 0;
+      padding-top: 10px;
     }
 
     ul{
@@ -340,7 +340,7 @@
       margin: 0 auto;
       font-size: 30px;
       li{
-        width: 18%;
+        width: 15%;
         display: inline-block;
         margin: 0 10px;
       }
@@ -355,9 +355,9 @@
     }
 
     .rankUserImges{
-
+      height: 180px;
       .rankUserImg{
-
+        height: 150px;
         img{
           width: 100px;
           height: 100px;
@@ -375,11 +375,11 @@
     }
 
     .rankUserName{
-      font-size: 50px;
+      font-size: 30px;
     }
     .rankUserName1{
       color: orange;
-      font-size: 50px;
+      font-size: 30px;
     }
 
   }
