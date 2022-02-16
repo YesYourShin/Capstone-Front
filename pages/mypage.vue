@@ -15,6 +15,11 @@
         </div>
          <input type="submit" class="rebtn" value="수정">
       </form>
+      <div class="mypagebtns">
+        <button>내가 쓴 글보기</button>
+        <button>내가 쓴 댓글보기</button>
+        <button>회원탈퇴</button>
+      </div>
     </div>
     <Footer/>
   </div>
