@@ -1,69 +1,69 @@
 <template>
-  <div class="fullfile h-screen flex flex-col">
-    <div class="profilebox">
+  <div class="fullProfile h-screen flex flex-col">
+    <div class="profileBox">
       <div class="profile1">
-        <img src="@/assets/pageimg/test.jpg" class="profileimg" />
+        <img src="@/assets/pageimg/test.jpg" class="profileImg" />
       </div>
 
       <div class="profile2">
-        <button class="userlink">
-          <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
+        <button class="userLink">
+          <NuxtLink to="/mypage" class="btnLink">MyPage</NuxtLink>
         </button>
-        <button class="userlink">Logout</button>
-        <p class="userlevel">Lv.250 <span class="username">Mirai0625</span></p>
-        <p class="usertext">Mirai1412/Capstone-Front</p>
+        <button class="userLink">Logout</button>
+        <p class="userLevel">Lv.250 <span class="username">Mirai0625</span></p>
+        <p class="userText">Mirai1412/Capstone-Front</p>
       </div>
 
       <div class="profile3">
-        <button class="profilebutton" v-on:click="friend">친구</button>
-        <button class="profilebutton" v-on:click="ball">알림</button>
-        <button class="profilebutton" v-on:click="record">전적</button>
+        <button class="profileButton" v-on:click="friend">친구</button>
+        <button class="profileButton" v-on:click="ball">알림</button>
+        <button class="profileButton" v-on:click="record">전적</button>
       </div>
     </div>
 
     <div class="profile4 grow" v-if="show1">
-      <p>친구</p>
+      <friend-bar></friend-bar>
     </div>
 
-    <div class="profileball grow" v-if="show2">
-      <div class="ballbox">
+    <div class="profileAlert grow" v-if="show2">
+      <div class="alertBox">
         <p>???에게 친구 신청이 왔습니다.</p>
-        <div class="cance">
-          <div class="cance1"></div>
-          <div class="cance2"></div>
+        <div class="cancel">
+          <div class="cancel1"></div>
+          <div class="cancel2"></div>
         </div>
       </div>
-      <div class="ballbox">
+      <div class="alertBox">
         <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cance">
-          <div class="cance1"></div>
-          <div class="cance2"></div>
+        <div class="cancel">
+          <div class="cancel1"></div>
+          <div class="cancel2"></div>
         </div>
       </div>
-      <div class="ballbox">
+      <div class="alertBox">
         <p>???에게 게임 초대가 왔습니다.</p>
-        <div class="cance">
-          <div class="cance1"></div>
-          <div class="cance2"></div>
+        <div class="cancel">
+          <div class="cancel1"></div>
+          <div class="cancel2"></div>
         </div>
       </div>
 
-      <div class="ballbox">
+      <div class="alertBox">
         <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cance">
-          <div class="cance1"></div>
-          <div class="cance2"></div>
+        <div class="cancel">
+          <div class="cancel1"></div>
+          <div class="cancel2"></div>
         </div>
       </div>
-      <div class="ballbox">
+      <div class="alertBox">
         <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cance">
-          <div class="cance1"></div>
-          <div class="cance2"></div>
+        <div class="cancel">
+          <div class="cancel1"></div>
+          <div class="cancel2"></div>
         </div>
       </div>
 
-      <div class="cancebutton" :click="cance">
+      <div class="cancelButton" :click="cancel">
         <button>전체 삭제</button>
       </div>
     </div>
@@ -75,8 +75,14 @@
 </template>
 
 <script>
+import FriendBar from "./profile_elements/friendBar.vue";
+
 export default {
   name: "CapstoneProfile",
+
+  components: {
+    FriendBar,
+  },
 
   data() {
     return {
@@ -87,7 +93,7 @@ export default {
   },
 
   methods: {
-    cance() {},
+    cancel() {},
     friend() {
       this.show1 = !this.show1;
       if (this.show2 == true) {
@@ -117,5 +123,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~assets/profile.scss";
+@import "~assets/profileInGame.scss";
 </style>

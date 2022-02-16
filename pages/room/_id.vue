@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import profile from "@/components/profile.vue";
+import profile from "@/components/profileInGame.vue";
 import gameRoom from "@/components/gameRoom.vue";
 export default {
   transition: "intro",

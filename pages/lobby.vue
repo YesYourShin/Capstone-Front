@@ -1,11 +1,11 @@
 <template lang="">
-  <div class="body">
+  <div class="flex">
     <profile></profile>
     <gameLobby></gameLobby>
   </div>
 </template>
 <script>
-import profile from "@/components/profile.vue";
+import profile from "@/components/profileInGame.vue";
 import gameLobby from "@/components/gameLobby.vue";
 
 export default {
@@ -15,6 +15,4 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-@import "~assets/lobby.scss";
-</style>
+<style lang=""></style>
