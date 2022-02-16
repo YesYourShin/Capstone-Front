@@ -2,17 +2,17 @@
   <div class="flex flex-col min-h-screen w-full">
     <div class="flex-grow">
       <div class="flex">
-        <div class="bg-gray-300 flex justify-center items-center">
+        <div class=" bg-gradient-to-r via-gray-300 from-transparent flex justify-center items-center">
           <p>방 제목입니다</p>
         </div>
         <sideBar></sideBar>
       </div>
       <div class="px-2 mt-10">
-        <div class="flex flex-wrap justify-evenly">
+        <div class="grid grid-cols-5 justify-evenly">
           <template v-for="n in 10">
-            <div class=" justify-self-center mx-2 mb-3">
+            <div class="justify-self-center px-2 pb-3 w-full">
               <div
-                class="w-[192px] h-[108px] bg-fuchsia-400 border border-red-600"
+                class="aspect-video bg-fuchsia-400 border border-red-600"
               ></div>
               <p class="bg-white rounded-b-lg">이름</p>
             </div>

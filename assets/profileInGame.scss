@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
 
-.fullfile{
+.fullProfile{
   position: relative;
   width: 420px;
   font-family: 'Do Hyeon', sans-serif;
   font-size: 20px;
 
-  .profilebox{
+  .profileBox{
     border: 3px solid black;
     width: 416px;
     display: flex;
@@ -23,7 +23,7 @@
       height: 80px;
       text-align: center;
 
-    .profileimg{
+    .profileImg{
       width: 100px;
       height: 100px;
       margin: 10px;
@@ -43,7 +43,7 @@
       text-align: center;
       justify-content: right;
 
-      .btnlink{
+      .btnLink{
         color: white;
         text-decoration: none;
         &:hover{
@@ -51,7 +51,7 @@
         }
       }
 
-      .userlink{
+      .userLink{
         width: 80px;
         height: 30px;
         margin: 0 5px;
@@ -63,12 +63,12 @@
         border: 2px solid rgb(131, 131, 131)
       }
 
-      .userlink:hover{
+      .userLink:hover{
         animation: colorturn 0.5s;
         animation-fill-mode: forwards;
       }
 
-      .userlevel{
+      .userLevel{
         width: 100%;
         font-size: 20px;
         height: 25px;
@@ -81,7 +81,7 @@
         }
       }
 
-      .usertext{
+      .userText{
         width: 100%;
         height: 20px;
         line-height: 10px;
@@ -99,7 +99,7 @@
       color: white;
       font-size: 25px;
 
-      .profilebutton{
+      .profileButton{
         width: 30%;
         height: 100%;
         margin: 0 auto;
@@ -126,12 +126,12 @@
     background-color: #fff;
   }
 
-  .profileball{
+  .profileAlert{
     width: 416px;
     border: 3px solid black;
     background-color: rgba(37, 37, 37, 0.815);
 
-    .ballbox{
+    .alertBox{
       background-color: white;
       width: 95%;
       height: 50px;
@@ -146,13 +146,13 @@
         margin-left: 10px;
       }
 
-      .cance{
+      .cancel{
         width: 30px;
         height: 30px;
         margin: auto 0;
         position: relative;
 
-        .cance1{
+        .cancel1{
           position: absolute;
           top: 43%;
           left: -15%;
@@ -162,7 +162,7 @@
           height: 3px;
           transform: rotate( 45deg );
         }
-        .cance2{
+        .cancel2{
           position: absolute;
           top: 43%;
           left: -15%;
@@ -174,7 +174,7 @@
         }
       }
     }
-    .cancebutton{
+    .cancelButton{
       text-align: center;
       color: white;
       padding-bottom: 10px;
