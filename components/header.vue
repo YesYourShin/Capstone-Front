@@ -7,7 +7,9 @@
       <div class="ulbox">
         <p class="headerlitilte">게임 가이드</p>
         <p class="headerlitilte">랭킹</p>
-        <p class="headerlitilte">커뮤니티</p>
+        <p class="headerlitilte">
+          <NuxtLink to="/allCommunity" class="lilink">커뮤니티</NuxtLink>
+        </p>
         <p class="headerlitilte">고객지원</p>
         <div class="buttonbox">
           <div class="buttonline1"></div>
@@ -32,7 +34,6 @@
 
         <ul class="tilteulbox">
           <li><NuxtLink to="/" class="lilink">공지 사항</NuxtLink></li>
-          <li><NuxtLink to="/" class="lilink">전체 게시판</NuxtLink></li>
           <li><NuxtLink to="/" class="lilink">자유 게시판</NuxtLink></li>
           <li><NuxtLink to="/" class="lilink">정보 게시판</NuxtLink></li>
           <li><NuxtLink to="/" class="lilink">인기 게시판</NuxtLink></li>

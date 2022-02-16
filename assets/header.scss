@@ -8,13 +8,13 @@
   min-width: 1280px;
   z-index: 10;
   position: relative;
-  height: 70px;
+  height: 90px;
 
   .logoimg{
-    width: 150px;
+    height: 85px;
     position: absolute;
     left: 75px;
-    top: 7px;
+    top: 5px;
     z-index: 11;
   }
 
@@ -30,21 +30,26 @@
         display: flex;
         justify-content: left;
         padding-left: 300px;
-        height: 70px;
+        height: 90px;
         font-weight: bold;
         z-index: 10;
         background-color: black;
 
+      .lilink{
+        text-decoration: none;
+        color: white;
+      }
+
       .headerlitilte{
         width: 180px;
-        font-size: 20px;
+        font-size: 25px;
         color: white;
-        line-height: 70px;
+        line-height: 90px;
         }
 
         .buttonbox{
-          width: 160px;
-          height: 60px;
+          width: 180px;
+          height: 70px;
           margin: auto 75px auto auto;
           //border: 3px solid rgb(255, 255, 255);
           display: flex;
@@ -53,16 +58,16 @@
 
           .gogame{
             margin: auto 0;
-            width: 130px;
-            height: 30px;
-            font-size: 15px;
+            width: 150px;
+            height: 40px;
+            font-size: 22px;
             color: white;
             border: 3px solid rgb(255, 255, 255);
 
             &:active{
-              width: 125px;
-              height: 25px;
-              font-size: 13px;
+              width: 140px;
+              height: 35px;
+              font-size: 20px;
             }
           }
 
@@ -104,8 +109,8 @@
 
           &:hover{
             .gogame{
-            color: black;
-            background-color: white;
+              animation: color1 1s;
+              animation-fill-mode: forwards;
             }
             .buttonline1{
               animation: buttonlinew 0.3s;
@@ -140,7 +145,7 @@
       .tilteulbox{
         width: 180px;
         padding-top: 10px;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
         li{
           list-style: none;
           padding: 4px 0;
@@ -179,11 +184,11 @@
 @keyframes headerul{
 	0%{
     background-color: rgba(211, 198, 198, 0);
-    top: -70px;
+    top: -90px;
   }
 	100%{
     background-color: rgba(0, 0, 0, 0.918);
-    top: 70px;
+    top: 90px;
   }
 	}
 
@@ -200,13 +205,22 @@
   0%{
   }
   100%{
-    width: 150px;
+    width: 170px;
   }
   }
   @keyframes buttonlineh{
     0%{
     }
     100%{
-      height: 50px;
+      height: 60px;
     }
     }
+@keyframes color1{
+  0%{
+
+  }
+  100%{
+    background-color: white;
+    color: #000;
+  }
+  }
