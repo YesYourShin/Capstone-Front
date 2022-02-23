@@ -139,6 +139,11 @@
         font-size: 25px;
         padding: 0 50px;
         margin: 10px auto;
+
+        &:hover{
+          animation: color1 0.5s;
+          animation-fill-mode: forwards;
+        }
       }
 
       .mtb1{
