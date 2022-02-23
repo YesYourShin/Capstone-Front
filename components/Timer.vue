@@ -3,11 +3,11 @@
   <div class="timer">
     <!-- start of the timer section -->
     <div>
-      <h6>
+      <h3>
         {{ timerMinutes }}:{{ timerSeconds }}
-      </h6>
+      </h3>
       <div class="button-toggle">
-        <button @click="startPunishmentVote">시작</button>
+        <button @click="startVote">시작</button>
         <!-- <button @click="start" v-if="isActive === false">START</button> -->
         <!-- <button @click="stop" v-if="isActive === true">STOP</button> -->
       </div>
@@ -58,8 +58,9 @@ export default {
         ) {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 5),
+          alert('의심되는 플레이어 투표 종료')
           this.$emit("timeoutVote")
-          alert('투표종료!')
+
         }
       }, 1000);
     },
@@ -73,8 +74,37 @@ export default {
         ) {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 5),
+          alert('사형 찬반투표 종료')
           this.$emit("timeoutPunishmentVote")
-          alert('투표종료!')
+        }
+      }, 1000);
+    },
+    nightEvent() {
+      alert('능력 사용')
+      this.pomodoroInstance = setInterval(() => {
+        this.totalSeconds -= 1;
+        if (
+          Math.floor(this.totalSeconds / 60) === 0 &&
+          this.totalSeconds % 60 === 0
+        ) {
+          clearInterval(this.pomodoroInstance);
+          (this.totalSeconds = 5),
+          alert('능력 사용이 완료되었습니다')
+          this.$emit("nightEvent")
+        }
+      }, 1000);
+    },
+    morningEvent() {
+      this.pomodoroInstance = setInterval(() => {
+        this.totalSeconds -= 1;
+        if (
+          Math.floor(this.totalSeconds / 60) === 0 &&
+          this.totalSeconds % 60 === 0
+        ) {
+          clearInterval(this.pomodoroInstance);
+          (this.totalSeconds = 5),
+          alert('아침이 종료되었습니다.')
+          this.startVote();
         }
       }, 1000);
     },

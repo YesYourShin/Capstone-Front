@@ -1,8 +1,8 @@
 <template>
   <div class="messagebox">
     <ul>
-      <p>상태메세지 : {{ this.$parent.flowMessage }}</p>
-      <p>최다 선정 유저 : {{ this.$parent.electedPlayers+1 }}</p>
+      <h3>상태메세지 : {{ this.$parent.flowMessage }}</h3>
+      <h3>최다 선정 유저 : {{ this.$parent.electedPlayers+1 }}</h3>
       <li v-show="dd" v-for="index in this.$parent.playerVote" :key="index"
       >{{index}}</li>
       <li v-show="ss" v-for="(c, index) in this.$parent.playerJob" :key="index">{{c}}</li>
