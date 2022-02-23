@@ -7,13 +7,13 @@
           <Profile/>
           <ul class="communityUl">
             <li class="communityLi">
-              <NuxtLink to="/allCommunity" class="Li">전체 게시판</NuxtLink>
+              <NuxtLink to="/community/allCommunity" class="Li">전체 게시판</NuxtLink>
               </li>
-            <li class="communityLi1">
-                <NuxtLink to="/cement" class="Li1">공지 사항</NuxtLink>
-            </li>
             <li class="communityLi">
-                <NuxtLink to="/posta" class="Li">자유 게시판</NuxtLink>
+                <NuxtLink to="/cement" class="Li">공지 사항</NuxtLink>
+            </li>
+            <li class="communityLi1">
+                <NuxtLink to="/posta" class="Li1">자유 게시판</NuxtLink>
             </li>
             <li class="communityLi">
                 <NuxtLink to="/postb" class="Li">정보 게시판</NuxtLink>
@@ -28,7 +28,7 @@
 
         <div class="communityPostSerchBox">
           <div class="psb1">
-            <p>공지 사항</p>
+            <p>자유 게시판</p>
           </div>
           <div class="psb2">
             <input type="text">

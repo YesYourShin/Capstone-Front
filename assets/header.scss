@@ -60,7 +60,7 @@
             margin: auto 0;
             width: 150px;
             height: 40px;
-            font-size: 22px;
+            font-size: 20px;
             color: white;
             border: 3px solid rgb(255, 255, 255);
 
@@ -108,6 +108,10 @@
           }
 
           &:hover{
+            .lilink{
+              animation: color2 1s;
+              animation-fill-mode: forwards;
+            }
             .gogame{
               animation: color1 1s;
               animation-fill-mode: forwards;
@@ -224,3 +228,11 @@
     color: #000;
   }
   }
+  @keyframes color2{
+    0%{
+
+    }
+    100%{
+      color: #000;
+    }
+    }
