@@ -44,7 +44,7 @@ input[id="menuIcon"]:checked + label {
   z-index: 9999;
 }
 input[id="menuIcon"]:checked + label span {
-  background: #fff;
+  background: #000;
 }
 input[id="menuIcon"]:checked + label span:nth-child(1) {
   top: 50%;
