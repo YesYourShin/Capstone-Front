@@ -21,6 +21,7 @@
         </template>
       </div>
       <div class="h-20 w-60 rounded-lg bg-slate-400 cursor-pointer" @click="$router.push('/')">메인으로</div>
+      <div class="h-20 w-60 rounded-lg bg-slate-400 cursor-pointer" @click="showAlert">메인으로</div>
       <div class="">
         <ul class="flex list-none rounded my-2 justify-end">
           <li class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 ml-0 rounded-l hover:bg-gray-200"><a class="page-link" href="#">Previous</a></li>
@@ -32,6 +33,7 @@
       </div>
     </div>
     <chatBox></chatBox>
+
   </div>
 </template>
 <script>
@@ -41,6 +43,7 @@ import checkBoxes from "@/components/lobby_elements/checkBoxes.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
 import createRoomButton from "@/components/lobby_elements/createRoomButton.vue";
 import chatBox from "@/components/lobby_elements/chatBox.vue";
+
 export default {
   components: {
     roomButton,
@@ -48,7 +51,7 @@ export default {
     checkBoxes,
     sideBar,
     createRoomButton,
-    chatBox
+    chatBox,
   },
   data() {
     return {
@@ -90,6 +93,17 @@ export default {
         },
       ]
     };
+  },
+  methods: {
+    showAlert() {
+      // this.$swal('Hello Vue world')
+      this.$swal({
+        title: 'Error!',
+        text: 'Do you want to continue',
+        icon: 'error',
+        confirmButtonText: 'Cool',
+      })
+    }
   },
 };
 </script>

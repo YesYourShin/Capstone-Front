@@ -20,9 +20,10 @@
         <button class="profileButton" v-on:click="record">전적</button>
       </div>
     </div>
-
-    <div class="profile4 grow" v-if="show1">
-      <friend-bar></friend-bar>
+    <div class="overflow-auto" v-if="show1">
+      <div class="profile4 grow">
+        <friend-bar></friend-bar>
+      </div>
     </div>
 
     <div class="profileAlert grow" v-if="show2">
@@ -76,7 +77,6 @@
 
 <script>
 import FriendBar from "./profile_elements/friendBar.vue";
-
 export default {
   name: "CapstoneProfile",
 
