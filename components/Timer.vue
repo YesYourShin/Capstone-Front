@@ -54,6 +54,7 @@ export default {
         this.totalSeconds -= 1;
         if (
           Math.floor(this.totalSeconds / 60) === 0 &&
+
           this.totalSeconds % 60 === 0
         ) {
           clearInterval(this.pomodoroInstance);
@@ -104,7 +105,7 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 5),
           alert('아침이 종료되었습니다.')
-          this.startVote();
+          this.$emit("morningEvent")
         }
       }, 1000);
     },

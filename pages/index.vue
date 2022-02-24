@@ -13,10 +13,8 @@ import Header from '../components/header.vue';
 import Footer from '../components/footer.vue';
 import Testbox from '../components/testbox.vue';
 
-import Timer from '../components/Timer.vue';
-
 export default {
-  components: { Profile, Home, Header, Footer, Testbox, Timer },
+  components: { Profile, Home, Header, Footer, Testbox},
   name: 'CapstoneIndex',
 
   data() {
@@ -38,9 +36,9 @@ export default {
 <style lang="scss" scoped>
 .indexbox{
   width: 100%;
-  height: 100%;
   max-width: 1920px;
   min-width: 1536px;
+  height: 100%;
   margin: 0 auto;
   position: relative;
 }
