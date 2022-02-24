@@ -43,9 +43,9 @@ export default {
       flowMessage: '투v',
       playerVote: [0,0,0,0,0,0],
       playerJob: ['시민','시민','시민','시민','시민','마피아'],
-      survivePlayer: [null, null, null, null,null,'die'],
+      survivePlayer: ['', '', '', '','',''],
       userLevel: [108, 17, 9, 666, 722, 15],
-      userName : ['전국코딩신', '사실저마피아', '발가락이용자', '미캉', '머래너나잘해', '정치하면던짐'],
+      userName : ['전국마피아신', '사실저마피아', '발가락이용자', '시민원챔', '머래너나잘해', '정치하면던짐'],
       electedPlayersNum: 1,
       electedPlayers: 0,
       electedPlayerVote: 0,
@@ -80,12 +80,13 @@ export default {
         this.flowMessage = '투표종료. 중복 혹은 무효처리'
         this.electedPlayers = null
         // 밤 & 능력사용 이벤트 (타이머로 이동하여)
-        this.$refs.timer.nightEvent()
+        // this.$refs.timer.nightEvent()
+        setTimeout(this.$refs.timer.nightEvent(), 3000);
       } else {
         this.flowMessage = '투표완료. 집행대상자 선정 완료'
         console.log(this.$refs.timer);
-        setTimeout(() => console.log("2초 후에 실행됨"), 2000);
-        this.$refs.timer.startPunishmentVote()
+        setTimeout(this.$refs.timer.startPunishmentVote(), 3000);
+        // this.$refs.timer.startPunishmentVote()
 
         // 찬반투표 이벤트. (타이머로 이동하여 )
       }
@@ -100,6 +101,7 @@ export default {
       //
     },
     finishPunishmentVote() {
+      alert('사형 찬반투표 종료')
       this.punishmentPros = Math.floor(Math.random()*5);
       this.punishmentCons = Math.floor(Math.random()*5);
       console.log(this.punishmentPros, this.punishmentCons)
@@ -116,6 +118,7 @@ export default {
       }
     },
     nightEvent() {
+        alert('능력 사용 종료')
         this.flowMessage = '능력 사용이 끝났습니다.'
         this.userKill = Math.floor(Math.random()*4);
         console.log(this.userKill)
@@ -125,6 +128,7 @@ export default {
     },
     morningEvent() {
       this.flowMessage = '아침이 되었습니다.'
+      this.$refs.timer.startVote()
       // 지목 유저 삭제 이벤트 발생
       // this.flowMessage = 'X번 플레이어가 사망하였습니다.'
       //
@@ -281,15 +285,15 @@ export default {
 		top: 617px;
     background-color: #ff00ff;
   }
-  //       .usercam8 {
-	// 	position: absolute;
-	// 	overflow: visible;
-	// 	width: 320px;
-	// 	height: 180px;
-	// 	left: 610px;
-	// 	top: 617px;
-  //   background-color: #ff00ff;
-  // }
+        .usercam8 {
+		position: absolute;
+		overflow: visible;
+		width: 320px;
+		height: 180px;
+		left: 610px;
+		top: 617px;
+    background-color: #ff00ff;
+  }
           .usercam9 {
 		position: absolute;
 		overflow: visible;

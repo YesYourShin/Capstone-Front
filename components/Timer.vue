@@ -74,13 +74,13 @@ export default {
         ) {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 5),
-          alert('사형 찬반투표 종료')
+
           this.$emit("timeoutPunishmentVote")
         }
       }, 1000);
     },
     nightEvent() {
-      alert('능력 사용')
+
       this.pomodoroInstance = setInterval(() => {
         this.totalSeconds -= 1;
         if (
