@@ -12,11 +12,26 @@ export const state = () => ({
       deletedAt: 0,
     };
   }),
-  chats: ['player1', 'player2'],
+  chats: [],
+  selectedIndex: -1,
 })
 
 export const mutations = {
   newChat(state, user) {
-    state.chats.push(user.social_id)
-  }
+    if (!state.chats.includes(user)) {
+      state.chats.push(user)
+      state.selectedIndex = state.chats.length - 1
+    }
+  },
+  tabClicked(state, index) {
+    state.selectedIndex = index
+  },
+  tabClose(state, index) {
+    console.log(state.chats);
+    console.log('catched index: ', index);
+    state.chats.splice(index, 1)
+    if (index <= state.selectedIndex) {
+      state.selectedIndex = state.selectedIndex - 1
+    }
+  },
 }

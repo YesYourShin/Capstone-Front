@@ -41,7 +41,7 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    'vue-sweetalert2/nuxt'
+    'vue-sweetalert2/nuxt',
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -66,7 +66,8 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   },
+
   server:{
     port: 7000
-  }
+  },
 }

@@ -9,12 +9,12 @@
       </div>
       <div class="px-2 mt-10">
         <div class="grid grid-cols-5 justify-evenly">
-          <template v-for="n in 10">
+          <template v-for="user in players">
             <div class="justify-self-center px-2 pb-3 w-full">
               <div
                 class="aspect-video bg-fuchsia-400 border border-red-600"
               ></div>
-              <p class="bg-white rounded-b-lg">이름</p>
+              <p class="bg-white rounded-b-lg">{{user.profile ? user.profile.nickname : ''}}</p>
             </div>
           </template>
         </div>
@@ -46,6 +46,36 @@ export default {
   components: {
     chatBox,
     sideBar,
+  },
+  data() {
+    return {
+      players: [
+        {
+          id: 1,
+          social_id: 1111,
+          provider: 'KAKAO',
+          role: 1,
+          profile: {
+            id: 1,
+            nickname: 'playerone',
+            image: 'url',
+            self_introduction: 'hi',
+            manner: 0,
+            level: 1,
+            exp: 100,
+          },
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
   },
   methods: {
     exit() {
