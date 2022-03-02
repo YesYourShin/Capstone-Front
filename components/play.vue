@@ -3,12 +3,16 @@
     <!-- <Billboard blilboard-vote="vote-result"/> -->
     <Billboard />
     <div class="videobox">
-      <video :class="['usercam' + index]" v-for="index in 8" :key="index">
+      <video :class="['usercam' + index]" v-for="index in 10" :key="index">
         {{ index }}
       </video>
-      <video class="usercam9 input_video"></video>
-      <canvas class="output_canvas" width="240px" height="180px"></canvas>
-      <video class="usercam10 input_video2"></video>
+      <canvas
+        :class="['output_canvas' + index]"
+        v-for="index in 10"
+        :key="index"
+        width="240px"
+        height="180px"
+      ></canvas>
       <!-- <div class="canvasmemo"> -->
       <!-- <input
           :id="['button' + index]"
@@ -210,7 +214,87 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.output_canvas {
+// .output_canvas {
+//   position: absolute;
+//   overflow: visible;
+//   width: 240px;
+//   height: 180px;
+//   left: 990px;
+//   top: 617px;
+// }
+.output_canvas1 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 230px;
+  top: 83px;
+}
+.output_canvas2 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 610px;
+  top: 83px;
+}
+.output_canvas3 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 990px;
+  top: 617px;
+}
+.output_canvas4 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 990px;
+  top: 617px;
+}
+.output_canvas5 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 990px;
+  top: 617px;
+}
+.output_canvas6 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 990px;
+  top: 617px;
+}
+.output_canvas7 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 990px;
+  top: 617px;
+}
+.output_canvas8 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 990px;
+  top: 617px;
+}
+.output_canvas9 {
+  position: absolute;
+  overflow: visible;
+  width: 240px;
+  height: 180px;
+  left: 990px;
+  top: 617px;
+}
+.output_canvas10 {
   position: absolute;
   overflow: visible;
   width: 240px;

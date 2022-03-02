@@ -1,41 +1,43 @@
 <template>
   <div class="canvasmemo">
-    <input
-      type="button"
-      id="button1"
-      v-on:click="memoJob('citizen')"
-      value="시민"
-    />
-    <input
-      type="button"
-      id="button2"
-      v-on:click="memoJob('police')"
-      value="경찰"
-    />
-    <input
-      type="button"
-      id="button3"
-      v-on:click="memoJob('doctor')"
-      value="의사"
-    />
-    <input
-      type="button"
-      id="button4"
-      v-on:click="memoJob('soldier')"
-      value="군인"
-    />
-    <input
-      type="button"
-      id="button5"
-      v-on:click="memoJob('mafia')"
-      value="마피아"
-    />
-    <input
-      type="button"
-      id="button6"
-      v-on:click="memoJob('none')"
-      value="메모삭제"
-    />
+    <div :class="['canvasmemo' + index]" v-for="index in 10" :key="index">
+      <input
+        type="button"
+        id="button1"
+        v-on:click="memoJob('citizen')"
+        value="시민"
+      />
+      <input
+        type="button"
+        id="button2"
+        v-on:click="memoJob('police')"
+        value="경찰"
+      />
+      <input
+        type="button"
+        id="button3"
+        v-on:click="memoJob('doctor')"
+        value="의사"
+      />
+      <input
+        type="button"
+        id="button4"
+        v-on:click="memoJob('soldier')"
+        value="군인"
+      />
+      <input
+        type="button"
+        id="button5"
+        v-on:click="memoJob('mafia')"
+        value="마피아"
+      />
+      <input
+        type="button"
+        id="button6"
+        v-on:click="memoJob('none')"
+        value="메모삭제"
+      />
+    </div>
   </div>
 </template>
 
@@ -86,8 +88,8 @@ export default {
   },
 
   mounted() {
-    this.videoElement = document.getElementsByClassName("input_video")[0];
-    this.canvasElement = document.getElementsByClassName("output_canvas")[0];
+    this.videoElement = document.getElementsByClassName("usercam1")[0];
+    this.canvasElement = document.getElementsByClassName("output_canvas1")[0];
     this.canvasCtx = this.canvasElement.getContext("2d");
     this.videoElement.style.display = "none";
 
@@ -211,10 +213,10 @@ export default {
                 : leftHeady - rightHeady) >
               leftHeadx - rightHeadx
             ) {
-              const canvasWidth = 400;
-              const canvasHeight = 249;
+              const canvasWidth = canvasElement.width / 2;
+              const canvasHeight = canvasElement.height / 2;
               const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-              const canvasy = canvasElement.height / 2 - canvasHeight / 2;
+              const canvasy = 0;
 
               img.onload = canvasCtx.drawImage(
                 img,
@@ -249,10 +251,10 @@ export default {
                 : leftHeady - rightHeady) >
               leftHeadx - rightHeadx
             ) {
-              const canvasWidth = 400;
-              const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+              const canvasWidth = canvasElement.width / 2;
+              const canvasHeight = canvasElement.height / 2;
               const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-              const canvasy = canvasElement.height / 2 - canvasHeight / 2;
+              const canvasy = 0;
 
               img.onload = canvasCtx.drawImage(
                 img,
@@ -286,10 +288,10 @@ export default {
                 : leftHeady - rightHeady) >
               leftHeadx - rightHeadx
             ) {
-              const canvasWidth = 400;
-              const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+              const canvasWidth = canvasElement.width / 2;
+              const canvasHeight = canvasElement.height / 2;
               const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-              const canvasy = canvasElement.height / 2 - canvasHeight / 2;
+              const canvasy = 0;
 
               img.onload = canvasCtx.drawImage(
                 img,
@@ -324,10 +326,10 @@ export default {
                 : leftHeady - rightHeady) >
               leftHeadx - rightHeadx
             ) {
-              const canvasWidth = 400;
-              const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+              const canvasWidth = canvasElement.width / 2;
+              const canvasHeight = canvasElement.height / 2;
               const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-              const canvasy = canvasElement.height / 2 - canvasHeight / 2;
+              const canvasy = 0;
 
               img.onload = canvasCtx.drawImage(
                 img,
@@ -401,12 +403,102 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.canvasmemo {
+// .canvasmemo {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 990px;
+//   top: 796px;
+//   background-color: red;
+// }
+.canvasmemo1 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 230px;
+  top: 293px;
+  background-color: red;
+}
+.canvasmemo2 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 610px;
+  top: 293px;
+  background-color: red;
+}
+.canvasmemo3 {
   position: absolute;
   overflow: visible;
   width: 320px;
   height: 30px;
   left: 990px;
+  top: 293px;
+  background-color: red;
+}
+.canvasmemo4 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 1370px;
+  top: 293px;
+  background-color: red;
+}
+.canvasmemo5 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 230px;
+  top: 560px;
+  background-color: red;
+}
+.canvasmemo6 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 1370px;
+  top: 560px;
+  background-color: red;
+}
+.canvasmemo7 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 230px;
+  top: 796px;
+  background-color: red;
+}
+.canvasmemo8 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 610px;
+  top: 796px;
+  background-color: red;
+}
+.canvasmemo9 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 990px;
+  top: 796px;
+  background-color: red;
+}
+.canvasmemo10 {
+  position: absolute;
+  overflow: visible;
+  width: 320px;
+  height: 30px;
+  left: 1370px;
   top: 796px;
   background-color: red;
 }
