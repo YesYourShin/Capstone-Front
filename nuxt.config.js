@@ -70,4 +70,8 @@ export default {
   server:{
     port: 7000
   },
+
+  serverMiddleware: [
+    {path: '/ws', handler: '~/api/srv.js'}
+  ]
 }

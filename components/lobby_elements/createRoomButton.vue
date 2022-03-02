@@ -21,6 +21,8 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -45,8 +47,8 @@ export default {
             <div class="col-span-1">
               <label class="block text-sm font-medium text-gray-700" for="mode">모드</label>
               <select class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="mode" id="mode">
-                <option value="normal">일반 모드</option>
-                <option value="extended">확장 모드</option>
+                <option value="1">일반 모드</option>
+                <option value="2">확장 모드</option>
               </select>
             </div>
             <div class="col-span-1">
@@ -65,8 +67,10 @@ export default {
         preConfirm: () => {
           const roomName = document.getElementById("room-name").value;
           const password = document.getElementById("password").value;
-          const mode = document.getElementById("mode").value;
-          const maxPlayer = document.getElementById("max-player").value;
+          const mode = parseInt(document.getElementById("mode").value);
+          const maxPlayer = parseInt(
+            document.getElementById("max-player").value
+          );
 
           if (!roomName) {
             return this.$swal.showValidationMessage(
@@ -74,11 +78,45 @@ export default {
             );
           }
 
-          return [roomName, password, mode, maxPlayer];
+          return { roomName, password, mode, maxPlayer };
         },
       });
       if (formValues) {
-        this.$swal(JSON.stringify(formValues));
+        // this.$swal(JSON.stringify(formValues));
+        const req = {
+          mode: formValues.mode,
+          name: formValues.roomName,
+          password: formValues?.password,
+          limit: formValues.maxPlayer,
+        };
+        console.log(req);
+
+        // axios
+        //   .post(
+        //     "http://localhost:3065/api/users/profile",
+        //     {
+        //       nickname: "player1",
+        //     },
+        //     { withCredentials: true }
+        //   )
+        //   .then((res) => {
+        //     console.log(res);
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
+
+        axios
+          .post("http://localhost:3065/api/games", req, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log(res);
+            console.log("make room success");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
       // this.$swal({
       //   title: "방 만들기",
