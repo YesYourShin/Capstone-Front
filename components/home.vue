@@ -190,14 +190,12 @@
 export default {
   data() {
     return {
-
+      cookie:true
     };
   },
-  methods:{
-    cookie(){
-      return document.cookie
-    }
-  },
+  computed:{
+
+  }
 };
 </script>
 
