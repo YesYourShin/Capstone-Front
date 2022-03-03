@@ -71,6 +71,10 @@ export default {
     port: 7000
   },
 
+  axios: {
+    baseURL: process.env.baseURL || 'http://localhost:3065'
+  },
+
   serverMiddleware: [
     {path: '/ws', handler: '~/api/srv.js'}
   ]
