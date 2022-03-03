@@ -9,7 +9,7 @@
         <button class="userlink">
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
-        <button class="userlink">Logout</button>
+        <button class="userlink"  @click="TestData">Logout</button>
         <p class="userlevel">Lv.250 <span class="username">Mirai0625</span></p>
         <p class="usertext">Mirai1412/Capstone-Front</p>
       </div>
@@ -75,6 +75,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "CapstoneProfile",
 
@@ -88,31 +90,42 @@ export default {
 
   methods: {
     cance() {},
-    friend() {
-      this.show1 = !this.show1;
-      if (this.show2 == true) {
-        this.show2 = !this.show2;
-      } else if (this.show3 == true) {
-        this.show3 = !this.show3;
-      }
-    },
-    ball() {
-      this.show2 = !this.show2;
-      if (this.show1 == true) {
+      friend() {
         this.show1 = !this.show1;
-      } else if (this.show3 == true) {
-        this.show3 = !this.show3;
-      }
-    },
-    record() {
-      this.show3 = !this.show3;
-      if (this.show2 == true) {
+        if (this.show2 == true) {
+          this.show2 = !this.show2;
+        } else if (this.show3 == true) {
+          this.show3 = !this.show3;
+        }
+      },
+      ball() {
         this.show2 = !this.show2;
-      } else if (this.show1 == true) {
-        this.show1 = !this.show1;
+        if (this.show1 == true) {
+          this.show1 = !this.show1;
+        } else if (this.show3 == true) {
+          this.show3 = !this.show3;
+        }
+      },
+      record() {
+        this.show3 = !this.show3;
+        if (this.show2 == true) {
+          this.show2 = !this.show2;
+        } else if (this.show1 == true) {
+          this.show1 = !this.show1;
+        }
+      },
+      TestData() {
+        axios
+          .get("/api/users")
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
-    },
   },
+
 };
 </script>
 
