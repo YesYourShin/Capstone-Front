@@ -107,9 +107,11 @@ export default {
         //   });
 
         axios
-          .post("http://localhost:3065/api/games", req, {
-            withCredentials: true,
-          })
+          .post(
+            `${this.$store.state.api}/games`,
+            req,
+            this.$store.state.payload
+          )
           .then((res) => {
             console.log(res);
             console.log("make room success");

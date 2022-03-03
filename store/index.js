@@ -14,6 +14,10 @@ export const state = () => ({
   }),
   chats: [],
   selectedIndex: -1,
+  payload: {
+    withCredentials: true,
+  },
+  api: 'http://localhost:3065/api'
 })
 
 export const mutations = {

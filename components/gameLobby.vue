@@ -43,6 +43,7 @@ import checkBoxes from "@/components/lobby_elements/checkBoxes.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
 import createRoomButton from "@/components/lobby_elements/createRoomButton.vue";
 import chatBox from "@/components/lobby_elements/chatBox.vue";
+import axios from 'axios';
 
 export default {
   components: {
@@ -55,42 +56,8 @@ export default {
   },
   data() {
     return {
+      evtSource: null,
       rooms: [
-        {
-          roomNum: 1,
-          roomName: '초보만',
-          maxPlayers: 6,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
-        {
-          roomNum: 2,
-          roomName: '마피아 게임',
-          maxPlayers: 6,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
-        {
-          roomNum: 3,
-          roomName: '매너게임 합시다',
-          maxPlayers: 8,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
-        {
-          roomNum: 4,
-          roomName: '옴팡지게 놀아보자',
-          maxPlayers: 10,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
-        {
-          roomNum: 5,
-          roomName: '그래프유출픽으로★100%수익가능★환전보장★',
-          maxPlayers: 6,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
       ]
     };
   },
@@ -105,6 +72,23 @@ export default {
       })
     }
   },
+  mounted() {
+    console.log('entered lobby');
+    axios.get(`${this.$store.state.api}/games`, this.$store.state.payload)
+      .then((res) => {
+        this.rooms = res.data.data
+      })
+
+    this.evtSource = new EventSource(`${this.$store.state.api}/games/sse`, this.$store.state.payload)
+
+    this.evtSource.onmessage = function(e) {
+      console.log(JSON.parse(e.data).data);
+      this.rooms = JSON.parse(e.data).data
+    }
+  },
+  beforeDestroy() {
+    this.evtSource?.close()
+  }
 };
 </script>
 <style lang="" scoped>
