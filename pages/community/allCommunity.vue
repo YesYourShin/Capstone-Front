@@ -66,19 +66,13 @@
 <script>
 export default {
   name: 'CapstoneCommunity',
-
   data() {
     return {
-
     };
   },
-
   mounted() {
-
   },
-
   methods: {
-
   },
 };
 </script>

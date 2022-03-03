@@ -77,6 +77,7 @@ import Profile from '../../components/profile.vue';
 export default {
   components: { Header, Profile },
   name: 'CapstonePost',
+<<<<<<< HEAD
 
   data() {
     return {
@@ -90,6 +91,15 @@ export default {
 
   methods: {
 
+=======
+  data() {
+    return {
+    };
+  },
+  mounted() {
+  },
+  methods: {
+>>>>>>> Backend
   },
 };
 </script>
