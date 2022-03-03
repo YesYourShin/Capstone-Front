@@ -43,7 +43,8 @@ import checkBoxes from "@/components/lobby_elements/checkBoxes.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
 import createRoomButton from "@/components/lobby_elements/createRoomButton.vue";
 import chatBox from "@/components/lobby_elements/chatBox.vue";
-import axios from 'axios';
+import { getGames } from '@/api/mafiaAPI'
+import axios from 'axios'
 
 export default {
   components: {
@@ -72,18 +73,23 @@ export default {
       })
     }
   },
-  mounted() {
+  async mounted() {
     console.log('entered lobby');
-    axios.get(`${this.$store.state.api}/games`, this.$store.state.payload)
-      .then((res) => {
-        this.rooms = res.data.data
-      })
+    // axios.get(`${this.$store.state.api}/games`, this.$store.state.payload)
+    //   .then((res) => {
+    //     this.rooms = res.data.data
+    //   })
+    const res = await getGames()
+    console.log(res);
+    this.rooms = res.data.data
 
     this.evtSource = new EventSource(`${this.$store.state.api}/games/sse`, this.$store.state.payload)
 
+    var abd = this
     this.evtSource.onmessage = function(e) {
-      console.log(JSON.parse(e.data).data);
-      this.rooms = JSON.parse(e.data).data
+      const data = JSON.parse(e.data).data
+      console.log(data);
+      abd.rooms = data
     }
   },
   beforeDestroy() {
