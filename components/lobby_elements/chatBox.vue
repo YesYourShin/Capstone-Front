@@ -33,14 +33,27 @@
         </div>
       </Tab>
     </transition-group>
-    <div class="h-52 bg-gray-300 flex flex-col">
-      <div class="flex-grow z-[800]"></div>
-      <input class="w-full outline-none z-[800]" type="text" />
+    <div class="h-52 bg-gray-300 flex flex-col overflow-auto">
+      <div class="grow">
+        <div class="">
+          <p v-for="message in currentMessages">{{ message }}</p>
+        </div>
+      </div>
     </div>
+    <label class="inline" for="chatInput">:</label>
+    <input
+      class="outline-none"
+      v-model="input"
+      @keyup.enter="sendMessage"
+      type="text"
+      name="chatInput"
+    />
   </div>
 </template>
 <script>
 import styled from "vue-styled-components";
+import axios from "axios";
+
 const tapProps = { index: Number, selectedIndex: Number };
 const Tab = styled("div", tapProps)`
   width: 12.5%;
@@ -73,9 +86,17 @@ export default {
   components: {
     Tab,
   },
+  head: {
+    script: [
+      {
+        src: "https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js",
+      },
+    ],
+  },
   data() {
     return {
       currentMessages: [],
+      input: "",
     };
   },
   methods: {
@@ -87,13 +108,23 @@ export default {
       console.log("tab Closed!");
       this.$store.commit("tabClose", index);
     },
+    sendMessage() {
+      this.socket.emit("msg", this.input);
+      this.input = "";
+    },
+  },
+  async mounted() {
+    await axios.get("/ws/init").then((resp) => {
+      this.socket = io();
+      this.socket.on("msg", (msg) => this.currentMessages.push(msg));
+    });
   },
 };
 </script>
 <style lang="css" scoped>
 .list-enter-active,
 .list-leave-active {
-  transition: all 1s;
+  transition: all 0.5s;
 }
 
 .list-enter,

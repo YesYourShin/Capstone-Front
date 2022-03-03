@@ -3,18 +3,18 @@
     <div class="flex-grow">
       <div class="flex">
         <div class=" bg-gradient-to-r via-gray-300 from-transparent flex justify-center items-center">
-          <p>방 제목입니다</p>
+          <p>{{game.name}}</p>
         </div>
         <sideBar></sideBar>
       </div>
       <div class="px-2 mt-10">
         <div class="grid grid-cols-5 justify-evenly">
-          <template v-for="user in players">
+          <template v-for="user in game.members">
             <div class="justify-self-center px-2 pb-3 w-full">
               <div
                 class="aspect-video bg-fuchsia-400 border border-red-600"
               ></div>
-              <p class="bg-white rounded-b-lg">{{user.profile ? user.profile.nickname : ''}}</p>
+              <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p>
             </div>
           </template>
         </div>
@@ -42,6 +42,8 @@
 <script>
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
+import axios from 'axios'
+
 export default {
   components: {
     chatBox,
@@ -49,38 +51,24 @@ export default {
   },
   data() {
     return {
-      players: [
-        {
-          id: 1,
-          social_id: 1111,
-          provider: 'KAKAO',
-          role: 1,
-          profile: {
-            id: 1,
-            nickname: 'playerone',
-            image: 'url',
-            self_introduction: 'hi',
-            manner: 0,
-            level: 1,
-            exp: 100,
-          },
-        },
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {}
-      ]
+      game: {}
     }
   },
   methods: {
-    exit() {
+    async exit() {
+      const res = await axios.delete(`${this.$store.state.api}/games/${this.$route.params.id}/users/me`, this.$store.state.payload)
+      console.log(res);
       this.$router.push(`/lobby`)
     }
+  },
+  mounted() {
+    axios.get(`${this.$store.state.api}/games/${this.$route.params.id}`, this.$store.state.payload)
+      .then((res) => {
+        this.game = res.data.data
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   },
 };
 </script>
