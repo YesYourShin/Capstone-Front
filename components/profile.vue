@@ -79,11 +79,16 @@ export default {
   name: "CapstoneProfile",
 
   data() {
+    // axios.get('http://localhost:3065/api/users') .then(res => {
+    //    console.log(res.data)
+    //    })
+
     return {
       show1: false,
       show2: false,
       show3: false,
     };
+
   },
 
   methods: {

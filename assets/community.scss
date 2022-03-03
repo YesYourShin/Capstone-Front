@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 1920px;
   min-width: 1106px;
-  height: 905px;
+  height: 100%;
   max-height: 935px;
   min-height: 935px;
   position: relative;
@@ -139,6 +139,11 @@
         font-size: 25px;
         padding: 0 50px;
         margin: 10px auto;
+
+        &:hover{
+          animation: color1 0.5s;
+          animation-fill-mode: forwards;
+        }
       }
 
       .mtb1{

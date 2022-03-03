@@ -13,6 +13,7 @@
     "@nuxt/kit": "^0.8.1-edge",
     "@popperjs/core": "^2.11.2",
     "@sweetalert2/theme-wordpress-admin": "^5.0.10",
+    "axios": "^0.26.0",
     "core-js": "^3.19.3",
     "nuxt": "^2.15.8",
     "socket.io": "^4.4.1",

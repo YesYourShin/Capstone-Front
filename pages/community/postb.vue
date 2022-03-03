@@ -7,19 +7,19 @@
           <Profile/>
           <ul class="communityUl">
             <li class="communityLi">
-              <NuxtLink to="/allCommunity" class="Li">전체 게시판</NuxtLink>
+              <NuxtLink to="/community/allCommunity" class="Li">전체 게시판</NuxtLink>
               </li>
             <li class="communityLi">
-                <NuxtLink to="/cement" class="Li">공지 사항</NuxtLink>
+                <NuxtLink to="/community/cement" class="Li">공지 사항</NuxtLink>
             </li>
             <li class="communityLi">
-                <NuxtLink to="/posta" class="Li">자유 게시판</NuxtLink>
+                <NuxtLink to="/community/posta" class="Li">자유 게시판</NuxtLink>
+            </li>
+            <li class="communityLi">
+                <NuxtLink to="/community/postb" class="Li">정보 게시판</NuxtLink>
             </li>
             <li class="communityLi1">
-                <NuxtLink to="/postb" class="Li1">정보 게시판</NuxtLink>
-            </li>
-            <li class="communityLi">
-                <NuxtLink to="/postc" class="Li">인기 게시판</NuxtLink>
+                <NuxtLink to="/community/postc" class="Li1">인기 게시판</NuxtLink>
             </li>
           </ul>
         </div>
@@ -28,7 +28,7 @@
 
         <div class="communityPostSerchBox">
           <div class="psb1">
-            <p>정보 게시판</p>
+            <p>인기 게시판</p>
           </div>
           <div class="psb2">
             <input type="text">
@@ -62,19 +62,13 @@
 
 <script>
 export default {
-
   data() {
     return {
-
     };
   },
-
   mounted() {
-
   },
-
   methods: {
-
   },
 };
 </script>

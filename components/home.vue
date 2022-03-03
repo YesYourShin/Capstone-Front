@@ -4,7 +4,8 @@
       <Banner/>
     </div>
     <div class="homeProFile">
-      <Profile/>
+      <div v-if="cookie"><Profile/></div>
+      <div v-else><LoginProfile/></div>
       <div class="guideBox">
         <div class="guides1">
           <img src="@/assets/homeimg/ny1.png" class="yimg1">
@@ -187,20 +188,15 @@
 
 <script>
 export default {
-  name: 'CapstoneHome',
-
   data() {
     return {
 
     };
   },
-
-  mounted() {
-
-  },
-
-  methods: {
-
+  methods:{
+    cookie(){
+      return document.cookie
+    }
   },
 };
 </script>

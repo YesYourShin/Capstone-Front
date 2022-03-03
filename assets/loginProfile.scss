@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap');
+
+.loginbox{
+  position: relative;
+  width: 416px;
+  height: 186px;
+  font-family: 'Dongle', sans-serif;
+  font-size: 30px;
+  border: 3px solid black;
+  font-weight: bold;
+  display: flex;
+  flex-wrap: wrap;
+  background-image: url("@/assets/profileimg/city.png");
+  background-size: 650px 450px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-color: #fff;
+
+  .btn1{
+    border-radius: 5px;
+    background-color: rgb(0, 0, 255);
+    width: 55%;
+    height: 33px;
+    line-height: 36px;
+    margin: auto;
+    color: white;
+
+    &:hover{
+      animation: test1 0.5s;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  .btn2{
+    border-radius: 5px;
+    background-color: yellow;
+    width: 55%;
+    height: 33px;
+    line-height: 36px;
+    margin: auto;
+    &:hover{
+      animation: test1 0.5s;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  .btn3{
+    border-radius: 5px;
+    background-color: green;
+    width: 55%;
+    height: 33px;
+    line-height: 36px;
+    margin: auto;
+    color: white;
+    &:hover{
+      animation: test1 0.5s;
+      animation-fill-mode: forwards;
+    }
+  }
+}
+
+@keyframes test1{
+	0%{
+
+  }
+	100%{
+    width: 60%;
+    background-color: white;
+    color: black;
+  }
+	}
