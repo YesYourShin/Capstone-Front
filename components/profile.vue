@@ -9,8 +9,8 @@
         <button class="userlink">
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
-        <button class="userlink"  @click="TestData">Logout</button>
-        <p class="userlevel">Lv.250 <span class="username">Mirai0625</span></p>
+        <button class="userlink">Logout</button>
+        <p class="userlevel">Lv.250 <span class="username">ds</span></p>
         <p class="usertext">Mirai1412/Capstone-Front</p>
       </div>
 
@@ -85,6 +85,7 @@ export default {
       show1: false,
       show2: false,
       show3: false,
+      data:[]
     };
   },
 
@@ -114,18 +115,16 @@ export default {
           this.show1 = !this.show1;
         }
       },
-      TestData() {
-        axios
-          .get("/api/users")
-          .then(res => {
-            console.log(res);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
   },
-
+  created(){
+    axios.get('http://localhost:3065/api/users', { withCredentials: true})
+    .then(function(response) {
+    console.log(response);
+    })
+    .catch(function(error) {
+    console.log(error);
+    });
+  }
 };
 </script>
 
