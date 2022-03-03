@@ -113,12 +113,12 @@ export default {
       this.input = "";
     },
   },
-  async mounted() {
-    await axios.get("/ws/init").then((resp) => {
-      this.socket = io();
-      this.socket.on("msg", (msg) => this.currentMessages.push(msg));
-    });
-  },
+  // async mounted() {
+  //   await axios.get("/ws/init").then((resp) => {
+  //     this.socket = io();
+  //     this.socket.on("msg", (msg) => this.currentMessages.push(msg));
+  //   });
+  // },
 };
 </script>
 <style lang="css" scoped>
