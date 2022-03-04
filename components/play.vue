@@ -266,7 +266,7 @@ export default {
   width: 240px;
   height: 180px;
   left: 1370px;
-  top: 263px;
+  top: 83px;
 }
 .output_canvas5 {
   position: absolute;
