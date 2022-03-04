@@ -44,6 +44,7 @@
       text-align: center;
       justify-content: right;
 
+
       .btnlink{
         color: white;
         text-decoration: none;
@@ -62,11 +63,15 @@
         background-color: black;
         color: white;
         border: 2px solid rgb(131, 131, 131)
+
       }
 
       .userlink:hover{
         animation: colorturn 0.5s;
         animation-fill-mode: forwards;
+        .btnlink{
+          color: black;
+        }
       }
 
       .userlevel{

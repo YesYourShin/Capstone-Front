@@ -4,13 +4,12 @@
       <div class="profile1">
         <img src="@/assets/pageimg/test.jpg" class="profileimg" />
       </div>
-
       <div class="profile2">
         <button class="userlink">
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
-        <button class="userlink">Logout</button>
-        <p class="userlevel">Lv.250 <span class="username">ds</span></p>
+        <button class="userlink" @click="logout">Logout</button>
+        <p v-if="data" class="userlevel">Lv.250 <span class="username">{{ data.id }}</span></p>
         <p class="usertext">Mirai1412/Capstone-Front</p>
       </div>
 
@@ -63,7 +62,7 @@
         </div>
       </div>
 
-      <div class="cancebutton" :click="cance">
+      <div class="cancebutton" >
         <button>전체 삭제</button>
       </div>
     </div>
@@ -85,12 +84,15 @@ export default {
       show1: false,
       show2: false,
       show3: false,
-      data:[]
+      data: [],
     };
   },
 
+  async mounted() {
+    const response = await axios.get("http://localhost:3065/api/users", { withCredentials:true});
+    this.data = response.data.data;
+  },
   methods: {
-    cance() {},
       friend() {
         this.show1 = !this.show1;
         if (this.show2 == true) {
@@ -115,19 +117,19 @@ export default {
           this.show1 = !this.show1;
         }
       },
+      logout(){
+        const link = 'http://localhost:7000/';
+
+        if(this.data = Object){
+          axios.post("http://localhost:3065/api/auth/logout")
+          console.log('logout')
+           location.href=link;
+        }
+      },
   },
-  created(){
-    axios.get('http://localhost:3065/api/users', { withCredentials: true})
-    .then(function(response) {
-    console.log(response);
-    })
-    .catch(function(error) {
-    console.log(error);
-    });
-  }
+
 };
 </script>
-
 <style lang="scss" scoped>
 @import "~assets/profile.scss";
 </style>
