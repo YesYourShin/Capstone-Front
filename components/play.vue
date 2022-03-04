@@ -3,9 +3,23 @@
     <!-- <Billboard blilboard-vote="vote-result"/> -->
     <Billboard />
     <div class="videobox">
-      <video :class="['usercam' + index]" v-for="index in 10" :key="index">
+      <video
+        :class="['usercam' + index]"
+        :id="['usercam' + index]"
+        v-for="index in 10"
+        :key="index"
+        width="640"
+        height="480"
+        autoplay
+      >
         {{ index }}
       </video>
+      <!-- <video
+        id="usercam1"
+        width="640"
+        height="480"
+        autoplay
+      ></video> -->
       <canvas
         :class="['output_canvas' + index]"
         v-for="index in 10"
@@ -244,38 +258,38 @@ export default {
   width: 240px;
   height: 180px;
   left: 990px;
-  top: 617px;
+  top: 83px;
 }
 .output_canvas4 {
   position: absolute;
   overflow: visible;
   width: 240px;
   height: 180px;
-  left: 990px;
-  top: 617px;
+  left: 1370px;
+  top: 263px;
 }
 .output_canvas5 {
   position: absolute;
   overflow: visible;
   width: 240px;
   height: 180px;
-  left: 990px;
-  top: 617px;
+  left: 230px;
+  top: 350px;
 }
 .output_canvas6 {
   position: absolute;
   overflow: visible;
   width: 240px;
   height: 180px;
-  left: 990px;
-  top: 617px;
+  left: 1370px;
+  top: 350px;
 }
 .output_canvas7 {
   position: absolute;
   overflow: visible;
   width: 240px;
   height: 180px;
-  left: 990px;
+  left: 230px;
   top: 617px;
 }
 .output_canvas8 {
@@ -283,7 +297,7 @@ export default {
   overflow: visible;
   width: 240px;
   height: 180px;
-  left: 990px;
+  left: 610px;
   top: 617px;
 }
 .output_canvas9 {
@@ -299,7 +313,7 @@ export default {
   overflow: visible;
   width: 240px;
   height: 180px;
-  left: 990px;
+  left: 1370px;
   top: 617px;
 }
 // .usercam9 {
