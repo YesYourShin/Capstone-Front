@@ -4,37 +4,37 @@
       <input
         type="button"
         id="button1"
-        v-on:click="memoJob('citizen')"
+        v-on:click="memoJob('citizen', index)"
         value="시민"
       />
       <input
         type="button"
         id="button2"
-        v-on:click="memoJob('police')"
+        v-on:click="memoJob('police', index)"
         value="경찰"
       />
       <input
         type="button"
         id="button3"
-        v-on:click="memoJob('doctor')"
+        v-on:click="memoJob('doctor', index)"
         value="의사"
       />
       <input
         type="button"
         id="button4"
-        v-on:click="memoJob('soldier')"
+        v-on:click="memoJob('soldier', index)"
         value="군인"
       />
       <input
         type="button"
         id="button5"
-        v-on:click="memoJob('mafia')"
+        v-on:click="memoJob('mafia', index)"
         value="마피아"
       />
       <input
         type="button"
         id="button6"
-        v-on:click="memoJob('none')"
+        v-on:click="memoJob('none', index)"
         value="메모삭제"
       />
     </div>
@@ -78,12 +78,12 @@ export default {
   data() {
     return {
       userNum: 3,
-      imgWidth: 0,
-      imgHeight: 0,
-      imgSrc: "",
-      videoElement: "",
-      canvasElement: "",
-      canvasCtx: "",
+      imgWidth: [],
+      imgHeight: [],
+      imgSrc: [],
+      // videoElement: "",
+      canvasElement: [],
+      canvasCtx: [],
     };
   },
 
@@ -98,21 +98,10 @@ export default {
         "output_canvas" + i
       )[0];
       const canvasCtx = canvasElement.getContext("2d");
-      myFace.style.display = "none";
-      let myStream;
 
-      const faceMesh = new FaceMesh({
-        locateFile: (file) => {
-          return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-        },
-      });
-      faceMesh.setOptions({
-        maxNumFaces: 1,
-        refineLandmarks: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-      });
-      faceMesh.onResults(onResults);
+      myFace.style.display = "none";
+
+      let myStream;
 
       async function getMedia() {
         try {
@@ -126,6 +115,19 @@ export default {
           console.log(e);
         }
       }
+
+      const faceMesh = new FaceMesh({
+        locateFile: (file) => {
+          return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+        },
+      });
+      faceMesh.setOptions({
+        maxNumFaces: 1,
+        refineLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
+      faceMesh.onResults(onResults);
 
       getMedia();
 
@@ -208,10 +210,16 @@ export default {
   // 해야할일, 투표
   methods: {
     // onResults(results) {
-    //   let canvasElement = this.canvasElement;
-    //   let canvasCtx = this.canvasCtx;
+
+    //   for (let i = 1; i <= 10; i++) {
+    //     const canvasElement = document.getElementsByClassName(
+    //       "output_canvas" + i
+    //     )[0];
+    //     const canvasCtx = canvasElement.getContext("2d");
+    //   }
+
     //   let img = new Image();
-    //   img.src = this.imgSrc;
+    //   img.src = this.imgSrc || "";
     //   let imgWidth = this.imgWidth;
     //   let imgHeight = this.imgHeight;
     //   canvasCtx.save();
@@ -457,19 +465,20 @@ export default {
     //     canvasCtx.restore();
     //   }
     // },
-    memoJob(job) {
+    memoJob(job, index) {
       // let img = new Image();
       // img.src = "";
       // let imgWidth = 0;
       // let imgHeight = 0;
       if (job == "citizen") {
-        this.imgSrc = "";
-        this.imgWidth = 0;
-        this.imgHeight = 0;
+        this.imgSrc[index] = "";
+        this.imgWidth[index] = 0;
+        this.imgHeight[index] = 0;
       } else if (job == "police") {
-        this.imgSrc = require("../assets/image/police_hat.png");
-        this.imgWidth = 600;
-        this.imgHeight = 451;
+        this.imgSrc[index] = require("../assets/image/police_hat.png");
+        this.imgWidth[index] = 600;
+        this.imgHeight[index] = 451;
+        console.log(this.imgSrc[index]);
       } else if (job == "doctor") {
         this.imgSrc = require("../assets/image/doctor_hat.png");
         this.imgWidth = 1000;
