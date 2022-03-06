@@ -82,8 +82,13 @@ export default {
       imgHeight: [],
       imgSrc: [],
       // videoElement: "",
-      canvasElement: [],
-      canvasCtx: [],
+      canvasElement: "",
+      canvasCtx: "",
+      test: 123,
+      imgSrc: [],
+      img: ["", "", "", "", "", "", "", "", "", ""],
+      imgWidth: [],
+      imgHeight: [],
     };
   },
 
@@ -92,13 +97,14 @@ export default {
     // this.canvasElement = document.getElementsByClassName("output_canvas1")[0];
     // this.canvasCtx = this.canvasElement.getContext("2d");
     // this.videoElement.style.display = "none";
-    for (let i = 1; i <= 10; i++) {
-      const myFace = document.getElementById("usercam" + i);
-      const canvasElement = document.getElementsByClassName(
-        "output_canvas" + i
+    for (let i = 0; i < 10; i++) {
+      const myFace = document.getElementById(`usercam${i + 1}`);
+      this.canvasElement = document.getElementsByClassName(
+        `output_canvas${i + 1}`
       )[0];
-      const canvasCtx = canvasElement.getContext("2d");
-
+      this.canvasCtx = this.canvasElement.getContext("2d");
+      const canvasElement = this.canvasElement;
+      const canvasCtx = this.canvasCtx;
       myFace.style.display = "none";
 
       let myStream;
@@ -116,33 +122,24 @@ export default {
         }
       }
 
-      const faceMesh = new FaceMesh({
-        locateFile: (file) => {
-          return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-        },
-      });
-      faceMesh.setOptions({
-        maxNumFaces: 1,
-        refineLandmarks: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-      });
-      faceMesh.onResults(onResults);
+      let onResults = (results) => {
+        // console.log(results);
+        // console.log(i);
 
-      getMedia();
+        // let img = new Image();
+        // img.src = require("../assets/image/mafia_hat.png");
+        // let imgWidth = 20;
+        // let imgHeight = 20;
 
-      const camera = new Camera(myFace, {
-        onFrame: async () => {
-          await faceMesh.send({ image: myFace });
-        },
-        width: 640,
-        height: 480,
-      });
-      camera.start();
-
-      function onResults(results) {
+        this.img[i] = new Image();
+        if (this.imgSrc[i]) this.img[i].src = this.imgSrc[i];
+        let img = this.img[i];
+        let imgWidth = this.imgWidth[i];
+        let imgHeight = this.imgHeight[i];
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        canvasCtx.translate(canvasElement.width, 0);
+        canvasCtx.scale(-1, 1);
         canvasCtx.drawImage(
           results.image,
           0,
@@ -180,44 +177,212 @@ export default {
             drawConnectors(canvasCtx, landmarks, FACEMESH_LIPS, {
               color: "#E0E0E0",
             });
+            let leftHeadx = 0;
+            let leftHeady = 0;
+            let rightHeadx = 0;
+            let rightHeady = 0;
+            for (let i = 0; i < landmarks.length; i++) {
+              for (let j = i; j == i; j++) {
+                // 오른쪽 머리
+                if (i == 162) {
+                  rightHeadx = landmarks[i].x * canvasElement.width;
+                  rightHeady = landmarks[i].y * canvasElement.height;
+                }
+                // 왼쪽 머리
+                if (i == 389) {
+                  leftHeadx = landmarks[i].x * canvasElement.width;
+                  leftHeady = landmarks[i].y * canvasElement.height;
+                }
+              }
+            }
+            if (img.src.includes("mafia_hat.png")) {
+              if (
+                (rightHeady > leftHeady
+                  ? rightHeady - leftHeady
+                  : leftHeady - rightHeady) >
+                leftHeadx - rightHeadx
+              ) {
+                const canvasWidth = canvasElement.width / 2;
+                const canvasHeight = canvasElement.height / 2;
+                const canvasx = canvasElement.width / 2 - canvasWidth / 2;
+                const canvasy = 0;
+                img.onload = canvasCtx.drawImage(
+                  img,
+                  canvasx,
+                  canvasy,
+                  canvasWidth,
+                  canvasHeight
+                );
+              } else {
+                // canvas x y는 화면상의 이미지 위치
+                // canvas Width Height는 이미지의 크기
+                const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
+                const canvasWidth = (leftHeadx - rightHeadx) * 2;
+                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+                const canvasy =
+                  rightHeady > leftHeady
+                    ? rightHeady - canvasHeight - (rightHeady - leftHeady) / 2
+                    : rightHeady - canvasHeight + (leftHeady - rightHeady) / 2;
+                img.onload = canvasCtx.drawImage(
+                  img,
+                  canvasx,
+                  canvasy,
+                  canvasWidth,
+                  canvasHeight
+                );
+              }
+            } else if (img.src.includes("police_hat.png")) {
+              if (
+                (rightHeady > leftHeady
+                  ? rightHeady - leftHeady
+                  : leftHeady - rightHeady) >
+                leftHeadx - rightHeadx
+              ) {
+                const canvasWidth = canvasElement.width / 2;
+                const canvasHeight = canvasElement.height / 2;
+                const canvasx = canvasElement.width / 2 - canvasWidth / 2;
+                const canvasy = 0;
+                img.onload = canvasCtx.drawImage(
+                  img,
+                  canvasx,
+                  canvasy,
+                  canvasWidth,
+                  canvasHeight
+                );
+              } else {
+                // canvas x y는 화면상의 이미지 위치
+                // canvas Width Height는 이미지의 크기
+                const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
+                const canvasWidth = (leftHeadx - rightHeadx) * 2;
+                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+                const canvasy =
+                  rightHeady > leftHeady
+                    ? rightHeady - canvasHeight - (rightHeady - leftHeady) / 2
+                    : rightHeady - canvasHeight + (leftHeady - rightHeady) / 2;
+                img.onload = canvasCtx.drawImage(
+                  img,
+                  canvasx,
+                  canvasy,
+                  canvasWidth,
+                  canvasHeight
+                );
+              }
+            } else if (img.src.includes("doctor_hat.png")) {
+              if (
+                (rightHeady > leftHeady
+                  ? rightHeady - leftHeady
+                  : leftHeady - rightHeady) >
+                leftHeadx - rightHeadx
+              ) {
+                const canvasWidth = canvasElement.width / 2;
+                const canvasHeight = canvasElement.height / 2;
+                const canvasx = canvasElement.width / 2 - canvasWidth / 2;
+                const canvasy = 0;
+                img.onload = canvasCtx.drawImage(
+                  img,
+                  canvasx,
+                  canvasy,
+                  canvasWidth,
+                  canvasHeight
+                );
+              } else {
+                // canvas x y는 화면상의 이미지 위치
+                // canvas Width Height는 이미지의 크기
+                const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
+                const canvasWidth = (leftHeadx - rightHeadx) * 2;
+                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+                const canvasy =
+                  rightHeady > leftHeady
+                    ? rightHeady - canvasHeight - (rightHeady - leftHeady) / 2
+                    : rightHeady - canvasHeight + (leftHeady - rightHeady) / 2;
+                img.onload = canvasCtx.drawImage(
+                  img,
+                  canvasx,
+                  canvasy,
+                  canvasWidth,
+                  canvasHeight
+                );
+              }
+            } else if (img.src.includes("military_helmet.png")) {
+              if (
+                (rightHeady > leftHeady
+                  ? rightHeady - leftHeady
+                  : leftHeady - rightHeady) >
+                leftHeadx - rightHeadx
+              ) {
+                const canvasWidth = canvasElement.width / 2;
+                const canvasHeight = canvasElement.height / 2;
+                const canvasx = canvasElement.width / 2 - canvasWidth / 2;
+                const canvasy = 0;
+                img.onload = canvasCtx.drawImage(
+                  img,
+                  canvasx,
+                  canvasy,
+                  canvasWidth,
+                  canvasHeight
+                );
+              } else {
+                // canvas x y는 화면상의 이미지 위치
+                // canvas Width Height는 이미지의 크기
+                const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
+                const canvasWidth = (leftHeadx - rightHeadx) * 2;
+                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+                // const canvasy = (rightHeady > leftHeady ? rightHeady-canvasHeight-(rightHeady - leftHeady) / 2 : rightHeady-canvasHeight+(leftHeady - rightHeady) / 2)
+                const canvasy =
+                  rightHeady > leftHeady
+                    ? rightHeady -
+                      (canvasHeight / 2 + canvasHeight / 5) -
+                      (rightHeady - leftHeady) / 2
+                    : leftHeady -
+                      (canvasHeight / 2 + canvasHeight / 5) -
+                      (leftHeady - rightHeady) / 2;
+                img.onload = canvasCtx.drawImage(
+                  img,
+                  canvasx,
+                  canvasy,
+                  canvasWidth,
+                  canvasHeight
+                );
+              }
+            }
           }
         }
         canvasCtx.restore();
-      }
-    }
-    // const faceMesh = new FaceMesh({
-    //   locateFile: (file) => {
-    //     return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-    //   },
-    // });
-    // faceMesh.setOptions({
-    //   maxNumFaces: 1,
-    //   refineLandmarks: true,
-    //   minDetectionConfidence: 0.5,
-    //   minTrackingConfidence: 0.5,
-    // });
-    // faceMesh.onResults(this.onResults);
+      };
 
-    // const camera = new Camera(this.videoElement, {
-    //   onFrame: async () => {
-    //     await faceMesh.send({ image: this.videoElement });
-    //   },
-    //   width: 640,
-    //   height: 480,
-    // });
-    // camera.start();
+      const faceMesh = new FaceMesh({
+        locateFile: (file) => {
+          return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+        },
+      });
+      faceMesh.setOptions({
+        maxNumFaces: 1,
+        refineLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
+      faceMesh.onResults(onResults);
+      getMedia();
+
+      const camera = new Camera(myFace, {
+        onFrame: async () => {
+          await faceMesh.send({ image: myFace });
+        },
+        width: 640,
+        height: 480,
+      });
+      camera.start();
+    }
   },
   // 해야할일, 투표
   methods: {
     // onResults(results) {
-
     //   for (let i = 1; i <= 10; i++) {
     //     const canvasElement = document.getElementsByClassName(
     //       "output_canvas" + i
     //     )[0];
     //     const canvasCtx = canvasElement.getContext("2d");
     //   }
-
     //   let img = new Image();
     //   img.src = this.imgSrc || "";
     //   let imgWidth = this.imgWidth;
@@ -237,13 +402,11 @@ export default {
     //     canvasElement.width,
     //     canvasElement.height
     //   );
-
     //   if (results.multiFaceLandmarks.length == 0) {
     //     const canvasWidth = canvasElement.width / 2;
     //     const canvasHeight = canvasElement.height / 2;
     //     const canvasx = canvasElement.width / 2 - canvasWidth / 2;
     //     const canvasy = 0;
-
     //     // console.log(canvasy);
     //     img.onload = canvasCtx.drawImage(
     //       img,
@@ -252,7 +415,6 @@ export default {
     //       canvasWidth,
     //       canvasHeight
     //     );
-
     //     canvasCtx.restore();
     //   } else if (results.multiFaceLandmarks) {
     //     for (const landmarks of results.multiFaceLandmarks) {
@@ -284,7 +446,6 @@ export default {
     //       drawConnectors(canvasCtx, landmarks, FACEMESH_LIPS, {
     //         color: "#E0E0E0",
     //       });
-
     //       let leftHeadx = 0;
     //       let leftHeady = 0;
     //       let rightHeadx = 0;
@@ -303,7 +464,6 @@ export default {
     //           }
     //         }
     //       }
-
     //       if (img.src.includes("mafia_hat.png")) {
     //         if (
     //           (rightHeady > leftHeady
@@ -315,7 +475,6 @@ export default {
     //           const canvasHeight = canvasElement.height / 2;
     //           const canvasx = canvasElement.width / 2 - canvasWidth / 2;
     //           const canvasy = 0;
-
     //           img.onload = canvasCtx.drawImage(
     //             img,
     //             canvasx,
@@ -333,7 +492,6 @@ export default {
     //             rightHeady > leftHeady
     //               ? rightHeady - canvasHeight - (rightHeady - leftHeady) / 2
     //               : rightHeady - canvasHeight + (leftHeady - rightHeady) / 2;
-
     //           img.onload = canvasCtx.drawImage(
     //             img,
     //             canvasx,
@@ -353,7 +511,6 @@ export default {
     //           const canvasHeight = canvasElement.height / 2;
     //           const canvasx = canvasElement.width / 2 - canvasWidth / 2;
     //           const canvasy = 0;
-
     //           img.onload = canvasCtx.drawImage(
     //             img,
     //             canvasx,
@@ -390,7 +547,6 @@ export default {
     //           const canvasHeight = canvasElement.height / 2;
     //           const canvasx = canvasElement.width / 2 - canvasWidth / 2;
     //           const canvasy = 0;
-
     //           img.onload = canvasCtx.drawImage(
     //             img,
     //             canvasx,
@@ -408,7 +564,6 @@ export default {
     //             rightHeady > leftHeady
     //               ? rightHeady - canvasHeight - (rightHeady - leftHeady) / 2
     //               : rightHeady - canvasHeight + (leftHeady - rightHeady) / 2;
-
     //           img.onload = canvasCtx.drawImage(
     //             img,
     //             canvasx,
@@ -428,7 +583,6 @@ export default {
     //           const canvasHeight = canvasElement.height / 2;
     //           const canvasx = canvasElement.width / 2 - canvasWidth / 2;
     //           const canvasy = 0;
-
     //           img.onload = canvasCtx.drawImage(
     //             img,
     //             canvasx,
@@ -451,7 +605,6 @@ export default {
     //               : leftHeady -
     //                 (canvasHeight / 2 + canvasHeight / 5) -
     //                 (leftHeady - rightHeady) / 2;
-
     //           img.onload = canvasCtx.drawImage(
     //             img,
     //             canvasx,
@@ -471,30 +624,30 @@ export default {
       // let imgWidth = 0;
       // let imgHeight = 0;
       if (job == "citizen") {
-        this.imgSrc[index] = "";
-        this.imgWidth[index] = 0;
-        this.imgHeight[index] = 0;
+        this.imgSrc[index - 1] = "";
+        this.imgWidth[index - 1] = 0;
+        this.imgHeight[index - 1] = 0;
       } else if (job == "police") {
-        this.imgSrc[index] = require("../assets/image/police_hat.png");
-        this.imgWidth[index] = 600;
-        this.imgHeight[index] = 451;
+        this.imgSrc[index - 1] = require("../assets/image/police_hat.png");
+        this.imgWidth[index - 1] = 600;
+        this.imgHeight[index - 1] = 451;
         console.log(this.imgSrc[index]);
       } else if (job == "doctor") {
-        this.imgSrc = require("../assets/image/doctor_hat.png");
-        this.imgWidth = 1000;
-        this.imgHeight = 630;
+        this.imgSrc[index - 1] = require("../assets/image/doctor_hat.png");
+        this.imgWidth[index - 1] = 1000;
+        this.imgHeight[index - 1] = 630;
       } else if (job == "soldier") {
-        this.imgSrc = require("../assets/image/military_helmet.png");
-        this.imgWidth = 246;
-        this.imgHeight = 250;
+        this.imgSrc[index - 1] = require("../assets/image/military_helmet.png");
+        this.imgWidth[index - 1] = 246;
+        this.imgHeight[index - 1] = 250;
       } else if (job == "mafia") {
-        this.imgSrc = require("../assets/image/mafia_hat.png");
-        this.imgWidth = 1125;
-        this.imgHeight = 701;
+        this.imgSrc[index - 1] = require("../assets/image/mafia_hat.png");
+        this.imgWidth[index - 1] = 1125;
+        this.imgHeight[index - 1] = 701;
       } else if (job == "none") {
-        this.imgSrc = "";
-        this.imgWidth = 0;
-        this.imgHeight = 0;
+        this.imgSrc[index - 1] = "";
+        this.imgWidth[index - 1] = 0;
+        this.imgHeight[index - 1] = 0;
       }
     },
   },
