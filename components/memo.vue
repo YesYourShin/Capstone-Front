@@ -86,25 +86,19 @@ export default {
       canvasCtx: "",
       test: 123,
       imgSrc: [],
-      img: ["", "", "", "", "", "", "", "", "", ""],
+      img: [],
       imgWidth: [],
       imgHeight: [],
     };
   },
 
   mounted() {
-    // this.videoElement = document.getElementsByClassName("usercam1")[0];
-    // this.canvasElement = document.getElementsByClassName("output_canvas1")[0];
-    // this.canvasCtx = this.canvasElement.getContext("2d");
-    // this.videoElement.style.display = "none";
     for (let i = 0; i < 10; i++) {
       const myFace = document.getElementById(`usercam${i + 1}`);
-      this.canvasElement = document.getElementsByClassName(
+      const canvasElement = document.getElementsByClassName(
         `output_canvas${i + 1}`
       )[0];
-      this.canvasCtx = this.canvasElement.getContext("2d");
-      const canvasElement = this.canvasElement;
-      const canvasCtx = this.canvasCtx;
+      const canvasCtx = canvasElement.getContext("2d");
       myFace.style.display = "none";
 
       let myStream;
@@ -123,14 +117,6 @@ export default {
       }
 
       let onResults = (results) => {
-        // console.log(results);
-        // console.log(i);
-
-        // let img = new Image();
-        // img.src = require("../assets/image/mafia_hat.png");
-        // let imgWidth = 20;
-        // let imgHeight = 20;
-
         this.img[i] = new Image();
         if (this.imgSrc[i]) this.img[i].src = this.imgSrc[i];
         let img = this.img[i];
@@ -147,6 +133,26 @@ export default {
           canvasElement.width,
           canvasElement.height
         );
+
+        if (results.multiFaceLandmarks.length == 0) {
+          // canvas x y는 화면상의 이미지 위치
+          // canvas Width Height는 이미지의 크기
+          const canvasWidth = canvasElement.width / 2;
+          const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+          const canvasx = canvasElement.width / 2 - canvasWidth / 2;
+          // const canvasy = canvasElement.height / 2 - canvasHeight / 2;
+          const canvasy = 0;
+
+          // console.log(canvasx)
+          img.onload = canvasCtx.drawImage(
+            img,
+            canvasx,
+            canvasy,
+            canvasWidth,
+            canvasHeight
+          );
+        }
+
         if (results.multiFaceLandmarks) {
           for (const landmarks of results.multiFaceLandmarks) {
             drawConnectors(canvasCtx, landmarks, FACEMESH_TESSELATION, {
@@ -177,10 +183,18 @@ export default {
             drawConnectors(canvasCtx, landmarks, FACEMESH_LIPS, {
               color: "#E0E0E0",
             });
+
             let leftHeadx = 0;
             let leftHeady = 0;
             let rightHeadx = 0;
             let rightHeady = 0;
+
+            let imgCitizenHat = "";
+            let imgPoliceHat = img.src.includes("police_hat.png");
+            let imgDoctorHat = img.src.includes("doctor_hat.png");
+            let imgMilitaryHelmet = img.src.includes("military_helmet.png");
+            let imgMafiaHat = img.src.includes("mafia_hat.png");
+
             for (let i = 0; i < landmarks.length; i++) {
               for (let j = i; j == i; j++) {
                 // 오른쪽 머리
@@ -195,7 +209,8 @@ export default {
                 }
               }
             }
-            if (img.src.includes("mafia_hat.png")) {
+
+            if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
               if (
                 (rightHeady > leftHeady
                   ? rightHeady - leftHeady
@@ -203,7 +218,7 @@ export default {
                 leftHeadx - rightHeadx
               ) {
                 const canvasWidth = canvasElement.width / 2;
-                const canvasHeight = canvasElement.height / 2;
+                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
                 const canvasx = canvasElement.width / 2 - canvasWidth / 2;
                 const canvasy = 0;
                 img.onload = canvasCtx.drawImage(
@@ -231,7 +246,7 @@ export default {
                   canvasHeight
                 );
               }
-            } else if (img.src.includes("police_hat.png")) {
+            } else if (imgMilitaryHelmet) {
               if (
                 (rightHeady > leftHeady
                   ? rightHeady - leftHeady
@@ -239,81 +254,10 @@ export default {
                 leftHeadx - rightHeadx
               ) {
                 const canvasWidth = canvasElement.width / 2;
-                const canvasHeight = canvasElement.height / 2;
-                const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-                const canvasy = 0;
-                img.onload = canvasCtx.drawImage(
-                  img,
-                  canvasx,
-                  canvasy,
-                  canvasWidth,
-                  canvasHeight
-                );
-              } else {
-                // canvas x y는 화면상의 이미지 위치
-                // canvas Width Height는 이미지의 크기
-                const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
-                const canvasWidth = (leftHeadx - rightHeadx) * 2;
                 const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-                const canvasy =
-                  rightHeady > leftHeady
-                    ? rightHeady - canvasHeight - (rightHeady - leftHeady) / 2
-                    : rightHeady - canvasHeight + (leftHeady - rightHeady) / 2;
-                img.onload = canvasCtx.drawImage(
-                  img,
-                  canvasx,
-                  canvasy,
-                  canvasWidth,
-                  canvasHeight
-                );
-              }
-            } else if (img.src.includes("doctor_hat.png")) {
-              if (
-                (rightHeady > leftHeady
-                  ? rightHeady - leftHeady
-                  : leftHeady - rightHeady) >
-                leftHeadx - rightHeadx
-              ) {
-                const canvasWidth = canvasElement.width / 2;
-                const canvasHeight = canvasElement.height / 2;
                 const canvasx = canvasElement.width / 2 - canvasWidth / 2;
                 const canvasy = 0;
-                img.onload = canvasCtx.drawImage(
-                  img,
-                  canvasx,
-                  canvasy,
-                  canvasWidth,
-                  canvasHeight
-                );
-              } else {
-                // canvas x y는 화면상의 이미지 위치
-                // canvas Width Height는 이미지의 크기
-                const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
-                const canvasWidth = (leftHeadx - rightHeadx) * 2;
-                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-                const canvasy =
-                  rightHeady > leftHeady
-                    ? rightHeady - canvasHeight - (rightHeady - leftHeady) / 2
-                    : rightHeady - canvasHeight + (leftHeady - rightHeady) / 2;
-                img.onload = canvasCtx.drawImage(
-                  img,
-                  canvasx,
-                  canvasy,
-                  canvasWidth,
-                  canvasHeight
-                );
-              }
-            } else if (img.src.includes("military_helmet.png")) {
-              if (
-                (rightHeady > leftHeady
-                  ? rightHeady - leftHeady
-                  : leftHeady - rightHeady) >
-                leftHeadx - rightHeadx
-              ) {
-                const canvasWidth = canvasElement.width / 2;
-                const canvasHeight = canvasElement.height / 2;
-                const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-                const canvasy = 0;
+
                 img.onload = canvasCtx.drawImage(
                   img,
                   canvasx,
@@ -362,6 +306,7 @@ export default {
         minTrackingConfidence: 0.5,
       });
       faceMesh.onResults(onResults);
+
       getMedia();
 
       const camera = new Camera(myFace, {
