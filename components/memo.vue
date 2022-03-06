@@ -322,10 +322,6 @@ export default {
   // 해야할일, 투표
   methods: {
     memoJob(job, index) {
-      // let img = new Image();
-      // img.src = "";
-      // let imgWidth = 0;
-      // let imgHeight = 0;
       if (job == "citizen") {
         this.imgSrc[index - 1] = "";
         this.imgWidth[index - 1] = 0;
