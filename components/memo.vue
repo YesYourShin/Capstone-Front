@@ -94,6 +94,12 @@ export default {
 
   mounted() {
     for (let i = 0; i < 10; i++) {
+      this.faceMemo(i);
+    }
+  },
+  // 해야할일, 투표
+  methods: {
+    faceMemo(i) {
       const myFace = document.getElementById(`usercam${i + 1}`);
       const canvasElement = document.getElementsByClassName(
         `output_canvas${i + 1}`
@@ -140,10 +146,8 @@ export default {
           const canvasWidth = canvasElement.width / 2;
           const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
           const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-          // const canvasy = canvasElement.height / 2 - canvasHeight / 2;
           const canvasy = 0;
 
-          // console.log(canvasx)
           img.onload = canvasCtx.drawImage(
             img,
             canvasx,
@@ -271,7 +275,6 @@ export default {
                 const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
                 const canvasWidth = (leftHeadx - rightHeadx) * 2;
                 const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-                // const canvasy = (rightHeady > leftHeady ? rightHeady-canvasHeight-(rightHeady - leftHeady) / 2 : rightHeady-canvasHeight+(leftHeady - rightHeady) / 2)
                 const canvasy =
                   rightHeady > leftHeady
                     ? rightHeady -
@@ -317,10 +320,7 @@ export default {
         height: 480,
       });
       camera.start();
-    }
-  },
-  // 해야할일, 투표
-  methods: {
+    },
     memoJob(job, index) {
       if (job == "citizen") {
         this.imgSrc[index - 1] = "";
@@ -330,7 +330,6 @@ export default {
         this.imgSrc[index - 1] = require("../assets/image/police_hat.png");
         this.imgWidth[index - 1] = 600;
         this.imgHeight[index - 1] = 451;
-        console.log(this.imgSrc[index]);
       } else if (job == "doctor") {
         this.imgSrc[index - 1] = require("../assets/image/doctor_hat.png");
         this.imgWidth[index - 1] = 1000;
