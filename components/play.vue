@@ -8,8 +8,8 @@
         :id="['usercam' + index]"
         v-for="index in 10"
         :key="index"
-        width="640"
-        height="480"
+        width="640px"
+        height="360px"
         autoplay
       >
         {{ index }}
@@ -24,7 +24,7 @@
         :class="['output_canvas' + index]"
         v-for="index in 10"
         :key="index"
-        width="240px"
+        width="320px"
         height="180px"
       ></canvas>
       <!-- <div class="canvasmemo"> -->
@@ -239,7 +239,7 @@ export default {
 .output_canvas1 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 230px;
   top: 83px;
@@ -247,7 +247,7 @@ export default {
 .output_canvas2 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 610px;
   top: 83px;
@@ -255,7 +255,7 @@ export default {
 .output_canvas3 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 990px;
   top: 83px;
@@ -263,7 +263,7 @@ export default {
 .output_canvas4 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 1370px;
   top: 83px;
@@ -271,7 +271,7 @@ export default {
 .output_canvas5 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 230px;
   top: 350px;
@@ -279,7 +279,7 @@ export default {
 .output_canvas6 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 1370px;
   top: 350px;
@@ -287,7 +287,7 @@ export default {
 .output_canvas7 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 230px;
   top: 617px;
@@ -295,7 +295,7 @@ export default {
 .output_canvas8 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 610px;
   top: 617px;
@@ -303,7 +303,7 @@ export default {
 .output_canvas9 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 990px;
   top: 617px;
@@ -311,7 +311,7 @@ export default {
 .output_canvas10 {
   position: absolute;
   overflow: visible;
-  width: 240px;
+  width: 320px;
   height: 180px;
   left: 1370px;
   top: 617px;

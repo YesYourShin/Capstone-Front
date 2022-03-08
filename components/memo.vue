@@ -97,7 +97,7 @@ export default {
 
   data() {
     return {
-      userNum: 3,
+      userNum: 7,
       imgWidth: [],
       imgHeight: [],
       imgSrc: [],
@@ -495,7 +495,7 @@ export default {
         try {
           myStream = await navigator.mediaDevices.getUserMedia({
             audio: true,
-            video: true,
+            video: { width: 1280, height: 720 },
           });
 
           videoElement.srcObject = myStream;
@@ -524,8 +524,8 @@ export default {
         onFrame: async () => {
           await hands.send({ image: videoElement });
         },
-        width: 640,
-        height: 480,
+        width: 1280,
+        height: 720,
       });
       camera.start();
     },
@@ -718,9 +718,10 @@ export default {
         try {
           myStream = await navigator.mediaDevices.getUserMedia({
             audio: true,
-            video: true,
+            video: { width: 1280, height: 720 },
+            // video: true,
           });
-
+          console.log(myStream);
           videoElement.srcObject = myStream;
         } catch (e) {
           console.log(e);
@@ -746,8 +747,8 @@ export default {
         onFrame: async () => {
           await faceMesh.send({ image: videoElement });
         },
-        width: 640,
-        height: 480,
+        width: 1280,
+        height: 720,
       });
       camera.start();
     },
