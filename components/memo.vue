@@ -126,8 +126,6 @@ export default {
   // 해야할일, 투표
   methods: {
     handCognition(i) {
-      // https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=pjok1122&logNo=221521019128
-      // https://okky.kr/article/200699
       const videoElement = document.getElementById(`usercam${i + 1}`);
       const canvasElement = document.getElementsByClassName(
         `output_canvas${i + 1}`
@@ -283,8 +281,6 @@ export default {
               });
             }
             canvasCtx.restore();
-            // draw.text((50, 50), text="몇 번을 지목하겠습니까?", font = font, fill=(255, 255, 255))
-            // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
             let recognitionError;
 
             if (rightHandLandmarks.length > 0) {
@@ -330,10 +326,8 @@ export default {
 
               let totalFingers = rightFingersCount + leftFingersCount;
               if (totalFingers == 0) {
-                // draw.text((50, 100), "0번은 없습니다.", font = font, fill=(255, 255, 255))
                 text = "0번은 없습니다.";
               } else {
-                // draw.text((50, 100), str(total_fingers) + "번", font = font, fill=(255, 255, 255))
                 text = totalFingers + "번";
               }
             }
@@ -467,7 +461,6 @@ export default {
             }
             canvasCtx.restore();
             if (vStatus) {
-              // canvasCtx.restore();
               canvasCtx.font = `${canvasElement.width / 12}px gulim`;
               canvasCtx.fillStyle = "rgba(0,0,0,1)";
               canvasCtx.fillText(
