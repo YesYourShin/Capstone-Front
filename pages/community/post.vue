@@ -2,8 +2,17 @@
   <div class="postMainBox">
     <Header/>
     <div class="mainPost">
-      <div>
+      <div class="proFileBox">
         <Profile/>
+        <div class="postTitle">
+          <ul class="postTitleUl">
+            <li class="postTitleLi1">공지 사항</li>
+            <li class="postTitleLi">자유 게시판</li>
+            <li class="postTitleLi">정보 게시판</li>
+            <li class="postTitleLi">인기 게시판</li>
+          </ul>
+        </div>
+        <Banner/>
       </div>
       <div class="postBox">
         <div class="postBoxContent1">

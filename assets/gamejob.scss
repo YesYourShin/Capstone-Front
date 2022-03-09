@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+
+.jobBox{
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  min-width: 1106px;
+  margin: 0 auto;
+
+  .jobMainBox{
+    position: relative;
+    z-index: 7;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    margin-top: 0;
+    padding-bottom: 78px;
+    height: 1100px;
+    font-family: 'Do Hyeon', sans-serif;
+    color: white;
+    font-size: 50px;
+    border: 1px solid white;
+    display: flex;
+
+    .jobTitle{
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      border: 1px solid white;
+
+      .jobLabel{
+        border: 1px solid white;
+      }
+    }
+
+    .jobBox{
+      width: 500px;
+      height: 900px;
+      border: 1px solid white;
+      display: none;
+    }
+
+    input[type="radio"]{
+      display: none;
+    }
+    input[type="radio"]:checked + .jobLabelBox > label{
+      color: orange;
+      padding-bottom: 10px;
+      border-bottom: 3px solid orange;
+    }
+
+    label{
+      width: 100px;
+    }
+
+    #job1:checked ~ .con1{display: block;}
+    #job2:checked ~ .con2{display: block;}
+    #job3:checked ~ .con3{display: block;}
+  }
+}

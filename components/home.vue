@@ -210,11 +210,6 @@ export default {
 
   },
 
-   async created(){
-    const response = await axios.get("http://localhost:3065/api/users", { withCredentials:true});
-    this.data = response.data.data;
-  },
-
 };
 </script>
 

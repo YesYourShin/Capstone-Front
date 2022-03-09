@@ -6,6 +6,7 @@
   height: 190px;
   font-family: 'Do Hyeon', sans-serif;
   font-size: 20px;
+  z-index: 8;
 
   .profilebox{
     border: 3px solid black;
@@ -151,6 +152,7 @@
 
       p{
         margin-left: 10px;
+        color: black;
       }
 
       .cance{

@@ -9,7 +9,7 @@
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
         <button class="userlink" @click="logout">Logout</button>
-        <p v-if="data" class="userlevel">Lv.250 <span class="username">{{ data.id }}</span></p>
+        <p v-if="data.data" class="userlevel">Lv.250 <span class="username">{{ data.data.id }}</span></p>
         <p class="usertext">Mirai1412/Capstone-Front</p>
       </div>
 
@@ -74,7 +74,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import { getMyInformation } from '@/api/mafiaAPI'
+import { logout } from '@/api/mafiaAPI'
 
 export default {
   name: "CapstoneProfile",
@@ -89,9 +90,10 @@ export default {
   },
 
   async mounted() {
-    const response = await axios.get("http://localhost:3065/api/users", { withCredentials:true});
-    this.data = response.data.data;
+     const response = await getMyInformation()
+     this.data = response.data
   },
+
   methods: {
       friend() {
         this.show1 = !this.show1;
@@ -118,12 +120,15 @@ export default {
         }
       },
       logout(){
-        const link = 'http://localhost:7000/';
-
+        const link = 'http://localhost:7000';
         if(this.data = Object){
-          axios.post("http://localhost:3065/api/auth/logout")
-          console.log('logout')
-           location.href=link;
+              logout()
+              .then(response => {
+                console.log('logout')
+              }).catch(err => {
+                console.log(err)
+              })
+            location.href=link;
         }
       },
   },

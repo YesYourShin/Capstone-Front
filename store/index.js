@@ -1,3 +1,5 @@
+import { UserModule } from "./user";
+
 export const state = () => ({
   friends: Array(12)
   .fill()
@@ -39,4 +41,12 @@ export const mutations = {
     }
   },
 }
+
+
+
+
+
+
+
+
 
