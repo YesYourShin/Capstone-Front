@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
 
 .jobBox{
   position: relative;
@@ -11,6 +13,7 @@
     position: relative;
     z-index: 7;
     width: 100%;
+    min-width: 1500px;
     height: 100%;
     margin: auto;
     margin-top: 0;
@@ -19,42 +22,259 @@
     font-family: 'Do Hyeon', sans-serif;
     color: white;
     font-size: 50px;
-    border: 1px solid white;
     display: flex;
 
     .jobTitle{
       width: 100%;
       height: 100%;
       margin: 0;
-      border: 1px solid white;
+      display: flex;
 
-      .jobLabel{
-        border: 1px solid white;
+      .jobLabelBox{
+        width: 300px;
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        padding-top: 80px;
+        background-color: rgba(0, 0, 0, 0.739);
+
+        .jobLabel{
+          margin: 20px 0;
+          text-align: center;
+          width: 100%;
+          height: 80px;
+          line-height: 80px;
+        }
       }
     }
 
     .jobBox{
-      width: 500px;
-      height: 900px;
-      border: 1px solid white;
-      display: none;
+      width: 1630px;
+      height: 100%;
+      background-color: rgba(75, 74, 74, 0.554);
+    }
+
+    #con1{
+      position: relative;
+      .mp1{
+        opacity: 0;
+        animation: pimg1 0.5s;
+        animation-delay: 0.3s;
+        animation-fill-mode: forwards;
+        position: absolute;
+        font-size: 300px;
+        font-family: 'Permanent Marker', cursive;
+        color: rgba(47, 47, 47, 0.479);
+        z-index: 6;
+        text-shadow: 5px 5px black;
+      }
+      .mp2{
+        position: absolute;
+        font-size: 200px;
+        top: 220px;
+        right: 60px;
+        color: rgb(255, 255, 255);
+        font-family: 'Black Han Sans', sans-serif;
+        z-index: 7;
+      }
+      .mimg1{
+        position: absolute;
+        width: 530px;
+        z-index: 8;
+        animation: yimg1 0.5s;
+        animation-fill-mode: forwards;
+      }
+      .ctentBox1{
+        width: 1100px;
+        height: 350px;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.822);
+        right: 0;
+        bottom: 170px;
+        z-index: 9;
+        p{
+          font-family: 'Black Han Sans', sans-serif;
+          width: 100%;
+          font-size: 40px;
+          text-align: center;
+          margin-top: 80px;
+        }
+      }
     }
 
     input[type="radio"]{
       display: none;
     }
-    input[type="radio"]:checked + .jobLabelBox > label{
-      color: orange;
-      padding-bottom: 10px;
-      border-bottom: 3px solid orange;
+
+    #con2{
+      position: relative;
+      .mp1{
+        position: absolute;
+        font-size: 300px;
+        opacity: 0;
+        animation: pimg2 0.5s;
+        animation-delay: 0.3s;
+        animation-fill-mode: forwards;
+        font-family: 'Permanent Marker', cursive;
+        color: rgba(47, 47, 47, 0.479);
+        z-index: 6;
+        text-shadow: 5px 5px black;
+      }
+      .mp2{
+        position: absolute;
+        font-size: 200px;
+        top: 220px;
+        right: 60px;
+        color: rgb(255, 255, 255);
+        font-family: 'Black Han Sans', sans-serif;
+        z-index: 7;
+      }
+      .mimg2{
+        position: absolute;
+        width: 500px;
+        z-index: 8;
+        animation: yimg2 0.5s;
+        animation-fill-mode: forwards;
+      }
+      .ctentBox2{
+        width: 1100px;
+        height: 350px;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.822);
+        right: 0;
+        bottom: 170px;
+        z-index: 9;
+        p{
+          font-family: 'Black Han Sans', sans-serif;
+          width: 100%;
+          font-size: 37px;
+          text-align: center;
+          margin-top: 80px;
+        }
+      }
     }
 
-    label{
-      width: 100px;
+    #con3{
+      position: relative;
+      .mp1{
+        position: absolute;
+        font-size: 300px;
+        opacity: 0;
+        animation: pimg3 0.5s;
+        animation-delay: 0.3s;
+        animation-fill-mode: forwards;
+        font-family: 'Permanent Marker', cursive;
+        color: rgba(47, 47, 47, 0.479);
+        z-index: 6;
+        text-shadow: 5px 5px black;
+      }
+      .mp2{
+        position: absolute;
+        font-size: 200px;
+        top: 220px;
+        right: 60px;
+        color: rgb(255, 255, 255);
+        font-family: 'Black Han Sans', sans-serif;
+        z-index: 7;
+      }
+      .mimg3{
+        position: absolute;
+        width: 500px;
+        animation: yimg3 0.5s;
+        animation-fill-mode: forwards;
+        z-index: 8;
+      }
+      .ctentBox3{
+        width: 1100px;
+        height: 350px;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.822);
+        right: 0;
+        bottom: 170px;
+        z-index: 9;
+        p{
+          font-family: 'Black Han Sans', sans-serif;
+          width: 100%;
+          font-size: 35px;
+          text-align: center;
+          margin-top: 70px;
+        }
+      }
     }
 
-    #job1:checked ~ .con1{display: block;}
-    #job2:checked ~ .con2{display: block;}
-    #job3:checked ~ .con3{display: block;}
+  }
+}
+
+@keyframes yimg1{
+	0%{
+    opacity: 0;
+    left: -150px;
+    top: -20px;
+  }
+	100%{
+    opacity: 1;
+    left: 10px;
+    top: -20px;
+  }
+}
+@keyframes pimg1{
+	0%{
+    opacity: 0;
+    top: 0px;
+    right: 200px;
+  }
+	100%{
+    opacity: 1;
+    top: 0px;
+    right: 50px;
+  }
+}
+@keyframes yimg2{
+	0%{
+    opacity: 0;
+    left: -150px;
+    top: -20px;
+  }
+	100%{
+    opacity: 1;
+    left: 10px;
+    top: -20px;
+  }
+}
+@keyframes pimg2{
+	0%{
+    opacity: 0;
+    top: 0px;
+    right: 200px;
+  }
+	100%{
+    opacity: 1;
+    top: 0px;
+    right: 50px;
+  }
+}
+@keyframes yimg3{
+	0%{
+    opacity: 0;
+    left: -140px;
+    top: -10px;
+  }
+	100%{
+    opacity: 1;
+    left: 10px;
+    top: -10px;
+  }
+}
+@keyframes pimg3{
+	0%{
+    opacity: 0;
+    top: 0px;
+    right: 200px;
+  }
+	100%{
+    opacity: 1;
+    top: 0px;
+    right: 50px;
   }
 }
