@@ -1,7 +1,6 @@
 <template>
   <div class="jobBox">
     <Header/>
-    <Banner/>
     <div class="jobMainBox">
           <div class="jobTitle">
               <div class="jobLabelBox">
@@ -27,7 +26,7 @@
                 <p class="mp1">POLICE</p>
                 <p class="mp2">경찰</p>
                 <div class="ctentBox2">
-                  <p>"변호인 선임할 수 있고, 진술 거부할 수 있고, 무비권을 행사할수있다."</p>
+                  <p>"변호인 선임할 수 있고, 진술 거부할 수 있고, 무비권을 행사할수있어."</p>
                   <p>[ 수사 ] 밤이되면 한명의 플레이어를 선택해 마피아 여부를 알아낼수있다.</p>
                 </div>
               </div>

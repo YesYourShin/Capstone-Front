@@ -83,7 +83,7 @@ export default {
     console.log(res);
     this.rooms = res.data.data
 
-    this.evtSource = new EventSource(`${this.$store.state.api}/games/sse`, this.$store.state.payload)
+    // this.evtSource = new EventSource(`${this.$store.state.api}/games/sse`, this.$store.state.payload)
 
     var abd = this
     this.evtSource.onmessage = function(e) {
@@ -92,9 +92,9 @@ export default {
       abd.rooms = data
     }
   },
-  beforeDestroy() {
-    this.evtSource?.close()
-  }
+  // beforeDestroy() {
+  //   this.evtSource?.close()
+  // }
 };
 </script>
 <style lang="" scoped>
