@@ -71,7 +71,8 @@ export default {
   },
 
   axios: {
-    baseURL: process.env.baseURL || 'http://localhost:3065'
+    baseURL:'http://localhost:3065',
+    credentials: true,
   },
 
   serverMiddleware: [

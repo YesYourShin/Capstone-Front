@@ -14,21 +14,12 @@
             </li>
             <li class="communityLi">
                 <NuxtLink to="/community/posta" class="Li">자유 게시판</NuxtLink>
-<<<<<<< HEAD
             </li>
             <li class="communityLi1">
                 <NuxtLink to="/community/postb" class="Li1">정보 게시판</NuxtLink>
             </li>
             <li class="communityLi">
                 <NuxtLink to="/community/postc" class="Li">인기 게시판</NuxtLink>
-=======
-            </li>
-            <li class="communityLi">
-                <NuxtLink to="/community/postb" class="Li">정보 게시판</NuxtLink>
-            </li>
-            <li class="communityLi1">
-                <NuxtLink to="/community/postc" class="Li1">인기 게시판</NuxtLink>
->>>>>>> Backend
             </li>
           </ul>
         </div>

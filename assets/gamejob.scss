@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
+
+.jobBox{
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  min-width: 1106px;
+  margin: 0 auto;
+
+  .jobMainBox{
+    position: relative;
+    z-index: 7;
+    width: 100%;
+    min-width: 1500px;
+    height: 100%;
+    margin: auto;
+    margin-top: 0;
+    padding-bottom: 78px;
+    height: 890px;
+    font-family: 'Do Hyeon', sans-serif;
+    color: white;
+    font-size: 35px;
+    display: flex;
+
+    .jobTitle{
+      width: 100%;
+      height: 810px;
+      margin: 0;
+      display: flex;
+
+      .jobLabelBox{
+        width: 250px;
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        padding-top: 80px;
+        background-color: rgba(0, 0, 0, 0.739);
+
+        .jobLabel{
+          margin: 20px 0;
+          text-align: center;
+          width: 100%;
+          height: 80px;
+          line-height: 80px;
+        }
+      }
+    }
+
+    .jobBox{
+      width: 1730px;
+      height: 100%;
+      background-color: rgba(75, 74, 74, 0.554);
+    }
+
+    #con1{
+      position: relative;
+      .mp1{
+        opacity: 0;
+        animation: pimg1 0.5s;
+        animation-delay: 0.3s;
+        animation-fill-mode: forwards;
+        position: absolute;
+        font-size: 250px;
+        font-family: 'Permanent Marker', cursive;
+        color: rgba(47, 47, 47, 0.479);
+        z-index: 6;
+        text-shadow: 5px 5px black;
+      }
+      .mp2{
+        position: absolute;
+        font-size: 200px;
+        top: 150px;
+        right: 415px;
+        color: rgba(255, 255, 255, 0.89);
+        font-family: 'Black Han Sans', sans-serif;
+        z-index: 7;
+      }
+      .mimg1{
+        position: absolute;
+        width: 420px;
+        z-index: 8;
+        animation: yimg1 0.5s;
+        animation-fill-mode: forwards;
+      }
+      .ctentBox1{
+        width: 900px;
+        height: 300px;
+        right: 0;
+        bottom: 100px;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.822);
+        z-index: 9;
+        p{
+          font-family: 'Black Han Sans', sans-serif;
+          width: 100%;
+          font-size: 40px;
+          text-align: center;
+          margin-top: 60px;
+        }
+      }
+    }
+
+    input[type="radio"]{
+      display: none;
+    }
+
+    #con2{
+      position: relative;
+      .mp1{
+        position: absolute;
+        font-size: 250px;
+        opacity: 0;
+        animation: pimg2 0.5s;
+        animation-delay: 0.3s;
+        animation-fill-mode: forwards;
+        font-family: 'Permanent Marker', cursive;
+        color: rgba(47, 47, 47, 0.479);
+        z-index: 6;
+        text-shadow: 5px 5px black;
+      }
+      .mp2{
+        position: absolute;
+        font-size: 200px;
+        top: 150px;
+        right: 575px;
+        color: rgb(255, 255, 255);
+        font-family: 'Black Han Sans', sans-serif;
+        z-index: 7;
+      }
+      .mimg2{
+        position: absolute;
+        width: 400px;
+        z-index: 8;
+        animation: yimg2 0.5s;
+        animation-fill-mode: forwards;
+      }
+      .ctentBox2{
+        width: 900px;
+        height: 300px;
+        right: 0;
+        bottom: 100px;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.822);
+        z-index: 9;
+        p{
+          font-family: 'Black Han Sans', sans-serif;
+          width: 100%;
+          font-size: 30px;
+          text-align: center;
+          margin-top: 70px;
+        }
+      }
+    }
+
+    #con3{
+      position: relative;
+      .mp1{
+        position: absolute;
+        font-size: 250px;
+        opacity: 0;
+        animation: pimg3 0.5s;
+        animation-delay: 0.3s;
+        animation-fill-mode: forwards;
+        font-family: 'Permanent Marker', cursive;
+        color: rgba(47, 47, 47, 0.479);
+        z-index: 6;
+        text-shadow: 5px 5px black;
+      }
+      .mp2{
+        position: absolute;
+        font-size: 200px;
+        top: 150px;
+        right: 583px;
+        color: rgb(255, 255, 255);
+        font-family: 'Black Han Sans', sans-serif;
+        z-index: 7;
+      }
+      .mimg3{
+        position: absolute;
+        width: 400px;
+        animation: yimg3 0.5s;
+        animation-fill-mode: forwards;
+        z-index: 8;
+      }
+      .ctentBox3{
+        width: 900px;
+        height: 300px;
+        right: 0;
+        bottom: 100px;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.822);
+        z-index: 9;
+        p{
+          font-family: 'Black Han Sans', sans-serif;
+          width: 100%;
+          font-size: 30px;
+          text-align: center;
+          margin-top: 60px;
+        }
+      }
+    }
+
+  }
+}
+
+@keyframes yimg1{
+	0%{
+    opacity: 0;
+    left: 0px;
+    top: 0px;
+  }
+	100%{
+    opacity: 1;
+    left: 150px;
+    top: 0px;
+  }
+}
+@keyframes pimg1{
+	0%{
+    opacity: 0;
+    top: 0px;
+    right: 200px;
+  }
+	100%{
+    opacity: 1;
+    top: 0px;
+    right: 50px;
+  }
+}
+@keyframes yimg2{
+	0%{
+    opacity: 0;
+    left: 0px;
+    top: -20px;
+  }
+	100%{
+    opacity: 1;
+    left: 150px;
+    top: -20px;
+  }
+}
+@keyframes pimg2{
+	0%{
+    opacity: 0;
+    top: 0px;
+    right: 200px;
+  }
+	100%{
+    opacity: 1;
+    top: 0px;
+    right: 50px;
+  }
+}
+@keyframes yimg3{
+	0%{
+    opacity: 0;
+    left: 0px;
+    top: 0px;
+  }
+	100%{
+    opacity: 1;
+    left: 140px;
+    top: 0px;
+  }
+}
+@keyframes pimg3{
+	0%{
+    opacity: 0;
+    top: 0px;
+    right: 200px;
+  }
+	100%{
+    opacity: 1;
+    top: 0px;
+    right: 50px;
+  }
+}

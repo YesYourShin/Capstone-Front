@@ -5,7 +5,9 @@
     </NuxtLink>
     <ul id="headerulbox">
       <div class="ulbox">
-        <p class="headerlitilte">게임 가이드</p>
+        <p class="headerlitilte">
+          <NuxtLink to="/guide/allGuide" class="lilink">게임 가이드</NuxtLink>
+        </p>
         <p class="headerlitilte">랭킹</p>
         <p class="headerlitilte">
           <NuxtLink to="/community/allCommunity" class="lilink">커뮤니티</NuxtLink>
@@ -24,9 +26,9 @@
 
       <div class="libox">
           <ul class="tilteulbox">
-          <li><NuxtLink to="/test" class="lilink">게임 설명</NuxtLink></li>
-          <li><NuxtLink to="/" class="lilink">직업 소개</NuxtLink></li>
-          <li><NuxtLink to="/" class="lilink">튜토리얼 가이드</NuxtLink></li>
+          <li><NuxtLink to="/guide/gameGuide" class="lilink">게임 설명</NuxtLink></li>
+          <li><NuxtLink to="/guide/gameJob" class="lilink">직업 소개</NuxtLink></li>
+          <li><NuxtLink to="/guide/tutorialGuide" class="lilink">튜토리얼 가이드</NuxtLink></li>
           </ul>
 
         <ul class="tilteulbox">

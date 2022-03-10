@@ -4,13 +4,12 @@
       <div class="profile1">
         <img src="@/assets/pageimg/test.jpg" class="profileimg" />
       </div>
-
       <div class="profile2">
         <button class="userlink">
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
-        <button class="userlink"  @click="TestData">Logout</button>
-        <p class="userlevel">Lv.250 <span class="username">Mirai0625</span></p>
+        <button class="userlink" @click="logout">Logout</button>
+        <p v-if="data.data" class="userlevel">Lv.250 <span class="username">{{ data.data.id }}</span></p>
         <p class="usertext">Mirai1412/Capstone-Front</p>
       </div>
 
@@ -63,7 +62,7 @@
         </div>
       </div>
 
-      <div class="cancebutton" :click="cance">
+      <div class="cancebutton" >
         <button>전체 삭제</button>
       </div>
     </div>
@@ -75,7 +74,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import { getMyInformation } from '@/api/mafiaAPI'
+import { logout } from '@/api/mafiaAPI'
 
 export default {
   name: "CapstoneProfile",
@@ -85,11 +85,16 @@ export default {
       show1: false,
       show2: false,
       show3: false,
+      data: [],
     };
   },
 
+  async mounted() {
+     const response = await getMyInformation()
+     this.data = response.data
+  },
+
   methods: {
-    cance() {},
       friend() {
         this.show1 = !this.show1;
         if (this.show2 == true) {
@@ -114,21 +119,22 @@ export default {
           this.show1 = !this.show1;
         }
       },
-      TestData() {
-        axios
-          .get("/api/users")
-          .then(res => {
-            console.log(res);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
+      logout(){
+        const link = 'http://localhost:7000';
+        if(this.data = Object){
+              logout()
+              .then(response => {
+                console.log('logout')
+              }).catch(err => {
+                console.log(err)
+              })
+            location.href=link;
+        }
+      },
   },
 
 };
 </script>
-
 <style lang="scss" scoped>
 @import "~assets/profile.scss";
 </style>

@@ -13,20 +13,60 @@
 
   .mainPost{
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     position: relative;
     margin: auto;
     z-index: 8;
     width: 100%;
 
+    .proFileBox{
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.397);
+      display: flex;
+      flex-wrap: wrap;
+
+      .postTitle{
+        background-image: url("@/assets/post.png");
+        background-size: 1500px 330px;
+        background-position: top;
+        width: 1500px;
+        height: 190px;
+        .postTitleUl{
+          .postTitleLi1{
+            color: orange;
+            border-bottom: 3px solid orange;
+            font-size: 40px;
+          }
+          .postTitleLi{
+            &:hover{
+              animation: postcolor 0.5s;
+              animation-fill-mode: forwards;
+            }
+          }
+        }
+        ul{
+          text-align: center;
+          margin: auto;
+          li{
+            display: inline-block;
+            margin: auto;
+            font-size: 35px;
+            margin: 62px 50px;
+          }
+        }
+      }
+
+    }
+
     .postBox{
       width: 1300px;
       padding: 50px;
       border: 3px solid white;
       border-radius: 10px;
+      margin: auto;
       margin-bottom: 130px;
       margin-top: 50px;
-      margin-right: 100px;
       display: flex;
       flex-wrap: wrap;
 
@@ -182,5 +222,14 @@
       }
     }
 
+  }
+}
+@keyframes postcolor{
+	0%{
+
+  }
+	100%{
+    font-size: 40px;
+    border-bottom: 3px solid white;
   }
 }
