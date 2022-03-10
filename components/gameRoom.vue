@@ -42,7 +42,7 @@
 <script>
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
-import axios from 'axios'
+import { leaveGame, getGame } from '@/api/mafiaAPI'
 
 export default {
   components: {
@@ -56,13 +56,13 @@ export default {
   },
   methods: {
     async exit() {
-      const res = await axios.delete(`${this.$store.state.api}/games/${this.$route.params.id}/users/me`, this.$store.state.payload)
+      const res = await leaveGame(this.$route.params.id)
       console.log(res);
       this.$router.push(`/lobby`)
     }
   },
   mounted() {
-    axios.get(`${this.$store.state.api}/games/${this.$route.params.id}`, this.$store.state.payload)
+    getGame(this.$route.params.id)
       .then((res) => {
         this.game = res.data.data
       })

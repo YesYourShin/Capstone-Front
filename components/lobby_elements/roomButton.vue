@@ -11,21 +11,21 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import { joinGame } from "@/api/mafiaAPI";
 
 export default {
   props: {
     room: Object,
   },
   methods: {
-    async goToRoom(id) {
-      const res = await axios.post(
-        `${this.$store.state.api}/games/${id}`,
-        {},
-        this.$store.state.payload
-      );
-      console.log(res);
-      this.$router.push(`room/${id}`);
+    goToRoom(id) {
+      joinGame(id)
+        .then((res) => {
+          this.$router.push(`room/${id}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

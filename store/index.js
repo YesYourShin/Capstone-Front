@@ -14,10 +14,8 @@ export const state = () => ({
   }),
   chats: [],
   selectedIndex: -1,
-  payload: {
-    withCredentials: true,
-  },
-  api: 'http://localhost:3065/api'
+  joinedRoom: null,
+  subscribedStreams: [],
 })
 
 export const mutations = {
@@ -38,5 +36,16 @@ export const mutations = {
       state.selectedIndex = state.selectedIndex - 1
     }
   },
+  joinRoom(state, data) {
+    state.joinedRoom = data
+  },
+  addSubscribeStream(state, data) {
+    state.subscribedStreams.push(data)
+  },
+  removeSubscriber(state, rfid) {
+    state.subscribedStreams = state.subscribedStreams.filter(function (data) {
+      return data.rfid != rfid;
+    })
+  }
 }
 
