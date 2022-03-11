@@ -10,16 +10,16 @@
               <NuxtLink to="/community/allCommunity" class="Li">전체 게시판</NuxtLink>
               </li>
             <li class="communityLi">
-                <NuxtLink to="/cement" class="Li">공지 사항</NuxtLink>
+                <NuxtLink to="/community/cement" class="Li">공지 사항</NuxtLink>
             </li>
             <li class="communityLi1">
-                <NuxtLink to="/posta" class="Li1">자유 게시판</NuxtLink>
+                <NuxtLink to="/community/posta" class="Li1">자유 게시판</NuxtLink>
             </li>
             <li class="communityLi">
-                <NuxtLink to="/postb" class="Li">정보 게시판</NuxtLink>
+                <NuxtLink to="/community/postb" class="Li">정보 게시판</NuxtLink>
             </li>
             <li class="communityLi">
-                <NuxtLink to="/postc" class="Li">인기 게시판</NuxtLink>
+                <NuxtLink to="/community/postc" class="Li">인기 게시판</NuxtLink>
             </li>
           </ul>
         </div>
@@ -62,19 +62,13 @@
 
 <script>
 export default {
-
   data() {
     return {
-
     };
   },
-
   mounted() {
-
   },
-
   methods: {
-
   },
 };
 </script>

@@ -25,6 +25,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/vue-simple-context-menu.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -39,6 +40,7 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    'vue-sweetalert2/nuxt',
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -63,7 +65,17 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   },
+
   server:{
     port: 7000
-  }
+  },
+
+  axios: {
+    baseURL:'http://localhost:3065',
+    credentials: true,
+  },
+
+  serverMiddleware: [
+    {path: '/ws', handler: '~/api/srv.js'}
+  ]
 }

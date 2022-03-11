@@ -4,7 +4,8 @@
       <Banner/>
     </div>
     <div class="homeProFile">
-      <Profile/>
+      <div v-if="data != null"><Profile/></div>
+      <div v-else><LoginProfile/></div>
       <div class="guideBox">
         <div class="guides1">
           <img src="@/assets/homeimg/ny1.png" class="yimg1">
@@ -186,22 +187,29 @@
 </template>
 
 <script>
-export default {
-  name: 'CapstoneHome',
+import axios from "axios";
 
+export default {
   data() {
     return {
-
+      data:[],
     };
   },
 
-  mounted() {
+  // mounted() {
+  //   vuex -> user 정보 저장
+  //   if(user?.profile?.nickname) {
+  //     this.$route.push('/mypage')
+  //   }
+  //   어디로 드가든 cookie -> 유저 정보 요청
+  //   profile 없는 경우 nickname 없는 경우 무조건 mypage로 푸쉬
+  //   여기서 mypage로 강제로 가지므로 유저는 몰라 알려줘야됨
+  // },
+
+  methods:{
 
   },
 
-  methods: {
-
-  },
 };
 </script>
 

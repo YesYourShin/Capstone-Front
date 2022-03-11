@@ -29,13 +29,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	.messagebox {
-		position: absolute;
-		overflow: visible;
-		width: 580px;
-		height: 250px;
-		left: 670px;
-		top: 315px;
-    background-color: #b1b11a;
-	}
 </style>

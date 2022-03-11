@@ -4,13 +4,12 @@
       <div class="profile1">
         <img src="@/assets/pageimg/test.jpg" class="profileimg" />
       </div>
-
       <div class="profile2">
         <button class="userlink">
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
-        <button class="userlink">Logout</button>
-        <p class="userlevel">Lv.250 <span class="username">Mirai0625</span></p>
+        <button class="userlink" @click="logout">Logout</button>
+        <p v-if="data.data" class="userlevel">Lv.250 <span class="username">{{ data.data.id }}</span></p>
         <p class="usertext">Mirai1412/Capstone-Front</p>
       </div>
 
@@ -63,7 +62,7 @@
         </div>
       </div>
 
-      <div class="cancebutton" :click="cance">
+      <div class="cancebutton" >
         <button>전체 삭제</button>
       </div>
     </div>
@@ -75,6 +74,9 @@
 </template>
 
 <script>
+import { getMyInformation } from '@/api/mafiaAPI'
+import { logout } from '@/api/mafiaAPI'
+
 export default {
   name: "CapstoneProfile",
 
@@ -83,39 +85,56 @@ export default {
       show1: false,
       show2: false,
       show3: false,
+      data: [],
     };
   },
 
-  methods: {
-    cance() {},
-    friend() {
-      this.show1 = !this.show1;
-      if (this.show2 == true) {
-        this.show2 = !this.show2;
-      } else if (this.show3 == true) {
-        this.show3 = !this.show3;
-      }
-    },
-    ball() {
-      this.show2 = !this.show2;
-      if (this.show1 == true) {
-        this.show1 = !this.show1;
-      } else if (this.show3 == true) {
-        this.show3 = !this.show3;
-      }
-    },
-    record() {
-      this.show3 = !this.show3;
-      if (this.show2 == true) {
-        this.show2 = !this.show2;
-      } else if (this.show1 == true) {
-        this.show1 = !this.show1;
-      }
-    },
+  async mounted() {
+     const response = await getMyInformation()
+     this.data = response.data
   },
+
+  methods: {
+      friend() {
+        this.show1 = !this.show1;
+        if (this.show2 == true) {
+          this.show2 = !this.show2;
+        } else if (this.show3 == true) {
+          this.show3 = !this.show3;
+        }
+      },
+      ball() {
+        this.show2 = !this.show2;
+        if (this.show1 == true) {
+          this.show1 = !this.show1;
+        } else if (this.show3 == true) {
+          this.show3 = !this.show3;
+        }
+      },
+      record() {
+        this.show3 = !this.show3;
+        if (this.show2 == true) {
+          this.show2 = !this.show2;
+        } else if (this.show1 == true) {
+          this.show1 = !this.show1;
+        }
+      },
+      logout(){
+        const link = 'http://localhost:7000';
+        if(this.data = Object){
+              logout()
+              .then(response => {
+                console.log('logout')
+              }).catch(err => {
+                console.log(err)
+              })
+            location.href=link;
+        }
+      },
+  },
+
 };
 </script>
-
 <style lang="scss" scoped>
 @import "~assets/profile.scss";
 </style>

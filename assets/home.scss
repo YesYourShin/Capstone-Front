@@ -19,7 +19,6 @@
 
   .homeProFile{
     width: 100%;
-    max-width: 1920px;
     height: 186px;
     margin-top: 0;
     margin-left: 0;
@@ -31,156 +30,40 @@
     justify-content: space-between;
 
     .guideBox{
-      width: 1504px;
-      position: relative;
-
-      .guides2{
-        border: 3px solid gray;
-        background-color: rgb(206, 206, 206);
-        width: 20%;
-        height: 160px;
-        margin: auto;
-        position: relative;
-        border-radius: 20px;
-        overflow: hidden;
-
-        position: absolute;
-        top: 50%;
-        left: 20%;
-        transform: translate(-50%, -50%);
-
-        &:hover{
-          height: 180px;
-          .yimg2{
-            animation: yimg1 0.5s;
-            animation-fill-mode: forwards;
-        }
-        }
-        &:active{
-          height: 160px;
-        }
-
-        .yimg2{
-          position: absolute;
-          top: -15px;
-          left: 30%;
-          width: 40%;
-        }
-
-        .gpBox{
-          position: absolute;
-          background-color: black;
-          color: white;
-          text-align: center;
-          border-radius: 0 0 17px 17px;
-          width: 100%;
-          bottom: 0;
-          height: 80px;
-
-          .gp1{
-            font-size: 30px;
-            line-height: 60px;
-          }
-          .gp2{
-            font-size: 20px;
-            line-height: 10px;
-          }
-        }
-      }
-
-
-
-      .guides3{
-        border: 3px solid gray;
-        background-color: rgb(206, 206, 206);
-        width:  20%;
-        height: 160px;
-        margin: auto;
-        position: relative;
-        border-radius: 20px;
-        overflow: hidden;
-
-        position: absolute;
-        top: 50%;
-        right: 0;
-        transform: translate(-50%, -50%);
-
-        &:hover{
-          height: 180px;
-          .yimg3{
-            animation: yimg1 0.5s;
-            animation-fill-mode: forwards;
-        }
-        }
-        &:active{
-          height: 160px;
-        }
-
-        .yimg3{
-          position: absolute;
-          top: 0;
-          left: 30%;
-          width: 40%;
-        }
-
-        .gpBox{
-          position: absolute;
-          background-color: black;
-          color: white;
-          text-align: center;
-          bottom: 0;
-          border-radius: 0 0 17px 17px;
-          width: 100%;
-          height: 80px;
-
-          .gp1{
-            font-size: 30px;
-            line-height: 60px;
-          }
-          .gp2{
-            font-size: 20px;
-            line-height: 10px;
-          }
-        }
-      }
+      width: 100%;
+      max-width: 1500px;
+      min-width: 1100px;
+      display: flex;
+      justify-content: space-between;
 
 
 
       .guides1{
         border: 3px solid gray;
         background-color: rgb(206, 206, 206);
-        width:  20%;
-        height: 160px;
+        width: 280px;
+        height: 150px;
         margin: auto;
         position: relative;
         border-radius: 20px;
         overflow: hidden;
 
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
 
-        &:hover{
-          height: 180px;
+          &:hover{
+            animation: size1 0.5s;
+            animation-fill-mode: forwards;
+            .yimg1{
+                animation: yimg1 0.5s;
+                animation-fill-mode: forwards;
+            }
 
-          .yimg1{
-              animation: yimg1 0.5s;
-              animation-fill-mode: forwards;
           }
-
-        }
-        &:active{
-          height: 160px;
-        }
-
         .yimg1{
           position: absolute;
           top: 5px;
           left: 29%;
           width: 40%;
         }
-
         .gpBox{
           position: absolute;
           background-color: black;
@@ -190,7 +73,6 @@
           height: 80px;
           border-radius: 0 0 17px 17px;
           width: 100%;
-
           .gp1{
             font-size: 30px;
             line-height: 60px;
@@ -201,8 +83,98 @@
           }
         }
       }
-    }
 
+      .guides2{
+        border: 3px solid gray;
+        background-color: rgb(206, 206, 206);
+        width: 280px;
+        height: 150px;
+        margin: auto;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+
+
+        &:hover{
+          animation: size1 0.5s;
+          animation-fill-mode: forwards;
+          .yimg2{
+            animation: yimg1 0.5s;
+            animation-fill-mode: forwards;
+        }
+        }
+        .yimg2{
+          position: absolute;
+          top: -15px;
+          left: 30%;
+          width: 40%;
+        }
+        .gpBox{
+          position: absolute;
+          background-color: black;
+          color: white;
+          text-align: center;
+          border-radius: 0 0 17px 17px;
+          width: 100%;
+          bottom: 0;
+          height: 80px;
+          .gp1{
+            font-size: 30px;
+            line-height: 60px;
+          }
+          .gp2{
+            font-size: 20px;
+            line-height: 10px;
+          }
+        }
+      }
+
+      .guides3{
+        border: 3px solid gray;
+        background-color: rgb(206, 206, 206);
+        width: 280px;
+        height: 150px;
+        margin: auto;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+
+
+          &:hover{
+            animation: size1 0.5s;
+            animation-fill-mode: forwards;
+            .yimg3{
+              animation: yimg1 0.5s;
+              animation-fill-mode: forwards;
+          }
+        }
+        .yimg3{
+          position: absolute;
+          top: 0;
+          left: 30%;
+          width: 40%;
+        }
+        .gpBox{
+          position: absolute;
+          background-color: black;
+          color: white;
+          text-align: center;
+          bottom: 0;
+          border-radius: 0 0 17px 17px;
+          width: 100%;
+          height: 80px;
+          .gp1{
+            font-size: 30px;
+            line-height: 60px;
+          }
+          .gp2{
+            font-size: 20px;
+            line-height: 10px;
+          }
+        }
+      }
+
+    }
   }
 
   .readBox{
@@ -214,42 +186,39 @@
     padding: 30px 0;
     text-align: center;
     z-index: 6;
-
-    .tabcontent{
-      display: flex;
-      flex-wrap: wrap;
-
-      .tabtitlebox{
-        color: white;
+      .tabcontent{
         display: flex;
-        width: 100%;
-        margin: 0 auto;
-        justify-content: space-between;
-        padding-right: 50px;
-        margin: 10px 0;
-        padding: 10px 0;
-        border-bottom: 1px solid white;
+        flex-wrap: wrap;
+        .tabtitlebox{
+          color: white;
+          display: flex;
+          width: 100%;
+          margin: 0 auto;
+          justify-content: space-between;
+          padding-right: 50px;
+          margin: 10px 0;
+          padding: 10px 0;
+          border-bottom: 1px solid white;
 
-        .mtb1{
-          width: 80px;
+          .mtb1{
+            width: 80px;
+          }
+          .mtb2{
+            width: 450px;
+          }
+          .mtb3{
+            width: 150px;
+          }
+          .mtb4{
+            width: 200px;
+          }
+          .mtb5{
+            width: 80px;
+          }
+          .mtb6{
+            width: 80px;
+          }
         }
-        .mtb2{
-          width: 450px;
-        }
-        .mtb3{
-          width: 150px;
-        }
-        .mtb4{
-          width: 200px;
-        }
-        .mtb5{
-          width: 80px;
-        }
-        .mtb6{
-          width: 80px;
-        }
-
-      }
 
       .montpostbox{
         color: white;
@@ -281,14 +250,12 @@
       }
     }
 
-
     input{
       display: none;
       &:checked + label{
         color: orange;
         border-bottom: 5px solid orange;
       }
-
     }
 
     label{
@@ -387,10 +354,19 @@
 @keyframes yimg1{
 	0%{
     left: -100px;
-    top: 17px;
+    top: 0px;
   }
 	100%{
     left: 70px;
-    top: 17px;
+    top: -10px;
   }
-	}
+}
+@keyframes size1{
+    0%{
+
+    }
+    100%{
+      top: 1%;
+      height: 170px;
+    }
+}

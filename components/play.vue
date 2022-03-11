@@ -1,107 +1,46 @@
 <template>
-  <div class="flex flex-col min-h-screen w-full">
+  <div class="gamebox">
     <!-- <Billboard blilboard-vote="vote-result"/> -->
     <Billboard />
-    <div class="videobox">
-      <video
-        :class="['usercam' + index]"
-        :id="['usercam' + index]"
-        v-for="index in 10"
-        :key="index"
-        width="640px"
-        height="360px"
-        autoplay
-      >
-        {{ index }}
-      </video>
-      <!-- <video
-        id="usercam1"
-        width="640"
-        height="480"
-        autoplay
-      ></video> -->
-      <canvas
-        :class="['output_canvas' + index]"
-        v-for="index in 10"
-        :key="index"
-        width="320px"
-        height="180px"
-      ></canvas>
-      <!-- <div class="canvasmemo"> -->
-      <!-- <input
-          :id="['button' + index]"
-          v-for="index in 6"
-          type="button"
-          :key="index"
-        /> -->
-      <!-- <input
-          type="button"
-          id="button1"
-          v-on:click="memoJob('citizen')"
-          value="시민"
-        />
-        <input
-          type="button"
-          id="button2"
-          v-on:click="memoJob('police')"
-          value="경찰"
-        />
-        <input
-          type="button"
-          id="button3"
-          v-on:click="memoJob('doctor')"
-          value="의사"
-        />
-        <input
-          type="button"
-          id="button4"
-          v-on:click="memoJob('soldier')"
-          value="군인"
-        />
-        <input
-          type="button"
-          id="button5"
-          v-on:click="memoJob('mafia')"
-          value="마피아"
-        />
-        <input
-          type="button"
-          id="button6"
-          v-on:click="memoJob('none')"
-          value="메모삭제"
-        />
+
+    <!-- <div class="itemBox">
+        <div class="settingbox">
+          <div class="settingCamAndMic">
+            <img :src="require(`../assets/ingame/muteMic.png`)">
+            <img :src="require(`../assets/ingame/offCam.png`)"></div>
+          </div>
+
+        <div class="timebox">
+          <Timer
+              v-on:timeoutVote="finishVote"
+              v-on:timeoutPunishmentVote="finishPunishmentVote"
+              v-on:nightEvent="nightEvent"
+              ref="timer">
+          </Timer>
+        </div>
       </div> -->
+
+    <div class="videomainbox">
+      <div class="videobox" v-for="index in 10" :key="index">
+        <video
+          :class="['aspect-video usercam' + index]"
+          :id="['usercam' + index]"
+        >
+          {{ index }}
+        </video>
+        <canvas :class="['aspect-video output_canvas' + index]"></canvas>
+        <div :class="['userInfo' + index]">
+          {{
+            "level : " +
+            userLevel[index - 1] +
+            "   " +
+            userName[index - 1] +
+            survivePlayer[index - 1]
+          }}
+        </div>
+      </div>
       <Memo></Memo>
-      <div :class="['userInfo' + index]" v-for="index in 6" :key="index">
-        {{
-          "level : " +
-          userLevel[index - 1] +
-          "   " +
-          userName[index - 1] +
-          survivePlayer[index - 1]
-        }}
-      </div>
     </div>
-    <div class="settingbox">
-      <!-- <div class="sound_setting">사운드 설정</div> -->
-      <div class="settingCamAndMic">
-        <img :src="require(`../assets/ingame/muteMic.png`)" />
-        <img :src="require(`../assets/ingame/offCam.png`)" />
-      </div>
-
-      <!-- <div class="cam_setting">카메라 설정</div> -->
-    </div>
-
-    <div class="timebox">
-      <Timer
-        v-on:timeoutVote="finishVote"
-        v-on:timeoutPunishmentVote="finishPunishmentVote"
-        v-on:nightEvent="nightEvent"
-        ref="timer"
-      ></Timer>
-    </div>
-    <div class="home bg-purple-400 w-full"></div>
-    <SideBar />
   </div>
 </template>
 
@@ -125,8 +64,8 @@ export default {
       flowMessage: "투v",
       playerVote: [0, 0, 0, 0, 0, 0],
       playerJob: ["시민", "시민", "시민", "시민", "시민", "마피아"],
-      survivePlayer: ["", "", "", "", "", ""],
-      userLevel: [108, 17, 9, 666, 722, 15],
+      survivePlayer: ["", "", "", "", "", "", "", "", "", ""],
+      userLevel: [108, 17, 9, 666, 722, 15, 22, 31, 34, 54],
       userName: [
         "전국마피아신",
         "사실저마피아",
@@ -134,6 +73,10 @@ export default {
         "시민원챔",
         "머래너나잘해",
         "정치하면던짐",
+        "유저7",
+        "유저8",
+        "유저9",
+        "유저10",
       ],
       electedPlayersNum: 1,
       electedPlayers: 0,
@@ -165,16 +108,13 @@ export default {
       if (this.electedPlayersNum != 1) {
         this.flowMessage = "투표종료. 중복 혹은 무효처리";
         this.electedPlayers = null;
-        // 밤 & 능력사용 이벤트 (타이머로 이동하여)
-        // this.$refs.timer.nightEvent()
+        // 밤 & 능력사용 이벤트 (타이머로 이동하여) this.$refs.timer.nightEvent()
         setTimeout(this.$refs.timer.nightEvent(), 3000);
       } else {
         this.flowMessage = "투표완료. 집행대상자 선정 완료";
         console.log(this.$refs.timer);
         setTimeout(this.$refs.timer.startPunishmentVote(), 3000);
-        // this.$refs.timer.startPunishmentVote()
-
-        // 찬반투표 이벤트. (타이머로 이동하여 )
+        // this.$refs.timer.startPunishmentVote() 찬반투표 이벤트. (타이머로 이동하여 )
       }
     },
     gameStart() {
@@ -194,8 +134,7 @@ export default {
       if (this.punishmentPros > this.punishmentCons) {
         this.flowMessage = this.electedPlayers + 1 + " 를 사형합니다.";
         // this.killUser = document.getElementsByClassName("usercam1")
-        // this.killUser.style.backgroundColor = "#ffffff";
-        // 플레이어 제거 후 밤 & 능력사용 이벤트 진행
+        // this.killUser.style.backgroundColor = "#ffffff"; 플레이어 제거 후 밤 & 능력사용 이벤트 진행
         this.$refs.timer.nightEvent();
       } else {
         this.flowMessage = "투표가 부결되어 사형하지 않습니다.";
@@ -215,8 +154,7 @@ export default {
     morningEvent() {
       this.flowMessage = "아침이 되었습니다.";
       this.$refs.timer.startVote();
-      // 지목 유저 삭제 이벤트 발생
-      // this.flowMessage = 'X번 플레이어가 사망하였습니다.'
+      // 지목 유저 삭제 이벤트 발생 this.flowMessage = 'X번 플레이어가 사망하였습니다.'
       //
     },
     startVotee() {
@@ -227,294 +165,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-// .output_canvas {
-//   position: absolute;
-//   overflow: visible;
-//   width: 240px;
-//   height: 180px;
-//   left: 990px;
-//   top: 617px;
-// }
-.output_canvas1 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 230px;
-  top: 83px;
-}
-.output_canvas2 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 610px;
-  top: 83px;
-}
-.output_canvas3 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 990px;
-  top: 83px;
-}
-.output_canvas4 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 1370px;
-  top: 83px;
-}
-.output_canvas5 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 230px;
-  top: 350px;
-}
-.output_canvas6 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 1370px;
-  top: 350px;
-}
-.output_canvas7 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 230px;
-  top: 617px;
-}
-.output_canvas8 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 610px;
-  top: 617px;
-}
-.output_canvas9 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 990px;
-  top: 617px;
-}
-.output_canvas10 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 1370px;
-  top: 617px;
-}
-// .usercam9 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 180px;
-//   left: 990px;
-//   top: 617px;
-//   background-color: #ff00ff;
-// }
-
-.messagebox {
-  position: absolute;
-  overflow: visible;
-  width: 580px;
-  height: 250px;
-  left: 670px;
-  top: 315px;
-  background-color: #b1b11a;
-}
-.userInfo1 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  // min-width: 320px;
-  // width: 16vw; height는 계산 좀 해야됨..
-  height: 30px;
-  left: 230px;
-  top: 263px;
-  background-color: #ffffff;
-}
-
-.usercam1 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  // min-width: 320px;
-  // width: 16vw; height는 계산 좀 해야됨..
-  height: 180px;
-  left: 230px;
-  top: 83px;
-  background-color: #ff00ff;
-}
-.userInfo2 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  // min-width: 320px;
-  // width: 16vw; height는 계산 좀 해야됨..
-  height: 30px;
-  left: 610px;
-  top: 263px;
-  background-color: #ffffff;
-}
-
-.usercam2 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 610px;
-  top: 83px;
-  background-color: #ff00ff;
-}
-.userInfo3 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  // min-width: 320px;
-  // width: 16vw; height는 계산 좀 해야됨..
-  height: 30px;
-  left: 990px;
-  top: 263px;
-  background-color: #ffffff;
-}
-.usercam3 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 990px;
-  top: 83px;
-  background-color: #ff00ff;
-}
-.userInfo4 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  // min-width: 320px;
-  // width: 16vw; height는 계산 좀 해야됨..
-  height: 30px;
-  left: 1370px;
-  top: 263px;
-  background-color: #ffffff;
-}
-.usercam4 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 1370px;
-  top: 83px;
-  background-color: #ff00ff;
-}
-.userInfo5 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  // min-width: 320px;
-  // width: 16vw; height는 계산 좀 해야됨..
-  height: 30px;
-  left: 230px;
-  top: 530px;
-  background-color: #ffffff;
-}
-.usercam5 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 230px;
-  top: 350px;
-  background-color: #ff00ff;
-}
-.userInfo6 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  // min-width: 320px;
-  // width: 16vw; height는 계산 좀 해야됨..
-  height: 30px;
-  left: 1370px;
-  top: 530px;
-  background-color: #ffffff;
-}
-.usercam6 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 1370px;
-  top: 350px;
-  background-color: #ff00ff;
-}
-.usercam7 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 230px;
-  top: 617px;
-  background-color: #ff00ff;
-}
-.usercam8 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 610px;
-  top: 617px;
-  background-color: #ff00ff;
-}
-.usercam9 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 990px;
-  top: 617px;
-  background-color: #ff00ff;
-}
-.usercam10 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 180px;
-  left: 1370px;
-  top: 617px;
-  background-color: #ff00ff;
-}
-.settingbox {
-  position: absolute;
-  overflow: visible;
-
-  width: 400px;
-  height: 50px;
-  left: 780px;
-  top: 850px;
-  background-color: #ff0000;
-}
-.settingCamAndMic {
-  float: left;
-}
-.timebox {
-  position: absolute;
-  overflow: visible;
-  width: 200px;
-  height: 50px;
-  left: 1200px;
-  top: 850px;
-  background-color: #ff00ff;
-}
+<style lang="scss" scoped="scoped">
+@import "~assets/game.scss";
 </style>

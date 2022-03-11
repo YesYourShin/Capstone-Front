@@ -21,6 +21,7 @@
         </template>
       </div>
       <div class="h-20 w-60 rounded-lg bg-slate-400 cursor-pointer" @click="$router.push('/')">메인으로</div>
+      <div class="h-20 w-60 rounded-lg bg-slate-400 cursor-pointer" @click="showAlert">메인으로</div>
       <div class="">
         <ul class="flex list-none rounded my-2 justify-end">
           <li class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 ml-0 rounded-l hover:bg-gray-200"><a class="page-link" href="#">Previous</a></li>
@@ -32,6 +33,7 @@
       </div>
     </div>
     <chatBox></chatBox>
+    <videoComponent></videoComponent>
   </div>
 </template>
 <script>
@@ -41,6 +43,9 @@ import checkBoxes from "@/components/lobby_elements/checkBoxes.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
 import createRoomButton from "@/components/lobby_elements/createRoomButton.vue";
 import chatBox from "@/components/lobby_elements/chatBox.vue";
+import videoComponent from '@/components/videoComponent.vue';
+import { getGames } from '@/api/mafiaAPI'
+
 export default {
   components: {
     roomButton,
@@ -48,49 +53,50 @@ export default {
     checkBoxes,
     sideBar,
     createRoomButton,
-    chatBox
+    chatBox,
+    videoComponent,
   },
   data() {
     return {
+      evtSource: null,
       rooms: [
-        {
-          roomNum: 1,
-          roomName: '초보만',
-          maxPlayers: 6,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
-        {
-          roomNum: 2,
-          roomName: '마피아 게임',
-          maxPlayers: 6,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
-        {
-          roomNum: 3,
-          roomName: '매너게임 합시다',
-          maxPlayers: 8,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
-        {
-          roomNum: 4,
-          roomName: '옴팡지게 놀아보자',
-          maxPlayers: 10,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
-        {
-          roomNum: 5,
-          roomName: '그래프유출픽으로★100%수익가능★환전보장★',
-          maxPlayers: 6,
-          currentPlayers: 1,
-          mode: 'normal'
-        },
       ]
     };
   },
+  methods: {
+    showAlert() {
+      // this.$swal('Hello Vue world')
+      this.$swal({
+        title: 'Error!',
+        text: 'Do you want to continue',
+        icon: 'error',
+        confirmButtonText: 'Cool',
+      })
+    },
+  },
+  // async mounted() {
+  //   console.log('entered lobby');
+  //   // axios.get(`${this.$store.state.api}/games`, this.$store.state.payload)
+  //   //   .then((res) => {
+  //   //     this.rooms = res.data.data
+  //   //   })
+  //   const res = await getGames()
+  //   console.log(res);
+  //   this.rooms = res.data.data
+
+  //   this.evtSource = new EventSource(`${this.$store.state.api}/games/sse`, this.$store.state.payload)
+
+  //   var abd = this
+  //   this.evtSource.onmessage = function(e) {
+  //     const data = JSON.parse(e.data).data
+  //     console.log(data);
+  //     abd.rooms = data
+  //   }
+  // },
+  // beforeDestroy() {
+  //   this.evtSource?.close()
+  // }
+
 };
 </script>
 <style lang="" scoped>

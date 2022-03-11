@@ -1,6 +1,7 @@
 <template>
   <div class="canvasmemo">
     <div :class="['canvasmemo' + index]" v-for="index in 10" :key="index">
+      {{ index }}
       <input
         type="button"
         id="button1"
@@ -39,11 +40,12 @@
       />
     </div>
     <div>
+      {{ "내 번호:" + userNum }}
       <input
         type="checkbox"
         id="checkbox1"
         v-model="fingers"
-        v-on:click="fingersResults()"
+        v-on:click="fingersResults(this)"
       /><label>지목</label>
       <input
         type="checkbox"
@@ -528,6 +530,7 @@ export default {
         `output_canvas${i + 1}`
       )[0];
       const canvasCtx = canvasElement.getContext("2d");
+
       videoElement.style.display = "none";
 
       let onResults = (results) => {
@@ -714,7 +717,6 @@ export default {
             video: { width: 1280, height: 720 },
             // video: true,
           });
-          console.log(myStream);
           videoElement.srcObject = myStream;
         } catch (e) {
           console.log(e);
@@ -764,30 +766,39 @@ export default {
       }
     },
     memoJob(job, index) {
-      if (job == "citizen") {
-        this.imgSrc[index - 1] = "";
-        this.imgWidth[index - 1] = 0;
-        this.imgHeight[index - 1] = 0;
-      } else if (job == "police") {
-        this.imgSrc[index - 1] = require("../assets/image/police_hat.png");
-        this.imgWidth[index - 1] = 600;
-        this.imgHeight[index - 1] = 451;
-      } else if (job == "doctor") {
-        this.imgSrc[index - 1] = require("../assets/image/doctor_hat.png");
-        this.imgWidth[index - 1] = 1000;
-        this.imgHeight[index - 1] = 630;
-      } else if (job == "soldier") {
-        this.imgSrc[index - 1] = require("../assets/image/military_helmet.png");
-        this.imgWidth[index - 1] = 246;
-        this.imgHeight[index - 1] = 250;
-      } else if (job == "mafia") {
-        this.imgSrc[index - 1] = require("../assets/image/mafia_hat.png");
-        this.imgWidth[index - 1] = 1125;
-        this.imgHeight[index - 1] = 701;
-      } else if (job == "none") {
-        this.imgSrc[index - 1] = "";
-        this.imgWidth[index - 1] = 0;
-        this.imgHeight[index - 1] = 0;
+      switch (job) {
+        case "citizen":
+          this.imgSrc[index - 1] = "";
+          this.imgWidth[index - 1] = 0;
+          this.imgHeight[index - 1] = 0;
+          break;
+        case "police":
+          this.imgSrc[index - 1] = require("../assets/image/police_hat.png");
+          this.imgWidth[index - 1] = 600;
+          this.imgHeight[index - 1] = 451;
+          break;
+        case "doctor":
+          this.imgSrc[index - 1] = require("../assets/image/doctor_hat.png");
+          this.imgWidth[index - 1] = 1000;
+          this.imgHeight[index - 1] = 630;
+          break;
+        case "soldier":
+          this.imgSrc[
+            index - 1
+          ] = require("../assets/image/military_helmet.png");
+          this.imgWidth[index - 1] = 246;
+          this.imgHeight[index - 1] = 250;
+          break;
+        case "mafia":
+          this.imgSrc[index - 1] = require("../assets/image/mafia_hat.png");
+          this.imgWidth[index - 1] = 1125;
+          this.imgHeight[index - 1] = 701;
+          break;
+        case "none":
+          this.imgSrc[index - 1] = "";
+          this.imgWidth[index - 1] = 0;
+          this.imgHeight[index - 1] = 0;
+          break;
       }
     },
   },
@@ -804,94 +815,94 @@ export default {
 //   top: 796px;
 //   background-color: red;
 // }
-.canvasmemo1 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 230px;
-  top: 293px;
-  background-color: red;
-}
-.canvasmemo2 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 610px;
-  top: 293px;
-  background-color: red;
-}
-.canvasmemo3 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 990px;
-  top: 293px;
-  background-color: red;
-}
-.canvasmemo4 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 1370px;
-  top: 293px;
-  background-color: red;
-}
-.canvasmemo5 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 230px;
-  top: 560px;
-  background-color: red;
-}
-.canvasmemo6 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 1370px;
-  top: 560px;
-  background-color: red;
-}
-.canvasmemo7 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 230px;
-  top: 796px;
-  background-color: red;
-}
-.canvasmemo8 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 610px;
-  top: 796px;
-  background-color: red;
-}
-.canvasmemo9 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 990px;
-  top: 796px;
-  background-color: red;
-}
-.canvasmemo10 {
-  position: absolute;
-  overflow: visible;
-  width: 320px;
-  height: 30px;
-  left: 1370px;
-  top: 796px;
-  background-color: red;
-}
+// .canvasmemo1 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 230px;
+//   top: 293px;
+//   background-color: red;
+// }
+// .canvasmemo2 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 610px;
+//   top: 293px;
+//   background-color: red;
+// }
+// .canvasmemo3 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 990px;
+//   top: 293px;
+//   background-color: red;
+// }
+// .canvasmemo4 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 1370px;
+//   top: 293px;
+//   background-color: red;
+// }
+// .canvasmemo5 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 230px;
+//   top: 560px;
+//   background-color: red;
+// }
+// .canvasmemo6 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 1370px;
+//   top: 560px;
+//   background-color: red;
+// }
+// .canvasmemo7 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 230px;
+//   top: 796px;
+//   background-color: red;
+// }
+// .canvasmemo8 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 610px;
+//   top: 796px;
+//   background-color: red;
+// }
+// .canvasmemo9 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 990px;
+//   top: 796px;
+//   background-color: red;
+// }
+// .canvasmemo10 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 30px;
+//   left: 1370px;
+//   top: 796px;
+//   background-color: red;
+// }
 </style>

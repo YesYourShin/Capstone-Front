@@ -196,15 +196,15 @@
   100%{
     border-bottom: 3px solid white;
   }
-  }
+}
 
-  @keyframes colorturn{
-    0%{
-      background-color: black;
-      color: white;
-    }
-    100%{
-      background-color: white;
-      color: black;
-    }
-    }
+@keyframes colorturn{
+  0%{
+    background-color: black;
+    color: white;
+  }
+  100%{
+    background-color: white;
+    color: black;
+  }
+}

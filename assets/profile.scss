@@ -6,6 +6,7 @@
   height: 190px;
   font-family: 'Do Hyeon', sans-serif;
   font-size: 20px;
+  z-index: 8;
 
   .profilebox{
     border: 3px solid black;
@@ -44,6 +45,7 @@
       text-align: center;
       justify-content: right;
 
+
       .btnlink{
         color: white;
         text-decoration: none;
@@ -62,11 +64,15 @@
         background-color: black;
         color: white;
         border: 2px solid rgb(131, 131, 131)
+
       }
 
       .userlink:hover{
         animation: colorturn 0.5s;
         animation-fill-mode: forwards;
+        .btnlink{
+          color: black;
+        }
       }
 
       .userlevel{
@@ -146,6 +152,7 @@
 
       p{
         margin-left: 10px;
+        color: black;
       }
 
       .cance{

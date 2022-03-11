@@ -19,7 +19,7 @@
                 <NuxtLink to="/community/postb" class="Li">정보 게시판</NuxtLink>
             </li>
             <li class="communityLi">
-                <NuxtLink to="/postc" class="Li">인기 게시판</NuxtLink>
+                <NuxtLink to="/community/postc" class="Li">인기 게시판</NuxtLink>
             </li>
           </ul>
         </div>
@@ -62,19 +62,13 @@
 
 <script>
 export default {
-
   data() {
     return {
-
     };
   },
-
   mounted() {
-
   },
-
   methods: {
-
   },
 };
 </script>

@@ -33,6 +33,7 @@
           <div class="psb2">
             <input type="text">
             <button>찾기</button>
+            <button><NuxtLink to="/community/post">글쓰기</NuxtLink></button>
           </div>
         </div>
 
@@ -45,6 +46,7 @@
           <p class="mtb6">좋아요</p>
         </div>
 
+      <NuxtLink to="/community/post">
         <div class="communityPostContent">
           <p class="mtb1">1</p>
           <p class="mtb2">[공지] 마피아 게임 일부 오류 안내(수정완료)</p>
@@ -53,6 +55,7 @@
           <p class="mtb5">25</p>
           <p class="mtb6">58</p>
         </div>
+      </NuxtLink>
 
       </div>
     </div>
@@ -63,19 +66,13 @@
 <script>
 export default {
   name: 'CapstoneCommunity',
-
   data() {
     return {
-
     };
   },
-
   mounted() {
-
   },
-
   methods: {
-
   },
 };
 </script>

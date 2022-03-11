@@ -3,18 +3,18 @@
     <div class="flex-grow">
       <div class="flex">
         <div class=" bg-gradient-to-r via-gray-300 from-transparent flex justify-center items-center">
-          <p>방 제목입니다</p>
+          <p>{{game.name}}</p>
         </div>
         <sideBar></sideBar>
       </div>
       <div class="px-2 mt-10">
         <div class="grid grid-cols-5 justify-evenly">
-          <template v-for="n in 10">
+          <template v-for="user in game.members">
             <div class="justify-self-center px-2 pb-3 w-full">
               <div
                 class="aspect-video bg-fuchsia-400 border border-red-600"
               ></div>
-              <p class="bg-white rounded-b-lg">이름</p>
+              <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p>
             </div>
           </template>
         </div>
@@ -42,15 +42,33 @@
 <script>
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
+import { leaveGame, getGame } from '@/api/mafiaAPI'
+
 export default {
   components: {
     chatBox,
     sideBar,
   },
+  data() {
+    return {
+      game: {}
+    }
+  },
   methods: {
-    exit() {
+    async exit() {
+      const res = await leaveGame(this.$route.params.id)
+      console.log(res);
       this.$router.push(`/lobby`)
     }
+  },
+  mounted() {
+    getGame(this.$route.params.id)
+      .then((res) => {
+        this.game = res.data.data
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   },
 };
 </script>

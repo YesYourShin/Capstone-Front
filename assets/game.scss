@@ -1,0 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+
+.gamebox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 2048px;
+  height: 100vh;
+  min-height: 1020px;
+  margin: auto;
+  font-family: "Jua", sans-serif;
+  background-image: url("@/assets/game/night.png");
+  background-size: 100%;
+  background-position: center;
+
+  .itemBox {
+    padding: 20px 0;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    .settingbox {
+      width: 400px;
+      height: 50px;
+      background-color: #ff0000;
+
+      .settingCamAndMic {
+        display: flex;
+        margin: 7px 0;
+      }
+    }
+    .timebox {
+      width: 200px;
+      height: 50px;
+      background-color: #ff00ff;
+    }
+  }
+
+  .videomainbox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: auto;
+    width: 100%;
+    max-width: 1900px;
+    padding-bottom: 50px;
+
+    .videobox {
+      margin: 10px;
+
+      // video {
+      //   width: 355px;
+      //   background-color: orange;
+      //   border: 3px solid white;
+      // }
+      canvas {
+        width: 355px;
+        background-color: orange;
+        border: 3px solid white;
+      }
+      div {
+        width: 355px;
+        height: 30px;
+        line-height: 30px;
+        padding-left: 5px;
+        background-color: #ffffff;
+      }
+    }
+  }
+
+  .messagebox {
+    width: 750px;
+    height: 400px;
+    margin: auto;
+    background-color: white;
+    border: 10px solid black;
+  }
+}
+
+// .output_canvas1 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 230px;
+//   top: 83px;
+// }
+// .output_canvas2 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 610px;
+//   top: 83px;
+// }
+// .output_canvas3 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 990px;
+//   top: 83px;
+// }
+// .output_canvas4 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 1370px;
+//   top: 83px;
+// }
+// .output_canvas5 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 230px;
+//   top: 350px;
+// }
+// .output_canvas6 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 1370px;
+//   top: 350px;
+// }
+// .output_canvas7 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 230px;
+//   top: 617px;
+// }
+// .output_canvas8 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 610px;
+//   top: 617px;
+// }
+// .output_canvas9 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 990px;
+//   top: 617px;
+// }
+// .output_canvas10 {
+//   position: absolute;
+//   overflow: visible;
+//   width: 320px;
+//   height: 180px;
+//   left: 1370px;
+//   top: 617px;
+// }

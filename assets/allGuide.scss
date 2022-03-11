@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+
+.guideBox{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1920px;
+  min-width: 1106px;
+  max-height: 935px;
+  min-height: 935px;
+  margin: 0 auto;
+
+  .mainGuideBox{
+    position: relative;
+    z-index: 7;
+    width: 85%;
+    margin: auto;
+    margin-top: 35px;
+    height: 700px;
+    font-family: 'Do Hyeon', sans-serif;
+    border-radius: 25px;
+    display: flex;
+    justify-content: space-between;
+
+    .giudeCard1{
+      width: 330px;
+      height: 80%;
+      margin: auto;
+      border-radius: 15px;
+      position: relative;
+      border: 3px solid white;
+
+      background-image: url("@/assets/pageimg/y1.png");
+      background-size: 250px;
+      background-position: bottom;
+      background-position: 30px;
+      background-color: rgba(131, 131, 131, 0.842);
+
+      p{
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 40px;
+        color: white;
+      }
+      &:hover{
+        animation: card1 0.5s;
+        animation-fill-mode: forwards;
+        p{
+          animation: size 0.5s;
+          animation-fill-mode: forwards;
+          color: orange;
+        }
+      }
+    }
+
+    .giudeCard2{
+      width: 330px;
+      height: 80%;
+      margin: auto;
+      border-radius: 15px;
+      position: relative;
+      border: 3px solid white;
+
+      background-image: url("@/assets/pageimg/y2.png");
+      background-size: 270px;
+      background-position: bottom;
+      background-color: rgba(131, 131, 131, 0.842);
+
+      p{
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 40px;
+        color: white;
+      }
+      &:hover{
+        animation: card2 0.5s;
+        animation-fill-mode: forwards;
+        p{
+          animation: size  0.5s;
+          animation-fill-mode: forwards;
+          color: orange;
+        }
+      }
+    }
+
+    .giudeCard3{
+      width: 330px;
+      height: 80%;
+      margin: auto;
+      border-radius: 15px;
+      position: relative;
+      border: 3px solid white;
+
+      background-image: url("@/assets/pageimg/y3.png");
+      background-size: 270px;
+      background-position: bottom;
+      background-color: rgba(131, 131, 131, 0.842);
+
+      p{
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 40px;
+        color: white;
+      }
+      &:hover{
+        animation: card3 0.5s;
+        animation-fill-mode: forwards;
+        p{
+          animation: size 0.5s;
+          animation-fill-mode: forwards;
+          color: orange;
+        }
+      }
+    }
+
+
+  }
+}
+@keyframes card1 {
+  0% {
+    background-position: -330px;
+      }
+  100% {
+    width: 360px;
+    height: 85%;
+    background-position: bottom;
+    background-position: 25px;
+    border: 5px solid orange;
+    background-size: 290px;
+  }
+}
+@keyframes card2 {
+  0% {
+    background-position: -330px;
+      }
+  100% {
+    width: 360px;
+    height: 85%;
+    background-position: bottom;
+    background-size: 290px;
+    border: 5px solid orange;
+  }
+}
+@keyframes card3 {
+  0% {
+    background-position: -330px;
+      }
+  100% {
+    width: 360px;
+    height: 85%;
+    background-size: 290px;
+    background-position: bottom;
+    border: 5px solid orange;
+  }
+}
+@keyframes size {
+  0% {
+      }
+  100% {
+    font-size: 50px;
+  }
+}
