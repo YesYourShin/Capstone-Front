@@ -5,7 +5,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
-  max-width: 2048px;
+  max-width: 2400px;
   height: 100vh;
   min-height: 1020px;
   margin: auto;
@@ -42,23 +42,24 @@
   .videomainbox{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     margin: 0 auto;
     padding: auto;
     width: 100%;
-    max-width: 1900px;
+    max-width: 2100px;
+    min-width: 1900px;
     padding-bottom: 50px;
 
     .videobox{
       margin: 10px;
 
       video{
-        width: 355px;
+        width: 345px;
         background-color: orange;
         border:3px solid white;
       }
       div{
-        width: 355px;
+        width: 345px;
         height: 30px;
         line-height: 30px;
         padding-left: 5px;
@@ -68,11 +69,14 @@
     }
   }
 
-  .messagebox {
-    width: 750px;
-    height: 400px;
+  .messagebiv{
+    height: 360px;
     margin: auto;
-    background-color: white;
-    border: 10px solid black;
+    .messagebox {
+      width: 750px;
+      height: 370px;
+      background-color: white;
+      border: 10px solid black;
+    }
   }
 }

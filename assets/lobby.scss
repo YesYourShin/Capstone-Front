@@ -1,0 +1,22 @@
+#lobbybox{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  background-image: url("@/assets/game/bay.png");
+  background-size: 100%;
+  background-position: bottom;
+
+  .proFileBox{
+    width: 420px;
+    .proimg{
+      width: 350px;
+      margin: 10px 0 10px 60px;
+    }
+  }
+  .lobbyBox{
+    width: 82%;
+    // border: 1px solid white;
+  }
+}

@@ -1,7 +1,7 @@
 import { UserModule } from "./user";
 
 export const state = () => ({
-  friends: Array(12)
+  friends: Array(6)
   .fill()
   .map((arr, i) => {
     return {

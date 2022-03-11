@@ -1,8 +1,9 @@
 <template>
   <div class="gamebox">
       <!-- <Billboard blilboard-vote="vote-result"/> -->
-    <Billboard/>
-
+      <div class="messagebiv">
+        <Billboard/>
+      </div>
       <!-- <div class="itemBox">
         <div class="settingbox">
           <div class="settingCamAndMic">
