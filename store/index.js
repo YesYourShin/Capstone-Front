@@ -17,7 +17,10 @@ export const state = () => ({
   chats: [],
   selectedIndex: -1,
   joinedRoom: null,
+  publishedStreams: [],
   subscribedStreams: [],
+  subscribedFeed: [],
+  mainFeed: null,
 })
 
 export const mutations = {
@@ -48,6 +51,15 @@ export const mutations = {
     state.subscribedStreams = state.subscribedStreams.filter(function (data) {
       return data.rfid != rfid;
     })
+  },
+  addPublishStream(state, data) {
+    state.publishedStreams.push(data)
+  },
+  changeMainFeed(state, data) {
+    state.mainFeed = data;
+  },
+  subscribeFeed(state, data) {
+    state.subscribedFeed = data
   }
 }
 
