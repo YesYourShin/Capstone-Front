@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3065/api',
+  baseURL: process.env.NODE_ENV === 'production' ? 'https://gjgjajaj.xyz/api' : 'http://localhost:3065/api',
   withCredentials: true,
 })
 

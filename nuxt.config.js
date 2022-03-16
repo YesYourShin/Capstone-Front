@@ -20,7 +20,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['~/assets/main.css'],
+  css: ['@/assets/css/main.css'],
   // css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -35,7 +35,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    '@nuxtjs/tailwindcss'
+    '@nuxt/postcss8',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -64,18 +64,15 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    postcss: {
+      plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+      },
+    },
   },
 
   server:{
     port: 7000
   },
-
-  axios: {
-    baseURL:'http://localhost:3065',
-    credentials: true,
-  },
-
-  serverMiddleware: [
-    {path: '/ws', handler: '~/api/srv.js'}
-  ]
 }

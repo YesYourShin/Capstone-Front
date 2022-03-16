@@ -63,11 +63,8 @@ export const mutations = {
   }
 }
 
-
-
-
-
-
-
+export const getters = {
+  getJoinedRoom: state => state.joinedRoom
+}
 
 
