@@ -4,7 +4,7 @@
       <Banner/>
     </div>
     <div class="homeProFile">
-      <div v-if="data != null"><Profile/></div>
+      <div v-if="login"><Profile/></div>
       <div v-else><LoginProfile/></div>
       <div class="guideBox">
         <div class="guides1">
@@ -193,6 +193,7 @@ export default {
   data() {
     return {
       data:[],
+      login:false,
     };
   },
 
@@ -207,7 +208,12 @@ export default {
   // },
 
   methods:{
-
+    login(){
+      if(this.data != null){
+        this.login = true;
+        console.log('sd')
+      }
+    }
   },
 
 };
