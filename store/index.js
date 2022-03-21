@@ -21,6 +21,7 @@ export const state = () => ({
   subscribedStreams: [],
   subscribedFeed: [],
   mainFeed: null,
+  janus: null,
 })
 
 export const mutations = {
@@ -45,6 +46,12 @@ export const mutations = {
     state.joinedRoom = data
   },
   addSubscribeStream(state, data) {
+    function findrfid(element) {
+      if (element.rfid === data.rfid) {
+        return true;
+      }
+    }
+    if (state.subscribedStreams.some(findrfid)) return;
     state.subscribedStreams.push(data)
   },
   removeSubscriber(state, rfid) {
@@ -60,11 +67,12 @@ export const mutations = {
   },
   subscribeFeed(state, data) {
     state.subscribedFeed = data
-  }
+  },
 }
 
 export const getters = {
-  getJoinedRoom: state => state.joinedRoom
+  getJoinedRoom: state => state.joinedRoom,
+  getSubscribedStreams: state => state.subscribedStreams,
 }
 
 

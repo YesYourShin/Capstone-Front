@@ -1,6 +1,9 @@
 <template lang="">
   <div id="testMain">
     <video id="myVideo" ref="myVideo" muted></video>
+    <template v-if="subscribedStreams.length" v-for="s in subscribedStreams">
+      <video :src-object.prop.camel="s.stream" :id="s.rfid" autoplay></video>
+    </template>
   </div>
 </template>
 <script>
@@ -11,205 +14,18 @@ export default {
     return {
       storePlugin: null,
       myStream: null,
-      janus: null,
-      opaqueId: "videoroomtest-" + Janus.randomString(12), //opaqueId 값을 통해서 유저 구분
-      roomId: 16121235,
-      pin: null,
-      username: "Yuuto",
     };
   },
   computed: {
-    getJoinedRoom() {
-      return this.$store.getters.getJoinedRoom.publisherPvtId;
-    },
+    subscribedStreams() {
+      return this.$store.getters.getSubscribedStreams;
+    }
   },
-  methods: {
-    newRemoteFeed(id, display, audio, video) {
-      // 새로운 피드가 Publish되면, 새로운 피드를 생성해 Subscribe한다.
-      let vrc = this;
-      let remoteFeed = null;
-      this.janus.attach({
-        plugin: "janus.plugin.videoroom",
-        opaqueId: this.opaqueId,
-        success: function (pluginHandle) {
-          remoteFeed = pluginHandle;
-          Janus.log(
-            "Plugin attached! (" +
-              remoteFeed.getPlugin() +
-              ", id=" +
-              remoteFeed.getId() +
-              ")"
-          );
-          Janus.log("  -- This is a subscriber");
-
-          let subscribe = null;
-          if (this.pin) {
-            subscribe = {
-              request: "join",
-              room: 16121235,
-              ptype: "subscriber",
-              feed: id,
-              pin: this.pin,
-              private_id: this.getJoinedRoom,
-            };
-          } else {
-            subscribe = {
-              request: "join",
-              room: 16121235,
-              ptype: "subscriber",
-              feed: id,
-              private_id: this.getJoinedRoom,
-            };
-          }
-
-          // Subscribe 메세지를 담아 Plugin에 전송 (Plugin 측에서 Offer를 생성하여 전송해줌)
-          remoteFeed.videoCodec = video;
-          remoteFeed.send({ message: subscribe });
-        },
-        error: function (error) {
-          Janus.error("  -- Error attaching plugin...", error);
-        },
-        onmessage: function (msg, jsep) {
-          Janus.debug(" ::: Got a message (subscriber) :::", msg);
-          Janus.log(" ::: Got a message (subscriber) :::", msg);
-          var event = msg["videoroom"];
-          Janus.debug("Event: " + event);
-          if (msg["error"]) {
-            console.log(msg["error"]);
-          } else if (event) {
-            if (event === "attached") {
-              remoteFeed.rfid = msg["id"];
-              remoteFeed.rfdisplay = msg["display"];
-
-              vrc.$store.commit("subscribeFeed", {
-                id: msg["id"],
-                display: msg["display"],
-              });
-              Janus.log(
-                "Successfully attached to feed " +
-                  remoteFeed.rfid +
-                  " (" +
-                  remoteFeed.rfdisplay +
-                  ") in room " +
-                  msg["room"]
-              );
-            } else if (event === "event") {
-              // publisher로부터의 동시캐스트를 사용할 시 사용 (현재 사용 X)
-            } else {
-              // What has just happened?
-            }
-          }
-          if (jsep) {
-            Janus.debug("Handling SDP as well...", jsep);
-            // Answer and attach
-            remoteFeed.createAnswer({
-              jsep: jsep,
-              // Audio와 Video를 보내지 않는다.(전송은 Publisher)
-              media: {
-                data: true,
-                audioSend: false,
-                videoSend: false,
-              },
-              success: function (jsep) {
-                Janus.debug("Got SDP!", jsep);
-                var body = { request: "start", room: this.roomId };
-                remoteFeed.send({ message: body, jsep: jsep });
-              },
-              error: function (error) {
-                Janus.error("WebRTC error:", error);
-              },
-            });
-          }
-        },
-        iceState: function (state) {
-          // ICE 상태 변화시
-          Janus.log(
-            "ICE state of this WebRTC PeerConnection (feed #" +
-              remoteFeed.rfindex +
-              ") changed to " +
-              state
-          );
-        },
-        webrtcState: function (on) {
-          // WebRETC PeerConnection 연결시 혹은 중단시
-          Janus.log(
-            "Janus says this WebRTC PeerConnection (feed #" +
-              remoteFeed.rfindex +
-              ") is " +
-              (on ? "up" : "down") +
-              " now"
-          );
-        },
-        onlocalstream: function (stream) {
-          // Subscriber는 오직 수신만
-        },
-        onremotestream: function (stream) {
-          Janus.debug("Remote feed #" + remoteFeed.rfid + ", stream:", stream);
-
-          var refName = `remoteVideo${remoteFeed.rfid}`;
-
-          var vid = document.createElement("video");
-          vid.setAttribute("id", refName);
-          vid.setAttribute("autoplay", true);
-
-          document.getElementById("testMain").append(vid);
-
-          console.log(vrc.$refs.refName, "이게 레프네임 되는거야?");
-          document.getElementById(refName).pause();
-          // Janus.attachMediaStream(vrc.$refs.refName, stream);
-          document.getElementById(refName).srcObject = stream;
-          document.getElementById(refName).load();
-          document.getElementById(refName).play();
-
-          vrc.$store.commit("addSubscribeStream", {
-            rfid: remoteFeed.rfid,
-            stream: stream,
-          });
-
-          console.log(stream, "ㅇㅎ! 이게 리모트 스트림이군요!");
-        },
-        oncleanup: function () {
-          // 퇴장시 Subscriber Feed에서 제거
-
-          vrc.$store.commit(remoteFeed.rfid);
-        },
-        ondataopen: function () {
-          console.log("remote datachannel opened");
-        },
-        ondata: function (data) {
-          let json = JSON.parse(data);
-          let what = json["textroom"];
-          if (what === "message") {
-            let whisper = json["to"];
-            console.log(whisper, vrc.username);
-            if (whisper) {
-              if (whisper === vrc.username) {
-                // dispatch(
-                //   receiveChat({
-                //     display: json["display"],
-                //     text: json["text"],
-                //     time: moment().format("HH:mm"),
-                //     isPrivateMessage: true,
-                //   })
-                // );
-              }
-            } else {
-              // dispatch(
-              //   receiveChat({
-              //     display: json["display"],
-              //     text: json["text"],
-              //     time: moment().format("HH:mm"),
-              //     isPrivateMessage: false,
-              //   })
-              // );
-            }
-          }
-        },
-      });
-    },
-  },
+  methods: {},
   mounted() {
     const ServerWS = "ws://13.125.132.255:8188/janus";
+    let janus = null;
+    const opaqueId = "videoroomtest-" + Janus.randomString(12); //opaqueId 값을 통해서 유저 구분
     let videoHandlerGame = null; //Handle 객체
 
     let vrc = this;
@@ -227,13 +43,13 @@ export default {
           return;
         }
         // 세션 생성
-        vrc.janus = new Janus({
+        janus = new Janus({
           server: ServerWS,
           success: function () {
             // VideoRoom Plugin 연결
-            vrc.janus.attach({
+            janus.attach({
               plugin: "janus.plugin.videoroom",
-              opaqueId: vrc.opaqueId,
+              opaqueId: opaqueId,
               success: function (pluginHandle) {
                 vrc.storePlugin = pluginHandle;
                 Janus.log(
@@ -244,20 +60,20 @@ export default {
                     ")"
                 );
                 Janus.log("  -- This is a publisher/manager");
-                if (vrc.pin) {
+                if (pin) {
                   var register = {
                     request: "join",
-                    room: vrc.roomId,
+                    room: roomId,
                     ptype: "publisher",
-                    display: vrc.username,
-                    pin: vrc.pin,
+                    display: username,
+                    pin: pin,
                   };
                 } else {
                   var register = {
                     request: "join",
-                    room: vrc.roomId,
+                    room: roomId,
                     ptype: "publisher",
-                    display: vrc.username,
+                    display: username,
                   };
                 }
 
@@ -311,13 +127,185 @@ export default {
                 Janus.debug("Event: " + event);
 
                 if (event) {
+                  newRemoteFeed = (id, display, audio, video) => {
+                    // 새로운 피드가 Publish되면, 새로운 피드를 생성해 Subscribe한다.
+                    let remoteFeed = null;
+                    janus.attach({
+                      plugin: "janus.plugin.videoroom",
+                      opaqueId: opaqueId,
+                      success: function (pluginHandle) {
+                        remoteFeed = pluginHandle;
+                        Janus.log(
+                          "Plugin attached! (" +
+                            remoteFeed.getPlugin() +
+                            ", id=" +
+                            remoteFeed.getId() +
+                            ")"
+                        );
+                        Janus.log("  -- This is a subscriber");
+
+                        let subscribe = null;
+                        if (pin) {
+                          subscribe = {
+                            request: "join",
+                            room: roomId,
+                            ptype: "subscriber",
+                            feed: id,
+                            pin: pin,
+                            private_id:
+                              vrc.$store.state.joinedRoom.publisherPvtId,
+                          };
+                        } else {
+                          subscribe = {
+                            request: "join",
+                            room: roomId,
+                            ptype: "subscriber",
+                            feed: id,
+                            private_id:
+                              vrc.$store.state.joinedRoom.publisherPvtId,
+                          };
+                        }
+
+                        // Subscribe 메세지를 담아 Plugin에 전송 (Plugin 측에서 Offer를 생성하여 전송해줌)
+                        remoteFeed.videoCodec = video;
+                        remoteFeed.send({ message: subscribe });
+                      },
+                      error: function (error) {
+                        Janus.error("  -- Error attaching plugin...", error);
+                      },
+                      onmessage: function (msg, jsep) {
+                        Janus.debug(" ::: Got a message (subscriber) :::", msg);
+                        Janus.log(" ::: Got a message (subscriber) :::", msg);
+                        var event = msg["videoroom"];
+                        Janus.debug("Event: " + event);
+                        if (msg["error"]) {
+                          console.log(msg["error"]);
+                        } else if (event) {
+                          if (event === "attached") {
+                            remoteFeed.rfid = msg["id"];
+                            remoteFeed.rfdisplay = msg["display"];
+
+                            vrc.$store.commit("subscribeFeed", {
+                              id: msg["id"],
+                              display: msg["display"],
+                            });
+                            Janus.log(
+                              "Successfully attached to feed " +
+                                remoteFeed.rfid +
+                                " (" +
+                                remoteFeed.rfdisplay +
+                                ") in room " +
+                                msg["room"]
+                            );
+                          } else if (event === "event") {
+                            // publisher로부터의 동시캐스트를 사용할 시 사용 (현재 사용 X)
+                          } else {
+                            // What has just happened?
+                          }
+                        }
+                        if (jsep) {
+                          Janus.debug("Handling SDP as well...", jsep);
+                          // Answer and attach
+                          remoteFeed.createAnswer({
+                            jsep: jsep,
+                            // Audio와 Video를 보내지 않는다.(전송은 Publisher)
+                            media: {
+                              data: true,
+                              audioSend: false,
+                              videoSend: false,
+                            },
+                            success: function (jsep) {
+                              Janus.debug("Got SDP!", jsep);
+                              var body = { request: "start", room: roomId };
+                              remoteFeed.send({ message: body, jsep: jsep });
+                            },
+                            error: function (error) {
+                              Janus.error("WebRTC error:", error);
+                            },
+                          });
+                        }
+                      },
+                      iceState: function (state) {
+                        // ICE 상태 변화시
+                        Janus.log(
+                          "ICE state of this WebRTC PeerConnection (feed #" +
+                            remoteFeed.rfindex +
+                            ") changed to " +
+                            state
+                        );
+                      },
+                      webrtcState: function (on) {
+                        // WebRETC PeerConnection 연결시 혹은 중단시
+                        Janus.log(
+                          "Janus says this WebRTC PeerConnection (feed #" +
+                            remoteFeed.rfindex +
+                            ") is " +
+                            (on ? "up" : "down") +
+                            " now"
+                        );
+                      },
+                      onlocalstream: function (stream) {
+                        // Subscriber는 오직 수신만
+                      },
+                      onremotestream: function (stream) {
+                        Janus.debug(
+                          "Remote feed #" + remoteFeed.rfid + ", stream:",
+                          stream
+                        );
+
+                        vrc.$store.commit("addSubscribeStream", {
+                          rfid: remoteFeed.rfid,
+                          stream: stream,
+                        });
+
+                        console.log(stream, "ㅇㅎ! 이게 리모트 스트림이군요!");
+                      },
+                      oncleanup: function () {
+                        // 퇴장시 Subscriber Feed에서 제거
+
+                        vrc.$store.commit('removeSubscriber', remoteFeed.rfid);
+                      },
+                      ondataopen: function () {
+                        console.log("remote datachannel opened");
+                      },
+                      ondata: function (data) {
+                        let json = JSON.parse(data);
+                        let what = json["textroom"];
+                        if (what === "message") {
+                          let whisper = json["to"];
+                          console.log(whisper, username);
+                          if (whisper) {
+                            if (whisper === username) {
+                              // dispatch(
+                              //   receiveChat({
+                              //     display: json["display"],
+                              //     text: json["text"],
+                              //     time: moment().format("HH:mm"),
+                              //     isPrivateMessage: true,
+                              //   })
+                              // );
+                            }
+                          } else {
+                            // dispatch(
+                            //   receiveChat({
+                            //     display: json["display"],
+                            //     text: json["text"],
+                            //     time: moment().format("HH:mm"),
+                            //     isPrivateMessage: false,
+                            //   })
+                            // );
+                          }
+                        }
+                      },
+                    });
+                  };
                   if (event === "joined") {
                     // Publisher가 Join시 WebRTC와 협상하거나 존재하는 피드에 연결
 
                     vrc.$store.commit("joinRoom", {
                       room: msg["room"],
                       publisherId: msg["id"],
-                      display: vrc.username,
+                      display: username,
                       publisherPvtId: msg["private_id"],
                     });
 
@@ -391,7 +379,7 @@ export default {
                             ")"
                         );
                         // 모두 Subscribe 진행
-                        vrc.newRemoteFeed(id, display, audio, video);
+                        newRemoteFeed(id, display, audio, video);
                       }
                     }
                   } else if (event === "destroyed") {
@@ -423,7 +411,7 @@ export default {
                             ")"
                         );
                         // 모두 Subscribe 진행unpublish
-                        vrc.newRemoteFeed(id, display, audio, video);
+                        newRemoteFeed(id, display, audio, video);
                       }
                     } else if (msg["leaving"]) {
                       // One of the publishers has gone away?
@@ -500,7 +488,7 @@ export default {
                 vrc.$store.commit("addPublishStream", stream);
                 vrc.$store.commit("changeMainFeed", {
                   stream: stream,
-                  display: vrc.username,
+                  display: username,
                 });
                 // Video 존재 여부에 따른 처리
                 // var videoTracks = stream.getVideoTracks();
