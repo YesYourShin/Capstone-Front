@@ -10,6 +10,9 @@
 import Janus from "@/plugins/janus";
 
 export default {
+  props: {
+    roomNum: Number,
+  },
   data() {
     return {
       storePlugin: null,
@@ -33,7 +36,7 @@ export default {
     let vrc = this;
     let pin = null;
     let username = "Yuuto";
-    let roomId = 16121235;
+    let roomId = vrc.roomNum;
     let newRemoteFeed = null;
 
     Janus.init({
