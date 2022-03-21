@@ -9,7 +9,9 @@
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
         <button class="userlink" @click="logout">Logout</button>
-        <p v-if="data.data" class="userlevel">Lv.250 <span class="username">{{ data.data.id }}</span></p>
+        <p v-if="data.data" class="userlevel">Lv.250 <span class="username">
+          {{ data.data.id }}
+          </span></p>
         <p class="usertext">Mirai1412/Capstone-Front</p>
       </div>
 
@@ -41,21 +43,6 @@
       </div>
       <div class="ballbox">
         <p>???에게 게임 초대가 왔습니다.</p>
-        <div class="cance">
-          <div class="cance1"></div>
-          <div class="cance2"></div>
-        </div>
-      </div>
-
-      <div class="ballbox">
-        <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cance">
-          <div class="cance1"></div>
-          <div class="cance2"></div>
-        </div>
-      </div>
-      <div class="ballbox">
-        <p>???에게 메세지가 도착했습니다.</p>
         <div class="cance">
           <div class="cance1"></div>
           <div class="cance2"></div>

@@ -7,11 +7,19 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { getMyInformation } from '@/api/mafiaAPI'
 
 export default {
 
-
+  data() {
+    return {
+      data: [],
+    };
+  },
+  async mounted() {
+     const response = await getMyInformation()
+     this.data = response.data
+  },
 };
 </script>
 

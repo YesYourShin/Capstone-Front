@@ -14,7 +14,8 @@ export default {
 
 <style>
 html {
-  background-color: rgba(0, 0, 0, 0.76);
+  /* background-color: rgba(0, 0, 0, 0.76); */
   height: 100%;
+    background-color: rgba(0, 0, 0, 0.911);
 }
 </style>
