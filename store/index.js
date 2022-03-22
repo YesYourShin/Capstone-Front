@@ -17,7 +17,11 @@ export const state = () => ({
   chats: [],
   selectedIndex: -1,
   joinedRoom: null,
+  publishedStream: null,
   subscribedStreams: [],
+  subscribedFeeds: [],
+  mainFeed: null,
+  janus: null,
 })
 
 export const mutations = {
@@ -42,20 +46,42 @@ export const mutations = {
     state.joinedRoom = data
   },
   addSubscribeStream(state, data) {
+    function findrfid(element) {
+      if (element.rfid === data.rfid) {
+        return true;
+      }
+    }
+    if (state.subscribedStreams.some(findrfid)) return;
     state.subscribedStreams.push(data)
   },
   removeSubscriber(state, rfid) {
     state.subscribedStreams = state.subscribedStreams.filter(function (data) {
       return data.rfid != rfid;
     })
-  }
+
+    // state.subscribedFeeds.forEach(e => {
+    //   if (e.rfid == rfid) {
+    //     e.detach
+    //   }
+    // });
+  },
+  addPublishStream(state, data) {
+    state.publishedStream = data;
+  },
+  changeMainFeed(state, data) {
+    state.mainFeed = data;
+  },
+  subscribeFeed(state, data) {
+    state.subscribedFeeds.push(data);
+  },
 }
 
-
-
-
-
-
-
+export const getters = {
+  getJoinedRoom: state => state.joinedRoom,
+  getSubscribedStreams: state => state.subscribedStreams,
+  getSubscribedFeeds: state => state.subscribedFeeds,
+  getPublishedStream: state => state.addPublishStream,
+  getMainFeed: state => state.mainFeed,
+}
 
 
