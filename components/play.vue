@@ -9,7 +9,6 @@
             <img :src="require(`../assets/ingame/muteMic.png`)">
             <img :src="require(`../assets/ingame/offCam.png`)"></div>
           </div>
-
         <div class="timebox">
           <Timer
               v-on:timeoutVote="finishVote"
@@ -62,7 +61,6 @@ export default {
     SideBar,
     Memo,
   },
-
   data() {
     return {
       flowMessage: "투v",
@@ -92,7 +90,6 @@ export default {
       userNum: 3,
     };
   },
-
   mounted() {},
   // 해야할일, 투표
   methods: {
@@ -108,7 +105,6 @@ export default {
           this.electedPlayersNum = 1;
         }
       }
-
       if (this.electedPlayersNum != 1) {
         this.flowMessage = "투표종료. 중복 혹은 무효처리";
         this.electedPlayers = null;

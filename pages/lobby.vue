@@ -1,7 +1,14 @@
-<template lang="">
-  <div class="flex">
-    <profile></profile>
-    <gameLobby></gameLobby>
+<template>
+  <div class="h-screen" id="lobbybox">
+    <div class="proFileBox">
+      <!-- <NuxtLink to="/">
+      <img src="@/assets/Logow.png" class="proimg">
+      </NuxtLink> -->
+      <profile/>
+    </div>
+    <div class="lobbyBox">
+      <gameLobby/>
+    </div>
   </div>
 </template>
 <script>

@@ -1,5 +1,5 @@
-<template lang="">
-  <div>
+<template>
+  <div class="chatBox">
     <transition-group
       name="list"
       tag="div"
@@ -36,7 +36,7 @@
     <div class="h-52 bg-gray-300 flex flex-col overflow-auto">
       <div class="grow">
         <div class="">
-          <p v-for="message in currentMessages">{{ message }}</p>
+          <!-- <p v-for="message in currentMessages">{{ message }}</p> -->
         </div>
       </div>
     </div>
