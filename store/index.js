@@ -65,6 +65,9 @@ export const mutations = {
     //   }
     // });
   },
+  removeAllSubscribers(state) {
+    state.subscribedStreams = [];
+  },
   addPublishStream(state, data) {
     state.publishedStream = data;
   },

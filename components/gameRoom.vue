@@ -93,6 +93,8 @@ export default {
     // }
     exit() {
       this.$router.push('/lobby')
+      this.janus.destroy()
+      this.$store.commit('removeAllSubscribers')
     }
   },
   mounted() {
@@ -612,7 +614,6 @@ export default {
     });
   },
   beforeDestroy() {
-    this.janus.destroy()
   }
 };
 </script>
