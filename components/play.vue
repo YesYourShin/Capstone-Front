@@ -28,7 +28,11 @@
         >
           {{ index }}
         </video>
-        <canvas :class="['aspect-video output_canvas' + index]"></canvas>
+        <canvas
+          :class="['aspect-video output_canvas' + index]"
+          width="640"
+          height="360"
+        ></canvas>
         <div :class="['userInfo' + index]">
           {{
             "level : " +

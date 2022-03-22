@@ -70,6 +70,16 @@ export default {
   head: {
     script: [
       {
+        src: "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs",
+        crossorigin: "anonymous",
+        body: true,
+      },
+      {
+        src: "https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface",
+        crossorigin: "anonymous",
+        body: true,
+      },
+      {
         src: "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js",
         crossorigin: "anonymous",
         body: true,
@@ -113,28 +123,58 @@ export default {
       fingers: false,
       check: false,
       vote: false,
+      landmarks: [],
+      topLeftLandmarks: [],
+      bottomRightLandmarks: [],
+      results: [],
+      myVideo: false,
+      myCanvas: false,
+      myCtx: false,
     };
   },
 
   mounted() {
+    /*
+      해야할 것
+      1. 손 인식 -> 얼굴 인식 -> 나머지 영상 순으로 하나 끝나면 하나 켜지게 할 것
+        한 번에 여러 개가 동시에 켜지니 에러가 발생하는 듯? 근데 이렇게 어떻게 하지
+      2. 나머지 영상은 스트림으로 받아서 영상이 켜지게 할 것
+        지금은 자기 스트림으로 자기 카메라가 켜지게 되어 있음
+        받은 스트림을 video 태그랑 어떻게 연결함?
+        videoElements.srcObject ?
+      3. 메모로 쓰이는 이미지의 캔버스 크기 지정?
+
+      문제점?
+      1. 마스크를 쓰면 인식률이 엄청 낮아짐
+        인식이 안 되는 건 아닌데 마스크 위로 인식되다보니 범위가 이상하게 잡힘
+        -> 게임 플레이 시에는 마스크를 쓰지 말 것
+      2. 얼굴이 여러개 인식 됨
+        하나만 인식되게 지정할 수 없어서 여러 얼굴이 인식됨
+        -> 처음 인식된 얼굴만 그리게 해서 해결
+    */
+    this.myVideo = document.getElementById(`usercam${this.userNum}`);
+    this.myCanvas = document.getElementsByClassName(
+      `output_canvas${this.userNum}`
+    )[0];
+    this.myCtx = this.myCanvas.getContext("2d");
+
+    this.handCognition();
+
     for (let i = 0; i < 10; i++) {
-      if (i == this.userNum - 1) {
-        this.handCognition(i);
-      } else {
+      if (i !== this.userNum - 1) {
         this.faceMemo(i);
       }
     }
   },
   // 해야할일, 투표
   methods: {
-    handCognition(i) {
-      const videoElement = document.getElementById(`usercam${i + 1}`);
-      const canvasElement = document.getElementsByClassName(
-        `output_canvas${i + 1}`
-      )[0];
-      const canvasCtx = canvasElement.getContext("2d");
+    handCognition() {
+      const videoElement = this.myVideo;
+      const canvasElement = this.myCanvas;
+      const canvasCtx = this.myCtx;
 
       videoElement.style.display = "none";
+
       let onResults = (results) => {
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -523,6 +563,124 @@ export default {
         height: 720,
       });
       camera.start();
+      this.myFace();
+    },
+    myFace() {
+      const videoElement = this.myVideo;
+      // const canvasElement = this.myCanvas;
+      const canvasCtx = this.myCtx;
+
+      // videoElement.style.display = "none";
+      let model;
+
+      const detectFaces = async () => {
+        /*
+    `predictions` is an array of objects describing each detected face, for example:
+
+    [
+      {
+        topLeft: [232.28, 145.26],
+        bottomRight: [449.75, 308.36],
+        probability: [0.998],
+        landmarks: [
+          [295.13, 177.64], // right eye
+          [382.32, 175.56], // left eye
+          [341.18, 205.03], // nose
+          [345.12, 250.61], // mouth
+          [252.76, 211.37], // right ear
+          [431.20, 204.93] // left ear
+        ]
+      }
+    ]
+    */
+        const prediction = await model.estimateFaces(videoElement, false);
+        // canvasCt0x.save();
+        // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        // canvasCtx.translate(canvasElement.width, 0);
+        // canvasCtx.scale(-1, 1);
+
+        // canvasCtx.drawImage(
+        //   videoElement,
+        //   0,
+        //   0,
+        //   canvasElement.width,
+        //   canvasElement.height
+        // );
+
+        this.postResults(prediction);
+        this.getResults();
+        canvasCtx.restore();
+        // if (prediction.length == 0) {
+        //   // this.landmarks[this.userNum - 1] = false;
+        //   // this.topLeftLandmarks[this.userNum - 1] = false;
+        //   // this.bottomRightLandmarks[this.userNum - 1] = false;
+
+        //   this.results[this.userNum] = false;
+        //   // for (let i = 0; i < 10; i++) {
+        //   //   if (i !== this.userNum - 1) this.results[i] = false;
+        //   // }
+
+        //   // console.log("no have my landmarks");
+        //   canvasCtx.restore();
+        // } else {
+        //   // this.landmarks[this.userNum - 1] = prediction.landmarks;
+
+        //   // this.landmarks[this.userNum - 1] = prediction[0].landmarks;
+        //   // this.topLeftLandmarks[this.userNum - 1] = prediction[0].topLeft;
+        //   // this.bottomRightLandmarks[this.userNum - 1] =
+        //   //   prediction[0].bottomRight;
+        //   for (let i = 0; i < 10; i++) {
+        //     if (i !== this.userNum - 1) this.results[i] = prediction;
+        //   }
+        //   // console.log(prediction[0].bottomRight);
+        //   // console.log(this.landmarks[this.userNum - 1]);
+        //   // console.log("have my landmarks");
+
+        //   // prediction.forEach((pred) => {
+        //   //   // 자신의 랜드마크 저장
+        //   //   this.landmarks[this.userNum - 1] = pred.landmarks;
+        //   //   console.log(pred);
+        //   //   console.log("have my landmarks");
+        //   //   // pred.landmarks.forEach((landmark) => {
+        //   //   //   canvasCtx.fillRect(landmark[0], landmark[1], 5, 5);
+        //   //   // });
+        //   // });
+        //   canvasCtx.restore();
+        // }
+      };
+
+      const setUpCamera = () => {
+        navigator.mediaDevices
+          .getUserMedia({
+            video: { width: 640, height: 360 },
+            audio: false,
+          })
+          .then((stream) => {
+            videoElement.srcObject = stream;
+            videoElement.play();
+          });
+      };
+
+      setUpCamera();
+
+      videoElement.addEventListener("loadeddata", async () => {
+        model = await blazeface.load();
+        setInterval(detectFaces, 30);
+        // detectFaces();
+      });
+    },
+    postResults(prediction) {
+      if (prediction.length == 0) {
+        this.results[this.userNum] = false;
+      } else {
+        this.results[this.userNum] = prediction[0];
+      }
+    },
+    getResults() {
+      for (let i = 0; i < 10; i++) {
+        if (i !== this.userNum - 1)
+          this.results[i] = this.results[this.userNum];
+      }
     },
     faceMemo(i) {
       const videoElement = document.getElementById(`usercam${i + 1}`);
@@ -532,33 +690,35 @@ export default {
       const canvasCtx = canvasElement.getContext("2d");
 
       videoElement.style.display = "none";
-
-      let onResults = (results) => {
-        this.img[i] = new Image();
-        if (this.imgSrc[i]) this.img[i].src = this.imgSrc[i];
-        let img = this.img[i];
-        let imgWidth = this.imgWidth[i];
-        let imgHeight = this.imgHeight[i];
+      let model;
+      const detectFaces = () => {
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         canvasCtx.translate(canvasElement.width, 0);
         canvasCtx.scale(-1, 1);
+
         canvasCtx.drawImage(
-          results.image,
+          videoElement,
           0,
           0,
           canvasElement.width,
           canvasElement.height
         );
 
-        if (results.multiFaceLandmarks.length == 0) {
-          // canvas x y는 화면상의 이미지 위치
-          // canvas Width Height는 이미지의 크기
+        this.img[i] = new Image();
+        if (this.imgSrc[i]) this.img[i].src = this.imgSrc[i];
+        let img = this.img[i];
+        let imgWidth = this.imgWidth[i];
+        let imgHeight = this.imgHeight[i];
+
+        // console.log(this.results[this.userNum - 1]);
+        // console.log(this.results[i]);
+
+        if (!this.results[i]) {
           const canvasWidth = canvasElement.width / 2;
           const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
           const canvasx = canvasElement.width / 2 - canvasWidth / 2;
           const canvasy = 0;
-
           img.onload = canvasCtx.drawImage(
             img,
             canvasx,
@@ -566,186 +726,115 @@ export default {
             canvasWidth,
             canvasHeight
           );
-        }
+          canvasCtx.restore();
+        } else {
+          let leftEyex;
+          let leftEyey;
+          let rightEyex;
+          let rightEyey;
+          let leftEarx;
+          let leftEary;
+          let rightEarx;
+          let rightEary;
+          let nosey;
+          let mousey;
+          let bottomRightx = this.results[i].bottomRight[0];
+          let bottomRighty = this.results[i].bottomRight[1];
+          let topLeftx = this.results[i].topLeft[0];
+          let topLefty = this.results[i].topLeft[1];
 
-        if (results.multiFaceLandmarks) {
-          for (const landmarks of results.multiFaceLandmarks) {
-            drawConnectors(canvasCtx, landmarks, FACEMESH_TESSELATION, {
-              color: "#C0C0C070",
-              lineWidth: 1,
-            });
-            drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, {
-              color: "#FF3030",
-            });
-            drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYEBROW, {
-              color: "#FF3030",
-            });
-            drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_IRIS, {
-              color: "#FF3030",
-            });
-            drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYE, {
-              color: "#30FF30",
-            });
-            drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYEBROW, {
-              color: "#30FF30",
-            });
-            drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_IRIS, {
-              color: "#30FF30",
-            });
-            drawConnectors(canvasCtx, landmarks, FACEMESH_FACE_OVAL, {
-              color: "#E0E0E0",
-            });
-            drawConnectors(canvasCtx, landmarks, FACEMESH_LIPS, {
-              color: "#E0E0E0",
-            });
+          let imgCitizenHat = "";
+          let imgPoliceHat = img.src.includes("police_hat.png");
+          let imgDoctorHat = img.src.includes("doctor_hat.png");
+          let imgMilitaryHelmet = img.src.includes("military_helmet.png");
+          let imgMafiaHat = img.src.includes("mafia_hat.png");
 
-            let leftHeadx = 0;
-            let leftHeady = 0;
-            let rightHeadx = 0;
-            let rightHeady = 0;
-
-            let imgCitizenHat = "";
-            let imgPoliceHat = img.src.includes("police_hat.png");
-            let imgDoctorHat = img.src.includes("doctor_hat.png");
-            let imgMilitaryHelmet = img.src.includes("military_helmet.png");
-            let imgMafiaHat = img.src.includes("mafia_hat.png");
-
-            for (let i = 0; i < landmarks.length; i++) {
-              for (let j = i; j == i; j++) {
-                // 오른쪽 머리
-                if (i == 162) {
-                  rightHeadx = landmarks[i].x * canvasElement.width;
-                  rightHeady = landmarks[i].y * canvasElement.height;
-                }
-                // 왼쪽 머리
-                if (i == 389) {
-                  leftHeadx = landmarks[i].x * canvasElement.width;
-                  leftHeady = landmarks[i].y * canvasElement.height;
-                }
-              }
+          for (let j = 0; j < this.results[i].landmarks.length; j++) {
+            switch (j) {
+              case 0: // 오른쪽 눈
+                rightEyex = this.results[i].landmarks[j][0];
+                rightEyey = this.results[i].landmarks[j][1];
+                break;
+              case 1: // 왼쪽 눈
+                leftEyex = this.results[i].landmarks[j][0];
+                leftEyey = this.results[i].landmarks[j][1];
+                break;
+              case 2: // 코
+                nosey = this.results[i].landmarks[j][1];
+                break;
+              case 3: // 입
+                mousey = this.results[i].landmarks[j][1];
+                break;
+              case 4: // 오른쪽 귀
+                rightEarx = this.results[i].landmarks[j][0];
+                rightEary = this.results[i].landmarks[j][1];
+                break;
+              case 5: // 왼쪽 귀
+                leftEarx = this.results[i].landmarks[j][0];
+                leftEary = this.results[i].landmarks[j][1];
+                break;
             }
+            // console.log(this.results[0][0]);
+            canvasCtx.fillRect(
+              this.results[i].landmarks[j][0],
+              this.results[i].landmarks[j][1],
+              5,
+              5
+            );
+            // console.log(this.topLeftLandmarks);
+            if (
+              imgCitizenHat ||
+              imgPoliceHat ||
+              imgDoctorHat ||
+              imgMafiaHat ||
+              imgMilitaryHelmet
+            ) {
+              // const canvasWidth = (leftEarx - rightEarx) * 2;
+              // const canvasHeight = (mousey - nosey) * 8;
+              // const canvasx =
+              //   rightEyex - canvasWidth / 2 + (leftEyex - rightEyex) / 2;
+              // const canvasy =
+              //   rightEyey < leftEyey
+              //     ? rightEyey - canvasHeight - (leftEarx - rightEarx) / 6
+              //     : leftEyey - canvasHeight - (leftEarx - rightEarx) / 6;
 
-            if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
-              if (
-                (rightHeady > leftHeady
-                  ? rightHeady - leftHeady
-                  : leftHeady - rightHeady) >
-                leftHeadx - rightHeadx
-              ) {
-                const canvasWidth = canvasElement.width / 2;
-                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-                const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-                const canvasy = 0;
-                img.onload = canvasCtx.drawImage(
-                  img,
-                  canvasx,
-                  canvasy,
-                  canvasWidth,
-                  canvasHeight
-                );
-              } else {
-                // canvas x y는 화면상의 이미지 위치
-                // canvas Width Height는 이미지의 크기
-                const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
-                const canvasWidth = (leftHeadx - rightHeadx) * 2;
-                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-                const canvasy =
-                  rightHeady > leftHeady
-                    ? rightHeady - canvasHeight - (rightHeady - leftHeady) / 2
-                    : rightHeady - canvasHeight + (leftHeady - rightHeady) / 2;
-                img.onload = canvasCtx.drawImage(
-                  img,
-                  canvasx,
-                  canvasy,
-                  canvasWidth,
-                  canvasHeight
-                );
-              }
-            } else if (imgMilitaryHelmet) {
-              if (
-                (rightHeady > leftHeady
-                  ? rightHeady - leftHeady
-                  : leftHeady - rightHeady) >
-                leftHeadx - rightHeadx
-              ) {
-                const canvasWidth = canvasElement.width / 2;
-                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-                const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-                const canvasy = 0;
+              const canvasWidth = bottomRightx - topLeftx;
+              const canvasHeight = bottomRighty - topLefty;
+              const canvasx = topLeftx;
+              const canvasy = topLefty - canvasHeight;
 
-                img.onload = canvasCtx.drawImage(
-                  img,
-                  canvasx,
-                  canvasy,
-                  canvasWidth,
-                  canvasHeight
-                );
-              } else {
-                // canvas x y는 화면상의 이미지 위치
-                // canvas Width Height는 이미지의 크기
-                const canvasx = rightHeadx - (leftHeadx - rightHeadx) / 2;
-                const canvasWidth = (leftHeadx - rightHeadx) * 2;
-                const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-                const canvasy =
-                  rightHeady > leftHeady
-                    ? rightHeady -
-                      (canvasHeight / 2 + canvasHeight / 5) -
-                      (rightHeady - leftHeady) / 2
-                    : leftHeady -
-                      (canvasHeight / 2 + canvasHeight / 5) -
-                      (leftHeady - rightHeady) / 2;
-                img.onload = canvasCtx.drawImage(
-                  img,
-                  canvasx,
-                  canvasy,
-                  canvasWidth,
-                  canvasHeight
-                );
-              }
+              img.onload = canvasCtx.drawImage(
+                img,
+                canvasx,
+                canvasy,
+                canvasWidth,
+                canvasHeight
+              );
             }
           }
+          canvasCtx.restore();
         }
-        canvasCtx.restore();
       };
 
-      let myStream;
-
-      async function getMedia() {
-        try {
-          myStream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: { width: 1280, height: 720 },
-            // video: true,
+      const setUpCamera = () => {
+        navigator.mediaDevices
+          .getUserMedia({
+            video: { width: 640, height: 360 },
+            audio: false,
+          })
+          .then((stream) => {
+            videoElement.srcObject = stream;
+            videoElement.play();
           });
-          videoElement.srcObject = myStream;
-        } catch (e) {
-          console.log(e);
-        }
-      }
+      };
 
-      const faceMesh = new FaceMesh({
-        locateFile: (file) => {
-          return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-        },
-      });
-      faceMesh.setOptions({
-        maxNumFaces: 1,
-        refineLandmarks: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-      });
-      faceMesh.onResults(onResults);
+      setUpCamera();
 
-      getMedia();
-
-      const camera = new Camera(videoElement, {
-        onFrame: async () => {
-          await faceMesh.send({ image: videoElement });
-        },
-        width: 1280,
-        height: 720,
+      videoElement.addEventListener("loadeddata", async () => {
+        model = await blazeface.load();
+        setInterval(detectFaces, 30);
+        // detectFaces();
       });
-      camera.start();
     },
     fingersResults() {
       if (!this.fingers) this.fStatus = true;
@@ -773,6 +862,7 @@ export default {
           this.imgHeight[index - 1] = 0;
           break;
         case "police":
+          console.log("ok");
           this.imgSrc[index - 1] = require("../assets/image/police_hat.png");
           this.imgWidth[index - 1] = 600;
           this.imgHeight[index - 1] = 451;
