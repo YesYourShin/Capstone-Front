@@ -18,22 +18,22 @@
               <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p>
             </div>
           </template> -->
-          <div v-if="mainFeed" class="justify-self-center px-2 pb-3 w-full">
+          <div class="justify-self-center px-2 pb-3 w-full">
             <div
               class="aspect-video bg-fuchsia-400 border border-red-600"
             >
-              <video id="myVideo" ref="myVideo" :src-object.prop.camel="mainFeed.stream" muted></video>
+              <video id="myVideo" ref="myVideo" muted></video>
             </div>
-            <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p>
+            <!-- <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p> -->
           </div>
           <template v-if="subscribedStreams.length" v-for="s in subscribedStreams">
             <div class="justify-self-center px-2 pb-3 w-full">
               <div
                 class="aspect-video bg-fuchsia-400 border border-red-600"
               >
-                <video :src-object.prop.camel="s.stream" :id="s.rfid" autoplay></video>
+                <video :ref="'remote'+s.rfid" :id="'remote'+s.rfid" muted></video>
               </div>
-              <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p>
+              <!-- <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p> -->
             </div>
           </template>
         </div>
@@ -93,7 +93,7 @@ export default {
     }
   },
   mounted() {
-    const ServerWS = "ws://13.125.132.255:8188/janus";
+    const ServerWS = process.env.NODE_ENV === 'production' ? "wss://13.125.132.255:8188/janus" : "ws://13.125.132.255:8188/janus";
     let janus = null;
     // const opaqueId = "videoroomtest-" + Janus.randomString(12); //opaqueId 값을 통해서 유저 구분
     const opaqueId = "videoroomtest-" + "dong"; //opaqueId 값을 통해서 유저 구분
@@ -326,8 +326,16 @@ export default {
 
                         vrc.$store.commit("addSubscribeStream", {
                           rfid: remoteFeed.rfid,
+                          display: remoteFeed.rfdisplay,
                           stream: stream,
                         });
+
+                        var vid = document.getElementById(`remote${remoteFeed.rfid}`)
+                        console.log(vid);
+                        // vid.pause()
+                        vid.load()
+                        vid.play()
+
 
                         console.log(stream, "ㅇㅎ! 이게 리모트 스트림이군요!");
                       },
@@ -565,10 +573,13 @@ export default {
                 // } else {
 
                 // }
-                vrc.$refs.myVideo.pause();
-                Janus.attachMediaStream(vrc.$refs.myVideo, stream);
-                vrc.$refs.myVideo.load();
-                vrc.$refs.myVideo.play();
+                if (vrc.mainFeed) {
+                  vrc.$refs.myVideo.pause();
+                  Janus.attachMediaStream(vrc.$refs.myVideo, stream);
+                  vrc.$refs.myVideo.load();
+                  vrc.$refs.myVideo.play();
+
+                }
               },
               onremotestream: function (stream) {
                 // 오직 Publish에서만 전송
