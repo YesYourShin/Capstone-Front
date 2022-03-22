@@ -77,7 +77,7 @@ export default {
     },
   },
   mounted() {
-    const ServerWS = process.env.NODE_ENV === 'production' ? "wss://13.125.132.255:8188/janus" : "ws://13.125.132.255:8188/janus";
+    const ServerWS = process.env.NODE_ENV === 'production' ? "wss://gjgjajaj.xyz/janus" : "ws://13.125.132.255:8188/janus";
     let janus = null;
     const opaqueId = "videoroomtest-" + Janus.randomString(12); //opaqueId 값을 통해서 유저 구분
     let videoHandlerGame = null; //Handle 객체
