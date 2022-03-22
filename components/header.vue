@@ -18,9 +18,11 @@
           <div class="buttonline2"></div>
           <div class="buttonline3"></div>
           <div class="buttonline4"></div>
-          <button class="gogame">
-                <NuxtLink to="/lobby" class="lilink">게임 하기</NuxtLink>
+          <NuxtLink to="/lobby"  class="gogame">
+            <button>
+                  게임 하기
             </button>
+          </NuxtLink>
         </div>
       </div>
 

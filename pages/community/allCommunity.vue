@@ -33,7 +33,7 @@
           <div class="psb2">
             <input type="text">
             <button>찾기</button>
-            <button><NuxtLink to="/community/post">글쓰기</NuxtLink></button>
+            <button><NuxtLink to="/community/makePost">글쓰기</NuxtLink></button>
           </div>
         </div>
 

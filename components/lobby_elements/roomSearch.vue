@@ -1,4 +1,4 @@
-<template lang="">
+<template>
   <div class="w-max mr-3">
     <div class="relative text-gray-600">
       <input

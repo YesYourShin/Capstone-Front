@@ -1,7 +1,7 @@
 <template lang="">
   <div class="flex flex-col min-h-screen w-full">
     <sideBar></sideBar>
-    <div class="px-5 flex-grow">
+    <div class="px-5 flex-grow" >
       <div class="flex items-center py-2">
         <!--로비 위쪽 검색창 및 체크박스 등-->
 
