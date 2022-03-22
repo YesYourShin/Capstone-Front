@@ -10,9 +10,11 @@
         </button>
         <button class="userlink" @click="logout">Logout</button>
         <p v-if="data.data" class="userlevel">Lv.250 <span class="username">
-          {{ data.data.id }}
+          {{ data.data.profile.nickname }}
           </span></p>
-        <p class="usertext">Mirai1412/Capstone-Front</p>
+        <p class="usertext" v-if="data.data">
+           {{ data.data.profile.selfIntroduction }}
+          </p>
       </div>
 
       <div class="profile3">

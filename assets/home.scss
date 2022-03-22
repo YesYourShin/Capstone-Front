@@ -38,7 +38,11 @@
       display: flex;
       justify-content: space-between;
 
-
+      a{
+        height: 186px;
+        display: flex;
+        justify-content: center;
+      }
 
       .guides1{
         border: 3px solid gray;
@@ -51,10 +55,10 @@
 
 
           &:hover{
-            animation: size1 0.5s;
+            animation: size1 0.3s;
             animation-fill-mode: forwards;
             .yimg1{
-                animation: yimg1 0.5s;
+                animation: yimg1 0.3s;
                 animation-fill-mode: forwards;
             }
 
@@ -95,10 +99,10 @@
 
 
         &:hover{
-          animation: size1 0.5s;
+          animation: size1 0.3s;
           animation-fill-mode: forwards;
           .yimg2{
-            animation: yimg1 0.5s;
+            animation: yimg1 0.3s;
             animation-fill-mode: forwards;
         }
         }
@@ -138,10 +142,10 @@
 
 
           &:hover{
-            animation: size1 0.5s;
+            animation: size1 0.3s;
             animation-fill-mode: forwards;
             .yimg3{
-              animation: yimg1 0.5s;
+              animation: yimg1 0.3s;
               animation-fill-mode: forwards;
           }
         }

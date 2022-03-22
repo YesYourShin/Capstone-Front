@@ -11,16 +11,19 @@
               type="file"
               name="user_img"
               accept="image/png, image/jpeg"
+              ref="imagedata"
               @change="myimage">
               </p>
             </div>
             <div class="mypageInput">
-              <p class="p1">닉네임 : <input type="text" name="user_name" v-model="nickname"></p>
+              <p class="p1">닉네임 : <input type="text" name="user_name"
+              v-model="nickname"></p>
             </div>
             <div class="mypageInput">
               <p class="p2">상태 메시지 : <input type="text" name="user_text" v-model="selfIntroduction"></p>
             </div>
-            <input type="submit" class="rebtn" value="회원 정보 저장">
+          <input type="submit" class="rebtn" value="회원 정보 저장"
+          onclick="document.location.href='/'">
           </form>
           <div class="mypagebtns">
             <button>내가 쓴 글보기</button>
@@ -37,7 +40,10 @@
 import Footer from '../components/footer.vue';
 import Header from '../components/header.vue';
 import { makeProfile } from '@/api/mafiaAPI';
+import { editProfile } from '@/api/mafiaAPI';
 import { getMyInformation } from '@/api/mafiaAPI'
+
+
 
 export default {
   components: { Header, Footer },
@@ -46,43 +52,57 @@ export default {
   data() {
     return {
         nickname : '',
-        imgsrc: require('../assets/myimg/default.png'),
+        image: '',
         selfIntroduction : '',
-      data:{
-        data:[
-
-        ],
-      }
+        data:{
+          data:[],
+            }
     };
   },
 
   async mounted() {
      const response = await getMyInformation()
      this.data = response.data
+
+    this.nickname =  this.data.data.profile.nickname;
+    this.selfIntroduction =  this.data.data.profile.selfIntroduction;
+
   },
 
   methods: {
+
+    myimage(){
+      this.image = this.$refs.imagedata.files
+      // if(){
+      // }else if(){
+      // } 이미지 디폴트 값
+    },
+
     submitForm(){
-      console.log(this.nickname, this.selfIntroduction);
+       console.log(this.nickname, this.selfIntroduction, this.image);
+
       var data = {
-        image : this.image,
+        // image : this.image, 500 serve error
         nickname: this.nickname,
         selfIntroduction: this.selfIntroduction
       }
-      getMyInformation(data)
+
+      if(this.data.data.profile == null){
+        makeProfile(data)
+          .then((res)=>{
+          })
+          .catch((err)=>{
+            console.log(error)
+          })
+      }else if(this.data.data.profile !== null){
+        editProfile(data)
         .then((res)=>{
         })
         .catch((err)=>{
           console.log(error)
         })
+      }
     },
-
-    myimage(){
-
-    }
-
-
-
   },
 
 };
