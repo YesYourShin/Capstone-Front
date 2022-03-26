@@ -64,13 +64,23 @@
 </template>
 
 <script>
+import { getPosts } from '@/api/mafiaAPI'
+import qs from "qs";
+
 export default {
   name: 'CapstoneCommunity',
   data() {
     return {
+      postData:{
+      },
     };
   },
-  mounted() {
+  async mounted() {
+    //  const response = await getPosts({
+    //     category: 1,
+    //     page: 1,
+    //   })
+     this.postData = response.data
   },
   methods: {
   },

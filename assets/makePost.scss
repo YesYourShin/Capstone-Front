@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap");
 
-.postMainBox{
+.postMainBox {
   width: 100%;
   height: 100%;
   max-width: 1920px;
   min-width: 1106px;
   margin: 0 auto;
-  font-family: 'Do Hyeon', sans-serif;
+  font-family: "Do Hyeon", sans-serif;
   color: white;
   font-size: 20px;
 
-  .mainPost{
+  .mainPost {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -19,33 +19,33 @@
     z-index: 8;
     width: 100%;
 
-    .proFileBox{
+    .proFileBox {
       width: 100%;
       display: flex;
 
-      .postTitle{
+      .postTitle {
         background-color: rgba(0, 0, 0, 0.452);
         width: 100%;
         height: 186px;
-        .postTitleUl{
+        .postTitleUl {
           max-width: 1504px;
           min-width: 1504px;
-          .postTitleLi1{
+          .postTitleLi1 {
             color: orange;
             border-bottom: 3px solid orange;
             font-size: 40px;
           }
-          .postTitleLi{
-            &:hover{
+          .postTitleLi {
+            &:hover {
               animation: postcolor 0.5s;
               animation-fill-mode: forwards;
             }
           }
         }
-        ul{
+        ul {
           text-align: center;
           margin: auto;
-          li{
+          li {
             display: inline-block;
             margin: auto;
             font-size: 35px;
@@ -53,10 +53,9 @@
           }
         }
       }
-
     }
 
-    .postBox{
+    .postBox {
       width: 80%;
       padding: 50px;
       border: 3px solid white;
@@ -67,13 +66,13 @@
       display: flex;
       flex-wrap: wrap;
 
-      .postBoxbiv1{
+      .postBoxbiv1 {
         width: 100%;
         border-bottom: 1px solid white;
         display: flex;
         justify-content: space-between;
         font-size: 50px;
-        button{
+        input {
           width: 100px;
           height: 50px;
           margin: auto 0;
@@ -81,12 +80,12 @@
           border: 1px solid white;
         }
       }
-      .postBoxbiv2{
+      .postBoxbiv2 {
         width: 100%;
         margin-top: 50px;
         display: flex;
         justify-content: center;
-        .setBox{
+        .setBox {
           font-size: 30px;
           border: 1px solid white;
           height: 60px;
@@ -94,23 +93,24 @@
           text-align: center;
         }
       }
-      .postBoxbiv3{
+      .postBoxbiv3 {
         width: 100%;
         border: 1px solid white;
         margin-top: 30px;
-        textarea{
+        textarea {
           width: 100%;
+          height: 100%;
           padding-top: 25px;
           padding-left: 20px;
           font-size: 30px;
           line-height: 10px;
         }
       }
-      .postBoxbiv4{
+      .postBoxbiv4 {
         width: 100%;
         border: 1px solid white;
         margin-top: 30px;
-        textarea{
+        textarea {
           padding-top: 20px;
           padding-left: 20px;
           width: 100%;
@@ -119,18 +119,13 @@
           font-size: 30px;
         }
       }
-
     }
-
-
-
   }
 }
-@keyframes postcolor{
-	0%{
-
+@keyframes postcolor {
+  0% {
   }
-	100%{
+  100% {
     font-size: 40px;
     border-bottom: 3px solid white;
   }

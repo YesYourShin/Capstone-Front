@@ -17,10 +17,10 @@
             </div>
             <div class="mypageInput">
               <p class="p1">닉네임 : <input type="text" name="user_name"
-              v-model="nickname"></p>
+              v-model="profile.nickname"></p>
             </div>
             <div class="mypageInput">
-              <p class="p2">상태 메시지 : <input type="text" name="user_text" v-model="selfIntroduction"></p>
+              <p class="p2">상태 메시지 : <input type="text" name="user_text" v-model="profile.selfIntroduction"></p>
             </div>
           <input type="submit" class="rebtn" value="회원 정보 저장"
           onclick="document.location.href='/'">
@@ -39,9 +39,7 @@
 <script>
 import Footer from '../components/footer.vue';
 import Header from '../components/header.vue';
-import { makeProfile } from '@/api/mafiaAPI';
-import { editProfile } from '@/api/mafiaAPI';
-import { getMyInformation } from '@/api/mafiaAPI'
+import { makeProfile, editProfile, getMyInformation } from '@/api/mafiaAPI';
 
 
 
@@ -51,23 +49,24 @@ export default {
 
   data() {
     return {
-        nickname : '',
-        image: '',
-        selfIntroduction : '',
+        profile:{
+          nickname : '',
+          image: '',
+          selfIntroduction : '',
+        },
         data:{
           data:[],
             }
-    };
-  },
+      };
+    },
 
-  async mounted() {
-     const response = await getMyInformation()
-     this.data = response.data
+    async mounted() {
+      const response = await getMyInformation()
+      this.data = response.data
 
-    this.nickname =  this.data.data.profile.nickname;
-    this.selfIntroduction =  this.data.data.profile.selfIntroduction;
-
-  },
+      this.profile.nickname =  this.data.data.profile.nickname;
+      this.profile.selfIntroduction =  this.data.data.profile.selfIntroduction;
+    },
 
   methods: {
 
@@ -79,23 +78,18 @@ export default {
     },
 
     submitForm(){
-       console.log(this.nickname, this.selfIntroduction, this.image);
+       console.log(this.profile);
 
-      var data = {
-        // image : this.image, 500 serve error
-        nickname: this.nickname,
-        selfIntroduction: this.selfIntroduction
-      }
 
       if(this.data.data.profile == null){
-        makeProfile(data)
+        makeProfile(this.profile)
           .then((res)=>{
           })
           .catch((err)=>{
             console.log(error)
           })
       }else if(this.data.data.profile !== null){
-        editProfile(data)
+        editProfile(this.profile)
         .then((res)=>{
         })
         .catch((err)=>{
@@ -104,7 +98,6 @@ export default {
       }
     },
   },
-
 };
 </script>
 

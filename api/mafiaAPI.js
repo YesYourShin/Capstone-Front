@@ -77,8 +77,8 @@ export const deleteFriend = (userId) => { // 친구 삭제
 }
 
 // Posts
-export const getPosts = () => { // 게시물들 불러오기
-  return instance.get(`/posts`)
+export const getPosts = ({ category, page }) => { // 게시물들 불러오기
+  return instance.get(`/posts?category=${category}&page=${page}`)
 }
 
 export const detailPost = (postId) => { // 게시물 자세히 보기
@@ -156,3 +156,12 @@ export const leaveGame = (gameId) => { // 게임 나가기 (마지막 사람이 
 }
 
 // Default
+// axios.default.paramsSerializer = params => {
+//   return qs.stringify(params);
+// }
+// const params = {
+//   search:{
+//     category : 'category',
+//     page : 'page',
+//   }
+// }

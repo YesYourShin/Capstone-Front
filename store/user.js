@@ -18,8 +18,8 @@ export const actions = {
   },
 }
 
-export const getters = {
-  getMyInfo(state) {
-    return state.myInfo;
-  }
-}
+// export const getters = {
+//   getMyInfo(state) {
+//     return state.myInfo;
+//   }
+// }

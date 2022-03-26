@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import { getMyInformation } from '@/api/mafiaAPI'
 import { logout } from '@/api/mafiaAPI'
 
 export default {
@@ -76,11 +75,6 @@ export default {
       show3: false,
       data: [],
     };
-  },
-
-  async mounted() {
-     const response = await getMyInformation()
-     this.data = response.data
   },
 
   methods: {

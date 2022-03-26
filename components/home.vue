@@ -4,8 +4,8 @@
       <Banner/>
     </div>
     <div class="homeProFile">
-      <div v-if="loginData"><Profile/></div>
-      <div v-else><LoginProfile/></div>
+      <!-- <div v-if="loginData"><Profile/></div>
+      <div v-else><LoginProfile/></div> -->
       <div class="guideBox">
       <NuxtLink to="/guide/gameJob">
         <div class="guides1">
@@ -193,7 +193,6 @@
 </template>
 
 <script>
-import { getMyInformation } from '@/api/mafiaAPI'
 export default {
 
   data() {
@@ -203,22 +202,17 @@ export default {
     };
   },
 
-  // mounted() {
-  //   vuex -> user 정보 저장
-  //   if(user?.profile?.nickname) {
-  //     this.$route.push('/mypage')
-  //   }
-  //   어디로 드가든 cookie -> 유저 정보 요청
-  //   profile 없는 경우 nickname 없는 경우 무조건 mypage로 푸쉬
-  //   여기서 mypage로 강제로 가지므로 유저는 몰라 알려줘야됨
-  // },
-
   async mounted(){
+      // const response = await getMyInformation()
+      // this.data = response.data
+      this.$store.dispatch('fetchMyInfo')
+      this.login();
+  },
 
-    const response = await getMyInformation()
-    this.data = response.data
-
-    this.login();
+  computed: {
+    myInfo() {
+      return this.$store.state.getMyInfo;
+    }
   },
 
   methods: {

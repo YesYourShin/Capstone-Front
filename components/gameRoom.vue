@@ -26,12 +26,12 @@
             </div>
             <!-- <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p> -->
           </div>
-          <template v-if="subscribedStreams.length" v-for="s in subscribedStreams">
+          <template v-for="s in subscribedStreams">
             <div class="justify-self-center px-2 pb-3 w-full">
               <div
                 class="aspect-video bg-fuchsia-400 border border-red-600"
               >
-                <video :ref="'remote'+s.rfid" :id="'remote'+s.rfid" muted></video>
+                <video :ref="'remote'+s.rfid" :id="'remote'+s.rfid" :src-object.prop.camel="s.stream" autoplay></video>
               </div>
               <!-- <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p> -->
             </div>
@@ -335,11 +335,11 @@ export default {
                           stream: stream,
                         });
 
-                        var vid = document.getElementById(`remote${remoteFeed.rfid}`)
-                        console.log(vid);
-                        // vid.pause()
-                        vid.load()
-                        vid.play()
+                        // var vid = document.getElementById(`remote${remoteFeed.rfid}`)
+                        // console.log(vid);
+                        // // vid.pause()
+                        // vid.load()
+                        // vid.play()
 
 
                         console.log(stream, "ㅇㅎ! 이게 리모트 스트림이군요!");
