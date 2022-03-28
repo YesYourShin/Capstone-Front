@@ -158,13 +158,17 @@ export default {
     )[0];
     this.myCtx = this.myCanvas.getContext("2d");
 
-    this.handCognition();
-
-    for (let i = 0; i < 10; i++) {
-      if (i !== this.userNum - 1) {
-        this.faceMemo(i);
+    const main = async () => {
+      await this.handCognition();
+      await this.myFace();
+      for (let i = 0; i < 10; i++) {
+        if (i !== this.userNum - 1) {
+          await this.faceMemo(i);
+        }
       }
-    }
+    };
+
+    main();
   },
   // 해야할일, 투표
   methods: {
@@ -524,21 +528,6 @@ export default {
         }
       };
 
-      let myStream;
-
-      async function getMedia() {
-        try {
-          myStream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: { width: 1280, height: 720 },
-          });
-
-          videoElement.srcObject = myStream;
-        } catch (e) {
-          console.log(e);
-        }
-      }
-
       const hands = new Hands({
         locateFile: (file) => {
           return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
@@ -553,7 +542,24 @@ export default {
 
       hands.onResults(onResults);
 
-      getMedia();
+      // let myStream;
+
+      // async function getMedia() {
+      //   try {
+      //     myStream = await navigator.mediaDevices.getUserMedia({
+      //       audio: true,
+      //       video: { width: 1280, height: 720 },
+      //     });
+
+      //     videoElement.srcObject = myStream;
+
+      //     console.log("getMedia");
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      // }
+
+      // getMedia();
 
       const camera = new Camera(videoElement, {
         onFrame: async () => {
@@ -562,10 +568,12 @@ export default {
         width: 1280,
         height: 720,
       });
-      camera.start();
-      this.myFace();
+      console.log("hand last");
+
+      return camera.start();
     },
     myFace() {
+      console.log("myFace");
       const videoElement = this.myVideo;
       // const canvasElement = this.myCanvas;
       const canvasCtx = this.myCtx;
@@ -649,21 +657,22 @@ export default {
         // }
       };
 
-      const setUpCamera = () => {
-        navigator.mediaDevices
-          .getUserMedia({
-            video: { width: 640, height: 360 },
-            audio: false,
-          })
-          .then((stream) => {
-            videoElement.srcObject = stream;
-            videoElement.play();
-          });
-      };
+      // const setUpCamera = () => {
+      //   navigator.mediaDevices
+      //     .getUserMedia({
+      //       video: { width: 640, height: 360 },
+      //       audio: false,
+      //     })
+      //     .then((stream) => {
+      //       videoElement.srcObject = stream;
+      //       videoElement.play();
+      //     });
+      // };
 
-      setUpCamera();
+      // setUpCamera();
 
-      videoElement.addEventListener("loadeddata", async () => {
+      return videoElement.addEventListener("loadeddata", async () => {
+        console.log("return");
         model = await blazeface.load();
         setInterval(detectFaces, 30);
         // detectFaces();
@@ -683,6 +692,7 @@ export default {
       }
     },
     faceMemo(i) {
+      console.log(`faceMemo : ${i}`);
       const videoElement = document.getElementById(`usercam${i + 1}`);
       const canvasElement = document.getElementsByClassName(
         `output_canvas${i + 1}`
@@ -816,25 +826,43 @@ export default {
         }
       };
 
-      const setUpCamera = () => {
-        navigator.mediaDevices
-          .getUserMedia({
-            video: { width: 640, height: 360 },
-            audio: false,
-          })
-          .then((stream) => {
-            videoElement.srcObject = stream;
-            videoElement.play();
-          });
-      };
+      // const setUpCamera = () => {
+      //   navigator.mediaDevices
+      //     .getUserMedia({
+      //       video: { width: 640, height: 360 },
+      //       audio: false,
+      //     })
+      //     .then((stream) => {
+      //       videoElement.srcObject = stream;
+      //       videoElement.play();
+      //     });
+      // };
 
-      setUpCamera();
+      // setUpCamera();
+
+      let myStream;
+
+      const getMedia = async () => {
+        try {
+          myStream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: { width: 1280, height: 720 },
+            // video: true,
+          });
+          videoElement.srcObject = myStream;
+          videoElement.play();
+          console.log("face getMidea");
+        } catch (e) {
+          console.log(e);
+        }
+      };
 
       videoElement.addEventListener("loadeddata", async () => {
         model = await blazeface.load();
         setInterval(detectFaces, 30);
         // detectFaces();
       });
+      getMedia();
     },
     fingersResults() {
       if (!this.fingers) this.fStatus = true;
