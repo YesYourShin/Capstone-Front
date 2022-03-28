@@ -4,30 +4,36 @@
       <Banner/>
     </div>
     <div class="homeProFile">
-      <div v-if="data != null"><Profile/></div>
+      <div v-if="loginData"><Profile/></div>
       <div v-else><LoginProfile/></div>
       <div class="guideBox">
+      <NuxtLink to="/guide/gameJob">
         <div class="guides1">
-          <img src="@/assets/homeimg/ny1.png" class="yimg1">
+          <img src="@/assets/pageimg/y1.png" class="yimg1">
           <div class="gpBox">
             <p class="gp1">게임 가이드</p>
             <p class="gp2">초심자를 위한 가이드</p>
           </div>
         </div>
+      </NuxtLink>
+      <NuxtLink to="/guide/gameJob">
         <div class="guides2">
-          <img src="@/assets/homeimg/ny2.png" class="yimg2">
+          <img src="@/assets/pageimg/y2.png" class="yimg2">
           <div class="gpBox">
             <p class="gp1">직업&능력</p>
             <p class="gp2">모든 직업 정보 확인하기</p>
           </div>
         </div>
+      </NuxtLink>
+      <NuxtLink to="/guide/gameJob">
         <div class="guides3">
-          <img src="@/assets/homeimg/ny3.png" class="yimg3">
+          <img src="@/assets/pageimg/y3.png" class="yimg3">
           <div class="gpBox">
             <p class="gp1">고객 서비스</p>
             <p class="gp2">문의 및 신고</p>
           </div>
         </div>
+      </NuxtLink>
       </div>
     </div>
 
@@ -187,12 +193,13 @@
 </template>
 
 <script>
-import axios from "axios";
-
+import { getMyInformation } from '@/api/mafiaAPI'
 export default {
+
   data() {
     return {
       data:[],
+      loginData:true,
     };
   },
 
@@ -206,9 +213,23 @@ export default {
   //   여기서 mypage로 강제로 가지므로 유저는 몰라 알려줘야됨
   // },
 
-  methods:{
+  async mounted(){
 
+    const response = await getMyInformation()
+    this.data = response.data
+
+    this.login();
   },
+
+  methods: {
+    login(){
+     if(this.data.data !== null){
+         return this.loginData = true;
+      }else if(this.data.data == null){
+         return this.loginData = false;
+      }
+    }
+	}
 
 };
 </script>

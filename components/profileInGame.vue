@@ -86,7 +86,7 @@ export default {
 
   data() {
     return {
-      show1: false,
+      show1: true,
       show2: false,
       show3: false,
     };
@@ -95,14 +95,20 @@ export default {
   methods: {
     cancel() {},
     friend() {
-      this.show1 = !this.show1;
-      if (this.show2 == true) {
-        this.show2 = !this.show2;
-      } else if (this.show3 == true) {
-        this.show3 = !this.show3;
+      if (this.show1) {
+        return
+      } else {
+        this.show1 = !this.show1;
+        if (this.show2 == true) {
+          this.show2 = !this.show2;
+        } else if (this.show3 == true) {
+          this.show3 = !this.show3;
+        }
       }
+
     },
     ball() {
+      if (this.show2) return
       this.show2 = !this.show2;
       if (this.show1 == true) {
         this.show1 = !this.show1;
@@ -111,6 +117,7 @@ export default {
       }
     },
     record() {
+      if (this.show3) return
       this.show3 = !this.show3;
       if (this.show2 == true) {
         this.show2 = !this.show2;

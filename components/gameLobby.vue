@@ -1,7 +1,7 @@
 <template lang="">
   <div class="flex flex-col min-h-screen w-full">
     <sideBar></sideBar>
-    <div class="px-5 flex-grow">
+    <div class="px-5 flex-grow" >
       <div class="flex items-center py-2">
         <!--로비 위쪽 검색창 및 체크박스 등-->
 
@@ -77,7 +77,7 @@ export default {
     },
   },
   mounted() {
-    const ServerWS = "ws://13.125.132.255:8188/janus";
+    const ServerWS = process.env.NODE_ENV === 'production' ? "wss://gjgjajaj.xyz/janus" : "ws://13.125.132.255:8188/janus";
     let janus = null;
     const opaqueId = "videoroomtest-" + Janus.randomString(12); //opaqueId 값을 통해서 유저 구분
     let videoHandlerGame = null; //Handle 객체
