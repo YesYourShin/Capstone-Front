@@ -159,13 +159,13 @@ export default {
     this.myCtx = this.myCanvas.getContext("2d");
 
     const main = async () => {
-      await this.handCognition();
-      await this.myFace();
-      for (let i = 0; i < 10; i++) {
-        if (i !== this.userNum - 1) {
-          await this.faceMemo(i);
-        }
-      }
+      // await this.handCognition();
+      // await this.myFace();
+      // for (let i = 0; i < 10; i++) {
+      //   if (i !== this.userNum - 1) {
+      //     await this.faceMemo(i);
+      //   }
+      // }
     };
 
     main();
