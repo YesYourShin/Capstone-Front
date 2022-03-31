@@ -29,8 +29,8 @@
         </video>
         <canvas
           :class="['aspect-video output_canvas' + index]"
-          width="640"
-          height="360"
+          width="1280"
+          height="720"
         ></canvas>
         <div :class="['userInfo' + index]">
           {{
