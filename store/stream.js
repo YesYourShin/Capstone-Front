@@ -43,7 +43,38 @@ export const mutations = {
     // });
   },
   removeAllSubscribers(state) {
+    // state.subscribedStreams = [];
+    function stopAndRemoveTrack(mediaStream) {
+      return function(track) {
+        track.stop();
+        mediaStream.removeTrack(track);
+      };
+    };
+
+    function stopMediaStream(mediaStream) {
+      if (!mediaStream) {
+        return
+      }
+
+      mediaStream.getTracks().forEach(stopAndRemoveTrack(mediaStream));
+    }
+
+    function kill_own_feed() {
+      // for (const [key, value] of Object.entries(localTracks)) {
+      //   stopMediaStream(localTracks[key]);
+      // }
+
+      for (let mediaStream in state.subscribedStreams) {
+        stopMediaStream(mediaStream)
+      }
+
+      stopMediaStream(state.publishStream.stream)
+    }
+
+    kill_own_feed();
+
     state.subscribedStreams = [];
+
     console.log("deleted all subscStreams");
   },
   setPublishStream(state, data) {

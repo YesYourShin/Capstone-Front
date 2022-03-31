@@ -42,16 +42,6 @@
         </div>
       </div>
       <div class="flex flex-row-reverse px-2">
-        <div
-          class="p-2 w-40 justify-center items-center"
-          @click="$router.push('/game')"
-        >
-          <div
-            class="flex items-center p-4 bg-yellow-200 rounded-lg shadow-xs cursor-pointer hover:bg-yellow-500 hover:text-gray-100 transition duration-300"
-          >
-            <p class="text-lg font-bold mx-auto">나가기</p>
-          </div>
-        </div>
         <div class="p-2 w-40 justify-center items-center" @click="exit()">
           <div
             class="flex items-center p-4 bg-yellow-200 rounded-lg shadow-xs cursor-pointer hover:bg-yellow-500 hover:text-gray-100 transition duration-300"
@@ -126,6 +116,7 @@ export default {
           vrc.janus.destroy();
           vrc.$router.push("/lobby");
           vrc.$store.commit("stream/removeAllSubscribers");
+          vrc.$store.commit("stream/setPublishStream", null);
         },
         error: function (error) {
           console.log("unpublish failed:", error);
