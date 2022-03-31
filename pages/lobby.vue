@@ -1,6 +1,7 @@
 <template>
   <div class="h-screen" id="lobbybox">
-    <div class="lobbyBox">
+    <div class="lobbyBox flex">
+      <profile></profile>
       <gameLobby />
     </div>
   </div>
