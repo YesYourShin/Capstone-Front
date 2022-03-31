@@ -1,7 +1,7 @@
 <template lang="">
   <div class="flex flex-col min-h-screen w-full">
     <sideBar></sideBar>
-    <div class="px-5 flex-grow" >
+    <div class="px-5 flex-grow">
       <div class="flex items-center py-2">
         <!--로비 위쪽 검색창 및 체크박스 등-->
 
@@ -20,16 +20,41 @@
           <roomButton :room="room"></roomButton>
         </template>
       </div>
-      <div class="h-20 w-60 rounded-lg bg-slate-400 cursor-pointer" @click="$router.push('/')">메인으로</div>
+      <div
+        class="h-20 w-60 rounded-lg bg-slate-400 cursor-pointer"
+        @click="$router.push('/')"
+      >
+        메인으로
+      </div>
       <!-- <div class="" @click="showAlert">
       </div> -->
       <div class="">
         <ul class="flex list-none rounded my-2 justify-end">
-          <li class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 ml-0 rounded-l hover:bg-gray-200"><a class="page-link" href="#">Previous</a></li>
-          <li class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"><a class="page-link" href="#">1</a></li>
-          <li class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"><a class="page-link" href="#">2</a></li>
-          <li class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"><a class="page-link" href="#">3</a></li>
-          <li class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 rounded-r hover:bg-gray-200"><a class="page-link" href="#">Next</a></li>
+          <li
+            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 ml-0 rounded-l hover:bg-gray-200"
+          >
+            <a class="page-link" href="#">Previous</a>
+          </li>
+          <li
+            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"
+          >
+            <a class="page-link" href="#">1</a>
+          </li>
+          <li
+            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"
+          >
+            <a class="page-link" href="#">2</a>
+          </li>
+          <li
+            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"
+          >
+            <a class="page-link" href="#">3</a>
+          </li>
+          <li
+            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 rounded-r hover:bg-gray-200"
+          >
+            <a class="page-link" href="#">Next</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -46,7 +71,7 @@ import createRoomButton from "@/components/lobby_elements/createRoomButton.vue";
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import Janus from "@/plugins/janus";
 // import videoComponent from '@/components/videoComponent.vue';
-import { getGames } from '@/api/mafiaAPI'
+import { getGames } from "@/api/mafiaAPI";
 
 export default {
   components: {
@@ -60,24 +85,31 @@ export default {
   data() {
     return {
       evtSource: null,
-      rooms: [
-      ],
+      rooms: [],
       janus: null,
     };
+  },
+  computed: {
+    subscribedStreams() {
+      return this.$store.state.stream.subscribedStreams;
+    },
   },
   methods: {
     showAlert() {
       // this.$swal('Hello Vue world')
       this.$swal({
-        title: 'Error!',
-        text: 'Do you want to continue',
-        icon: 'error',
-        confirmButtonText: 'Cool',
-      })
+        title: "Error!",
+        text: "Do you want to continue",
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
     },
   },
   mounted() {
-    const ServerWS = process.env.NODE_ENV === 'production' ? "wss://gjgjajaj.xyz/janus" : "ws://13.125.132.255:8188/janus";
+    const ServerWS =
+      process.env.NODE_ENV === "production"
+        ? "wss://gjgjajaj.xyz/janus"
+        : "ws://13.125.132.255:8188/janus";
     let janus = null;
     const opaqueId = "videoroomtest-" + Janus.randomString(12); //opaqueId 값을 통해서 유저 구분
     let videoHandlerGame = null; //Handle 객체
@@ -122,7 +154,7 @@ export default {
 
                 var register = {
                   request: "list",
-                }
+                };
 
                 storePlugin.send({
                   message: register,
@@ -190,10 +222,15 @@ export default {
     });
   },
   beforeDestroy() {
-    this.janus.destroy()
-  }
+    this.janus.destroy();
+  },
+  watch: {
+    subscribedStreams(newVal, oldVal) {
+      if (this.subscribedStreams.length) {
+        this.$store.commit("stream/removeAllSubscribers");
+      }
+    },
+  },
 };
 </script>
-<style lang="" scoped>
-
-</style>
+<style lang="" scoped></style>
