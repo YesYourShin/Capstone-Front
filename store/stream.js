@@ -65,10 +65,12 @@ export const mutations = {
       // }
 
       for (let mediaStream in state.subscribedStreams) {
-        stopMediaStream(mediaStream)
+        stopMediaStream(mediaStream.stream)
       }
 
-      stopMediaStream(state.publishStream.stream)
+      if (state.publishStream) {
+        stopMediaStream(state.publishStream.stream)
+      }
     }
 
     kill_own_feed();
