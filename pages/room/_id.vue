@@ -10,7 +10,6 @@ import gameRoom from "@/components/gameRoom.vue";
 export default {
   transition: "intro",
   name: "room",
-  layout: "inGame",
   components: {
     profile,
     gameRoom,

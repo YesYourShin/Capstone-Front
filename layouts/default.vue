@@ -9,9 +9,18 @@ export default {
   components: {},
   name: "Default",
   watch: {
-    $route: (to, from) => {
-      console.log("페이지를 이동하였습니다.");
-      console.log(to, from);
+    $route: {
+      handler: function (to, from) {
+        console.log("페이지를 이동하였습니다.");
+        console.log(to, from);
+        if (to.name !== "room-id" && to.name !== "game") {
+          this.$store.commit("stream/onRoomOut");
+        } else {
+          this.$store.commit("stream/offRoomOut");
+        }
+      },
+      deep: true,
+      immediate: true,
     },
   },
 };
