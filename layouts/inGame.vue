@@ -1,13 +1,12 @@
-<template>
-  <div class="main" style="">
+<template lang="">
+  <div>
     <Nuxt />
   </div>
 </template>
-
-<script lang="ts">
+<script>
 export default {
+  name: "InGameLayout",
   components: {},
-  name: "Default",
   watch: {
     $route: (to, from) => {
       console.log("페이지를 이동하였습니다.");
@@ -16,11 +15,4 @@ export default {
   },
 };
 </script>
-
-<style>
-html {
-  /* background-color: rgba(0, 0, 0, 0.76); */
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.911);
-}
-</style>
+<style lang=""></style>

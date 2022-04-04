@@ -1,7 +1,7 @@
 <template>
   <div id="headermainbox">
     <NuxtLink to="/">
-    <img src="@/assets/Logow.png" class="logoimg">
+      <img src="@/assets/Logow.png" class="logoimg" />
     </NuxtLink>
     <ul id="headerulbox">
       <div class="ulbox">
@@ -10,7 +10,9 @@
         </p>
         <p class="headerlitilte">랭킹</p>
         <p class="headerlitilte">
-          <NuxtLink to="/community/allCommunity" class="lilink">커뮤니티</NuxtLink>
+          <NuxtLink to="/community/allCommunity" class="lilink"
+            >커뮤니티</NuxtLink
+          >
         </p>
         <p class="headerlitilte">고객지원</p>
         <div class="buttonbox">
@@ -18,20 +20,26 @@
           <div class="buttonline2"></div>
           <div class="buttonline3"></div>
           <div class="buttonline4"></div>
-          <NuxtLink to="/lobby"  class="gogame">
-            <button>
-                  게임 하기
-            </button>
+          <NuxtLink to="/lobby" class="gogame">
+            <button>게임 하기</button>
           </NuxtLink>
         </div>
       </div>
 
       <div class="libox">
-          <ul class="tilteulbox">
-          <li><NuxtLink to="/guide/gameGuide" class="lilink">게임 설명</NuxtLink></li>
-          <li><NuxtLink to="/guide/gameJob" class="lilink">직업 소개</NuxtLink></li>
-          <li><NuxtLink to="/guide/tutorialGuide" class="lilink">튜토리얼 가이드</NuxtLink></li>
-          </ul>
+        <ul class="tilteulbox">
+          <li>
+            <NuxtLink to="/guide/gameGuide" class="lilink">게임 설명</NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/guide/gameJob" class="lilink">직업 소개</NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/guide/tutorialGuide" class="lilink"
+              >튜토리얼 가이드</NuxtLink
+            >
+          </li>
+        </ul>
 
         <ul class="tilteulbox">
           <li><NuxtLink to="/" class="lilink">레벨 랭킹</NuxtLink></li>
@@ -39,10 +47,24 @@
         </ul>
 
         <ul class="tilteulbox">
-          <li><NuxtLink to="/community/cement" class="lilink">공지 사항</NuxtLink></li>
-          <li><NuxtLink to="/community/posta" class="lilink">자유 게시판</NuxtLink></li>
-          <li><NuxtLink to="/community/postb" class="lilink">정보 게시판</NuxtLink></li>
-          <li><NuxtLink to="/community/postc" class="lilink">인기 게시판</NuxtLink></li>
+          <li>
+            <NuxtLink to="/community/cement" class="lilink">공지 사항</NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/community/posta" class="lilink"
+              >자유 게시판</NuxtLink
+            >
+          </li>
+          <li>
+            <NuxtLink to="/community/postb" class="lilink"
+              >정보 게시판</NuxtLink
+            >
+          </li>
+          <li>
+            <NuxtLink to="/community/postc" class="lilink"
+              >인기 게시판</NuxtLink
+            >
+          </li>
         </ul>
 
         <ul class="tilteulbox">
@@ -51,26 +73,21 @@
         </ul>
       </div>
     </ul>
-
   </div>
 </template>
 
 <script>
 export default {
-  name: 'CapstoneHeader',
+  name: "CapstoneHeader",
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  methods: {
-
-  },
+  methods: {},
 };
 </script>
 
 <style lang="scss" scoped>
-@import '~assets/header.scss'
+@import "~assets/header.scss";
 </style>

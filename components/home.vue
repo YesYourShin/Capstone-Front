@@ -1,39 +1,39 @@
 <template>
   <div class="homeBox">
     <div class="bannerBox">
-      <Banner/>
+      <Banner />
     </div>
     <div class="homeProFile">
-      <div v-if="loginData"><Profile/></div>
-      <div v-else><LoginProfile/></div>
+      <div v-if="loginData"><Profile /></div>
+      <div v-else><LoginProfile /></div>
       <div class="guideBox">
-      <NuxtLink to="/guide/gameJob">
-        <div class="guides1">
-          <img src="@/assets/pageimg/y1.png" class="yimg1">
-          <div class="gpBox">
-            <p class="gp1">게임 가이드</p>
-            <p class="gp2">초심자를 위한 가이드</p>
+        <NuxtLink to="/guide/gameJob">
+          <div class="guides1">
+            <img src="@/assets/pageimg/y1.png" class="yimg1" />
+            <div class="gpBox">
+              <p class="gp1">게임 가이드</p>
+              <p class="gp2">초심자를 위한 가이드</p>
+            </div>
           </div>
-        </div>
-      </NuxtLink>
-      <NuxtLink to="/guide/gameJob">
-        <div class="guides2">
-          <img src="@/assets/pageimg/y2.png" class="yimg2">
-          <div class="gpBox">
-            <p class="gp1">직업&능력</p>
-            <p class="gp2">모든 직업 정보 확인하기</p>
+        </NuxtLink>
+        <NuxtLink to="/guide/gameJob">
+          <div class="guides2">
+            <img src="@/assets/pageimg/y2.png" class="yimg2" />
+            <div class="gpBox">
+              <p class="gp1">직업&능력</p>
+              <p class="gp2">모든 직업 정보 확인하기</p>
+            </div>
           </div>
-        </div>
-      </NuxtLink>
-      <NuxtLink to="/guide/gameJob">
-        <div class="guides3">
-          <img src="@/assets/pageimg/y3.png" class="yimg3">
-          <div class="gpBox">
-            <p class="gp1">고객 서비스</p>
-            <p class="gp2">문의 및 신고</p>
+        </NuxtLink>
+        <NuxtLink to="/guide/gameJob">
+          <div class="guides3">
+            <img src="@/assets/pageimg/y3.png" class="yimg3" />
+            <div class="gpBox">
+              <p class="gp1">고객 서비스</p>
+              <p class="gp2">문의 및 신고</p>
+            </div>
           </div>
-        </div>
-      </NuxtLink>
+        </NuxtLink>
       </div>
     </div>
 
@@ -49,19 +49,19 @@
 
       <ul class="rankUserImges">
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg">
+          <img src="@/assets/pageimg/test.jpg" />
         </li>
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg">
+          <img src="@/assets/pageimg/test.jpg" />
         </li>
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg" class="rankUserImg1">
+          <img src="@/assets/pageimg/test.jpg" class="rankUserImg1" />
         </li>
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg">
+          <img src="@/assets/pageimg/test.jpg" />
         </li>
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg">
+          <img src="@/assets/pageimg/test.jpg" />
         </li>
       </ul>
 
@@ -72,16 +72,15 @@
         <li class="rankUserName">MIRAI0625</li>
         <li class="rankUserName">MIRAI0625</li>
       </ul>
-
     </div>
 
     <div class="readBox">
-      <input type="radio" name="readtab" id="tab2" checked>
+      <input type="radio" name="readtab" id="tab2" checked />
       <label for="tab2">자유 게시판</label>
-      <input type="radio" name="readtab" id="tab1"  >
+      <input type="radio" name="readtab" id="tab1" />
       <label for="tab1">공지 사항</label>
-      <input type="radio" name="readtab" id="tab3" >
-      <label for="tab3" >인기 게시판</label>
+      <input type="radio" name="readtab" id="tab3" />
+      <label for="tab3">인기 게시판</label>
 
       <div class="tabcontent box1">
         <div class="tabtitlebox">
@@ -118,7 +117,6 @@
           <p class="mtb5">145</p>
           <p class="mtb6">58</p>
         </div>
-
       </div>
       <div class="tabcontent box2">
         <div class="tabtitlebox">
@@ -187,19 +185,18 @@
           <p class="mtb5">135</p>
           <p class="mtb6">64</p>
         </div>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
 <script>
-import { getMyInformation } from '@/api/mafiaAPI'
+import { getMyInformation } from "@/api/mafiaAPI";
 export default {
-
   data() {
     return {
-      data:[],
-      loginData:true,
+      data: [],
+      loginData: true,
     };
   },
 
@@ -213,27 +210,25 @@ export default {
   //   여기서 mypage로 강제로 가지므로 유저는 몰라 알려줘야됨
   // },
 
-  async mounted(){
-
-    const response = await getMyInformation()
-    this.data = response.data
+  async mounted() {
+    const response = await getMyInformation();
+    this.data = response.data;
 
     this.login();
   },
 
   methods: {
-    login(){
-     if(this.data.data !== null){
-         return this.loginData = true;
-      }else if(this.data.data == null){
-         return this.loginData = false;
+    login() {
+      if (this.data.data !== null) {
+        return (this.loginData = true);
+      } else if (this.data.data == null) {
+        return (this.loginData = false);
       }
-    }
-	}
-
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '~assets/home.scss';
+@import "~assets/home.scss";
 </style>

@@ -77,7 +77,6 @@ export default {
     return {
       game: {},
       storePlugin: null,
-      myStream: null,
       janus: null,
     };
   },
@@ -109,17 +108,26 @@ export default {
     // }
     exit() {
       var unpublish = { request: "unpublish" };
+      var leave = { request: "leave" };
       let vrc = this;
       this.storePlugin.send({
         message: unpublish,
         success: function () {
-          vrc.janus.destroy();
-          vrc.$router.push("/lobby");
           vrc.$store.commit("stream/removeAllSubscribers");
           vrc.$store.commit("stream/setPublishStream", null);
         },
         error: function (error) {
           console.log("unpublish failed:", error);
+        },
+      });
+      this.storePlugin.send({
+        message: leave,
+        success: function () {
+          vrc.janus.destroy();
+          vrc.$router.push("/lobby");
+        },
+        error: function (error) {
+          console.log("leave failed:", error);
         },
       });
     },
@@ -151,6 +159,7 @@ export default {
         // 세션 생성
         vrc.janus = new Janus({
           server: ServerWS,
+          opaqueId: opaqueId,
           success: function () {
             vrc.janus.attach({
               plugin: "janus.plugin.videoroom",
