@@ -12,6 +12,7 @@ import gameLobby from "@/components/gameLobby.vue";
 
 export default {
   transition: "lobby",
+  name: "lobby",
   components: {
     profile,
     gameLobby,

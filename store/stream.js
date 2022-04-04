@@ -5,6 +5,7 @@ export const state = () => ({
   subscribedFeeds: [],
   mainFeed: null,
   janus: null,
+  isRoomOut: false,
 })
 
 export const mutations = {
@@ -76,6 +77,7 @@ export const mutations = {
     kill_own_feed();
 
     state.subscribedStreams = [];
+    state.joinedRoom = null;
 
     console.log("deleted all subscStreams");
   },
@@ -88,6 +90,12 @@ export const mutations = {
   subscribeFeed(state, data) {
     state.subscribedFeeds.push(data);
   },
+  onRoomOut(state) {
+    state.isRoomOut = true;
+  },
+  offRoomOut(state) {
+    state.isRoomOut = false;
+  }
 }
 
 export const getters = {

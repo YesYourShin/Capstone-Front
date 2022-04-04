@@ -1,8 +1,5 @@
 <template lang="">
-  <div
-    class=""
-    @click="goToRoom(room.gameNumber)"
-  >
+  <div class="cursor-pointer" @click="goToRoom(room.room)">
     <div class="bg-red-600 h-9 flex justify-between items-center px-2 mb-2">
       <span>{{ room.description }}</span>
       <span>{{ room.memberCount }}/{{ room.limit }}</span>

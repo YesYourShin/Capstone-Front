@@ -9,6 +9,7 @@ import profile from "@/components/profileInGame.vue";
 import gameRoom from "@/components/gameRoom.vue";
 export default {
   transition: "intro",
+  name: "room",
   components: {
     profile,
     gameRoom,
@@ -20,7 +21,9 @@ $t-duration: 800ms;
 $t-delay: 300ms;
 
 .intro-enter-active,
-.intro-leave-active {
+.intro-leave-active,
+.layout-enter-active,
+.layout-leave-active {
   transition-duration: $t-duration * 2;
 
   &::before,
@@ -47,14 +50,16 @@ $t-delay: 300ms;
   }
 }
 
-.intro-leave {
+.intro-leave,
+.layout-leave {
   &::before,
   &::after {
     transform: scaleX(0);
   }
 }
 
-.intro-leave-active {
+.intro-leave-active,
+.layout-leave-active {
   &::before {
     transition-duration: $t-duration;
   }
@@ -65,7 +70,8 @@ $t-delay: 300ms;
   }
 }
 
-.intro-leave-to {
+.intro-leave-to,
+.layout-leave-to {
   &::before,
   &::after {
     transform: scale(1);
@@ -73,14 +79,16 @@ $t-delay: 300ms;
   }
 }
 
-.intro-enter {
+.intro-enter,
+.layout-enter {
   &::before,
   &::after {
     transform: scaleX(1);
   }
 }
 
-.intro-enter-active {
+.intro-enter-active,
+.layout-enter-active {
   &::before {
     transition-duration: $t-duration;
   }
@@ -91,7 +99,8 @@ $t-delay: 300ms;
   }
 }
 
-.intro-enter-to {
+.intro-enter-to,
+.layout-enter-to {
   &::before,
   &::after {
     transform: scaleX(0);

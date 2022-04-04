@@ -42,7 +42,10 @@
         </div>
       </div>
       <div class="flex flex-row-reverse px-2">
-        <div class="p-2 w-40 justify-center items-center" @click="exit()">
+        <div
+          class="p-2 w-40 justify-center items-center"
+          @click="$router.replace('/lobby')"
+        >
           <div
             class="flex items-center p-4 bg-yellow-200 rounded-lg shadow-xs cursor-pointer hover:bg-yellow-500 hover:text-gray-100 transition duration-300"
           >
@@ -77,7 +80,6 @@ export default {
     return {
       game: {},
       storePlugin: null,
-      myStream: null,
       janus: null,
     };
   },
@@ -94,6 +96,9 @@ export default {
     joinedRoom() {
       return this.$store.state.stream.joinedRoom;
     },
+    isRoomOut() {
+      return this.$store.state.stream.isRoomOut;
+    },
     // ...mapState([
     //   "subscribedStreams",
     //   "mainFeed",
@@ -109,17 +114,25 @@ export default {
     // }
     exit() {
       var unpublish = { request: "unpublish" };
+      var leave = { request: "leave" };
       let vrc = this;
       this.storePlugin.send({
         message: unpublish,
         success: function () {
-          vrc.janus.destroy();
-          vrc.$router.push("/lobby");
           vrc.$store.commit("stream/removeAllSubscribers");
           vrc.$store.commit("stream/setPublishStream", null);
         },
         error: function (error) {
           console.log("unpublish failed:", error);
+        },
+      });
+      this.storePlugin.send({
+        message: leave,
+        success: function () {
+          vrc.janus.destroy();
+        },
+        error: function (error) {
+          console.log("leave failed:", error);
         },
       });
     },
@@ -151,6 +164,7 @@ export default {
         // 세션 생성
         vrc.janus = new Janus({
           server: ServerWS,
+          opaqueId: opaqueId,
           success: function () {
             vrc.janus.attach({
               plugin: "janus.plugin.videoroom",
@@ -599,6 +613,11 @@ export default {
         });
       },
     });
+  },
+  beforeDestroy() {
+    if (this.isRoomOut) {
+      this.exit();
+    }
   },
 };
 </script>
