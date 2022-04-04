@@ -1,7 +1,7 @@
 <template>
   <div class="gamebox">
     <!-- <Billboard blilboard-vote="vote-result"/> -->
-    <div class="chatbox"><p>게임 채팅방 여기에!</p></div>
+    <div class="chatbox"><button v-on:click="exitRoom">게임 채팅방 여기에! (지금은 소켓 제거)</button></div>
     <Billboard ref="billboard" />
     <Timer v-on:startThisGame="gameStart" v-on:timeoutPunishmentVote="finishPunishmentVote"
     v-on:nightSkillEvent="nightSkillEvent" v-on:startVote="startVote" v-on:timeoutVote="finishVote"
@@ -37,7 +37,7 @@
           height="720"
         ></canvas>
         <div :class="['userInfo' + index]">
-          {{'level : ' + userLevel[index-1] +'   '+ userName[index-1] + ' ' + playerJob[index-1] + ' ' + survivePlayer[index-1]}}
+          {{'level : ' + userLevel[index-1] +'   '+ userName[index-1] + ' ' + survivePlayer[index-1]}}
         </div>
         <!-- <Memo class="memoInfo" ></Memo> -->
       </div>
@@ -53,6 +53,7 @@ import Billboard from "@/components/gameFlow_elements/billboard.vue";
 // import StartAndRule from "@/components/gameFlow/startAndRule.vue";
 import SideBar from "@/components/lobby_elements/sideBar.vue";
 import Memo from "@/components/memo.vue";
+import io from "socket.io-client"
 export default {
   name: "App",
   components: {
@@ -81,48 +82,28 @@ export default {
       citizenNum : 8,
       voteNum : 0,
       doctorSelected: 0,
+      roomJob: [],
     };
   },
-  mounted() {},
-  // 해야할일, 투표
+  created() {
+    this.socket = io('http://localhost:3065/game', { transports: ['websocket'] })
+  },
+  mounted() {
+
+  },
   methods: {
+    exitRoom() {
+      this.socket.emit('exitRoom')
+    },
     gameStart() {
       this.flowMessage = '마피아 게임을 시작합니다'
       setTimeout(() => {
-        this.grantJob()
+        this.flowMessage = '직업을 배분했습니다'
+          this.socket.emit("grantJob")
+
       }, 3000);
     },
-    grantJob() {
-      this.flowMessage = '직업을 선정하겠습니다.'
-      setTimeout(() => {
-        const candidates = Array(this.userName.length).fill().map((v, i) => v = i);
-        while (candidates.length > 0) {
-        let num = Math.floor(Math.random() * candidates.length);
-        let leftNum = candidates.splice(num, 1)[0];
-        this.playerJob.push(leftNum);
-        console.log(this.playerJob)
-      }
-      for (let i = 0; i < this.userName.length; i++) {
-        if (this.playerJob[i] == 0 || this.playerJob[i] == 1) {
-          this.playerJob[i] = '마피아'
-          this.survivePlayer[i] = true
-        } else if (this.playerJob[i] == 2) {
-          this.playerJob[i] = '의사'
-          this.survivePlayer[i] = true
-        } else if (this.playerJob[i] == 3) {
-          this.playerJob[i] = '경찰'
-          this.survivePlayer[i] = true
-        } else {
-          this.playerJob[i] = '시민'
-          this.survivePlayer[i] = true
-        }
-      }console.log(this.playerJob)
-        this.flowMessage = '당신은 ' + this.playerJob[0] + '입니다. 잠시 후 게임을 시작합니다'
-              setTimeout(() => {
-        this.morningEvent()
-        }, 3000);
-      }, 3000);
-    },
+
     morningEvent() {
       this.flowMessage = '낮이 되었습니다.'
       // this.backgroundChange.backgroundImage = url("@/assets/game/night.png");

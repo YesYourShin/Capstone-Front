@@ -4,7 +4,7 @@
       <h3>상태메세지 : {{ this.$parent.flowMessage }}</h3>
       <!-- <h3>선정 유저 : {{ this.$parent.electedPlayers+1 }}</h3> -->
 
-      <li v-show="voteShow" v-for="indexs in this.$parent.playerVote" :key="indexs"
+      <li v-show="voteShow" v-for="indexs in this.$parent.playerVote" :key="'a'+indexs"
       >플레이어 : {{indexs}}</li>
       <!-- <li v-show="" v-for="(c, index) in this.$parent.playerJob" :key="index">{{c}}</li> -->
       <li v-show="votePunishment">찬성 : + {{this.$parent.punishmentPros}}</li>
