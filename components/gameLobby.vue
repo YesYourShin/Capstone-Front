@@ -1,6 +1,5 @@
 <template lang="">
   <div class="flex flex-col min-h-screen w-full">
-    <sideBar></sideBar>
     <div class="px-5 flex-grow">
       <div class="flex items-center py-2">
         <!--로비 위쪽 검색창 및 체크박스 등-->
@@ -66,7 +65,6 @@
 import roomButton from "@/components/lobby_elements/roomButton.vue";
 import roomSearch from "@/components/lobby_elements/roomSearch.vue";
 import checkBoxes from "@/components/lobby_elements/checkBoxes.vue";
-import sideBar from "@/components/lobby_elements/sideBar.vue";
 import createRoomButton from "@/components/lobby_elements/createRoomButton.vue";
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import Janus from "@/plugins/janus";
@@ -78,7 +76,6 @@ export default {
     roomButton,
     roomSearch,
     checkBoxes,
-    sideBar,
     createRoomButton,
     chatBox,
   },
