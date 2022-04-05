@@ -3,7 +3,7 @@ export const state = () => ({
   publishStream: null,
   subscribedStreams: [],
   subscribedFeeds: [],
-  mainFeed: null,
+  storePlugin: null,
   janus: null,
   isRoomOut: false,
 })
@@ -84,9 +84,6 @@ export const mutations = {
   setPublishStream(state, data) {
     state.publishStream = data;
   },
-  changeMainFeed(state, data) {
-    state.mainFeed = data;
-  },
   subscribeFeed(state, data) {
     state.subscribedFeeds.push(data);
   },
@@ -103,7 +100,6 @@ export const getters = {
   getSubscribedStreams: state => state.subscribedStreams,
   getSubscribedFeeds: state => state.subscribedFeeds,
   getPublishStream: state => state.publishStream,
-  getMainFeed: state => state.mainFeed,
 }
 
 

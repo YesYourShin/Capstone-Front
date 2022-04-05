@@ -53,8 +53,17 @@
         <div class="p-2 md:w-40">
           <div
             class="flex items-center p-4 bg-green-200 rounded-lg shadow-xs cursor-pointer hover:bg-green-500 hover:text-gray-100 transition duration-300"
+            @click="goToGame()"
           >
             <p class="text-lg font-bold mx-auto">준비하기</p>
+          </div>
+        </div>
+        <div class="p-2 w-20">
+          <div
+            class="flex items-center p-4 bg-green-200 rounded-lg shadow-xs cursor-pointer hover:bg-green-500 hover:text-gray-100 transition duration-300"
+            @click="toast()"
+          >
+            <p class="text-lg font-bold mx-auto">TEST</p>
           </div>
         </div>
       </div>
@@ -131,6 +140,18 @@ export default {
         },
         error: function (error) {
           console.log("leave failed:", error);
+        },
+      });
+    },
+    toast() {
+      this.$toast.show("hi");
+    },
+    goToGame() {
+      this.$router.replace({
+        name: "game",
+        params: {
+          janus: this.janus,
+          storePlugin: this.storePlugin,
         },
       });
     },

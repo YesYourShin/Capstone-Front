@@ -41,6 +41,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     'vue-sweetalert2/nuxt',
+    '@nuxtjs/toast',
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -60,6 +61,10 @@ export default {
         }
       }
     }
+  },
+
+  toast: {
+    position: 'bottom-right',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
