@@ -1,7 +1,6 @@
 <template lang="">
   <div class="w-40" @click="openModal">
-    <a
-      href="#"
+    <div
       class="flex items-center p-4 bg-blue-200 rounded-lg shadow-xs cursor-pointer hover:bg-blue-500 hover:text-gray-100 transition duration-300"
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -14,7 +13,7 @@
       <div>
         <p class="text-lg font-bold ml-2">방 만들기</p>
       </div>
-    </a>
+    </div>
   </div>
 </template>
 <script>
@@ -129,11 +128,11 @@ export default {
 };
 </script>
 <style lang="scss">
-.RoomBtn {
+/* .RoomBtn {
   width: 150px;
   height: 80px;
   border: 1px solid white;
   color: white;
   font-size: 25px;
-}
+} */
 </style>

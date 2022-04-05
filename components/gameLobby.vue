@@ -12,6 +12,9 @@
 
         <createRoomButton></createRoomButton>
         <!--방만들기 버튼-->
+
+        <leaveButton :pathToGo="'/'"></leaveButton>
+        <!-- 나가기 버튼 -->
       </div>
       <div class="grid grid-cols-2 gap-2">
         <!--방 목록-->
@@ -19,46 +22,11 @@
           <roomButton :room="room"></roomButton>
         </template>
       </div>
-      <div
-        class="h-20 w-60 rounded-lg bg-slate-400 cursor-pointer"
-        @click="$router.push('/')"
-      >
-        메인으로
-      </div>
-      <!-- <div class="" @click="showAlert">
-      </div> -->
-      <div class="">
-        <ul class="flex list-none rounded my-2 justify-end">
-          <li
-            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 ml-0 rounded-l hover:bg-gray-200"
-          >
-            <a class="page-link" href="#">Previous</a>
-          </li>
-          <li
-            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"
-          >
-            <a class="page-link" href="#">1</a>
-          </li>
-          <li
-            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"
-          >
-            <a class="page-link" href="#">2</a>
-          </li>
-          <li
-            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 border-r-0 hover:bg-gray-200"
-          >
-            <a class="page-link" href="#">3</a>
-          </li>
-          <li
-            class="relative block py-2 px-3 leading-tight bg-white border border-gray-300 text-blue-700 rounded-r hover:bg-gray-200"
-          >
-            <a class="page-link" href="#">Next</a>
-          </li>
-        </ul>
-      </div>
+
+      <pageNavigator></pageNavigator>
+      <!-- 페이지네이션 (임시)-->
     </div>
     <chatBox></chatBox>
-    <!-- <videoComponent></videoComponent> -->
   </div>
 </template>
 <script>
@@ -67,6 +35,8 @@ import roomSearch from "@/components/lobby_elements/roomSearch.vue";
 import checkBoxes from "@/components/lobby_elements/checkBoxes.vue";
 import createRoomButton from "@/components/lobby_elements/createRoomButton.vue";
 import chatBox from "@/components/lobby_elements/chatBox.vue";
+import leaveButton from "@/components/lobby_elements/leaveButton.vue";
+import pageNavigator from "@/components/lobby_elements/pageNavigator.vue";
 import Janus from "@/plugins/janus";
 // import videoComponent from '@/components/videoComponent.vue';
 import { getGames } from "@/api/mafiaAPI";
@@ -78,6 +48,8 @@ export default {
     checkBoxes,
     createRoomButton,
     chatBox,
+    leaveButton,
+    pageNavigator,
   },
   data() {
     return {
