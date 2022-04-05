@@ -16,7 +16,7 @@ export const state = () => ({
     }),
   chats: [],
   selectedIndex: -1,
-})
+});
 
 export const mutations = {
   newChat(state, user) {
@@ -36,6 +36,4 @@ export const mutations = {
       state.selectedIndex = state.selectedIndex - 1;
     }
   },
-}
-
-
+};

@@ -126,7 +126,8 @@ export default {
       landmarks: [],
       topLeftLandmarks: [],
       bottomRightLandmarks: [],
-      results: [],
+      myPrediction: false,
+      usersPrediction: [],
       myVideo: false,
       myCanvas: false,
       myCtx: false,
@@ -151,6 +152,13 @@ export default {
       2. 얼굴이 여러개 인식 됨
         하나만 인식되게 지정할 수 없어서 여러 얼굴이 인식됨
         -> 처음 인식된 얼굴만 그리게 해서 해결
+
+      주의사항
+      1. [크롬 - 설정 - 시스템 - 가능한 경우 하드웨어 가속 사용] 할 것
+        안 그러면 카메라 렉에 느려터짐
+
+      모르겠다
+      1. async await 할 때 꼭 return 해야 되나
     */
     this.myVideo = document.getElementById(`usercam${this.userNum}`);
     this.myCanvas = document.getElementsByClassName(
@@ -159,13 +167,13 @@ export default {
     this.myCtx = this.myCanvas.getContext("2d");
 
     const main = async () => {
-      // await this.handCognition();
-      // await this.myFace();
-      // for (let i = 0; i < 10; i++) {
-      //   if (i !== this.userNum - 1) {
-      //     await this.faceMemo(i);
-      //   }
-      // }
+      await this.handCognition();
+      await this.myFace();
+      for (let i = 0; i < 10; i++) {
+        if (i !== this.userNum - 1) {
+          await this.faceMemo(i);
+        }
+      }
     };
 
     main();
@@ -615,8 +623,8 @@ export default {
         //   canvasElement.height
         // );
 
-        this.postResults(prediction);
-        this.getResults();
+        this.postPrediction(prediction);
+        this.getPrediction();
         canvasCtx.restore();
         // if (prediction.length == 0) {
         //   // this.landmarks[this.userNum - 1] = false;
@@ -678,17 +686,16 @@ export default {
         // detectFaces();
       });
     },
-    postResults(prediction) {
+    postPrediction(prediction) {
       if (prediction.length == 0) {
-        this.results[this.userNum] = false;
+        this.myPrediction = false;
       } else {
-        this.results[this.userNum] = prediction[0];
+        this.myPrediction = prediction[0];
       }
     },
-    getResults() {
+    getPrediction() {
       for (let i = 0; i < 10; i++) {
-        if (i !== this.userNum - 1)
-          this.results[i] = this.results[this.userNum];
+        if (i !== this.userNum - 1) this.usersPrediction[i] = this.myPrediction;
       }
     },
     faceMemo(i) {
@@ -724,7 +731,7 @@ export default {
         // console.log(this.results[this.userNum - 1]);
         // console.log(this.results[i]);
 
-        if (!this.results[i]) {
+        if (!this.usersPrediction[i]) {
           const canvasWidth = canvasElement.width / 2;
           const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
           const canvasx = canvasElement.width / 2 - canvasWidth / 2;
@@ -748,10 +755,10 @@ export default {
           let rightEary;
           let nosey;
           let mousey;
-          let bottomRightx = this.results[i].bottomRight[0];
-          let bottomRighty = this.results[i].bottomRight[1];
-          let topLeftx = this.results[i].topLeft[0];
-          let topLefty = this.results[i].topLeft[1];
+          let bottomRightx = this.usersPrediction[i].bottomRight[0];
+          let bottomRighty = this.usersPrediction[i].bottomRight[1];
+          let topLeftx = this.usersPrediction[i].topLeft[0];
+          let topLefty = this.usersPrediction[i].topLeft[1];
 
           let imgCitizenHat = "";
           let imgPoliceHat = img.src.includes("police_hat.png");
@@ -759,35 +766,35 @@ export default {
           let imgMilitaryHelmet = img.src.includes("military_helmet.png");
           let imgMafiaHat = img.src.includes("mafia_hat.png");
 
-          for (let j = 0; j < this.results[i].landmarks.length; j++) {
+          for (let j = 0; j < this.usersPrediction[i].landmarks.length; j++) {
             switch (j) {
               case 0: // 오른쪽 눈
-                rightEyex = this.results[i].landmarks[j][0];
-                rightEyey = this.results[i].landmarks[j][1];
+                rightEyex = this.usersPrediction[i].landmarks[j][0];
+                rightEyey = this.usersPrediction[i].landmarks[j][1];
                 break;
               case 1: // 왼쪽 눈
-                leftEyex = this.results[i].landmarks[j][0];
-                leftEyey = this.results[i].landmarks[j][1];
+                leftEyex = this.usersPrediction[i].landmarks[j][0];
+                leftEyey = this.usersPrediction[i].landmarks[j][1];
                 break;
               case 2: // 코
-                nosey = this.results[i].landmarks[j][1];
+                nosey = this.usersPrediction[i].landmarks[j][1];
                 break;
               case 3: // 입
-                mousey = this.results[i].landmarks[j][1];
+                mousey = this.usersPrediction[i].landmarks[j][1];
                 break;
               case 4: // 오른쪽 귀
-                rightEarx = this.results[i].landmarks[j][0];
-                rightEary = this.results[i].landmarks[j][1];
+                rightEarx = this.usersPrediction[i].landmarks[j][0];
+                rightEary = this.usersPrediction[i].landmarks[j][1];
                 break;
               case 5: // 왼쪽 귀
-                leftEarx = this.results[i].landmarks[j][0];
-                leftEary = this.results[i].landmarks[j][1];
+                leftEarx = this.usersPrediction[i].landmarks[j][0];
+                leftEary = this.usersPrediction[i].landmarks[j][1];
                 break;
             }
             // console.log(this.results[0][0]);
             canvasCtx.fillRect(
-              this.results[i].landmarks[j][0],
-              this.results[i].landmarks[j][1],
+              this.usersPrediction[i].landmarks[j][0],
+              this.usersPrediction[i].landmarks[j][1],
               5,
               5
             );
@@ -851,7 +858,7 @@ export default {
           });
           videoElement.srcObject = myStream;
           videoElement.play();
-          console.log("face getMidea");
+          console.log("face getMedea");
         } catch (e) {
           console.log(e);
         }

@@ -58,7 +58,7 @@
         </div>
         <!-- <Memo class="memoInfo" ></Memo> -->
       </div>
-      <!-- <Memo></Memo> -->
+      <Memo></Memo>
     </div>
     <SideBar />
   </div>
@@ -114,9 +114,9 @@ export default {
     };
   },
   created() {
-    this.socket = io("http://localhost:3065/game", {
-      transports: ["websocket"],
-    });
+    // this.socket = io("http://localhost:3065/game", {
+    //   transports: ["websocket"],
+    // });
   },
   mounted() {},
   methods: {

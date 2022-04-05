@@ -431,7 +431,7 @@ export default {
                         success: function (jsep) {
                           Janus.debug("Got publisher SDP!", jsep);
                           var publish = {
-                            request: "configure",
+                            request: "publish",
                             audio: true,
                             video: true,
                           };
@@ -521,6 +521,10 @@ export default {
                       if (unpublished === "ok") {
                         return;
                       }
+                      console.log(
+                        "unpublished 발생!! unpublished: ",
+                        unpublished
+                      );
 
                       vrc.$store.commit("stream/removeSubscriber", unpublished);
                     } else if (msg["error"]) {
