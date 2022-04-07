@@ -8,7 +8,7 @@
       <Tab
         v-for="(chat, index) in $store.state.chats"
         :key="chat.id"
-        class="group-hover:translate-y-0 hover:bg-blue-500"
+        class="group-hover:translate-y-0"
         :index="index"
         :selectedIndex="$store.state.selectedIndex"
       >
@@ -86,7 +86,7 @@ const Tab = styled("div", tapProps)`
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
   background-color: ${(props) => {
-    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#1c51ff"}`;
+    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#d0d0d0"}`;
   }};
   border-width: 2px;
   position: relative;
@@ -102,9 +102,8 @@ const Tab = styled("div", tapProps)`
   cursor: pointer;
   &:hover {
     background-color: ${(props) => {
-      return `${props.index == props.selectedIndex ? "#f2f2f2" : "#4773ff"}`;
+      return `${props.index == props.selectedIndex ? "#f2f2f2" : "#e0e0e0"}`;
     }};
-    color: black;
   }
 `;
 

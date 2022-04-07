@@ -4,12 +4,12 @@
     @click="goToRoom(room.room)"
   >
     <div
-      class="bg-red-600 h-9 flex justify-between items-center px-2 mb-2 rounded-md"
+      class="bg-orange-500 h-9 flex justify-between items-center px-2 mb-2 rounded-md"
     >
       <span>{{ room.description }}</span>
       <span>{{ room.memberCount }}/{{ room.limit }}</span>
     </div>
-    <div class="h-9 w-3/4 bg-red-600 rounded-md"></div>
+    <div class="h-9 w-3/4 bg-red-500 rounded-md"></div>
   </div>
 </template>
 <script>
@@ -20,7 +20,7 @@ export default {
     room: Object,
   },
   methods: {
-    goToRoom(id) {
+    goToRoom() {
       // joinGame(id)
       //   .then((res) => {
       //     this.$router.push(`room/${id}`);
