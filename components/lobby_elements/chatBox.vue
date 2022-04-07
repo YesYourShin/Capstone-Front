@@ -48,20 +48,31 @@
       type="text"
       name="chatInput"
     /> -->
-    <div class="grid grid-flow-row auto-rows-auto grid-cols-12">
-      <div class="col-span-12">
-        <div class="bg-gray-400 flex align-center py-2 px-3">
-          <v-icon class="white">mdi-emoticon-outline</v-icon>
-          <div class="grow mx-3">
-            <input
-              type="text"
-              class="w-full bg-white rounded-lg px-2 outline-none"
-              placeholder="Type your message here..."
-            />
-          </div>
-          <v-icon>mdi-send</v-icon>
-        </div>
+    <div class="bg-gray-400 flex align-center py-2 px-3">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 hover:cursor-pointer hover:text-blue-700"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <div class="grow mx-3">
+        <input
+          type="text"
+          class="w-full bg-white rounded-lg px-2 outline-none"
+          placeholder="Type your message here..."
+          v-model="input"
+          @keyup.enter="sendMessage"
+        />
       </div>
+      <v-icon>mdi-send</v-icon>
     </div>
   </div>
 </template>

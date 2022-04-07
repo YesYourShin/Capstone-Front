@@ -425,7 +425,7 @@ export default {
                           videoRecv: false,
                           audioSend: true,
                           videoSend: true,
-                          video: "lowres-16:9",
+                          video: "hires-16:9",
                         },
 
                         success: function (jsep) {
