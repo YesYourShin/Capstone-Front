@@ -14,6 +14,28 @@ export default {
     profile,
     gameRoom,
   },
+  computed: {
+    entered() {
+      return this.$store.state.stream.entered;
+    },
+    left() {
+      return this.$store.state.stream.left;
+    },
+  },
+  watch: {
+    entered(newVal, oldVal) {
+      if (newVal) {
+        this.$toast.show(newVal + " 님이 참가하셨습니다.");
+        this.$store.commit("stream/resetEntered");
+      }
+    },
+    left(newVal, oldVal) {
+      if (newVal) {
+        this.$toast.show(newVal + " 님이 퇴장하셨습니다.");
+        this.$store.commit("stream/resetLeft");
+      }
+    },
+  },
 };
 </script>
 <style lang="scss">

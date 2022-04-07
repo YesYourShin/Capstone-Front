@@ -6,6 +6,8 @@ export const state = () => ({
   storePlugin: null,
   janus: null,
   isRoomOut: false,
+  entered: null,
+  left: null,
 })
 
 export const mutations = {
@@ -21,6 +23,7 @@ export const mutations = {
     if (state.subscribedStreams.some(findrfid)) return;
     state.subscribedStreams.push(data)
     console.log("added subscStream: (rfid)", data.rfid);
+    state.entered = data.display;
   },
   removeSubscriber(state, rfid) {
     console.log(rfid);
@@ -30,6 +33,7 @@ export const mutations = {
     for (let i = 0; i<state.subscribedStreams.length; i++) {
       console.log('index: ', i, 'rfid: ', state.subscribedStreams[i].rfid);
       if (state.subscribedStreams[i].rfid == rfid) {
+        state.left = state.subscribedStreams[i].display;
         state.subscribedStreams.splice(i, 1);
         console.log("deleted rfid: ", rfid);
         i--;
@@ -78,6 +82,8 @@ export const mutations = {
 
     state.subscribedStreams = [];
     state.joinedRoom = null;
+    state.entered = null;
+    state.left = null;
 
     console.log("deleted all subscStreams");
   },
@@ -92,7 +98,13 @@ export const mutations = {
   },
   offRoomOut(state) {
     state.isRoomOut = false;
-  }
+  },
+  resetEntered(state) {
+    state.entered = null;
+  },
+  resetLeft(state) {
+    state.left = null;
+  },
 }
 
 export const getters = {

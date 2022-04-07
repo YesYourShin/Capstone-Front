@@ -65,6 +65,13 @@ export default {
 
   toast: {
     position: 'bottom-right',
+    duration: 5000,
+    action: {
+      text: 'CLOSE',
+      onClick: (e, toastObject) => {
+        toastObject.goAway(0);
+      }
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

@@ -40,14 +40,29 @@
         </div>
       </div>
     </div>
-    <label class="inline" for="chatInput">:</label>
+    <!-- <label class="inline" for="chatInput">:</label>
     <input
       class="outline-none"
       v-model="input"
       @keyup.enter="sendMessage"
       type="text"
       name="chatInput"
-    />
+    /> -->
+    <div class="grid grid-flow-row auto-rows-auto grid-cols-12">
+      <div class="col-span-12">
+        <div class="bg-gray-400 flex align-center py-2 px-3">
+          <v-icon class="white">mdi-emoticon-outline</v-icon>
+          <div class="grow mx-3">
+            <input
+              type="text"
+              class="w-full bg-white rounded-lg px-2 outline-none"
+              placeholder="Type your message here..."
+            />
+          </div>
+          <v-icon>mdi-send</v-icon>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>

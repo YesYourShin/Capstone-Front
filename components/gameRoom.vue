@@ -445,7 +445,7 @@ export default {
                         error: function (error) {
                           // 에러 발생시 재시도
                           Janus.error("WebRTC error:", error);
-                          publishOwnFeed(useAudio);
+                          publishOwnFeed();
                         },
                       });
                     };
