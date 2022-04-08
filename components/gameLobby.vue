@@ -10,6 +10,9 @@
         <checkBoxes></checkBoxes>
         <!--체크박스-->
 
+        <div class="grow"></div>
+        <!-- 공란 -->
+
         <createRoomButton></createRoomButton>
         <!--방만들기 버튼-->
 
