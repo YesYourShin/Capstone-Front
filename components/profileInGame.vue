@@ -20,8 +20,8 @@
         <button class="profileButton" v-on:click="record">전적</button>
       </div>
     </div>
-    <div class="overflow-auto grow" v-if="show1">
-      <div class="profile4">
+    <div class="overflow-auto flex flex-col" v-if="show1">
+      <div class="profile4 grow">
         <friend-bar></friend-bar>
       </div>
     </div>

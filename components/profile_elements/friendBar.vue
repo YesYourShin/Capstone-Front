@@ -1,23 +1,25 @@
 <template>
   <div class="friendMainBox">
-    <div
-      class="friendBox flex px-4 py-2 transition duration-200 ease-in hover:bg-orange-300"
-      v-for="user in $store.state.friends"
-      :key="user.id"
-      @click.prevent.stop="handleClick($event, user)"
-    >
-      <div class="friendImg">
-        <img
-          src="@/assets/pageimg/test.jpg"
-          alt=""
-          class="aspect-square friendImg rounded-full object-cover w-20"
-        />
+    <template v-for="user in $store.state.friends">
+      <div
+        class="friendBox flex px-4 py-2 transition duration-200 ease-in hover:bg-orange-300 text-white hover:text-black cursor-pointer"
+        @click.prevent.stop="handleClick($event, user)"
+        :key="user.id"
+      >
+        <div class="friendImg">
+          <img
+            src="@/assets/pageimg/test.jpg"
+            alt=""
+            class="aspect-square friendImg rounded-full object-cover w-20"
+          />
+        </div>
+        <div class="friendStatus ml-3 flex flex-col justify-center gap-1">
+          <p class="userId font-bold text-2xl">{{ user.social_id }}</p>
+          <p>{{ user.provider }}</p>
+        </div>
       </div>
-      <div class="friendStatus ml-3 flex flex-col justify-center gap-1">
-        <p class="userId font-bold text-2xl">{{ user.social_id }}</p>
-        <p>{{ user.provider }}</p>
-      </div>
-    </div>
+    </template>
+
     <vue-simple-context-menu
       :elementId="'myUniqueId'"
       :options="options"
