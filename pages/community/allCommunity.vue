@@ -4,7 +4,12 @@
     <div class="communitymain">
       <div class="communityProfile">
         <div class="communityTitle">
-          <Profile/>
+          <div v-if="this.myInfo">
+            <Profile/>
+          </div>
+          <div v-else>
+            <LoginProfile/>
+          </div>
           <ul class="communityUl">
             <li class="communityLi1">
               <NuxtLink to="/community/allCommunity" class="Li1">전체 게시판</NuxtLink>
@@ -64,23 +69,21 @@
 </template>
 
 <script>
-import { getPosts } from '@/api/mafiaAPI'
-import qs from "qs";
 
 export default {
   name: 'CapstoneCommunity',
   data() {
     return {
-      postData:{
-      },
+
     };
   },
-  async mounted() {
-    //  const response = await getPosts({
-    //     category: 1,
-    //     page: 1,
-    //   })
-     this.postData = response.data
+  created(){
+   this.$store.dispatch('user/fetchMyInfo')
+  },
+  computed:{
+    myInfo(){
+      return this.$store.getters['user/getMyInfo']
+    }
   },
   methods: {
   },

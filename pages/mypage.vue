@@ -5,7 +5,7 @@
         <div class="myProfile">
           <p class="mypageText">MyPage</p>
           <form v-on:submit.prevent="submitForm" class="mypageForm">
-            <div class="mypageInput">
+            <!-- <div class="mypageInput">
               <p>이미지 : <input
               class="imgInput"
               type="file"
@@ -14,13 +14,14 @@
               ref="imagedata"
               @change="myimage">
               </p>
-            </div>
+            </div> -->
             <div class="mypageInput">
               <p class="p1">닉네임 : <input type="text" name="user_name"
               v-model="profile.nickname"></p>
             </div>
             <div class="mypageInput">
-              <p class="p2">상태 메시지 : <input type="text" name="user_text" v-model="profile.selfIntroduction"></p>
+              <p class="p2">상태 메시지 : <input type="text"
+              name="user_text" v-model="profile.selfIntroduction"></p>
             </div>
           <input type="submit" class="rebtn" value="회원 정보 저장"
           onclick="document.location.href='/'">
@@ -28,7 +29,8 @@
           <div class="mypagebtns">
             <button>내가 쓴 글보기</button>
             <button>내가 쓴 댓글보기</button>
-            <button>회원탈퇴</button>
+            <button @click="endbtn"
+            onclick="document.location.href='/'">회원탈퇴</button>
           </div>
         </div>
       </div>
@@ -39,14 +41,11 @@
 <script>
 import Footer from '../components/footer.vue';
 import Header from '../components/header.vue';
-import { makeProfile, editProfile, getMyInformation } from '@/api/mafiaAPI';
-
-
+import { makeProfile,editProfile,withdrawUser } from '@/api/mafiaAPI';
 
 export default {
   components: { Header, Footer },
   name: "CapstoneMypage",
-
   data() {
     return {
         profile:{
@@ -54,50 +53,51 @@ export default {
           image: '',
           selfIntroduction : '',
         },
-        data:{
-          data:[],
-            }
       };
     },
 
-    async mounted() {
-      const response = await getMyInformation()
-      this.data = response.data
-
-      this.profile.nickname =  this.data.data.profile.nickname;
-      this.profile.selfIntroduction =  this.data.data.profile.selfIntroduction;
-    },
-
   methods: {
-
-    myimage(){
-      this.image = this.$refs.imagedata.files
-      // if(){
-      // }else if(){
-      // } 이미지 디폴트 값
-    },
-
-    submitForm(){
-       console.log(this.profile);
-
-
-      if(this.data.data.profile == null){
+     submitForm(){
+       if(this.myInfo.profile == null){
         makeProfile(this.profile)
+          .then((res)=>{
+            })
+          .catch((err)=>{
+            console.log(error)
+            })
+       }else{
+          editProfile(this.profile)
           .then((res)=>{
           })
           .catch((err)=>{
             console.log(error)
           })
-      }else if(this.data.data.profile !== null){
-        editProfile(this.profile)
-        .then((res)=>{
-        })
-        .catch((err)=>{
-          console.log(error)
-        })
-      }
-    },
+       }
+     },
+    myimage(){
+      //   this.image = this.$refs.imagedata.files
+      //   // if(){
+      //   // }else if(){
+      //   // } 이미지 디폴트 값
+     },
+    endbtn(){
+      withdrawUser()
+    }
   },
+
+  async mounted(){
+     await this.$store.dispatch('user/fetchMyInfo')
+
+     this.profile.nickname =  this.myInfo.profile.nickname;
+     this.profile.selfIntroduction =  this.myInfo.profile.selfIntroduction;
+  },
+
+  computed:{
+    myInfo(){
+      return this.$store.getters['user/getMyInfo']
+    }
+  },
+
 };
 </script>
 

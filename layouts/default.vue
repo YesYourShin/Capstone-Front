@@ -4,17 +4,20 @@
   </div>
 </template>
 
-<script lang="ts">
+<script >
 export default {
   components: {},
-
+  // async mounted(){
+  //   await this.$store.dispatch('user/fetchMyInfo')
+  // },
 };
 </script>
 
 <style>
 html {
-  /* background-color: rgba(0, 0, 0, 0.76); */
   height: 100%;
+  /* background-color: rgba(0, 0, 0, 0.76); */
     background-color: rgba(0, 0, 0, 0.911);
 }
+
 </style>

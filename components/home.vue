@@ -4,8 +4,8 @@
       <Banner/>
     </div>
     <div class="homeProFile">
-      <!-- <div v-if="loginData"><Profile/></div>
-      <div v-else><LoginProfile/></div> -->
+        <div v-if="myInfo"><Profile/></div>
+        <div v-else><LoginProfile/></div>
       <div class="guideBox">
       <NuxtLink to="/guide/gameJob">
         <div class="guides1">
@@ -66,11 +66,11 @@
       </ul>
 
       <ul class="rankUserNames">
-        <li class="rankUserName">MIRAI0625</li>
-        <li class="rankUserName">MIRAI0625</li>
+        <li class="rankUserName">NOA666</li>
+        <li class="rankUserName">Ariae854</li>
         <li class="rankUserName1">MIRAI0625</li>
-        <li class="rankUserName">MIRAI0625</li>
-        <li class="rankUserName">MIRAI0625</li>
+        <li class="rankUserName">Lim0807</li>
+        <li class="rankUserName">SCPark</li>
       </ul>
 
     </div>
@@ -194,37 +194,14 @@
 
 <script>
 export default {
-
-  data() {
-    return {
-      data:[],
-      loginData:true,
-    };
+  created(){
+   this.$store.dispatch('user/fetchMyInfo')
   },
-
-  async mounted(){
-      // const response = await getMyInformation()
-      // this.data = response.data
-      this.$store.dispatch('fetchMyInfo')
-      this.login();
-  },
-
-  computed: {
-    myInfo() {
-      return this.$store.state.getMyInfo;
+  computed:{
+    myInfo(){
+      return this.$store.getters['user/getMyInfo']
     }
-  },
-
-  methods: {
-    login(){
-     if(this.data.data !== null){
-         return this.loginData = true;
-      }else if(this.data.data == null){
-         return this.loginData = false;
-      }
-    }
-	}
-
+  }
 };
 </script>
 
