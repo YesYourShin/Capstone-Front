@@ -86,7 +86,7 @@ const Tab = styled("div", tapProps)`
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
   background-color: ${(props) => {
-    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#d0d0d0"}`;
+    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#c0c0c0"}`;
   }};
   border-width: 2px;
   position: relative;

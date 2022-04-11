@@ -2,7 +2,7 @@
   <div class="friendMainBox">
     <template v-for="user in $store.state.friends">
       <div
-        class="friendBox flex px-4 py-2 transition duration-200 ease-in hover:bg-orange-300 text-white hover:text-black cursor-pointer"
+        class="friendBox flex px-4 py-2 transition duration-200 ease-in hover:bg-gray-300 text-white hover:text-black cursor-pointer"
         @click.prevent.stop="handleClick($event, user)"
         :key="user.id"
       >
