@@ -1,51 +1,35 @@
 <template>
   <div class="loginbox">
     <button class="btn1">
-      <a
-        :href="
-          process.env.NODE_ENV === 'production'
-            ? 'https://gjgjajaj.xyz/api/auth/google/login'
-            : 'http://localhost:3065/api/auth/google/login'
-        "
-        >구글 로그인</a
-      >
+      <a :href="googleLoginURL">구글 로그인</a>
     </button>
     <button class="btn3">
-      <a
-        :href="
-          process.env.NODE_ENV === 'production'
-            ? 'https://gjgjajaj.xyz/api/auth/naver/login'
-            : 'http://localhost:3065/api/auth/naver/login'
-        "
-        >네이버 로그인</a
-      >
+      <a :href="naverLoginURL">네이버 로그인</a>
     </button>
     <button class="btn2">
-      <a
-        :href="
-          process.env.NODE_ENV === 'production'
-            ? 'https://gjgjajaj.xyz/api/auth/kakao/login'
-            : 'http://localhost:3065/api/auth/kakao/login'
-        "
-        >카카오 로그인</a
-      >
+      <a :href="koakaoLoginURL">카카오 로그인</a>
     </button>
   </div>
 </template>
 
 <script>
-import { getMyInformation } from '@/api/mafiaAPI'
-
 export default {
 
   data() {
     return {
       data: [],
+      googleLoginURL: process.env.NODE_ENV === 'production'
+            ? 'https://gjgjajaj.xyz/api/auth/google/login'
+            : 'http://localhost:3065/api/auth/google/login',
+      naverLoginURL: process.env.NODE_ENV === 'production'
+            ? 'https://gjgjajaj.xyz/api/auth/naver/login'
+            : 'http://localhost:3065/api/auth/naver/login',
+      koakaoLoginURL: process.env.NODE_ENV === 'production'
+            ? 'https://gjgjajaj.xyz/api/auth/kakao/login'
+            : 'http://localhost:3065/api/auth/kakao/login'
     };
   },
   async mounted() {
-     const response = await getMyInformation()
-     this.data = response.data
   },
 };
 </script>

@@ -18,14 +18,16 @@
 
   .btn1{
     border-radius: 5px;
-    background-color: rgb(0, 0, 255);
+    background-color: rgba(0, 0, 0, 0.706);
+    border: 3px solid blue;
     width: 55%;
-    height: 33px;
+    height: 40px;
     line-height: 36px;
     margin: auto;
     color: white;
 
     &:hover{
+      border: 5px solid blue;
       animation: test1 0.5s;
       animation-fill-mode: forwards;
     }
@@ -33,28 +35,33 @@
 
   .btn2{
     border-radius: 5px;
-    background-color: yellow;
+    background-color: rgba(0, 0, 0, 0.706);
+    border: 3px solid yellow;
     width: 55%;
-    height: 33px;
+    height: 40px;
     line-height: 36px;
+    color: white;
     margin: auto;
     &:hover{
       animation: test1 0.5s;
       animation-fill-mode: forwards;
+      border: 5px solid yellow;
     }
   }
 
   .btn3{
     border-radius: 5px;
-    background-color: green;
+    background-color: rgba(0, 0, 0, 0.706);
+    border: 3px solid green;
     width: 55%;
-    height: 33px;
+    height: 40px;
     line-height: 36px;
     margin: auto;
     color: white;
     &:hover{
       animation: test1 0.5s;
       animation-fill-mode: forwards;
+      border: 5px solid green;
     }
   }
 }
@@ -64,8 +71,7 @@
 
   }
 	100%{
-    width: 60%;
-    background-color: white;
+    background-color: rgb(255, 255, 255, 0.706);
     color: black;
   }
 	}

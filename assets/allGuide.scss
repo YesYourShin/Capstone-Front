@@ -11,7 +11,7 @@
     position: relative;
     z-index: 7;
     width: 85%;
-    height: 81vh;
+    height: 100vh;
     margin: auto;
     font-family: 'Do Hyeon', sans-serif;
     border-radius: 25px;
@@ -20,7 +20,7 @@
 
     .giudeCard1{
       width: 20%;
-      height: 80%;
+      height: 60%;
       margin: auto;
       border-radius: 15px;
       position: relative;
@@ -53,14 +53,14 @@
 
     .giudeCard2{
       width: 20%;
-      height: 80%;
+      height: 60%;
       margin: auto;
       border-radius: 15px;
       position: relative;
       border: 3px solid white;
 
       background-image: url("@/assets/pageimg/y2.png");
-      background-size: 270px;
+      background-size: 260px;
       background-position: bottom;
       background-color: rgba(131, 131, 131, 0.842);
 
@@ -85,14 +85,14 @@
 
     .giudeCard3{
       width: 20%;
-      height: 80%;
+      height: 60%;
       margin: auto;
       border-radius: 15px;
       position: relative;
       border: 3px solid white;
 
       background-image: url("@/assets/pageimg/y3.png");
-      background-size: 270px;
+      background-size: 260px;
       background-position: bottom;
       background-color: rgba(131, 131, 131, 0.842);
 
@@ -124,7 +124,7 @@
       }
   100% {
     width: 360px;
-    height: 85%;
+    height: 70%;
     background-position: bottom;
     background-position: 25px;
     border: 5px solid orange;
@@ -137,7 +137,7 @@
       }
   100% {
     width: 360px;
-    height: 85%;
+    height: 70%;
     background-position: bottom;
     background-size: 290px;
     border: 5px solid orange;
@@ -149,7 +149,7 @@
       }
   100% {
     width: 360px;
-    height: 85%;
+    height: 70%;
     background-size: 290px;
     background-position: bottom;
     border: 5px solid orange;
