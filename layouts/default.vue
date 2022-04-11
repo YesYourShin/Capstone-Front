@@ -4,20 +4,30 @@
   </div>
 </template>
 
-<script >
+<script lang="ts">
 export default {
   components: {},
-  // async mounted(){
-  //   await this.$store.dispatch('user/fetchMyInfo')
-  // },
+  name: "Default",
+  watch: {
+    $route: {
+      handler: function (to, from) {
+        if (to.name !== "room-id" && to.name !== "game") {
+          this.$store.commit("stream/onRoomOut");
+        } else {
+          this.$store.commit("stream/offRoomOut");
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
 };
 </script>
 
 <style>
 html {
-  height: 100%;
   /* background-color: rgba(0, 0, 0, 0.76); */
-    background-color: rgba(0, 0, 0, 0.911);
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.911);
 }
-
 </style>

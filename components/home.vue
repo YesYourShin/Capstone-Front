@@ -4,13 +4,8 @@
       <Banner />
     </div>
     <div class="homeProFile">
-<<<<<<< HEAD
-      <div v-if="loginData"><Profile /></div>
+      <div v-if="myInfo"><Profile /></div>
       <div v-else><LoginProfile /></div>
-=======
-        <div v-if="myInfo"><Profile/></div>
-        <div v-else><LoginProfile/></div>
->>>>>>> CRUD
       <div class="guideBox">
         <NuxtLink to="/guide/gameJob">
           <div class="guides1">
@@ -197,14 +192,14 @@
 
 <script>
 export default {
-  created(){
-   this.$store.dispatch('user/fetchMyInfo')
+  created() {
+    this.$store.dispatch("user/fetchMyInfo");
   },
-  computed:{
-    myInfo(){
-      return this.$store.getters['user/getMyInfo']
-    }
-  }
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
+    },
+  },
 };
 </script>
 
