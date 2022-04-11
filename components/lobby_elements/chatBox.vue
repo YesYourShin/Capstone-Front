@@ -33,7 +33,7 @@
         </div>
       </Tab>
     </transition-group>
-    <div class="h-52 bg-gray-300 flex flex-col overflow-auto">
+    <div class="h-52 bg-black/75 flex flex-col overflow-auto">
       <div class="grow">
         <div class="">
           <!-- <p v-for="message in currentMessages">{{ message }}</p> -->

@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="flex">
+  <div class="flex" id="roomBox">
     <profile></profile>
     <gameRoom></gameRoom>
   </div>
@@ -39,6 +39,12 @@ export default {
 };
 </script>
 <style lang="scss">
+#roomBox {
+  background-image: url("@/assets/game/bay.png");
+  background-size: 100%;
+  background-position: bottom;
+}
+
 $t-duration: 800ms;
 $t-delay: 300ms;
 
