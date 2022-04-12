@@ -1,7 +1,7 @@
 <template lang="">
   <div
     class="bg-black/60 rounded-2xl shadow-xl px-2 py-2 cursor-pointer hover:scale-95 border border-gray-600 transition duration-200"
-    @click="goToRoom(room.room)"
+    @click="onClickRoomButton()"
   >
     <div
       class="bg-yellow-200/90 h-9 flex justify-between items-center px-2 mb-2 rounded-md"
@@ -9,7 +9,26 @@
       <span class="font-bold">{{ room.description }}</span>
       <span>{{ room.memberCount }}/{{ room.limit }}</span>
     </div>
-    <div class="h-9 w-3/4 bg-yellow-200/90 rounded-md"></div>
+    <div
+      class="h-9 p-2 w-3/4 bg-yellow-200/90 rounded-md flex items-center justify-between"
+    >
+      <div></div>
+      <div class="">
+        <svg
+          v-if="room.pin_required"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -20,16 +39,41 @@ export default {
     room: Object,
   },
   methods: {
-    goToRoom() {
-      // joinGame(id)
-      //   .then((res) => {
-      //     this.$router.push(`room/${id}`);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+    async onClickRoomButton() {
+      let pin;
+      if (this.room.pin_required) {
+        const { value: password } = await this.$swal({
+          title: "Enter password",
+          input: "password",
+          inputLabel: "Password",
+          inputPlaceholder: "Enter password",
+          inputAttributes: {
+            maxlength: 10,
+            autocapitalize: "off",
+            autocorrect: "off",
+          },
+        });
 
-      this.$router.push(`/room/${this.room.room}`);
+        if (password) {
+          // this.$swal(`Entered password: ${password}`);
+          pin = password;
+          this.$router.push({
+            name: "room-id",
+            params: {
+              id: this.room.room,
+              pin: pin,
+            },
+          });
+        }
+      } else {
+        this.$router.push({
+          name: "room-id",
+          params: {
+            id: this.room.room,
+            pin: pin,
+          },
+        });
+      }
     },
   },
 };

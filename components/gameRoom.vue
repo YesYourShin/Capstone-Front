@@ -163,9 +163,9 @@ export default {
     let videoHandlerGame = null; //Handle 객체
 
     let vrc = this;
-    let pin = null;
+    let pin = this.$route.params.pin;
     let username = "Yuuto";
-    let roomId = 16121235;
+    let roomId = parseInt(this.$route.params.id);
     // let newRemoteFeed = null;
 
     Janus.init({

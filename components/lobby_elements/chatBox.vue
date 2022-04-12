@@ -86,9 +86,12 @@ const Tab = styled("div", tapProps)`
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
   background-color: ${(props) => {
-    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#c0c0c0"}`;
+    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#b7b7b7"}`;
   }};
   border-width: 2px;
+  border-color: ${(props) => {
+    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#d7d7d7"}`;
+  }};
   position: relative;
   transition-property: color, background-color, border-color,
     text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
@@ -102,7 +105,7 @@ const Tab = styled("div", tapProps)`
   cursor: pointer;
   &:hover {
     background-color: ${(props) => {
-      return `${props.index == props.selectedIndex ? "#f2f2f2" : "#e0e0e0"}`;
+      return `${props.index == props.selectedIndex ? "#f2f2f2" : "#d7d7d7"}`;
     }};
   }
 `;
