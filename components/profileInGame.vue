@@ -20,7 +20,7 @@
         <button class="profileButton" v-on:click="record">전적</button>
       </div>
     </div>
-    <div class="overflow-auto" v-if="show1">
+    <div class="overflow-auto flex flex-col" v-if="show1">
       <div class="profile4 grow">
         <friend-bar></friend-bar>
       </div>
@@ -96,7 +96,7 @@ export default {
     cancel() {},
     friend() {
       if (this.show1) {
-        return
+        return;
       } else {
         this.show1 = !this.show1;
         if (this.show2 == true) {
@@ -105,10 +105,9 @@ export default {
           this.show3 = !this.show3;
         }
       }
-
     },
     ball() {
-      if (this.show2) return
+      if (this.show2) return;
       this.show2 = !this.show2;
       if (this.show1 == true) {
         this.show1 = !this.show1;
@@ -117,7 +116,7 @@ export default {
       }
     },
     record() {
-      if (this.show3) return
+      if (this.show3) return;
       this.show3 = !this.show3;
       if (this.show2 == true) {
         this.show2 = !this.show2;

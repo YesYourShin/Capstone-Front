@@ -30,6 +30,12 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  props: {
+    roomList: {
+      type: Array,
+    },
+  },
+};
 </script>
 <style lang=""></style>

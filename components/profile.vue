@@ -4,17 +4,25 @@
       <div class="profile1">
         <img src="@/assets/pageimg/test.jpg" class="profileimg" />
       </div>
-      <div class="profile2">
+      <div class="profile2" v-if="this.myInfo">
         <button class="userlink">
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
         <button class="userlink" @click="logout">Logout</button>
-        <p v-if="data.data" class="userlevel">Lv.250 <span class="username">
-          {{ data.data.profile.nickname }}
-          </span></p>
-        <p class="usertext" v-if="data.data">
-           {{ data.data.profile.selfIntroduction }}
+        <p class="userlevel">Lv.250
+          <span class="username" v-if=" this.myInfo.profile">
+          {{ this.myInfo.profile.nickname }}
+          </span>
+          <span class="username" v-else>
+            ID : {{ this.myInfo.id }}
+          </span>
           </p>
+        <p class="usertext"  v-if=" this.myInfo.profile">
+           {{ this.myInfo.profile.selfIntroduction }}
+        </p>
+        <p class="usertext" v-else>
+          상태메세지를 입력해주세요.
+        </p>
       </div>
 
       <div class="profile3">
@@ -63,7 +71,6 @@
 </template>
 
 <script>
-import { getMyInformation } from '@/api/mafiaAPI'
 import { logout } from '@/api/mafiaAPI'
 
 export default {
@@ -74,13 +81,7 @@ export default {
       show1: false,
       show2: false,
       show3: false,
-      data: [],
     };
-  },
-
-  async mounted() {
-     const response = await getMyInformation()
-     this.data = response.data
   },
 
   methods: {
@@ -122,6 +123,11 @@ export default {
       },
   },
 
+  computed:{
+    myInfo(){
+      return this.$store.getters['user/getMyInfo']
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>

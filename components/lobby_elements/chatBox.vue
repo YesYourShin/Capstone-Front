@@ -8,7 +8,7 @@
       <Tab
         v-for="(chat, index) in $store.state.chats"
         :key="chat.id"
-        class="group-hover:translate-y-0 hover:bg-blue-500"
+        class="group-hover:translate-y-0"
         :index="index"
         :selectedIndex="$store.state.selectedIndex"
       >
@@ -33,21 +33,47 @@
         </div>
       </Tab>
     </transition-group>
-    <div class="h-52 bg-gray-300 flex flex-col overflow-auto">
+    <div class="h-52 bg-black/75 flex flex-col overflow-auto">
       <div class="grow">
         <div class="">
           <!-- <p v-for="message in currentMessages">{{ message }}</p> -->
         </div>
       </div>
     </div>
-    <label class="inline" for="chatInput">:</label>
+    <!-- <label class="inline" for="chatInput">:</label>
     <input
       class="outline-none"
       v-model="input"
       @keyup.enter="sendMessage"
       type="text"
       name="chatInput"
-    />
+    /> -->
+    <div class="bg-gray-400 flex align-center py-2 px-3">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 hover:cursor-pointer hover:text-blue-700"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <div class="grow mx-3">
+        <input
+          type="text"
+          class="w-full bg-white rounded-lg px-2 outline-none"
+          placeholder="Type your message here..."
+          v-model="input"
+          @keyup.enter="sendMessage"
+        />
+      </div>
+      <v-icon>mdi-send</v-icon>
+    </div>
   </div>
 </template>
 <script>
@@ -60,9 +86,12 @@ const Tab = styled("div", tapProps)`
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
   background-color: ${(props) => {
-    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#1c51ff"}`;
+    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#b7b7b7"}`;
   }};
   border-width: 2px;
+  border-color: ${(props) => {
+    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#d7d7d7"}`;
+  }};
   position: relative;
   transition-property: color, background-color, border-color,
     text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
@@ -76,9 +105,8 @@ const Tab = styled("div", tapProps)`
   cursor: pointer;
   &:hover {
     background-color: ${(props) => {
-      return `${props.index == props.selectedIndex ? "#f2f2f2" : "#4773ff"}`;
+      return `${props.index == props.selectedIndex ? "#f2f2f2" : "#d7d7d7"}`;
     }};
-    color: black;
   }
 `;
 

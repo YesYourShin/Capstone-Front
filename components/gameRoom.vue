@@ -22,7 +22,14 @@
           </template> -->
           <div class="justify-self-center px-2 pb-3 w-full">
             <div class="aspect-video bg-fuchsia-400 border border-red-600">
-              <video id="myVideo" ref="myVideo" muted></video>
+              <video
+                v-if="publishStream"
+                id="myVideo"
+                ref="myVideo"
+                :src-object.prop.camel="publishStream.stream"
+                autoplay
+                muted
+              ></video>
             </div>
             <!-- <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p> -->
           </div>
@@ -56,14 +63,6 @@
             @click="goToGame()"
           >
             <p class="text-lg font-bold mx-auto">준비하기</p>
-          </div>
-        </div>
-        <div class="p-2 w-20">
-          <div
-            class="flex items-center p-4 bg-green-200 rounded-lg shadow-xs cursor-pointer hover:bg-green-500 hover:text-gray-100 transition duration-300"
-            @click="toast()"
-          >
-            <p class="text-lg font-bold mx-auto">TEST</p>
           </div>
         </div>
       </div>
@@ -143,9 +142,6 @@ export default {
         },
       });
     },
-    toast() {
-      this.$toast.show("hi");
-    },
     goToGame() {
       this.$router.replace({
         name: "game",
@@ -167,9 +163,9 @@ export default {
     let videoHandlerGame = null; //Handle 객체
 
     let vrc = this;
-    let pin = null;
+    let pin = this.$route.params.pin;
     let username = "Yuuto";
-    let roomId = 16121235;
+    let roomId = parseInt(this.$route.params.id);
     // let newRemoteFeed = null;
 
     Janus.init({
@@ -425,7 +421,7 @@ export default {
                           videoRecv: false,
                           audioSend: true,
                           videoSend: true,
-                          video: "lowres-16:9",
+                          video: "hires-16:9",
                         },
 
                         success: function (jsep) {
@@ -445,7 +441,7 @@ export default {
                         error: function (error) {
                           // 에러 발생시 재시도
                           Janus.error("WebRTC error:", error);
-                          publishOwnFeed(useAudio);
+                          publishOwnFeed();
                         },
                       });
                     };
@@ -576,13 +572,6 @@ export default {
                     stream: stream,
                     display: username,
                   });
-
-                  if (vrc.publishStream) {
-                    vrc.$refs.myVideo.pause();
-                    Janus.attachMediaStream(vrc.$refs.myVideo, stream);
-                    vrc.$refs.myVideo.load();
-                    vrc.$refs.myVideo.play();
-                  }
                 }
               },
               // onlocaltrack: function (track, on) {

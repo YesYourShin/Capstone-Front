@@ -1,42 +1,44 @@
 <template>
   <div class="friendMainBox">
-    <div
-      class="friendBox"
-      v-for="user in $store.state.friends"
-      :key="user.id"
-      @click.prevent.stop="handleClick($event, user)"
-    >
+    <template v-for="user in $store.state.friends">
+      <div
+        class="friendBox flex px-4 py-2 transition duration-200 ease-in hover:bg-gray-200 text-white hover:text-black cursor-pointer"
+        @click.prevent.stop="handleClick($event, user)"
+        :key="user.id"
+      >
         <div class="friendImg">
           <img
             src="@/assets/pageimg/test.jpg"
             alt=""
-            class="aspect-square friendImg rounded-full object-cover"
+            class="aspect-square friendImg rounded-full object-cover w-20"
           />
         </div>
-        <div class="friendStatus">
-          <p class="userId">{{ user.social_id }}</p>
+        <div class="friendStatus ml-3 flex flex-col justify-center gap-1">
+          <p class="userId font-bold text-2xl">{{ user.social_id }}</p>
           <p>{{ user.provider }}</p>
         </div>
-    </div>
-      <vue-simple-context-menu
-        :elementId="'myUniqueId'"
-        :options="options"
-        :ref="'vueSimpleContextMenu'"
-        @option-clicked="optionClicked"
-      />
+      </div>
+    </template>
+
+    <vue-simple-context-menu
+      :elementId="'myUniqueId'"
+      :options="options"
+      :ref="'vueSimpleContextMenu'"
+      @option-clicked="optionClicked"
+    />
     <!-- 컴포넌트 MyModal -->
     <MyModal @close="modal = false" v-if="modal">
       <!-- default 슬롯 콘텐츠 -->
       <p>Vue.js Modal Window!</p>
       <div class="flex">
         <div class="aspect-square w-8">
-          <img class="" src="@/assets/pageimg/test.jpg">
+          <img class="" src="@/assets/pageimg/test.jpg" />
         </div>
         <div>
-          <p>닉네임 : {{showingUser.social_id}}</p>
+          <p>닉네임 : {{ showingUser.social_id }}</p>
           <p>접속상태 :</p>
-          <p>상태메시지 : {{showingUser.provider}}</p>
-          <p>전적 : </p>
+          <p>상태메시지 : {{ showingUser.provider }}</p>
+          <p>전적 :</p>
         </div>
       </div>
       <!-- /default -->
@@ -49,11 +51,11 @@
   </div>
 </template>
 <script>
-import MyModal from '@/components/myModal.vue';
+import MyModal from "@/components/myModal.vue";
 
 export default {
   components: {
-    MyModal
+    MyModal,
   },
   data() {
     return {
@@ -82,13 +84,13 @@ export default {
       // window.alert(JSON.stringify(event.option.name));
       // window.alert(JSON.stringify(event));
       if (event.option.name == "See Details") {
-        this.showingUser = event.item
+        this.showingUser = event.item;
         // this.modal = true
         this.$swal({
-          title: '유저 정보',
-          imageUrl: '@/assets/pageimg/normal.png',
-          imageHeight: '128',
-          imageWidth: '128',
+          title: "유저 정보",
+          imageUrl: "@/assets/pageimg/normal.png",
+          imageHeight: "128",
+          imageWidth: "128",
           html: `
                 <div>
                   <p>닉네임 : ${this.showingUser.social_id}</p>
@@ -96,16 +98,15 @@ export default {
                   <p>상태메시지 : ${this.showingUser.provider}</p>
                   <p>전적 : </p>
                 </div>`,
-        })
-      }
-      else if (event.option.name == "DirectMessage") {
+        });
+      } else if (event.option.name == "DirectMessage") {
         console.log(event.item);
-        this.$store.commit('newChat', event.item)
+        this.$store.commit("newChat", event.item);
       }
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-@import '~assets/friend.scss'
+/* @import '~assets/friend.scss' */
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="h-screen" id="lobbybox">
-    <div class="lobbyBox flex">
+  <div class="h-screen" id="lobbyBox">
+    <div class="flex">
       <profile></profile>
       <gameLobby />
     </div>
@@ -27,5 +27,11 @@ export default {
 .lobby-enter,
 .lobby-leave-to {
   opacity: 0;
+}
+
+#lobbyBox {
+  background-image: url("@/assets/game/bay.png");
+  background-size: 100%;
+  background-position: bottom;
 }
 </style>

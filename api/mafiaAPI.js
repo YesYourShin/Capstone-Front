@@ -69,7 +69,7 @@ export const editProfile = (data) => { // 프로필 수정
 }
 
 export const requestFriend = (userId) => { // 친구 신청
-  return instance.post(`/users/friend/${userId}`)
+  return instance.patch(`/users/friend/${userId}`)
 }
 
 export const deleteFriend = (userId) => { // 친구 삭제
@@ -77,8 +77,8 @@ export const deleteFriend = (userId) => { // 친구 삭제
 }
 
 // Posts
-export const getPosts = () => { // 게시물들 불러오기
-  return instance.get(`/posts`)
+export const getPosts = ({ category, page }) => { // 게시물들 불러오기
+  return instance.get(`/posts?category=${category}&page=${page}`)
 }
 
 export const detailPost = (postId) => { // 게시물 자세히 보기
@@ -126,33 +126,42 @@ export const deleteComment = (commentId) => { // 댓글 삭제
   return instance.delete(`/comments/${commentId}`)
 }
 
-// Games
-export const getGames = () => { // 방들 불러오기
-  return instance.get(`/games`)
+// Rooms
+export const getRooms = () => { // 방들 불러오기
+  return instance.get(`/rooms`)
 }
 
-export const makeGame = (data) => { // 방 만들기
-  return instance.post(`/games`, data)
+export const makeRoom = (data) => { // 방 만들기
+  return instance.post(`/rooms`, data)
 }
 
-export const refreshGames = () => { // 5초마다 방들 불러오기
-  return instance.get(`/games/sse`)
+export const refreshRooms = () => { // 5초마다 방들 불러오기
+  return instance.get(`/rooms/sse`)
 }
 
-export const getGame = (gameId) => { // 특정 방 정보 불러오기
-  return instance.get(`/games/${gameId}`)
+export const getRoom = (roomId) => { // 특정 방 정보 불러오기
+  return instance.get(`/rooms/${roomId}`)
 }
 
-export const joinGame = (gameId) => { // 방 참가
-  return instance.post(`/games/${gameId}`)
+export const joinRoom = (roomId) => { // 방 참가
+  return instance.post(`/rooms/${roomId}`)
 }
 
-export const destroyGame = (gameId) => { // 방 삭제
-  return instance.delete(`/games/${gameId}`)
+export const destroyRoom = (roomId) => { // 방 삭제
+  return instance.delete(`/rooms/${roomId}`)
 }
 
-export const leaveGame = (gameId) => { // 게임 나가기 (마지막 사람이 나가면 자동 방 삭제)
-  return instance.delete(`/games/${gameId}/users/me`)
+export const leaveRoom = (roomId) => { // 게임 나가기 (마지막 사람이 나가면 자동 방 삭제)
+  return instance.delete(`/rooms/${roomId}/users/me`)
 }
 
 // Default
+// axios.default.paramsSerializer = params => {
+//   return qs.stringify(params);
+// }
+// const params = {
+//   search:{
+//     category : 'category',
+//     page : 'page',
+//   }
+// }
