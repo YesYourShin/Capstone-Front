@@ -49,7 +49,7 @@
       name="chatInput"
     /> -->
     <div class="bg-gray-400 flex align-center py-2 px-3">
-      <svg
+      <!-- <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6 hover:cursor-pointer hover:text-blue-700"
         fill="none"
@@ -62,8 +62,8 @@
           stroke-linejoin="round"
           d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
         />
-      </svg>
-      <div class="grow mx-3">
+      </svg> -->
+      <div class="grow mr-3">
         <input
           type="text"
           class="w-full bg-white rounded-lg px-2 outline-none"
