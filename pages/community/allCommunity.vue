@@ -38,7 +38,7 @@
           <div class="psb2">
             <input type="text">
             <button>찾기</button>
-            <button><NuxtLink to="/community/makePost">글쓰기</NuxtLink></button>
+            <button v-if="this.myInfo"><NuxtLink to="/community/makePost">글쓰기</NuxtLink></button>
           </div>
         </div>
 
@@ -52,15 +52,16 @@
         </div>
 
       <NuxtLink to="/community/post">
-        <div class="communityPostContent">
-          <p class="mtb1">1</p>
-          <p class="mtb2">[공지] 마피아 게임 일부 오류 안내(수정완료)</p>
-          <p class="mtb3">관리자</p>
-          <p class="mtb4">2022-02-28</p>
-          <p class="mtb5">25</p>
-          <p class="mtb6">58</p>
-        </div>
+        <ul class="communityPostContent" v-for="item in posts.items" :key="item">
+          <li class="mtb1">{{ item.id }}</li>
+          <li class="mtb2">{{ item.title }}</li>
+          <li class="mtb3">{{ item.profile.nickname }}</li>
+          <li class="mtb4">{{ item.updatedAt }}</li>
+          <li class="mtb5">{{ item.views }}</li>
+          <li class="mtb6">{{ item.likeCount }}</li>
+        </ul>
       </NuxtLink>
+
 
       </div>
     </div>
@@ -69,16 +70,33 @@
 </template>
 
 <script>
+import { getPosts } from '@/api/mafiaAPI';
 
 export default {
   name: 'CapstoneCommunity',
   data() {
     return {
-
+      posts: {
+        items: {},
+        links: [],
+        meta: {
+          itemCount: 0,
+          totalItems: 0,
+          totalPages: 0,
+          currentPage: 0,
+        }
+      }
     };
   },
-  created(){
+  async created (){
    this.$store.dispatch('user/fetchMyInfo')
+    try {
+      let res = await getPosts({category: '4', page: this.posts.meta.currentPage + 1})
+      console.log(res.data.data)
+      this.posts = res.data.data
+    } catch (err) {
+      console.error('allCommunity getPosts error', err)
+    }
   },
   computed:{
     myInfo(){

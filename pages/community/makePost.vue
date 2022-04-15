@@ -17,24 +17,27 @@
 
             <div class="postBoxbiv1">
               <p>글쓰기</p>
-              <input type="submit" class="gobtn" value="등록">
+              <input type="submit" class="gobtn" value="등록"
+              onclick="document.location.href='/community/allCommunity'">
               <!-- onclick="document.location.href='/community/allCommunity'"               -->
             </div>
 
             <div class="postBoxbiv2">
-              <select class="setBox" v-model="post.postCategoryId">
-                <option :value="1">공지 사항</option>
+              <select class="setBox" v-model="post.categoryId">
+                <!-- <option :value="1">공지 사항</option> -->
                 <option :value="2">자유 게시판</option>
                 <option :value="3">정보 게시판</option>
               </select>
             </div>
 
             <div class="postBoxbiv3">
-              <textarea name="title" placeholder="제목을 입력해 주세요" v-model="post.title"></textarea>
+              <textarea name="title" placeholder="제목을 입력해 주세요"
+              v-model="post.title"></textarea>
             </div>
 
             <div class="postBoxbiv4">
-              <textarea name="content" placeholder="내용을 입력해 주세요" v-model="post.content"></textarea>
+              <textarea name="content" placeholder="내용을 입력해 주세요"
+              v-model="post.content"></textarea>
             </div>
       </form>
     </div>
@@ -45,7 +48,7 @@
 <script>
 import Header from '../../components/header.vue';
 import Profile from '../../components/profile.vue';
-import { savePost,getMyInformation } from '@/api/mafiaAPI';
+import { savePost } from '@/api/mafiaAPI';
 
 
 export default {
@@ -54,19 +57,12 @@ export default {
   data() {
     return {
       post: {
-        title: null,
-        content: null,
-        postCategoryId: 1,
-        },
-      data:{
-          data:[],
-          }
-    };
-  },
+        title: '',
+        content: '',
+        categoryId: 2,
+      },
 
-  async mounted() {
-    const response = await getMyInformation()
-    this.data = response.data
+    };
   },
 
   methods: {
@@ -81,6 +77,11 @@ export default {
         })
     },
   },
+  created() {
+    this.$store.dispatch("user/fetchMyInfo");
+
+  },
+
 
 };
 </script>
