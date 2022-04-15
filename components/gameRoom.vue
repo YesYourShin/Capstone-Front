@@ -20,7 +20,10 @@
               <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p>
             </div>
           </template> -->
-          <div class="justify-self-center px-2 pb-3 w-full">
+          <div
+            v-if="publishStream"
+            class="justify-self-center px-2 pb-3 w-full"
+          >
             <div class="aspect-video bg-fuchsia-400 border border-red-600">
               <video
                 v-if="publishStream"
@@ -566,6 +569,7 @@ export default {
                 }
               },
               onlocalstream: function (stream) {
+                console.log(stream);
                 Janus.debug(" ::: Got a local stream :::", stream);
                 if (stream.active) {
                   vrc.$store.commit("stream/setPublishStream", {

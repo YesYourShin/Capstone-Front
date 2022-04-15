@@ -32,28 +32,57 @@
           </Timer>
         </div>
       </div> -->
-
     <div class="videomainbox">
-      <div class="videobox" v-for="index in 10" :key="index">
+      <div class="videobox">
         <video
-          :class="['aspect-video usercam' + index]"
-          :id="['usercam' + index]"
-        >
-          {{ index }}
-        </video>
+          id="myVideo"
+          ref="myVideo"
+          muted
+          :src-object.prop.camel="publishStream.stream"
+          autoplay
+        ></video>
+
+        <!-- <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p> -->
         <canvas
-          :class="['aspect-video output_canvas' + index]"
+          :class="['aspect-video my_canvas']"
           width="1280"
           height="720"
         ></canvas>
-        <div :class="['userInfo' + index]">
+        <div :class="['userInfo' + 9]">
           {{
             "level : " +
-            userLevel[index - 1] +
+            userLevel[9] +
             "   " +
-            userName[index - 1] +
+            userName[9] +
             " " +
-            survivePlayer[index - 1]
+            survivePlayer[9]
+          }}
+        </div>
+      </div>
+      <div class="videobox" v-for="(s, n) in subscribedStreams" :key="n">
+        <video
+          v-if="subscribedStreams.length != n"
+          :class="['aspect-video usercam' + n]"
+          :id="['usercam' + n]"
+          :src-object.prop.camel="s.stream"
+          muted
+          autoplay
+        >
+          {{ n }}
+        </video>
+        <canvas
+          :class="['aspect-video output_canvas' + n]"
+          width="1280"
+          height="720"
+        ></canvas>
+        <div :class="['userInfo' + n]">
+          {{
+            "level : " +
+            userLevel[n - 1] +
+            "   " +
+            userName[n - 1] +
+            " " +
+            survivePlayer[n - 1]
           }}
         </div>
         <!-- <Memo class="memoInfo" ></Memo> -->
@@ -78,6 +107,14 @@ export default {
     Billboard,
     SideBar,
     Memo,
+  },
+  computed: {
+    subscribedStreams() {
+      return this.$store.state.stream.subscribedStreams;
+    },
+    publishStream() {
+      return this.$store.state.stream.publishStream;
+    },
   },
   data() {
     return {
@@ -113,12 +150,16 @@ export default {
       roomJob: [],
     };
   },
+  mounted() {
+    /* 
+      해야하는 거
+    */
+  },
   created() {
     // this.socket = io("http://localhost:3065/game", {
     //   transports: ["websocket"],
     // });
   },
-  mounted() {},
   methods: {
     exitRoom() {
       this.socket.emit("exitRoom");

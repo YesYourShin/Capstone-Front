@@ -1,6 +1,10 @@
 <template>
   <div class="canvasmemo">
-    <div :class="['canvasmemo' + index]" v-for="index in 10" :key="index">
+    <div
+      :class="['canvasmemo' + index]"
+      v-for="index in this.playUsersNum"
+      :key="index"
+    >
       {{ index }}
       <input
         type="button"
@@ -64,26 +68,34 @@
 </template>
 
 <script>
+import { Hands, HAND_CONNECTIONS } from "@mediapipe/hands";
+import { Camera } from "@mediapipe/camera_utils";
+import io from "socket.io-client";
 export default {
   name: "App",
   components: {},
   head: {
     script: [
+      // {
+      //   src: "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs",
+      //   crossorigin: "anonymous",
+      //   body: true,
+      // },
       {
-        src: "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs",
+        src: "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js",
         crossorigin: "anonymous",
         body: true,
       },
-      {
-        src: "https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface",
-        crossorigin: "anonymous",
-        body: true,
-      },
-      {
-        src: "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js",
-        crossorigin: "anonymous",
-        body: true,
-      },
+      // {
+      //   src: "https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface",
+      //   crossorigin: "anonymous",
+      //   body: true,
+      // },
+      // {
+      //   src: "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js",
+      //   crossorigin: "anonymous",
+      //   body: true,
+      // },
       {
         src: "https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js",
         crossorigin: "anonymous",
@@ -94,25 +106,23 @@ export default {
         crossorigin: "anonymous",
         body: true,
       },
-      {
-        src: "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js",
-        crossorigin: "anonymous",
-        body: true,
-      },
-      {
-        src: "https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js",
-        crossorigin: "anonymous",
-        body: true,
-      },
+      // {
+      //   src: "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js",
+      //   crossorigin: "anonymous",
+      //   body: true,
+      // },
+      // {
+      //   src: "https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js",
+      //   crossorigin: "anonymous",
+      //   body: true,
+      // },
     ],
   },
 
   data() {
     return {
-      userNum: 7,
-      imgWidth: [],
-      imgHeight: [],
-      imgSrc: [],
+      playUsersNum: 10, // 게임 인원 수
+      userNum: 1, // 자신의 번호
       fstatus: false, // 손가락 카운트
       cstatus: false, // ox 체크
       vstatus: false, // 엄지로 죽이기
@@ -126,15 +136,43 @@ export default {
       landmarks: [],
       topLeftLandmarks: [],
       bottomRightLandmarks: [],
-      myPrediction: false,
-      usersPrediction: [],
       myVideo: false,
       myCanvas: false,
       myCtx: false,
+      othersLandmarks: [],
+      socket: null,
     };
   },
-
+  create() {},
+  computed: {
+    publishStream() {
+      return this.$store.state.stream.publishStream;
+    },
+    subscribedStreams() {
+      return this.$store.state.stream.subscribedStreams;
+    },
+  },
   mounted() {
+    // nestJs socketio 채팅
+    // https://velog.io/@kimgano12/NestJS-Socket.io-RN-Mysql%EB%A1%9C-%EC%B1%84%ED%8C%85-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-1
+    // socketio 클라이언트 api
+    // https://socket.io/docs/v4/client-api/#io-url-options
+    // socketio server api
+    // https://www.zerocho.com/category/NodeJS/post/57edfcf481d46f0015d3f0cd
+    // Socket.io 사용시 Client 와 Server 동시에 개발하기
+    // https://leestrument.tistory.com/entry/Socketio-%EC%82%AC%EC%9A%A9%EC%8B%9C-Client-%EC%99%80-Server-%EB%8F%99%EC%8B%9C%EC%97%90-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0
+
+    // const socket = io("http://localhost:3065", {
+    //   transports: ["websocket"],
+    // });
+    // let socket = io();
+    // console.log(this.socket);
+    // this.socket.emit("ClientEvent", "Hello Server");
+    // this.socket.on("ServerEvent", (serverMessage) =>
+    //   console.log(serverMessage)
+    // );
+    // this.socket.on("connect_error", (err) => console.log(err));
+    // this.socketEvents();
     /*
       해야할 것
       1. 손 인식 -> 얼굴 인식 -> 나머지 영상 순으로 하나 끝나면 하나 켜지게 할 것
@@ -142,8 +180,13 @@ export default {
       2. 나머지 영상은 스트림으로 받아서 영상이 켜지게 할 것
         지금은 자기 스트림으로 자기 카메라가 켜지게 되어 있음
         받은 스트림을 video 태그랑 어떻게 연결함?
-        videoElements.srcObject ?
-      3. 메모로 쓰이는 이미지의 캔버스 크기 지정?
+        -> 스트림 받아서 video 태그랑 연결
+      3. 메모로 쓰이는 모자 이미지의 캔버스 크기 지정?
+       -> ?
+      4. gameroom에서 replace하면 hand 동작 안 함 이유? 544줄
+       -> cdn이었던걸 npm으로 설치해서 해결
+      5. 캔버스 좌우반전 왜 자꾸 ㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈ
+
 
       문제점?
       1. 마스크를 쓰면 인식률이 엄청 낮아짐
@@ -159,23 +202,39 @@ export default {
 
       모르겠다
       1. async await 할 때 꼭 return 해야 되나
+
+      현재
+      1. 게임 입장시 맨 처음 video 태그가 자신의 카메라
+      2. 두 번째 video 태그부터 타인의 카메라
+      3. 게임 입장하면 자신의 카메라에서 얼굴 랜드마크를 소켓서버로 보내서 전체 인원한테 뿌려줌(현재 자신 포함으로 뿌리고 있고 카메라 번호를 주는 방식으로 2번으로 고정해놔서 고쳐야 됨)
+      4. 게임 카메라 번호가 아니라 스트림 id로 하려했는데 자신의 스트림은 vuex에 아이디가 없어서 번호로 하는 게 나을 듯?
+      5. 묘하게 캔버스가 느린 느낌? 
+      6. 가끔 캔버스가 잠시 안 나오는데 이건 모르겠다
+        -> Remote track flowing again: 이라 뜸 Janus 문제?
+      7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류} 
     */
-    this.myVideo = document.getElementById(`usercam${this.userNum}`);
-    this.myCanvas = document.getElementsByClassName(
-      `output_canvas${this.userNum}`
-    )[0];
-    this.myCtx = this.myCanvas.getContext("2d");
 
     const main = async () => {
+      // 소켓 연결
+      this.socket = io("http://localhost:3065/game", {
+        transports: ["websocket"],
+      });
+
+      // 자기 비디오랑 캔버스
+      this.myVideo = document.getElementById(`myVideo`);
+      this.myCanvas = document.getElementsByClassName(`my_canvas`)[0];
+      this.myCtx = this.myCanvas.getContext("2d");
+
       await this.handCognition();
       await this.myFace();
-      for (let i = 0; i < 10; i++) {
+
+      // 타인의 스트림만큼 캔버스에 메모 그리기
+      for (let i = 0; i <= this.subscribedStreams.length; i++) {
         if (i !== this.userNum - 1) {
           await this.faceMemo(i);
         }
       }
     };
-
     main();
   },
   // 해야할일, 투표
@@ -187,7 +246,7 @@ export default {
 
       videoElement.style.display = "none";
 
-      let onResults = (results) => {
+      let onResults = async (results) => {
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         // 기준점을 지정한 크기(x,y)만큼 평행이동함
@@ -208,331 +267,31 @@ export default {
         let cStatus = this.cStatus;
         let vStatus = this.vStatus;
 
-        if (fStatus) {
-          if (results.multiHandLandmarks) {
-            let rightHandLandmarks = {};
-            let leftHandLandmarks = {};
-            let rightFingersStatus = {
-              RIGHT_THUMB: false,
-              RIGHT_INDEX_FINGER: false,
-              RIGHT_MIDDLE_FINGER: false,
-              RIGHT_RING_FINGER: false,
-              RIGHT_PINKY: false,
-            };
-            let leftFingersStatus = {
-              LEFT_THUMB: false,
-              LEFT_INDEX_FINGER: false,
-              LEFT_MIDDLE_FINGER: false,
-              LEFT_RING_FINGER: false,
-              LEFT_PINKY: false,
-            };
-            let text = "";
-            let n = 0;
-            for (const landmarks of results.multiHandLandmarks) {
-              if (results.multiHandedness) {
-                // 오른손
-                if (results.multiHandedness[n].label == "Right") {
-                  rightHandLandmarks = landmarks;
-
-                  // 엄지 4번(x)가 새끼손가락 17번(x)보다 왼쪽에 있을 때(손 바닥면)
-                  if (
-                    rightHandLandmarks[4]["x"] < rightHandLandmarks[17]["x"]
-                  ) {
-                    // 엄지 4번(x)가 엄지 3번 (x)보다 왼쪽에 있고 엄지 4번 (y)이 검지 6번 (y) 보다 아래에 있을 경우
-                    if (
-                      rightHandLandmarks[4]["x"] < rightHandLandmarks[3]["x"] &&
-                      rightHandLandmarks[4]["y"] > rightHandLandmarks[6]["y"]
-                    ) {
-                      rightFingersStatus["RIGHT_THUMB"] = true;
-                    }
-                  }
-
-                  // 엄지 4번(x)가 새끼손가락 17번(x)보다 오른쪽에 있을 때(손 등면)
-                  else if (
-                    rightHandLandmarks[17]["x"] < rightHandLandmarks[4]["x"]
-                  ) {
-                    // 엄지 4번(x)가 엄지 2번(x)보다 오른쪽에 있고 엄지 4번 (y)가 검지 6번(y)보다 위에 있을 경우
-                    if (
-                      rightHandLandmarks[4]["x"] > rightHandLandmarks[2]["x"] &&
-                      rightHandLandmarks[4]["y"] > rightHandLandmarks[6]["y"]
-                    ) {
-                      rightFingersStatus["RIGHT_THUMB"] = true;
-                    }
-                  }
-
-                  // 나머지 손가락 4개의 맨 위(y)가 한 개 아래의 관절(y)보다 높을 경우
-                  if (rightHandLandmarks[8]["y"] < rightHandLandmarks[6]["y"]) {
-                    rightFingersStatus["RIGHT_INDEX_FINGER"] = true;
-                  }
-                  if (
-                    rightHandLandmarks[12]["y"] < rightHandLandmarks[10]["y"]
-                  ) {
-                    rightFingersStatus["RIGHT_MIDDLE_FINGER"] = true;
-                  }
-                  if (
-                    rightHandLandmarks[16]["y"] < rightHandLandmarks[14]["y"]
-                  ) {
-                    rightFingersStatus["RIGHT_RING_FINGER"] = true;
-                  }
-                  if (
-                    rightHandLandmarks[20]["y"] < rightHandLandmarks[18]["y"]
-                  ) {
-                    rightFingersStatus["RIGHT_PINKY"] = true;
-                  }
-                }
-                // 왼손
-                if (results.multiHandedness[n].label == "Left") {
-                  leftHandLandmarks = landmarks;
-
-                  // 엄지 4번(x)가 새끼손가락 17번(x)보다 오른쪽에 있을 때(손 바닥면)
-                  if (leftHandLandmarks[17]["x"] < leftHandLandmarks[4]["x"]) {
-                    // 엄지 4번(x)가 엄지 3번 (x)보다 오른쪽에 있고 엄지 4번 (y)이 검지 6번 (y) 보다 아래에 있을 경우
-                    if (
-                      leftHandLandmarks[4]["x"] > leftHandLandmarks[3]["x"] &&
-                      leftHandLandmarks[4]["y"] > leftHandLandmarks[6]["y"]
-                    ) {
-                      leftFingersStatus["LEFT_THUMB"] = true;
-                    }
-                  }
-
-                  // 엄지 4번(x)가 새끼손가락 17번(x)보다 왼쪽에 있을 때(손 등면)
-                  else if (
-                    leftHandLandmarks[17]["x"] > leftHandLandmarks[4]["x"]
-                  ) {
-                    // 엄지 4번(x)가 엄지 2번(x)보다 왼쪽에 있고 엄지 4번 (y)이 검지 6번 (y) 보다 아래에 있을 경우
-                    if (
-                      leftHandLandmarks[4]["x"] < leftHandLandmarks[2]["x"] &&
-                      leftHandLandmarks[4]["y"] > leftHandLandmarks[6]["y"]
-                    ) {
-                      leftFingersStatus["LEFT_THUMB"] = true;
-                    }
-                  }
-
-                  // 나머지 손가락 4개의 맨 위(y)가 한 개 아래의 관절(y)보다 높을 경우
-                  if (leftHandLandmarks[8]["y"] < leftHandLandmarks[6]["y"]) {
-                    leftFingersStatus["LEFT_INDEX_FINGER"] = true;
-                  }
-                  if (leftHandLandmarks[12]["y"] < leftHandLandmarks[10]["y"]) {
-                    leftFingersStatus["LEFT_MIDDLE_FINGER"] = true;
-                  }
-                  if (leftHandLandmarks[16]["y"] < leftHandLandmarks[14]["y"]) {
-                    leftFingersStatus["LEFT_RING_FINGER"] = true;
-                  }
-                  if (leftHandLandmarks[20]["y"] < leftHandLandmarks[18]["y"]) {
-                    leftFingersStatus["LEFT_PINKY"] = true;
-                  }
-                }
-                n += 1;
-              }
-
-              drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-                color: "#00FF00",
-                lineWidth: 5,
-              });
-              drawLandmarks(canvasCtx, landmarks, {
-                color: "#FF0000",
-                lineWidth: 2,
-              });
+        let status = fStatus
+          ? "fStatus"
+          : cStatus
+          ? "cStatus"
+          : vStatus
+          ? "vStatus"
+          : false;
+        switch (status) {
+          case "fStatus":
+            if (results.multiHandLandmarks) {
+              this.fingersCount(results, canvasElement, canvasCtx, fStatus);
             }
+            break;
+          case "cStatus":
+            if (results.multiHandLandmarks) {
+              this.checking(results, canvasElement, canvasCtx, cStatus);
+            }
+            break;
+          case "vStatus":
+            if (results.multiHandLandmarks) {
+              this.voting(results, canvasElement, canvasCtx, vStatus);
+            }
+            break;
+          default:
             canvasCtx.restore();
-            let recognitionError;
-
-            if (rightHandLandmarks.length > 0) {
-              if (
-                rightHandLandmarks[0]["y"] < rightHandLandmarks[1]["y"] ||
-                (rightHandLandmarks[0]["y"] - rightHandLandmarks[5]["y"]) / 2 >
-                  rightHandLandmarks[0]["y"] - rightHandLandmarks[17]["y"]
-              ) {
-                recognitionError = true;
-                text = "손을 정확하게 인식시켜주세요.";
-              }
-            }
-
-            if (leftHandLandmarks.length > 0) {
-              if (
-                leftHandLandmarks[0]["y"] < leftHandLandmarks[1]["y"] ||
-                (leftHandLandmarks[0]["y"] - leftHandLandmarks[5]["y"]) / 2 >
-                  leftHandLandmarks[0]["y"] - leftHandLandmarks[17]["y"]
-              ) {
-                recognitionError = true;
-                text = "손을 정확하게 인식시켜주세요.";
-              }
-            }
-
-            if (
-              !recognitionError &&
-              (rightHandLandmarks.length > 0 || leftHandLandmarks.length > 0)
-            ) {
-              let rightFingersCount = 0;
-              let leftFingersCount = 0;
-
-              for (let fingersStatus of Object.values(rightFingersStatus)) {
-                if (fingersStatus == true) {
-                  rightFingersCount += 1;
-                }
-              }
-
-              for (let fingers of Object.values(leftFingersStatus)) {
-                if (fingers == true) {
-                  leftFingersCount += 1;
-                }
-              }
-
-              let totalFingers = rightFingersCount + leftFingersCount;
-              if (totalFingers == 0) {
-                text = "0번은 없습니다.";
-              } else {
-                text = totalFingers + "번";
-              }
-            }
-            if (fStatus) {
-              canvasCtx.font = `${canvasElement.width / 12}px gulim`;
-              canvasCtx.fillStyle = "rgba(255,255,255,1)";
-              canvasCtx.fillText(
-                "몇 번을 지목하겠습니까?",
-                canvasElement.width / 15,
-                canvasElement.height / 8
-              );
-              canvasCtx.fillText(
-                text,
-                canvasElement.width / 15,
-                (canvasElement.height / 8) * 2
-              );
-              console.log(text);
-            } else {
-              console.log("no fingers");
-            }
-          }
-        } else if (cStatus) {
-          console.log(cStatus);
-          if (results.multiHandLandmarks) {
-            let right_hand = {};
-            let left_hand = {};
-            let text = "";
-            let n = 0;
-            for (const landmarks of results.multiHandLandmarks) {
-              if (results.multiHandedness) {
-                if (results.multiHandedness[n].label == "Right") {
-                  right_hand = landmarks;
-                }
-
-                if (results.multiHandedness[n].label == "Left") {
-                  left_hand = landmarks;
-                }
-                n += 1;
-              }
-
-              drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-                color: "#00FF00",
-                lineWidth: 5,
-              });
-              drawLandmarks(canvasCtx, landmarks, {
-                color: "#FF0000",
-                lineWidth: 2,
-              });
-            }
-            canvasCtx.restore();
-            if (right_hand.length > 0 && left_hand.length > 0) {
-              if (
-                right_hand[9]["x"] > left_hand[9]["x"] &&
-                right_hand[12]["y"] < right_hand[0]["y"] &&
-                left_hand[12]["y"] < left_hand[0]["y"] &&
-                right_hand[5]["x"] < right_hand[0]["x"] &&
-                left_hand[5]["x"] > left_hand[0]["x"]
-              ) {
-                text = "네";
-              } else if (
-                right_hand[9]["x"] < left_hand[9]["x"] &&
-                right_hand[12]["y"] < right_hand[0]["y"] &&
-                left_hand[12]["y"] < left_hand[0]["y"] &&
-                right_hand[9]["x"] < right_hand[0]["x"] &&
-                left_hand[9]["x"] > left_hand[0]["x"]
-              ) {
-                text = "아니요";
-              } else {
-                text = "손을 정확하게 인식시켜주세요.";
-              }
-            } else if (right_hand.length > 0 || left_hand.length > 0) {
-              text = "손을 정확하게 인식시켜주세요.";
-            }
-            if (cStatus) {
-              canvasCtx.font = `${canvasElement.width / 12}px gulim`;
-              canvasCtx.fillStyle = "rgba(0,0,0,1)";
-              canvasCtx.fillText(
-                "n번에게 투표하시겠습니까?",
-                canvasElement.width / 15,
-                canvasElement.height / 8
-              );
-              canvasCtx.fillText(
-                text,
-                canvasElement.width / 15,
-                (canvasElement.height / 8) * 2
-              );
-              console.log(text);
-            } else {
-              console.log("no check");
-            }
-          }
-        } else if (vStatus) {
-          if (results.multiHandLandmarks) {
-            let safe = false;
-            let kill = false;
-            let text = "";
-            if (results.multiHandedness[1]) {
-              text = "한 손만 인식시켜 주세요.";
-            } else {
-              for (const landmarks of results.multiHandLandmarks) {
-                if (
-                  landmarks[4]["y"] < landmarks[17]["y"] &&
-                  landmarks[4]["y"] < landmarks[3]["y"]
-                ) {
-                  kill = true;
-                } else if (
-                  landmarks[4]["y"] > landmarks[17]["y"] &&
-                  landmarks[4]["y"] > landmarks[3]["y"]
-                ) {
-                  safe = true;
-                }
-
-                if (kill == true) {
-                  text = "찬성";
-                } else if (safe == true) {
-                  text = "반대";
-                }
-                if (landmarks && kill == false && safe == false) {
-                  text = "손을 정확하게 인식시켜 주세요.";
-                }
-
-                drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-                  color: "#00FF00",
-                  lineWidth: 5,
-                });
-                drawLandmarks(canvasCtx, landmarks, {
-                  color: "#FF0000",
-                  lineWidth: 2,
-                });
-              }
-            }
-            canvasCtx.restore();
-            if (vStatus) {
-              canvasCtx.font = `${canvasElement.width / 12}px gulim`;
-              canvasCtx.fillStyle = "rgba(0,0,0,1)";
-              canvasCtx.fillText(
-                "죽이겠습니까?",
-                canvasElement.width / 15,
-                canvasElement.height / 8
-              );
-              canvasCtx.fillText(
-                text,
-                canvasElement.width / 15,
-                (canvasElement.height / 8) * 2
-              );
-            } else {
-              console.log("no vote");
-            }
-          }
-        } else {
-          canvasCtx.restore();
         }
       };
 
@@ -550,25 +309,6 @@ export default {
 
       hands.onResults(onResults);
 
-      // let myStream;
-
-      // async function getMedia() {
-      //   try {
-      //     myStream = await navigator.mediaDevices.getUserMedia({
-      //       audio: true,
-      //       video: { width: 1280, height: 720 },
-      //     });
-
-      //     videoElement.srcObject = myStream;
-
-      //     console.log("getMedia");
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
-      // }
-
-      // getMedia();
-
       const camera = new Camera(videoElement, {
         onFrame: async () => {
           await hands.send({ image: videoElement });
@@ -576,14 +316,351 @@ export default {
         width: 1280,
         height: 720,
       });
-      console.log("hand last");
 
       return camera.start();
     },
+    fingersCount(results, canvasElement, canvasCtx, fStatus) {
+      let rightHandLandmarks = {};
+      let leftHandLandmarks = {};
+      let rightFingersStatus = {
+        RIGHT_THUMB: false,
+        RIGHT_INDEX_FINGER: false,
+        RIGHT_MIDDLE_FINGER: false,
+        RIGHT_RING_FINGER: false,
+        RIGHT_PINKY: false,
+      };
+      let leftFingersStatus = {
+        LEFT_THUMB: false,
+        LEFT_INDEX_FINGER: false,
+        LEFT_MIDDLE_FINGER: false,
+        LEFT_RING_FINGER: false,
+        LEFT_PINKY: false,
+      };
+      let n = 0;
+
+      // 손을 인식해서 접혔는지 상태를 확인
+      for (const landmarks of results.multiHandLandmarks) {
+        if (results.multiHandedness) {
+          // 오른손
+          if (results.multiHandedness[n].label == "Right") {
+            rightHandLandmarks = landmarks;
+            rightFingersStatus = this.rightHand(
+              rightHandLandmarks,
+              rightFingersStatus
+            );
+          }
+          // 왼손
+          if (results.multiHandedness[n].label == "Left") {
+            leftHandLandmarks = landmarks;
+            leftFingersStatus = this.leftHand(
+              leftHandLandmarks,
+              leftFingersStatus
+            );
+          }
+          n += 1;
+        }
+
+        // 랜드마크대로 손 그림
+        drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
+          color: "#00FF00",
+          lineWidth: 5,
+        });
+        drawLandmarks(canvasCtx, landmarks, {
+          color: "#FF0000",
+          lineWidth: 2,
+        });
+      }
+      canvasCtx.restore();
+
+      const text = this.cognitionErrorCheck(
+        rightHandLandmarks,
+        rightFingersStatus,
+        leftHandLandmarks,
+        leftFingersStatus
+      );
+
+      if (fStatus) {
+        canvasCtx.font = `${canvasElement.width / 12}px gulim`;
+        canvasCtx.fillStyle = "rgba(255,255,255,1)";
+        canvasCtx.fillText(
+          "몇 번을 지목하겠습니까?",
+          canvasElement.width / 15,
+          canvasElement.height / 8
+        );
+        canvasCtx.fillText(
+          text,
+          canvasElement.width / 15,
+          (canvasElement.height / 8) * 2
+        );
+        console.log(text);
+      } else {
+        console.log("no fingers");
+      }
+    },
+    rightHand(rightHandLandmarks, rightFingersStatus) {
+      // 엄지 4번(x)가 새끼손가락 17번(x)보다 왼쪽에 있을 때(손 바닥면)
+      if (rightHandLandmarks[4]["x"] < rightHandLandmarks[17]["x"]) {
+        // 엄지 4번(x)가 엄지 3번 (x)보다 왼쪽에 있고 엄지 4번 (y)이 검지 6번 (y) 보다 아래에 있을 경우
+        if (
+          rightHandLandmarks[4]["x"] < rightHandLandmarks[3]["x"] &&
+          rightHandLandmarks[4]["y"] > rightHandLandmarks[6]["y"]
+        ) {
+          rightFingersStatus["RIGHT_THUMB"] = true;
+        }
+      }
+
+      // 엄지 4번(x)가 새끼손가락 17번(x)보다 오른쪽에 있을 때(손 등면)
+      else if (rightHandLandmarks[17]["x"] < rightHandLandmarks[4]["x"]) {
+        // 엄지 4번(x)가 엄지 2번(x)보다 오른쪽에 있고 엄지 4번 (y)가 검지 6번(y)보다 위에 있을 경우
+        if (
+          rightHandLandmarks[4]["x"] > rightHandLandmarks[2]["x"] &&
+          rightHandLandmarks[4]["y"] > rightHandLandmarks[6]["y"]
+        ) {
+          rightFingersStatus["RIGHT_THUMB"] = true;
+        }
+      }
+
+      // 나머지 손가락 4개의 맨 위(y)가 한 개 아래의 관절(y)보다 높을 경우
+      if (rightHandLandmarks[8]["y"] < rightHandLandmarks[6]["y"]) {
+        rightFingersStatus["RIGHT_INDEX_FINGER"] = true;
+      }
+      if (rightHandLandmarks[12]["y"] < rightHandLandmarks[10]["y"]) {
+        rightFingersStatus["RIGHT_MIDDLE_FINGER"] = true;
+      }
+      if (rightHandLandmarks[16]["y"] < rightHandLandmarks[14]["y"]) {
+        rightFingersStatus["RIGHT_RING_FINGER"] = true;
+      }
+      if (rightHandLandmarks[20]["y"] < rightHandLandmarks[18]["y"]) {
+        rightFingersStatus["RIGHT_PINKY"] = true;
+      }
+      return rightFingersStatus;
+    },
+    leftHand(leftHandLandmarks, leftFingersStatus) {
+      // 엄지 4번(x)가 새끼손가락 17번(x)보다 오른쪽에 있을 때(손 바닥면)
+      if (leftHandLandmarks[17]["x"] < leftHandLandmarks[4]["x"]) {
+        // 엄지 4번(x)가 엄지 3번 (x)보다 오른쪽에 있고 엄지 4번 (y)이 검지 6번 (y) 보다 아래에 있을 경우
+        if (
+          leftHandLandmarks[4]["x"] > leftHandLandmarks[3]["x"] &&
+          leftHandLandmarks[4]["y"] > leftHandLandmarks[6]["y"]
+        ) {
+          leftFingersStatus["LEFT_THUMB"] = true;
+        }
+      }
+
+      // 엄지 4번(x)가 새끼손가락 17번(x)보다 왼쪽에 있을 때(손 등면)
+      else if (leftHandLandmarks[17]["x"] > leftHandLandmarks[4]["x"]) {
+        // 엄지 4번(x)가 엄지 2번(x)보다 왼쪽에 있고 엄지 4번 (y)이 검지 6번 (y) 보다 아래에 있을 경우
+        if (
+          leftHandLandmarks[4]["x"] < leftHandLandmarks[2]["x"] &&
+          leftHandLandmarks[4]["y"] > leftHandLandmarks[6]["y"]
+        ) {
+          leftFingersStatus["LEFT_THUMB"] = true;
+        }
+      }
+
+      // 나머지 손가락 4개의 맨 위(y)가 한 개 아래의 관절(y)보다 높을 경우
+      if (leftHandLandmarks[8]["y"] < leftHandLandmarks[6]["y"]) {
+        leftFingersStatus["LEFT_INDEX_FINGER"] = true;
+      }
+      if (leftHandLandmarks[12]["y"] < leftHandLandmarks[10]["y"]) {
+        leftFingersStatus["LEFT_MIDDLE_FINGER"] = true;
+      }
+      if (leftHandLandmarks[16]["y"] < leftHandLandmarks[14]["y"]) {
+        leftFingersStatus["LEFT_RING_FINGER"] = true;
+      }
+      if (leftHandLandmarks[20]["y"] < leftHandLandmarks[18]["y"]) {
+        leftFingersStatus["LEFT_PINKY"] = true;
+      }
+
+      return leftFingersStatus;
+    },
+    cognitionErrorCheck(
+      rightHandLandmarks,
+      rightFingersStatus,
+      leftHandLandmarks,
+      leftFingersStatus
+    ) {
+      let recognitionError;
+      let text = "";
+      if (rightHandLandmarks.length > 0) {
+        if (
+          rightHandLandmarks[0]["y"] < rightHandLandmarks[1]["y"] ||
+          (rightHandLandmarks[0]["y"] - rightHandLandmarks[5]["y"]) / 2 >
+            rightHandLandmarks[0]["y"] - rightHandLandmarks[17]["y"]
+        ) {
+          recognitionError = true;
+          text = "손을 정확하게 인식시켜주세요.";
+        }
+      }
+
+      if (leftHandLandmarks.length > 0) {
+        if (
+          leftHandLandmarks[0]["y"] < leftHandLandmarks[1]["y"] ||
+          (leftHandLandmarks[0]["y"] - leftHandLandmarks[5]["y"]) / 2 >
+            leftHandLandmarks[0]["y"] - leftHandLandmarks[17]["y"]
+        ) {
+          recognitionError = true;
+          text = "손을 정확하게 인식시켜주세요.";
+        }
+      }
+
+      if (
+        !recognitionError &&
+        (rightHandLandmarks.length > 0 || leftHandLandmarks.length > 0)
+      ) {
+        let rightFingersCount = 0;
+        let leftFingersCount = 0;
+
+        for (let fingersStatus of Object.values(rightFingersStatus)) {
+          if (fingersStatus == true) {
+            rightFingersCount += 1;
+          }
+        }
+
+        for (let fingers of Object.values(leftFingersStatus)) {
+          if (fingers == true) {
+            leftFingersCount += 1;
+          }
+        }
+
+        let totalFingers = rightFingersCount + leftFingersCount;
+        if (totalFingers == 0) {
+          text = "0번은 없습니다.";
+        } else {
+          text = totalFingers + "번";
+        }
+      }
+
+      return text;
+    },
+    checking(results, canvasElement, canvasCtx, cStatus) {
+      let right_hand = {};
+      let left_hand = {};
+      let text = "";
+      let n = 0;
+      for (const landmarks of results.multiHandLandmarks) {
+        if (results.multiHandedness) {
+          if (results.multiHandedness[n].label == "Right") {
+            right_hand = landmarks;
+          }
+
+          if (results.multiHandedness[n].label == "Left") {
+            left_hand = landmarks;
+          }
+          n += 1;
+        }
+
+        drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
+          color: "#00FF00",
+          lineWidth: 5,
+        });
+        drawLandmarks(canvasCtx, landmarks, {
+          color: "#FF0000",
+          lineWidth: 2,
+        });
+      }
+      canvasCtx.restore();
+      if (right_hand.length > 0 && left_hand.length > 0) {
+        if (
+          right_hand[9]["x"] > left_hand[9]["x"] &&
+          right_hand[12]["y"] < right_hand[0]["y"] &&
+          left_hand[12]["y"] < left_hand[0]["y"] &&
+          right_hand[5]["x"] < right_hand[0]["x"] &&
+          left_hand[5]["x"] > left_hand[0]["x"]
+        ) {
+          text = "네";
+        } else if (
+          right_hand[9]["x"] < left_hand[9]["x"] &&
+          right_hand[12]["y"] < right_hand[0]["y"] &&
+          left_hand[12]["y"] < left_hand[0]["y"] &&
+          right_hand[9]["x"] < right_hand[0]["x"] &&
+          left_hand[9]["x"] > left_hand[0]["x"]
+        ) {
+          text = "아니요";
+        } else {
+          text = "손을 정확하게 인식시켜주세요.";
+        }
+      } else if (right_hand.length > 0 || left_hand.length > 0) {
+        text = "손을 정확하게 인식시켜주세요.";
+      }
+      if (cStatus) {
+        canvasCtx.font = `${canvasElement.width / 12}px gulim`;
+        canvasCtx.fillStyle = "rgba(0,0,0,1)";
+        canvasCtx.fillText(
+          "n번에게 투표하시겠습니까?",
+          canvasElement.width / 15,
+          canvasElement.height / 8
+        );
+        canvasCtx.fillText(
+          text,
+          canvasElement.width / 15,
+          (canvasElement.height / 8) * 2
+        );
+        console.log(text);
+      } else {
+        console.log("no check");
+      }
+    },
+    voting(results, canvasElement, canvasCtx, vStatus) {
+      let safe = false;
+      let kill = false;
+      let text = "";
+      if (results.multiHandedness[1]) {
+        text = "한 손만 인식시켜 주세요.";
+      } else {
+        for (const landmarks of results.multiHandLandmarks) {
+          if (
+            landmarks[4]["y"] < landmarks[17]["y"] &&
+            landmarks[4]["y"] < landmarks[3]["y"]
+          ) {
+            kill = true;
+          } else if (
+            landmarks[4]["y"] > landmarks[17]["y"] &&
+            landmarks[4]["y"] > landmarks[3]["y"]
+          ) {
+            safe = true;
+          }
+
+          if (kill == true) {
+            text = "찬성";
+          } else if (safe == true) {
+            text = "반대";
+          }
+          if (landmarks && kill == false && safe == false) {
+            text = "손을 정확하게 인식시켜 주세요.";
+          }
+
+          drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
+            color: "#00FF00",
+            lineWidth: 5,
+          });
+          drawLandmarks(canvasCtx, landmarks, {
+            color: "#FF0000",
+            lineWidth: 2,
+          });
+        }
+      }
+      canvasCtx.restore();
+      if (vStatus) {
+        canvasCtx.font = `${canvasElement.width / 12}px gulim`;
+        canvasCtx.fillStyle = "rgba(0,0,0,1)";
+        canvasCtx.fillText(
+          "죽이겠습니까?",
+          canvasElement.width / 15,
+          canvasElement.height / 8
+        );
+        canvasCtx.fillText(
+          text,
+          canvasElement.width / 15,
+          (canvasElement.height / 8) * 2
+        );
+      } else {
+        console.log("no vote");
+      }
+    },
     myFace() {
-      console.log("myFace");
       const videoElement = this.myVideo;
-      // const canvasElement = this.myCanvas;
+      const canvasElement = this.myCanvas;
       const canvasCtx = this.myCtx;
 
       // videoElement.style.display = "none";
@@ -609,8 +686,8 @@ export default {
       }
     ]
     */
-        const prediction = await model.estimateFaces(videoElement, false);
-        // canvasCt0x.save();
+        let landmarks = await model.estimateFaces(videoElement, false);
+        // canvasCtx.save();
         // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         // canvasCtx.translate(canvasElement.width, 0);
         // canvasCtx.scale(-1, 1);
@@ -623,97 +700,55 @@ export default {
         //   canvasElement.height
         // );
 
-        this.postPrediction(prediction);
-        this.getPrediction();
-        canvasCtx.restore();
-        // if (prediction.length == 0) {
-        //   // this.landmarks[this.userNum - 1] = false;
-        //   // this.topLeftLandmarks[this.userNum - 1] = false;
-        //   // this.bottomRightLandmarks[this.userNum - 1] = false;
-
-        //   this.results[this.userNum] = false;
-        //   // for (let i = 0; i < 10; i++) {
-        //   //   if (i !== this.userNum - 1) this.results[i] = false;
-        //   // }
-
-        //   // console.log("no have my landmarks");
-        //   canvasCtx.restore();
-        // } else {
-        //   // this.landmarks[this.userNum - 1] = prediction.landmarks;
-
-        //   // this.landmarks[this.userNum - 1] = prediction[0].landmarks;
-        //   // this.topLeftLandmarks[this.userNum - 1] = prediction[0].topLeft;
-        //   // this.bottomRightLandmarks[this.userNum - 1] =
-        //   //   prediction[0].bottomRight;
-        //   for (let i = 0; i < 10; i++) {
-        //     if (i !== this.userNum - 1) this.results[i] = prediction;
-        //   }
-        //   // console.log(prediction[0].bottomRight);
-        //   // console.log(this.landmarks[this.userNum - 1]);
-        //   // console.log("have my landmarks");
-
-        //   // prediction.forEach((pred) => {
-        //   //   // 자신의 랜드마크 저장
-        //   //   this.landmarks[this.userNum - 1] = pred.landmarks;
-        //   //   console.log(pred);
-        //   //   console.log("have my landmarks");
-        //   //   // pred.landmarks.forEach((landmark) => {
-        //   //   //   canvasCtx.fillRect(landmark[0], landmark[1], 5, 5);
-        //   //   // });
-        //   // });
-        //   canvasCtx.restore();
+        // if (landmarks.length > 0) {
+        //   landmarks[0].landmarks.forEach((landmark) => {
+        //     canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
+        //   });
         // }
+
+        await this.postLandmarks(landmarks);
+        // console.log(landmarks);
+        await this.getLandmarks();
+        // canvasCtx.restore();
       };
 
-      // const setUpCamera = () => {
-      //   navigator.mediaDevices
-      //     .getUserMedia({
-      //       video: { width: 640, height: 360 },
-      //       audio: false,
-      //     })
-      //     .then((stream) => {
-      //       videoElement.srcObject = stream;
-      //       videoElement.play();
-      //     });
-      // };
-
-      // setUpCamera();
-
       return videoElement.addEventListener("loadeddata", async () => {
-        console.log("return");
+        const blazeface = require("@tensorflow-models/blazeface");
         model = await blazeface.load();
         setInterval(detectFaces, 30);
-        // detectFaces();
       });
     },
-    postPrediction(prediction) {
-      if (prediction.length == 0) {
-        this.myPrediction = false;
-      } else {
-        this.myPrediction = prediction[0];
-      }
+    postLandmarks(landmarks) {
+      const number = 2;
+      this.socket.emit("myFaceLandmarks", {
+        landmarks: landmarks[0],
+        number: number,
+      });
     },
-    getPrediction() {
-      for (let i = 0; i < 10; i++) {
-        if (i !== this.userNum - 1) this.usersPrediction[i] = this.myPrediction;
-      }
+    getLandmarks() {
+      this.socket.on("othersFaceLandmarks", (data) => {
+        this.othersLandmarks[data.number] = data.landmarks;
+      });
     },
     faceMemo(i) {
-      console.log(`faceMemo : ${i}`);
-      const videoElement = document.getElementById(`usercam${i + 1}`);
+      // console.log(`faceMemo : ${i - 1}`);
+      const videoElement = document.getElementById(`usercam${i - 1}`);
       const canvasElement = document.getElementsByClassName(
-        `output_canvas${i + 1}`
+        `output_canvas${i - 1}`
       )[0];
       const canvasCtx = canvasElement.getContext("2d");
 
-      videoElement.style.display = "none";
-      let model;
-      const detectFaces = () => {
+      // videoElement.style.display = "none";
+
+      const detectFace = () => {
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        // 기준점을 지정한 크기(x,y)만큼 평행이동함
         canvasCtx.translate(canvasElement.width, 0);
+        // scale(x,y)
+        // x : 수평 방향의 배율. 음수 값은 수직 축에서 픽셀을 뒤집음
+        // y : 수직 방향의 배율. 음수 값은 가로 축에서 픽셀을 뒤집음
         canvasCtx.scale(-1, 1);
-
         canvasCtx.drawImage(
           videoElement,
           0,
@@ -722,16 +757,23 @@ export default {
           canvasElement.height
         );
 
+        // 받아온 자신의 랜드마크를 변수에 저장
+        const landmarks = this.othersLandmarks[i + 1];
+
+        // 잘 받아왔는지 확인용 랜드마크 위치에 그림 그리기
+        // if (landmarks) {
+        //   landmarks.landmarks.forEach((landmark) => {
+        //     canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
+        //   });
+        // }
+
         this.img[i] = new Image();
         if (this.imgSrc[i]) this.img[i].src = this.imgSrc[i];
         let img = this.img[i];
         let imgWidth = this.imgWidth[i];
         let imgHeight = this.imgHeight[i];
 
-        // console.log(this.results[this.userNum - 1]);
-        // console.log(this.results[i]);
-
-        if (!this.usersPrediction[i]) {
+        if (!landmarks) {
           const canvasWidth = canvasElement.width / 2;
           const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
           const canvasx = canvasElement.width / 2 - canvasWidth / 2;
@@ -743,22 +785,11 @@ export default {
             canvasWidth,
             canvasHeight
           );
-          canvasCtx.restore();
         } else {
-          let leftEyex;
-          let leftEyey;
-          let rightEyex;
-          let rightEyey;
-          let leftEarx;
-          let leftEary;
-          let rightEarx;
-          let rightEary;
-          let nosey;
-          let mousey;
-          let bottomRightx = this.usersPrediction[i].bottomRight[0];
-          let bottomRighty = this.usersPrediction[i].bottomRight[1];
-          let topLeftx = this.usersPrediction[i].topLeft[0];
-          let topLefty = this.usersPrediction[i].topLeft[1];
+          let bottomRightx = landmarks.bottomRight[0];
+          let bottomRighty = landmarks.bottomRight[1];
+          let topLeftx = landmarks.topLeft[0];
+          let topLefty = landmarks.topLeft[1];
 
           let imgCitizenHat = "";
           let imgPoliceHat = img.src.includes("police_hat.png");
@@ -766,110 +797,41 @@ export default {
           let imgMilitaryHelmet = img.src.includes("military_helmet.png");
           let imgMafiaHat = img.src.includes("mafia_hat.png");
 
-          for (let j = 0; j < this.usersPrediction[i].landmarks.length; j++) {
-            switch (j) {
-              case 0: // 오른쪽 눈
-                rightEyex = this.usersPrediction[i].landmarks[j][0];
-                rightEyey = this.usersPrediction[i].landmarks[j][1];
-                break;
-              case 1: // 왼쪽 눈
-                leftEyex = this.usersPrediction[i].landmarks[j][0];
-                leftEyey = this.usersPrediction[i].landmarks[j][1];
-                break;
-              case 2: // 코
-                nosey = this.usersPrediction[i].landmarks[j][1];
-                break;
-              case 3: // 입
-                mousey = this.usersPrediction[i].landmarks[j][1];
-                break;
-              case 4: // 오른쪽 귀
-                rightEarx = this.usersPrediction[i].landmarks[j][0];
-                rightEary = this.usersPrediction[i].landmarks[j][1];
-                break;
-              case 5: // 왼쪽 귀
-                leftEarx = this.usersPrediction[i].landmarks[j][0];
-                leftEary = this.usersPrediction[i].landmarks[j][1];
-                break;
-            }
-            // console.log(this.results[0][0]);
-            canvasCtx.fillRect(
-              this.usersPrediction[i].landmarks[j][0],
-              this.usersPrediction[i].landmarks[j][1],
-              5,
-              5
+          if (
+            imgCitizenHat ||
+            imgPoliceHat ||
+            imgDoctorHat ||
+            imgMafiaHat ||
+            imgMilitaryHelmet
+          ) {
+            const canvasWidth = bottomRightx - topLeftx;
+            const canvasHeight = bottomRighty - topLefty;
+            const canvasx = topLeftx;
+            const canvasy = topLefty - canvasHeight;
+
+            img.onload = canvasCtx.drawImage(
+              img,
+              canvasx,
+              canvasy,
+              canvasWidth,
+              canvasHeight
             );
-            // console.log(this.topLeftLandmarks);
-            if (
-              imgCitizenHat ||
-              imgPoliceHat ||
-              imgDoctorHat ||
-              imgMafiaHat ||
-              imgMilitaryHelmet
-            ) {
-              // const canvasWidth = (leftEarx - rightEarx) * 2;
-              // const canvasHeight = (mousey - nosey) * 8;
-              // const canvasx =
-              //   rightEyex - canvasWidth / 2 + (leftEyex - rightEyex) / 2;
-              // const canvasy =
-              //   rightEyey < leftEyey
-              //     ? rightEyey - canvasHeight - (leftEarx - rightEarx) / 6
-              //     : leftEyey - canvasHeight - (leftEarx - rightEarx) / 6;
-
-              const canvasWidth = bottomRightx - topLeftx;
-              const canvasHeight = bottomRighty - topLefty;
-              const canvasx = topLeftx;
-              const canvasy = topLefty - canvasHeight;
-
-              img.onload = canvasCtx.drawImage(
-                img,
-                canvasx,
-                canvasy,
-                canvasWidth,
-                canvasHeight
-              );
-            }
           }
-          canvasCtx.restore();
+
+          // 랜드마크로 얼굴 그리기
+          // for (let j = 0; j < landmarks.landmarks.length; j++) {
+          //   canvasCtx.fillRect(
+          //     landmarks.landmarks[j][0],
+          //     landmarks.landmarks[j][1],
+          //     5,
+          //     5
+          //   );
+          // }
         }
+
+        canvasCtx.restore();
       };
-
-      // const setUpCamera = () => {
-      //   navigator.mediaDevices
-      //     .getUserMedia({
-      //       video: { width: 640, height: 360 },
-      //       audio: false,
-      //     })
-      //     .then((stream) => {
-      //       videoElement.srcObject = stream;
-      //       videoElement.play();
-      //     });
-      // };
-
-      // setUpCamera();
-
-      let myStream;
-
-      const getMedia = async () => {
-        try {
-          myStream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: { width: 1280, height: 720 },
-            // video: true,
-          });
-          videoElement.srcObject = myStream;
-          videoElement.play();
-          console.log("face getMedea");
-        } catch (e) {
-          console.log(e);
-        }
-      };
-
-      videoElement.addEventListener("loadeddata", async () => {
-        model = await blazeface.load();
-        setInterval(detectFaces, 30);
-        // detectFaces();
-      });
-      getMedia();
+      setInterval(detectFace, 10);
     },
     fingersResults() {
       if (!this.fingers) this.fStatus = true;
@@ -897,7 +859,6 @@ export default {
           this.imgHeight[index - 1] = 0;
           break;
         case "police":
-          console.log("ok");
           this.imgSrc[index - 1] = require("../assets/image/police_hat.png");
           this.imgWidth[index - 1] = 600;
           this.imgHeight[index - 1] = 451;
@@ -929,105 +890,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-// .canvasmemo {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 990px;
-//   top: 796px;
-//   background-color: red;
-// }
-// .canvasmemo1 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 230px;
-//   top: 293px;
-//   background-color: red;
-// }
-// .canvasmemo2 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 610px;
-//   top: 293px;
-//   background-color: red;
-// }
-// .canvasmemo3 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 990px;
-//   top: 293px;
-//   background-color: red;
-// }
-// .canvasmemo4 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 1370px;
-//   top: 293px;
-//   background-color: red;
-// }
-// .canvasmemo5 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 230px;
-//   top: 560px;
-//   background-color: red;
-// }
-// .canvasmemo6 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 1370px;
-//   top: 560px;
-//   background-color: red;
-// }
-// .canvasmemo7 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 230px;
-//   top: 796px;
-//   background-color: red;
-// }
-// .canvasmemo8 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 610px;
-//   top: 796px;
-//   background-color: red;
-// }
-// .canvasmemo9 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 990px;
-//   top: 796px;
-//   background-color: red;
-// }
-// .canvasmemo10 {
-//   position: absolute;
-//   overflow: visible;
-//   width: 320px;
-//   height: 30px;
-//   left: 1370px;
-//   top: 796px;
-//   background-color: red;
-// }
-</style>
