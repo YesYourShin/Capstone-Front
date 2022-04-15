@@ -86,6 +86,7 @@
 
 <script>
 import FriendBar from "./profile_elements/friendBar.vue";
+import { logout } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
 
@@ -131,6 +132,19 @@ export default {
         this.show2 = !this.show2;
       } else if (this.show1 == true) {
         this.show1 = !this.show1;
+      }
+    },
+    logout() {
+      const link = "http://localhost:7000";
+      if ((this.data = Object)) {
+        logout()
+          .then((response) => {
+            console.log("logout");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        location.href = link;
       }
     },
   },
