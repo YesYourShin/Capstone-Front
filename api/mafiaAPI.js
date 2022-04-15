@@ -5,6 +5,35 @@ const instance = axios.create({
   withCredentials: true,
 })
 
+// Socket
+export const socketJoin = () => { // 게임 방 참가 이벤트
+  return instance.post('/Socket/join')
+}
+
+export const socketUpdate = () => { // 게임 방 정보 수정 이벤트
+  return instance.post('/Socket/update')
+}
+
+export const socketOnlinelist = () => { // 게임 방 멤버들 정보 최신화
+  return instance.post('/Socket/onlinelist')
+}
+
+export const socketMessage = () => { // 게임 방 채팅 이벤트
+  return instance.post('/Socket/message')
+}
+
+export const socketStart = () => { // 게임 시작 이벤트
+  return instance.post('/Socket/start')
+}
+
+export const socketReady = () => { // 게임 준비 이벤트
+  return instance.post('/Socket/ready')
+}
+
+export const socketUnready = () => { // 게임 준비 해제 이벤트
+  return instance.post('/Socket/unready')
+}
+
 // Auth
 export const loginWithGoogle = () => {
   return instance.get(`/auth/google/login`)
@@ -128,31 +157,35 @@ export const deleteComment = (commentId) => { // 댓글 삭제
 
 // Rooms
 export const getRooms = () => { // 방들 불러오기
-  return instance.get(`/rooms`)
+  return instance.get(`/games/rooms`)
 }
 
 export const makeRoom = (data) => { // 방 만들기
-  return instance.post(`/rooms`, data)
+  return instance.post(`/games/rooms`, data)
 }
 
 export const refreshRooms = () => { // 5초마다 방들 불러오기
-  return instance.get(`/rooms/sse`)
+  return instance.get(`/games/rooms/sse`)
 }
 
 export const getRoom = (roomId) => { // 특정 방 정보 불러오기
-  return instance.get(`/rooms/${roomId}`)
+  return instance.get(`/games/rooms/${roomId}`)
+}
+
+export const editRoom = (roomId, data) => { // 특정 방 정보 불러오기
+  return instance.patch(`/games/rooms/${roomId}`, data)
 }
 
 export const joinRoom = (roomId) => { // 방 참가
-  return instance.post(`/rooms/${roomId}`)
+  return instance.get(`/games/rooms/${roomId}/joinable-room`)
 }
 
 export const destroyRoom = (roomId) => { // 방 삭제
-  return instance.delete(`/rooms/${roomId}`)
+  return instance.delete(`/games/rooms/${roomId}`)
 }
 
 export const leaveRoom = (roomId) => { // 게임 나가기 (마지막 사람이 나가면 자동 방 삭제)
-  return instance.delete(`/rooms/${roomId}/users/me`)
+  return instance.delete(`/games/rooms/${roomId}/users/me`)
 }
 
 // Default
