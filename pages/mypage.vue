@@ -50,7 +50,7 @@ export default {
     return {
         profile:{
           nickname : '',
-          image: '',
+          image: null,
           selfIntroduction : '',
         },
       };
@@ -58,7 +58,7 @@ export default {
 
   methods: {
      submitForm(){
-       if(this.myInfo.profile == null){
+       if(!this.myInfo?.profile){
         makeProfile(this.profile)
           .then((res)=>{
             })
@@ -68,6 +68,7 @@ export default {
        }else{
           editProfile(this.profile)
           .then((res)=>{
+             console.log(this.profile)
           })
           .catch((err)=>{
             console.log(error)
