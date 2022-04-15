@@ -5,13 +5,22 @@
         <img src="@/assets/pageimg/test.jpg" class="profileImg" />
       </div>
 
-      <div class="profile2">
-        <button class="userLink">
-          <NuxtLink to="/mypage" class="btnLink">MyPage</NuxtLink>
+      <div class="profile2" v-if="this.myInfo">
+        <button class="userlink">
+          <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
-        <button class="userLink">Logout</button>
-        <p class="userLevel">Lv.250 <span class="username">Mirai0625</span></p>
-        <p class="userText">Mirai1412/Capstone-Front</p>
+        <button class="userlink" @click="logout">Logout</button>
+        <p class="userlevel">
+          Lv.250
+          <span class="username" v-if="this.myInfo.profile">
+            {{ this.myInfo.profile.nickname }}
+          </span>
+          <span class="username" v-else> ID : {{ this.myInfo.id }} </span>
+        </p>
+        <p class="usertext" v-if="this.myInfo.profile">
+          {{ this.myInfo.profile.selfIntroduction }}
+        </p>
+        <p class="usertext" v-else>상태메세지를 입력해주세요.</p>
       </div>
 
       <div class="profile3">
@@ -123,6 +132,11 @@ export default {
       } else if (this.show1 == true) {
         this.show1 = !this.show1;
       }
+    },
+  },
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
     },
   },
 };

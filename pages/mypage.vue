@@ -88,8 +88,11 @@ export default {
   async mounted(){
      await this.$store.dispatch('user/fetchMyInfo')
 
+    if(this.myInfo.profile){
      this.profile.nickname =  this.myInfo.profile.nickname;
      this.profile.selfIntroduction =  this.myInfo.profile.selfIntroduction;
+    }
+
   },
 
   computed:{

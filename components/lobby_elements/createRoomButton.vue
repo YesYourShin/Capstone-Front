@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-import { makeGame } from "@/api/mafiaAPI";
+import { makeRoom } from "@/api/mafiaAPI";
 
 export default {
   data() {
