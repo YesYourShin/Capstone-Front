@@ -34,7 +34,9 @@
                 muted
               ></video>
             </div>
-            <!-- <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p> -->
+            <p class="bg-white rounded-b-lg">
+              {{ myInfo.profile ? myInfo.profile.nickname : "Yuuto" }}
+            </p>
           </div>
           <template v-for="s in subscribedStreams">
             <div class="justify-self-center px-2 pb-3 w-full">
@@ -55,7 +57,7 @@
         <div class="p-2 w-40 justify-center items-center">
           <div
             class="flex items-center p-4 bg-yellow-200 rounded-lg shadow-xs cursor-pointer hover:bg-yellow-500 hover:text-gray-100 transition duration-300"
-            @click="$router.replace('/lobby')"
+            @click="leave()"
           >
             <p class="text-lg font-bold mx-auto">나가기</p>
           </div>
@@ -77,19 +79,22 @@
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
 import Janus from "@/plugins/janus";
-import { mapState } from "vuex";
-import { leaveGame, getGame } from "@/api/mafiaAPI";
+import { leaveRoom, getRoom } from "@/api/mafiaAPI";
 
 export default {
   components: {
     chatBox,
     sideBar,
   },
+  props: {
+    roomInfo: Object,
+  },
   data() {
     return {
       game: {},
       storePlugin: null,
       janus: null,
+      socket: null,
     };
   },
   computed: {
@@ -108,6 +113,9 @@ export default {
     isRoomOut() {
       return this.$store.state.stream.isRoomOut;
     },
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
+    },
     // ...mapState([
     //   "subscribedStreams",
     //   "mainFeed",
@@ -121,6 +129,13 @@ export default {
     //   console.log(res);
     //   this.$router.push(`/lobby`)
     // }
+    leave() {
+      leaveRoom(this.$route.params.id).then((res) => {
+        if (res.data.success) {
+          this.$router.push("/lobby");
+        }
+      });
+    },
     exit() {
       var unpublish = { request: "unpublish" };
       var leave = { request: "leave" };
@@ -159,7 +174,7 @@ export default {
     const ServerWS =
       process.env.NODE_ENV === "production"
         ? "wss://gjgjajaj.xyz/janus"
-        : "ws://13.125.132.255:8188/janus";
+        : "http://13.125.132.255:8088/janus";
     let janus = null;
     // const opaqueId = "videoroomtest-" + Janus.randomString(12); //opaqueId 값을 통해서 유저 구분
     const opaqueId = "videoroomtest-" + "dong"; //opaqueId 값을 통해서 유저 구분
@@ -167,9 +182,23 @@ export default {
 
     let vrc = this;
     let pin = this.$route.params.pin;
-    let username = "Yuuto";
-    let roomId = parseInt(this.$route.params.id);
+    let username = this.myInfo.profile ? this.myInfo.profile.nickname : "Yuuto";
+    let roomId = parseInt(this.$route.params.room);
     // let newRemoteFeed = null;
+
+    this.socket = this.$nuxtSocket({
+      channel: "/room",
+      withCredentials: true,
+      transports: ["websocket"],
+    });
+
+    this.socket.on("game:join", (data) => {
+      console.log("game:join", data);
+    });
+
+    this.socket.emit("game:join", {
+      roomId: this.$route.params.id,
+    });
 
     Janus.init({
       debut: "all",
@@ -178,15 +207,17 @@ export default {
           Janus.log("No WebRTC support...");
           return;
         }
-
+        console.log("초기화 콜백");
         // 세션 생성
         vrc.janus = new Janus({
           server: ServerWS,
           opaqueId: opaqueId,
           success: function () {
+            console.log("세션 생성 성공");
             vrc.janus.attach({
               plugin: "janus.plugin.videoroom",
               success: function (pluginHandle) {
+                console.log("플러그인 접속 성공");
                 vrc.storePlugin = pluginHandle;
 
                 if (pin) {
@@ -622,6 +653,7 @@ export default {
           },
           error: function (err) {
             Janus.error(err);
+            console.error(err);
           },
           destroyed: function () {
             Janus.log("Janus Destroyed");

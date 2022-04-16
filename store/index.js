@@ -1,4 +1,5 @@
 import { UserModule } from "./user";
+import io from "socket.io-client";
 
 export const state = () => ({
   friends: Array(12)
@@ -16,6 +17,10 @@ export const state = () => ({
     }),
   chats: [],
   selectedIndex: -1,
+  // socket: io("ws://localhost:3065/game", {
+  //   transports: ["websocket"],
+  //   withCredentials: true,
+  // }),
 });
 
 export const mutations = {
@@ -37,3 +42,9 @@ export const mutations = {
     }
   },
 };
+
+// export const getters = {
+//   getSocket(state) {
+//     return state.socket;
+//   }
+// }

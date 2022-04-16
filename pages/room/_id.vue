@@ -1,12 +1,14 @@
 <template lang="">
   <div class="flex" id="roomBox">
     <profile></profile>
-    <gameRoom></gameRoom>
+    <gameRoom :roomInfo="roomInfo"></gameRoom>
   </div>
 </template>
 <script>
 import profile from "@/components/profileInGame.vue";
 import gameRoom from "@/components/gameRoom.vue";
+import { getRoom } from "@/api/mafiaAPI";
+
 export default {
   transition: "intro",
   name: "room",
@@ -35,6 +37,10 @@ export default {
         this.$store.commit("stream/resetLeft");
       }
     },
+  },
+  async asyncData({ params }) {
+    const roomInfo = await getRoom(params.id);
+    return { roomInfo };
   },
 };
 </script>

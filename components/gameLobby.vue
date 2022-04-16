@@ -56,6 +56,7 @@ export default {
   data() {
     return {
       rooms: [],
+      evtSource: null,
     };
   },
   computed: {
@@ -82,6 +83,21 @@ export default {
       .catch((err) => {
         console.log(err);
       });
+
+    this.evtSource = new EventSource(
+      process.env.NODE_ENV === "production"
+        ? "https://gjgjajaj.xyz/api/games/rooms/sse"
+        : "http://localhost:3065/api/games/rooms/sse",
+      {
+        withCredentials: true,
+      }
+    );
+
+    var vrc = this;
+    this.evtSource.onmessage = function (e) {
+      vrc.rooms = JSON.parse(e.data).data;
+      console.log(vrc.rooms);
+    };
   },
   watch: {
     subscribedStreams(newVal, oldVal) {
@@ -89,6 +105,9 @@ export default {
         this.$store.commit("stream/removeAllSubscribers");
       }
     },
+  },
+  beforeDestroy() {
+    this.evtSource.close();
   },
 };
 </script>

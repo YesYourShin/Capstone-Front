@@ -1,5 +1,6 @@
 export const state = () => ({
   joinedRoom: null,
+  currentRoomInfo: null,
   publishStream: null,
   subscribedStreams: [],
   subscribedFeeds: [],
@@ -105,6 +106,18 @@ export const mutations = {
   resetLeft(state) {
     state.left = null;
   },
+  setCurrentRoomInfo(state, data) {
+    state.currentRoomInfo = data;
+  },
+  setCurrentRoomMember(state, data) {
+    state.currentRoomInfo.members = data;
+  },
+  deleteCurrentRoomMember(state, data) {
+    state.currentRoomInfo.members = state.currentRoomInfo.members.filter(e => e !== data);
+  },
+  addCurrentRoomMember(state, data) {
+    state.currentRoomInfo.members.push(data);
+  }
 }
 
 export const getters = {

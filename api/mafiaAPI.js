@@ -200,7 +200,7 @@ export const editRoom = (roomId, data) => { // 특정 방 정보 불러오기
   return instance.patch(`/games/rooms/${roomId}`, data)
 }
 
-export const joinRoom = (roomId) => { // 방 참가
+export const isJoinable = (roomId) => { // 방 참가가능한가?
   return instance.get(`/games/rooms/${roomId}/joinable-room`)
 }
 

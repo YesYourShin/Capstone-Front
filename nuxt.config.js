@@ -42,7 +42,18 @@ export default {
   modules: [
     'vue-sweetalert2/nuxt',
     '@nuxtjs/toast',
+    'nuxt-socket-io',
   ],
+
+  io: {
+    sockets: [
+      {
+        name: 'main',
+        url: process.env.NODE_ENV === 'production' ? 'wss://gjgjajaj.xyz/api' : 'ws://localhost:3065',
+        default: true,
+      },
+    ]
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -82,6 +93,10 @@ export default {
         autoprefixer: {},
       },
     },
+  },
+
+  env: {
+    WS_URL: process.env.NODE_ENV === 'production' ? 'wss://gjgjajaj.xyz/api/game' : 'ws://localhost:3065/api/game',
   },
 
   server:{

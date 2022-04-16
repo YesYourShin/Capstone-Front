@@ -43,8 +43,8 @@ export default {
             <div class="col-span-1">
               <label class="block text-sm font-medium text-gray-700" for="mode">모드</label>
               <select class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="mode" id="mode">
-                <option value="1">일반 모드</option>
-                <option value="2">확장 모드</option>
+                <option value="classic">일반 모드</option>
+                <option value="expanded">확장 모드</option>
               </select>
             </div>
             <div class="col-span-1">
@@ -63,7 +63,7 @@ export default {
         preConfirm: () => {
           const roomName = document.getElementById("room-name").value;
           const password = document.getElementById("password").value;
-          const mode = parseInt(document.getElementById("mode").value);
+          const mode = document.getElementById("mode").value;
           const maxPlayer = parseInt(
             document.getElementById("max-player").value
           );
@@ -81,9 +81,9 @@ export default {
         // this.$swal(JSON.stringify(formValues));
         const req = {
           mode: formValues.mode,
-          name: formValues.roomName,
-          password: formValues?.password,
-          limit: formValues.maxPlayer,
+          description: formValues.roomName,
+          publishers: formValues.maxPlayer,
+          pin: formValues?.password,
         };
         console.log(req);
 
@@ -101,10 +101,17 @@ export default {
         //     console.log(err);
         //   });
 
-        makeGame(req)
+        makeRoom(req)
           .then((res) => {
             console.log(res);
-            this.$router.push(`/room/${res.data.data.gameNumber}`);
+            this.$router.push({
+            name: "room-id",
+            params: {
+              id: res.data.data.id,
+              room: res.data.data.room,
+              pin: formValues?.password,
+            },
+          });
           })
           .catch((err) => {
             console.log(err);

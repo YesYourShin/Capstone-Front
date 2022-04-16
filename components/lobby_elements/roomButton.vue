@@ -7,7 +7,7 @@
       class="bg-yellow-200/90 h-9 flex justify-between items-center px-2 mb-2 rounded-md"
     >
       <span class="font-bold">{{ room.description }}</span>
-      <span>{{ room.memberCount }}/{{ room.limit }}</span>
+      <span>{{ room.memberCount }}/{{ room.publishers }}</span>
     </div>
     <div
       class="h-9 p-2 w-3/4 bg-yellow-200/90 rounded-md flex items-center justify-between"
@@ -15,7 +15,7 @@
       <div></div>
       <div class="">
         <svg
-          v-if="room.pin_required"
+          v-if="room.isPrivate"
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5"
           viewBox="0 0 20 20"
@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { joinGame } from "@/api/mafiaAPI";
+import { isJoinable } from "@/api/mafiaAPI";
 
 export default {
   props: {
@@ -40,40 +40,51 @@ export default {
   },
   methods: {
     async onClickRoomButton() {
-      let pin;
-      if (this.room.pin_required) {
-        const { value: password } = await this.$swal({
-          title: "Enter password",
-          input: "password",
-          inputLabel: "Password",
-          inputPlaceholder: "Enter password",
-          inputAttributes: {
-            maxlength: 10,
-            autocapitalize: "off",
-            autocorrect: "off",
-          },
-        });
+      isJoinable(this.room.id)
+        .then(async (res) => {
+          let pin;
+          if (this.room.isPrivate) {
+            const { value: password } = await this.$swal({
+              title: "Enter password",
+              input: "password",
+              inputLabel: "Password",
+              inputPlaceholder: "Enter password",
+              inputAttributes: {
+                maxlength: 10,
+                autocapitalize: "off",
+                autocorrect: "off",
+              },
+            });
 
-        if (password) {
-          // this.$swal(`Entered password: ${password}`);
-          pin = password;
-          this.$router.push({
-            name: "room-id",
-            params: {
-              id: this.room.room,
-              pin: pin,
-            },
+            if (password) {
+              // this.$swal(`Entered password: ${password}`);
+              pin = password;
+              this.$router.push({
+                name: "room-id",
+                params: {
+                  id: this.room.room,
+                  pin: pin,
+                },
+              });
+            }
+          } else {
+            this.$router.push({
+              name: "room-id",
+              params: {
+                id: this.room.id,
+                room: this.room.room,
+                pin: pin,
+              },
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$swal({
+            icon: "error",
+            title: "The room is full",
           });
-        }
-      } else {
-        this.$router.push({
-          name: "room-id",
-          params: {
-            id: this.room.room,
-            pin: pin,
-          },
         });
-      }
     },
   },
 };
