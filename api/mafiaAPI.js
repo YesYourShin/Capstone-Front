@@ -212,6 +212,20 @@ export const leaveRoom = (roomId) => { // 게임 나가기 (마지막 사람이 
   return instance.delete(`/games/rooms/${roomId}/users/me`)
 }
 
+export const checkPassword = (roomId, data) => { // 방 비밀번호 확인
+  return instance.post(`/games/rooms/check-password/${roomId}`, data)
+}
+
+export const GameRoomEvent = {
+  UPDATE: 'room:update',
+  JOIN: 'room:join',
+  MESSAGE: 'room:message',
+  MEMBER_LIST: 'room:memberlist',
+  LEAVE: 'room:leave',
+  START: 'room:start',
+  READY: 'room:ready',
+  UNREADY: 'room:unready',
+};
 // Default
 // axios.default.paramsSerializer = params => {
 //   return qs.stringify(params);

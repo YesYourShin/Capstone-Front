@@ -6,7 +6,7 @@
     <div
       class="bg-yellow-200/90 h-9 flex justify-between items-center px-2 mb-2 rounded-md"
     >
-      <span class="font-bold">{{ room.description }}</span>
+      <span class="font-bold">[No.{{ room.id }}] {{ room.description }}</span>
       <span>{{ room.memberCount }}/{{ room.publishers }}</span>
     </div>
     <div
@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { isJoinable } from "@/api/mafiaAPI";
+import { isJoinable, checkPassword } from "@/api/mafiaAPI";
 
 export default {
   props: {
@@ -59,13 +59,27 @@ export default {
             if (password) {
               // this.$swal(`Entered password: ${password}`);
               pin = password;
-              this.$router.push({
-                name: "room-id",
-                params: {
-                  id: this.room.room,
-                  pin: pin,
-                },
-              });
+              checkPassword(this.room.id, { pin })
+                .then((res) => {
+                  console.log(res);
+                  if (res.data.data.joinable) {
+                    this.$router.push({
+                      name: "room-id",
+                      params: {
+                        id: this.room.id,
+                        room: this.room.room,
+                        pin: pin,
+                      },
+                    });
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                  this.$swal({
+                    icon: "error",
+                    title: "Wrong password",
+                  });
+                });
             }
           } else {
             this.$router.push({
@@ -79,10 +93,9 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
           this.$swal({
             icon: "error",
-            title: "The room is full",
+            title: err.response.data.data.message,
           });
         });
     },

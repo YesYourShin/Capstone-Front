@@ -5,7 +5,7 @@
         <div
           class="bg-gradient-to-r via-gray-300 from-transparent flex justify-center items-center"
         >
-          <p>{{ game.name }}</p>
+          <p>{{ roomInfo.description }}</p>
         </div>
         <sideBar></sideBar>
       </div>
@@ -79,7 +79,7 @@
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
 import Janus from "@/plugins/janus";
-import { leaveRoom, getRoom } from "@/api/mafiaAPI";
+import { leaveRoom, getRoom, GameRoomEvent } from "@/api/mafiaAPI";
 
 export default {
   components: {
@@ -192,11 +192,11 @@ export default {
       transports: ["websocket"],
     });
 
-    this.socket.on("game:join", (data) => {
-      console.log("game:join", data);
+    this.socket.on(GameRoomEvent.JOIN, (data) => {
+      console.log(data);
     });
 
-    this.socket.emit("game:join", {
+    this.socket.emit(GameRoomEvent.JOIN, {
       roomId: this.$route.params.id,
     });
 

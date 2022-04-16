@@ -1,7 +1,7 @@
 <template lang="">
   <div class="flex" id="roomBox">
     <profile></profile>
-    <gameRoom :roomInfo="roomInfo"></gameRoom>
+    <gameRoom :roomInfo="roomInfo" @setRoomInfo="setRoomInfo"></gameRoom>
   </div>
 </template>
 <script>
@@ -24,6 +24,11 @@ export default {
       return this.$store.state.stream.left;
     },
   },
+  methods: {
+    setRoomInfo(data) {
+      this.roomInfo = data;
+    },
+  },
   watch: {
     entered(newVal, oldVal) {
       if (newVal) {
@@ -40,7 +45,7 @@ export default {
   },
   async asyncData({ params }) {
     const roomInfo = await getRoom(params.id);
-    return { roomInfo };
+    return { roomInfo: roomInfo.data.data };
   },
 };
 </script>
