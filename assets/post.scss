@@ -20,117 +20,111 @@
     z-index: 8;
     width: 100%;
 
-    .proFileBox{
+
+    .allbox{
       width: 100%;
-      background-color: rgba(0, 0, 0, 0.397);
       display: flex;
-      flex-wrap: wrap;
 
-      .postTitle{
-        background-image: url("@/assets/post.png");
-        background-size: 1500px 330px;
-        background-position: top;
-        width: 1500px;
-        height: 190px;
-        .postTitleUl{
-          .postTitleLi1{
-            color: orange;
-            border-bottom: 3px solid orange;
-            font-size: 40px;
-          }
-          .postTitleLi{
-            &:hover{
-              animation: postcolor 0.5s;
-              animation-fill-mode: forwards;
-            }
-          }
-        }
-        ul{
-          text-align: center;
-          margin: auto;
-          li{
-            display: inline-block;
-            margin: auto;
-            font-size: 35px;
-            margin: 62px 50px;
-          }
-        }
-      }
-
-    }
-
-    .postBox{
-      width: 1300px;
-      padding: 50px;
-      border: 3px solid white;
-      border-radius: 10px;
-      margin: auto;
-      margin-bottom: 130px;
-      margin-top: 50px;
-      display: flex;
-      flex-wrap: wrap;
-
-      .postBoxContent1{
-        width: 100%;
-        font-size: 50px;
-        display: flex;
-        justify-content: space-between;
-
-        .userbtn{
-          button{
-            margin-bottom: 20px;
-            width: 90px;
-            font-size: 25px;
-            border-radius: 5px;
-            border: 2px solid white;
-            &:hover{
-              animation: color 0.3s;
-              animation-fill-mode: forwards;
-            }
-          }
-        }
-
-      }
-      .postBoxContent2{
-        width: 100%;
-        font-size: 35px;
-      }
-      .postBoxContent3{
-        width: 70px;
-        height: 85px;
-        img{
-          border-radius: 100%;
-          height: 70px;
-          border: 2px solid white;
-          background-color: white;
-          margin-left: 10px;
-          margin-top: 5px;
-        }
-        border-bottom: 1px solid white;
-      }
-      .postBoxContent4{
-        text-align: center;
-        width: 1110px;
-        height: 75px;
-        text-align: left;
-        padding-left: 20px;
+      .proFileBox{
+        width: 420px;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.397);
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
-        p{
-          width: 100%;
+        flex-direction: column;
+        .linebox1{
+          height: 190px;
         }
-        border-bottom: 1px solid white;
-        padding-bottom: 15px;
-        margin: 10px 0;
-        padding-right: 65px;
+        .linebox2{
+          width: 100%;
+          flex: 1;
+          ul{
+            text-align: center;
+            margin-top: 100px;
+            li{
+              font-size: 30px;
+              margin: 30px 0;
+              &:hover{
+                color: orange;
+              }
+            }
+          }
+        }
       }
-      .postBoxContent5{
-        margin-top: 20px;
-        width: 100%;
-        img{
-          width: 87%;
-          margin: 0 auto;
+
+      .postBox{
+        width: 1300px;
+        padding: 50px;
+        border: 3px solid white;
+        border-radius: 10px;
+        margin: auto;
+        margin-bottom: 130px;
+        margin-top: 50px;
+        display: flex;
+        flex-wrap: wrap;
+
+        .postBoxContent1{
+          width: 100%;
+          font-size: 50px;
+          display: flex;
+          justify-content: space-between;
+
+          .userbtn{
+            button{
+              margin-bottom: 20px;
+              width: 90px;
+              font-size: 25px;
+              border-radius: 5px;
+              border: 2px solid white;
+              &:hover{
+                animation: color 0.3s;
+                animation-fill-mode: forwards;
+              }
+            }
+          }
+
+        }
+        .postBoxContent2{
+          width: 100%;
+          font-size: 35px;
+        }
+        .postBoxContent3{
+          width: 70px;
+          height: 85px;
+          img{
+            border-radius: 100%;
+            height: 70px;
+            border: 2px solid white;
+            background-color: white;
+            margin-left: 10px;
+            margin-top: 5px;
+          }
+          border-bottom: 1px solid white;
+        }
+        .postBoxContent4{
+          text-align: center;
+          width: 1110px;
+          height: 75px;
+          text-align: left;
+          padding-left: 20px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          p{
+            width: 100%;
+          }
+          border-bottom: 1px solid white;
+          padding-bottom: 15px;
+          margin: 10px 0;
+          padding-right: 65px;
+        }
+        .postBoxContent5{
+          margin-top: 20px;
+          width: 100%;
+          img{
+            width: 87%;
+            margin: 0 auto;
+          }
         }
       }
     }

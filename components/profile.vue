@@ -110,16 +110,13 @@ export default {
         }
       },
       logout(){
-        const link = 'http://localhost:7000';
-        if(this.data = Object){
-              logout()
-              .then(response => {
-                console.log('logout')
-              }).catch(err => {
-                console.log(err)
-              })
+        logout().then((res) => {
+          if(res.data.data.logout) {
+            const link = process.env.NODE_ENV === 'production'
+              ? 'https://gjgjajaj.xyz' : 'http://localhost:7000';
             location.href=link;
-        }
+          }
+        })
       },
   },
 

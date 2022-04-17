@@ -2,21 +2,38 @@
   <div class="postMainBox">
     <Header/>
     <div class="mainPost">
+      <Banner/>
+
+      <div class="allbox">
+
       <div class="proFileBox">
-        <Profile/>
-        <div class="postTitle">
-          <ul class="postTitleUl">
-            <li class="postTitleLi1">공지 사항</li>
-            <li class="postTitleLi">자유 게시판</li>
-            <li class="postTitleLi">정보 게시판</li>
-            <li class="postTitleLi">인기 게시판</li>
+        <div class="linebox1">
+          <Profile/>
+        </div>
+        <div class="linebox2">
+          <ul>
+            <NuxtLink to="/community/allCommunity">
+              <li>전체 게시판</li>
+            </NuxtLink>
+            <NuxtLink to="/community/cement">
+              <li>공지 사항</li>
+            </NuxtLink>
+            <NuxtLink to="/community/posta">
+              <li>자유 게시판</li>
+            </NuxtLink>
+            <NuxtLink to="/community/postb">
+              <li>정보 게시판</li>
+            </NuxtLink>
+            <NuxtLink to="/community/postc">
+              <li>인기 게시판</li>
+            </NuxtLink>
           </ul>
         </div>
-        <Banner/>
       </div>
+
       <div class="postBox">
         <div class="postBoxContent1">
-          <NuxtLink to="/community/cement"><p>{{ post.categoryName }} ></p></NuxtLink>
+          <p>{{ post.categoryName }}</p>
           <div class="userbtn" v-if="post.profile && this.post.profile.id === this.myInfo.id">
             <button  @click="$router.push('/repost/' + post.id)">수정</button>
             <button @click="delet"
@@ -56,7 +73,7 @@
             <div>등록순&nbsp;&nbsp;&nbsp;최신순</div>
           </div>
           <div class="commentBox2">
-            <img src="@/assets/pageimg/test.jpg">
+            <img src="@/assets/pageimg/test.png">
             <div class="commentBox3">
               <p class="PBC1">Mirai</p>
               <p class="PBC2">점검 언제끝남?</p>
@@ -64,7 +81,7 @@
             </div>
           </div>
           <div class="commentBox2">
-            <img src="@/assets/pageimg/test.jpg">
+            <img src="@/assets/pageimg/test.png">
             <div class="commentBox3">
               <p class="PBC1">NOA</p>
               <p class="PBC2">오류 해결 부탁합니다.</p>
@@ -79,6 +96,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
     <Footer/>

@@ -49,19 +49,19 @@
 
       <ul class="rankUserImges">
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg" />
+          <img src="@/assets/pageimg/test.png" />
         </li>
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg" />
+          <img src="@/assets/pageimg/test.png" />
         </li>
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg" class="rankUserImg1" />
+          <img src="@/assets/pageimg/test.png" class="rankUserImg1" />
         </li>
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg" />
+          <img src="@/assets/pageimg/test.png" />
         </li>
         <li class="rankUserImg">
-          <img src="@/assets/pageimg/test.jpg" />
+          <img src="@/assets/pageimg/test.png" />
         </li>
       </ul>
 

@@ -2,14 +2,21 @@
   <div class="communitybox">
     <Header/>
     <div class="communitymain">
+
       <div class="communityProfile">
-        <div class="communityTitle">
+
+        <div class="community1">
+
           <div v-if="this.myInfo">
             <Profile/>
           </div>
           <div v-else>
             <LoginProfile/>
           </div>
+
+        </div>
+
+        <div class="community2">
           <ul class="communityUl">
             <li class="communityLi1">
               <NuxtLink to="/community/allCommunity" class="Li1">전체 게시판</NuxtLink>
@@ -28,7 +35,11 @@
             </li>
           </ul>
         </div>
+
+
       </div>
+
+
       <div class="communityPost">
 
         <div class="communityPostSerchBox">

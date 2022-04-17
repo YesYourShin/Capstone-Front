@@ -21,7 +21,7 @@
           <div class="buttonline3"></div>
           <div class="buttonline4"></div>
           <NuxtLink to="/lobby" class="gogame" v-if="this.myInfo">
-            <button>게임 하기</button>
+            <button @click="openFullScreenMode()">게임 하기</button>
           </NuxtLink>
           <button v-else class="gogame" @click="test">
               게임 하기
@@ -94,6 +94,19 @@ export default {
   methods: {
     test(){
       this.$swal("로그인을 해주십시오");
+    },
+    openFullScreenMode(){
+        var doc = document.documentElement;
+        if (doc.requestFullscreen)
+        doc.requestFullscreen();
+        else if (doc.webkitRequestFullscreen) // Chrome, Safari (webkit)
+            doc.webkitRequestFullscreen();
+        else if (doc.mozRequestFullScreen) // Firefox
+            doc.mozRequestFullScreen();
+        else if (doc.msRequestFullscreen) // IE or Edge
+            doc.msRequestFullscreen();
+        $('.fullscreen').hide();
+        $('.close-fullscreen').show();
     }
   }
 };

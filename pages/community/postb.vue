@@ -2,9 +2,21 @@
   <div class="communitybox">
     <Header/>
     <div class="communitymain">
+
       <div class="communityProfile">
-        <div class="communityTitle">
-          <Profile/>
+
+        <div class="community1">
+
+          <div v-if="this.myInfo">
+            <Profile/>
+          </div>
+          <div v-else>
+            <LoginProfile/>
+          </div>
+
+        </div>
+
+        <div class="community2">
           <ul class="communityUl">
             <li class="communityLi">
               <NuxtLink to="/community/allCommunity" class="Li">전체 게시판</NuxtLink>
@@ -23,16 +35,21 @@
             </li>
           </ul>
         </div>
+
+
       </div>
+
+
       <div class="communityPost">
 
         <div class="communityPostSerchBox">
           <div class="psb1">
-            <p>인기 게시판</p>
+            <p>정보 게시판</p>
           </div>
           <div class="psb2">
             <input type="text">
             <button>찾기</button>
+            <button v-if="this.myInfo"><NuxtLink to="/community/makePost">글쓰기</NuxtLink></button>
           </div>
         </div>
 
@@ -45,14 +62,23 @@
           <p class="mtb6">좋아요</p>
         </div>
 
-        <div class="communityPostContent">
-          <p class="mtb1">1</p>
-          <p class="mtb2">[공지] 마피아 게임 일부 오류 안내(수정완료)</p>
-          <p class="mtb3">관리자</p>
-          <p class="mtb4">2022-02-28</p>
-          <p class="mtb5">25</p>
-          <p class="mtb6">58</p>
+        <ul class="communityPostContent" v-for="item in posts.items" :key="item.id" @click="$router.push('/post/' + item.id)">
+          <li class="mtb1">{{ item.id }}</li>
+          <li class="mtb2">{{ item.title }}</li>
+          <li class="mtb3">{{ item.profile.nickname }}</li>
+          <li class="mtb4">{{ item.updatedAt }}</li>
+          <li class="mtb5">{{ item.views }}</li>
+          <li class="mtb6">{{ item.likeCount }}</li>
+        </ul>
+
+        <div class="pagebox">
+          <div class="pageNextBox" v-if="posts.meta.totalPages >=1">이전</div>
+          <ul v-for="page in posts.meta.totalPages" :key="page.totalPages" class="pageul">
+            <li class="pageli">{{ page }}</li>
+          </ul>
+          <div class="pageNextBox" v-if="posts.meta.totalPages >=1">다음</div>
         </div>
+
 
       </div>
     </div>
@@ -61,12 +87,41 @@
 </template>
 
 <script>
+import { getPosts } from '@/api/mafiaAPI';
+
 export default {
+  name: 'CapstoneCommunity',
   data() {
     return {
+      posts: {
+        items: {
+        },
+        links: [],
+        meta: {
+          itemCount: 0,
+          totalItems: 0,
+          totalPages: 0,
+          currentPage: 0,
+        }
+      }
     };
   },
-  mounted() {
+  async created (){
+   this.$store.dispatch('user/fetchMyInfo')
+    try {
+      let res = await getPosts({
+        category: "정보게시판",
+        page: this.posts.meta.currentPage + 1})
+      // console.log(res.data.data)
+      this.posts = res.data.data
+    } catch (err) {
+     console.log(err)
+    }
+  },
+  computed:{
+    myInfo(){
+      return this.$store.getters['user/getMyInfo']
+    }
   },
   methods: {
   },

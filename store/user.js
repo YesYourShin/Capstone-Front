@@ -13,7 +13,6 @@ export const mutations = {
 export const actions = {
   async fetchMyInfo(context) {
     const response = await getMyInformation()
-    console.log('fetchMyInfo', response.data);
     return context.commit('setMyInfo', response.data.data);
   },
 }
