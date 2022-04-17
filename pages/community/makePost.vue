@@ -35,7 +35,8 @@
             </div>
 
             <div class="postBoxbiv4">
-              <textarea name="content" placeholder="내용을 입력해 주세요"></textarea>
+              <textarea name="content" placeholder="내용을 입력해 주세요"
+              v-model="post.content"></textarea>
               <!-- <Tui/> -->
             </div>
       </form>
