@@ -106,6 +106,9 @@ export default {
       }
     },
   },
+  created() {
+    this.$store.dispatch("user/fetchMyInfo");
+  },
   beforeDestroy() {
     this.evtSource.close();
   },
