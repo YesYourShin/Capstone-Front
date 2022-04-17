@@ -37,7 +37,6 @@
             <div class="postBoxbiv4">
               <textarea name="content" placeholder="내용을 입력해 주세요"
               v-model="post.content"></textarea>
-              <!-- <Tui/> -->
             </div>
       </form>
     </div>
@@ -48,12 +47,11 @@
 <script>
 import Header from '../../components/header.vue';
 import Profile from '../../components/profile.vue';
-import Tui from '../../components/tui.vue';
 import { savePost } from '@/api/mafiaAPI';
 
 
 export default {
-  components: { Header, Profile, Tui},
+  components: { Header, Profile},
   name: "CapstonePost",
   data() {
     return {
