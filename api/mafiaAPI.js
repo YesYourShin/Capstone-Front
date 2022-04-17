@@ -135,7 +135,7 @@ export const savePost = (data) => {
 
 export const editPost = (postId, data) => {
   // 게시물 수정
-  return instance.post(`/posts/${postId}`, data);
+  return instance.patch(`/posts/${postId}`, data);
 };
 
 export const deletePost = (postId) => {
