@@ -17,8 +17,8 @@
 
             <div class="postBoxbiv1">
               <p>글쓰기</p>
-              <input type="submit" class="gobtn" value="등록"
-              onclick="document.location.href='/community/allCommunity'">
+              <input type="submit" class="gobtn" value="등록">
+              <!-- onclick="document.location.href='/community/allCommunity'" -->
             </div>
 
             <div class="postBoxbiv2">
@@ -35,8 +35,8 @@
             </div>
 
             <div class="postBoxbiv4">
-              <textarea name="content" placeholder="내용을 입력해 주세요"></textarea>
-              <!-- <Tui/> -->
+              <!-- <textarea name="content" placeholder="내용을 입력해 주세요"></textarea> -->
+              <Tui/>
             </div>
       </form>
     </div>
