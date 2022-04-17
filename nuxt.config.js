@@ -25,7 +25,10 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/vue-simple-context-menu.js',
+    {
+      src:"~plugins/tui-editor.js",
+      ssr: false
+    }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -43,7 +46,6 @@ export default {
     'vue-sweetalert2/nuxt',
     '@nuxtjs/toast',
   ],
-
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],

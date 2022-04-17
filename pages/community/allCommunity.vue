@@ -51,8 +51,7 @@
           <p class="mtb6">좋아요</p>
         </div>
 
-      <NuxtLink to="/community/post">
-        <ul class="communityPostContent" v-for="item in posts.items" :key="item">
+        <ul class="communityPostContent" v-for="item in posts.items" :key="item.id" @click="$router.push('/post/' + item.id)">
           <li class="mtb1">{{ item.id }}</li>
           <li class="mtb2">{{ item.title }}</li>
           <li class="mtb3">{{ item.profile.nickname }}</li>
@@ -60,7 +59,14 @@
           <li class="mtb5">{{ item.views }}</li>
           <li class="mtb6">{{ item.likeCount }}</li>
         </ul>
-      </NuxtLink>
+
+        <div class="pagebox">
+          <div class="pageNextBox">이전</div>
+          <ul v-for="page in posts.meta.totalPages" :key="page.totalPages" class="pageul">
+            <li class="pageli">{{ page }}</li>
+          </ul>
+          <div class="pageNextBox">다음</div>
+        </div>
 
 
       </div>
@@ -77,7 +83,8 @@ export default {
   data() {
     return {
       posts: {
-        items: {},
+        items: {
+        },
         links: [],
         meta: {
           itemCount: 0,
@@ -91,11 +98,13 @@ export default {
   async created (){
    this.$store.dispatch('user/fetchMyInfo')
     try {
-      let res = await getPosts({category: '4', page: this.posts.meta.currentPage + 1})
-      console.log(res.data.data)
+      let res = await getPosts({
+        category: "전체게시판",
+        page: this.posts.meta.currentPage + 1})
+      // console.log(res.data.data)
       this.posts = res.data.data
     } catch (err) {
-      console.error('allCommunity getPosts error', err)
+     console.log(err)
     }
   },
   computed:{

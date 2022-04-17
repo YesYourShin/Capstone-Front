@@ -20,9 +20,12 @@
           <div class="buttonline2"></div>
           <div class="buttonline3"></div>
           <div class="buttonline4"></div>
-          <NuxtLink to="/lobby" class="gogame">
+          <NuxtLink to="/lobby" class="gogame" v-if="this.myInfo">
             <button>게임 하기</button>
           </NuxtLink>
+          <button v-else class="gogame" @click="test">
+              게임 하기
+          </button>
         </div>
       </div>
 
@@ -83,8 +86,16 @@ export default {
   data() {
     return {};
   },
-
-  methods: {},
+  computed:{
+    myInfo(){
+      return this.$store.getters['user/getMyInfo']
+    }
+  },
+  methods: {
+    test(){
+      this.$swal("로그인을 해주십시오");
+    }
+  }
 };
 </script>
 

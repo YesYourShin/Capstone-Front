@@ -73,10 +73,27 @@
       .postBoxContent1{
         width: 100%;
         font-size: 50px;
+        display: flex;
+        justify-content: space-between;
+
+        .userbtn{
+          button{
+            margin-bottom: 20px;
+            width: 90px;
+            font-size: 25px;
+            border-radius: 5px;
+            border: 2px solid white;
+            &:hover{
+              animation: color 0.3s;
+              animation-fill-mode: forwards;
+            }
+          }
+        }
+
       }
       .postBoxContent2{
         width: 100%;
-        font-size: 30px;
+        font-size: 35px;
       }
       .postBoxContent3{
         width: 70px;
@@ -233,3 +250,11 @@
     border-bottom: 3px solid white;
   }
 }
+@keyframes color{
+	0%{
+  }
+	100%{
+    background-color: white;
+    color: black;
+  }
+	}

@@ -17,7 +17,7 @@
 
             <div class="postBoxbiv1">
               <p>글쓰기</p>
-              <input type="submit" class="gobtn" value="등록"
+              <input type="submit" class="gobtn" value="수정"
               onclick="document.location.href='/community/allCommunity'">
             </div>
 
@@ -35,8 +35,8 @@
             </div>
 
             <div class="postBoxbiv4">
-              <textarea name="content" placeholder="내용을 입력해 주세요"></textarea>
-              <!-- <Tui/> -->
+              <textarea name="content" placeholder="내용을 입력해 주세요"
+              v-model="post.content"></textarea>
             </div>
       </form>
     </div>
@@ -47,12 +47,11 @@
 <script>
 import Header from '../../components/header.vue';
 import Profile from '../../components/profile.vue';
-import Tui from '../../components/tui.vue';
-import { savePost } from '@/api/mafiaAPI';
+import { editPost,detailPost } from '@/api/mafiaAPI';
 
 
 export default {
-  components: { Header, Profile, Tui},
+  components: { Header, Profile },
   name: "CapstonePost",
   data() {
     return {
@@ -67,19 +66,23 @@ export default {
 
   methods: {
     submitPost() {
-      // this.post.postCategoryId = parseInt(this.)
-      savePost(this.post)
+      // console.log(this.post);
+      editPost(this.$route.params.id,this.post)
         .then((res)=>{
-          // console.log(this.post)
         })
         .catch((err)=>{
           console.log(error)
         })
     },
   },
-  created() {
+  async created() {
     this.$store.dispatch("user/fetchMyInfo");
-
+    try {
+      let res = await detailPost(this.$route.params.id)
+      this.post = res.data.data
+        }catch (err) {
+      console.log(err)
+        }
   },
 
 

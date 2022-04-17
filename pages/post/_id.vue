@@ -16,34 +16,39 @@
       </div>
       <div class="postBox">
         <div class="postBoxContent1">
-          <NuxtLink to="/community/cement"><p>공지사항 ></p></NuxtLink>
+          <NuxtLink to="/community/cement"><p>{{ post.categoryName }} ></p></NuxtLink>
+          <div class="userbtn" v-if="post.profile && this.post.profile.id === this.myInfo.id">
+            <button  @click="$router.push('/repost/' + post.id)">수정</button>
+            <button @click="delet"
+            onclick="document.location.href='/community/allCommunity'">삭제</button>
+          </div>
+          <div class="userbtn" v-else>
+          </div>
         </div>
         <div class="postBoxContent2">
-          <p>[점검] 2/24(목) 임시 점검 안내</p>
+          <p>{{ post.title }}</p>
         </div>
         <div class="postBoxContent3">
           <img src="@/assets/pageimg/test.jpg">
         </div>
         <div class="postBoxContent4">
-          <p class="PBC1">관리자</p>
+          <p class="PBC1" v-if="post.profile">{{ post.profile.nickname }}</p>
           <div>2022.02.23 11:32 조회 199</div>
-          <div>댓글 3&nbsp;&nbsp;좋아요 5</div>
+          <div>댓글 3&nbsp;&nbsp;좋아요 {{ post.likeCount }}</div>
         </div>
         <div class="postBoxContent5">
-          <img src="@/assets/pageimg/test.jpg">
+            <!-- {{ post.img }} -->
         </div>
         <div class="postBoxContent6">
           <p>
-            서버 최적화를 위해 일부 서버를 대상으로 임시 점검을 진행할 예정이니<br>
-            자세한 사항은 아래 내용을 확인해주시길 바랍니다.<br>
-            감사합니다.
+            {{ post.content }}
           </p>
         </div>
         <div class="postBoxContent7">
-          <p class="PBC1">관리자</p><p class="PBC2">님의 게시글더보기 ></p>
+          <p class="PBC1" v-if="post.profile">{{ post.profile.nickname }}</p><p class="PBC2">님의 게시글더보기 ></p>
         </div>
         <div class="postBoxContent8">
-          <p>좋아요 5 댓글 3</p>
+          <p>좋아요 {{ post.likeCount }} 댓글 3</p>
         </div>
         <div class="commentBox">
           <div class="commentBox1">
@@ -83,17 +88,46 @@
 <script>
 import Header from '../../components/header.vue';
 import Profile from '../../components/profile.vue';
+import { detailPost,deletePost } from '@/api/mafiaAPI';
+
 export default {
   components: { Header, Profile },
   name: 'CapstonePost',
   data() {
     return {
+      post:{
+        id: '',
+        title: '',
+        content: '',
+        updatedAt: '',
+      },
     };
   },
-  mounted() {
+  async created (){
+   this.$store.dispatch('user/fetchMyInfo')
+    try {
+      let res = await detailPost(this.$route.params.id)
+      this.post = res.data.data
+        }catch (err) {
+      console.log(err)
+        }
+  },
+  computed:{
+    myInfo(){
+      return this.$store.getters['user/getMyInfo']
+    }
+  },
+  mounted(){
   },
   methods: {
-  },
+    delet(){
+      try {
+      deletePost(this.$route.params.id)
+      }catch(err){
+        console.log(err)
+      }
+    }
+  }
 };
 </script>
 
