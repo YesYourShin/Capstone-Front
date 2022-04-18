@@ -145,11 +145,17 @@ export default {
   },
   create() {},
   computed: {
-    publishStream() {
-      return this.$store.state.stream.publishStream;
+    // publishStream() {
+    //   return this.$store.state.stream.publishStream;
+    // },
+    // subscribedStreams() {
+    //   return this.$store.state.stream.subscribedStreams;
+    // },
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
     },
-    subscribedStreams() {
-      return this.$store.state.stream.subscribedStreams;
+    roomMembers() {
+      return this.$store.state.stream.roomMembers;
     },
   },
   mounted() {
@@ -208,10 +214,10 @@ export default {
       2. 두 번째 video 태그부터 타인의 카메라
       3. 게임 입장하면 자신의 카메라에서 얼굴 랜드마크를 소켓서버로 보내서 전체 인원한테 뿌려줌(현재 자신 포함으로 뿌리고 있고 카메라 번호를 주는 방식으로 2번으로 고정해놔서 고쳐야 됨)
       4. 게임 카메라 번호가 아니라 스트림 id로 하려했는데 자신의 스트림은 vuex에 아이디가 없어서 번호로 하는 게 나을 듯?
-      5. 묘하게 캔버스가 느린 느낌? 
+      5. 묘하게 캔버스가 느린 느낌?
       6. 가끔 캔버스가 잠시 안 나오는데 이건 모르겠다
         -> Remote track flowing again: 이라 뜸 Janus 문제?
-      7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류} 
+      7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
 
     const main = async () => {
@@ -221,16 +227,20 @@ export default {
       });
 
       // 자기 비디오랑 캔버스
-      this.myVideo = document.getElementById(`myVideo`);
-      this.myCanvas = document.getElementsByClassName(`my_canvas`)[0];
+      this.myVideo = document.getElementById(
+        `usercam${this.myInfo.profile.id}`
+      );
+      this.myCanvas = document.getElementsByClassName(
+        `output_canvas${this.myInfo.profile.id}`
+      )[0];
       this.myCtx = this.myCanvas.getContext("2d");
 
       await this.handCognition();
       await this.myFace();
 
       // 타인의 스트림만큼 캔버스에 메모 그리기
-      for (let i = 0; i <= this.subscribedStreams.length; i++) {
-        if (i !== this.userNum - 1) {
+      for (let i of this.roomMembers) {
+        if (i.id != this.myInfo.profile.id) {
           await this.faceMemo(i);
         }
       }
@@ -706,9 +716,9 @@ export default {
         //   });
         // }
 
-        await this.postLandmarks(landmarks);
-        // console.log(landmarks);
-        await this.getLandmarks();
+        // await this.postLandmarks(landmarks);
+        // await this.getLandmarks();
+
         // canvasCtx.restore();
       };
 
@@ -719,10 +729,10 @@ export default {
       });
     },
     postLandmarks(landmarks) {
-      const number = 2;
+      const id = this.myInfo.profile.id;
       this.socket.emit("myFaceLandmarks", {
         landmarks: landmarks[0],
-        number: number,
+        id: id,
       });
     },
     getLandmarks() {
@@ -732,13 +742,13 @@ export default {
     },
     faceMemo(i) {
       // console.log(`faceMemo : ${i - 1}`);
-      const videoElement = document.getElementById(`usercam${i - 1}`);
+      const videoElement = document.getElementById(`usercam${i.id}`);
       const canvasElement = document.getElementsByClassName(
-        `output_canvas${i - 1}`
+        `output_canvas${i.id}`
       )[0];
       const canvasCtx = canvasElement.getContext("2d");
 
-      // videoElement.style.display = "none";
+      videoElement.style.display = "none";
 
       const detectFace = () => {
         canvasCtx.save();
