@@ -72,7 +72,7 @@
             <div>댓글</div>
             <div>등록순&nbsp;&nbsp;&nbsp;최신순</div>
           </div>
-          <div class="commentBox2">
+          <!-- <div class="commentBox2">
             <img src="@/assets/pageimg/test.png">
             <div class="commentBox3">
               <p class="PBC1">Mirai</p>
@@ -87,13 +87,18 @@
               <p class="PBC2">오류 해결 부탁합니다.</p>
               <p class="PBC3">2022.02.23 11:41</p>
             </div>
-          </div>
-          <div class="commentBox4">
-            <label for="commentBox"  class="PBC1">Mirai</label>
-            <input type="text" id="commentBox" class="PBC2">
-            <div class="flex justify-end px-5 my-1">
-              <button class="PBC3">등록</button>
-            </div>
+          </div> -->
+          <div class="commentBox4" v-if="this.myInfo">
+            <label for="commentBox"  class="PBC1" v-if="this.myInfo.profile">{{ this.myInfo.profile.nickname }}</label>
+            <label for="commentBox"  class="PBC1" v-else>{{this.myInfo.id}}</label>
+            <form @submit.prevent="submitPost">
+                <div>
+                  <input type="text" id="commentBox" class="PBC2">
+                </div>
+                <div>
+                  <input type="submit" class="PBC3" value="등록">
+                </div>
+            </form>
           </div>
         </div>
       </div>
@@ -106,7 +111,7 @@
 <script>
 import Header from '../../components/header.vue';
 import Profile from '../../components/profile.vue';
-import { detailPost,deletePost } from '@/api/mafiaAPI';
+import { detailPost,deletePost,saveComment } from '@/api/mafiaAPI';
 
 export default {
   components: { Header, Profile },
@@ -119,6 +124,9 @@ export default {
         content: '',
         updatedAt: '',
       },
+      comment:{
+        content:'',
+      }
     };
   },
   async created (){

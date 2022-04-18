@@ -96,17 +96,7 @@ export default {
       this.$swal("로그인을 해주십시오");
     },
     openFullScreenMode(){
-        var doc = document.documentElement;
-        if (doc.requestFullscreen)
-        doc.requestFullscreen();
-        else if (doc.webkitRequestFullscreen) // Chrome, Safari (webkit)
-            doc.webkitRequestFullscreen();
-        else if (doc.mozRequestFullScreen) // Firefox
-            doc.mozRequestFullScreen();
-        else if (doc.msRequestFullscreen) // IE or Edge
-            doc.msRequestFullscreen();
-        $('.fullscreen').hide();
-        $('.close-fullscreen').show();
+      document.documentElement.requestFullscreen()
     }
   }
 };

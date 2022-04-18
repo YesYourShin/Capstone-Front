@@ -120,6 +120,13 @@ export default {
       },
   },
 
+  created() {
+    if(!this.myInfo.profile){
+      window.location.href = process.env.NODE_ENV === 'production'
+        ? 'https://gjgjajaj.xyz/mypage' : 'http://localhost:7000/mypage';
+    }
+  },
+
   computed:{
     myInfo(){
       return this.$store.getters['user/getMyInfo']
