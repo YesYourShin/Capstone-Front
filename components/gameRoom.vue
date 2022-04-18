@@ -35,7 +35,7 @@
           </div> -->
           <div
             class="justify-self-center px-2 pb-3 w-full"
-            v-for="s in roomMembers"
+            v-for="(s, index) in roomMembers"
             :key="s.userId"
           >
             <div class="aspect-video bg-fuchsia-400 border">
@@ -59,7 +59,8 @@
             </div>
             <p
               :class="
-                `${s.ready ? 'bg-green-300' : 'bg-white'}` + ' rounded-b-lg'
+                `${s.ready || index === 0 ? 'bg-green-300' : 'bg-white'}` +
+                ' rounded-b-lg'
               "
             >
               {{ s.nickname }}
@@ -76,22 +77,29 @@
             <p class="text-lg font-bold mx-auto">나가기</p>
           </div>
         </div>
-        <div class="p-2 md:w-40">
-          <div
-            class="flex items-center p-4 bg-green-200 rounded-lg shadow-xs cursor-pointer hover:bg-green-500 hover:text-gray-100 transition duration-300"
-            @click="getReady()"
-          >
-            <p class="text-lg font-bold mx-auto">준비하기</p>
-          </div>
-        </div>
-        <div class="p-2 md:w-40">
-          <div
-            class="flex items-center p-4 bg-blue-200 rounded-lg shadow-xs cursor-pointer hover:bg-blue-500 hover:text-gray-100 transition duration-300"
-            @click="goToGame()"
-          >
-            <p class="text-lg font-bold mx-auto">게임 시작</p>
-          </div>
-        </div>
+        <template v-if="roomMembers">
+          <template v-if="roomMembers.length">
+            <div
+              class="p-2 md:w-40"
+              v-if="roomMembers[0].userId !== myInfo.profile.userId"
+            >
+              <div
+                class="flex items-center p-4 bg-green-200 rounded-lg shadow-xs cursor-pointer hover:bg-green-500 hover:text-gray-100 transition duration-300"
+                @click="getReady()"
+              >
+                <p class="text-lg font-bold mx-auto">준비하기</p>
+              </div>
+            </div>
+            <div class="p-2 md:w-40" v-else>
+              <div
+                class="flex items-center p-4 bg-blue-200 rounded-lg shadow-xs cursor-pointer hover:bg-blue-500 hover:text-gray-100 transition duration-300"
+                @click="getStart()"
+              >
+                <p class="text-lg font-bold mx-auto">게임 시작</p>
+              </div>
+            </div>
+          </template>
+        </template>
       </div>
     </div>
     <chatBox></chatBox>
@@ -156,11 +164,12 @@ export default {
     //   this.$router.push(`/lobby`)
     // }
     leave() {
-      leaveRoom(this.$route.params.id).then((res) => {
-        if (res.data.success) {
-          this.$router.push("/lobby");
-        }
-      });
+      this.socket.emit(GameRoomEvent.LEAVE);
+      this.$router.push("/lobby");
+      // leaveRoom(this.$route.params.id).then((res) => {
+      //   if (res.data.success) {
+      //   }
+      // });
     },
     // checkIsStreamOn(userId) {
     //   let res = this.roomMembers.find((s) => s.userId === userId).stream;
@@ -171,6 +180,7 @@ export default {
       var unpublish = { request: "unpublish" };
       var leave = { request: "leave" };
       let vrc = this;
+      this.socket.emit(GameRoomEvent.LEAVE);
       this.storePlugin.send({
         message: unpublish,
         success: function () {
@@ -204,6 +214,9 @@ export default {
         },
       });
     },
+    getStart() {
+      this.socket.emit(GameRoomEvent.START);
+    },
   },
   mounted() {
     const ServerWS =
@@ -230,6 +243,9 @@ export default {
     this.socket.on(GameRoomEvent.JOIN, (data) => {
       console.log(data.member);
       this.$store.commit("stream/addRoomMember", data.member);
+      if (data.member.userId !== this.myInfo.id) {
+        this.$toast.show(data.member.nickname + " 님이 입장하셨습니다.");
+      }
     });
 
     this.socket.on(GameRoomEvent.MEMBER_LIST, (data) => {
@@ -243,6 +259,20 @@ export default {
       //   }
       // }
       this.$store.commit("stream/setRoomMembers", data.members);
+    });
+
+    this.socket.on(GameRoomEvent.START, (data) => {
+      console.log(data);
+      if (data.start) {
+        this.goToGame();
+      }
+    });
+
+    this.socket.on(GameRoomEvent.LEAVE, (data) => {
+      if (data.member.userId !== this.myInfo.id) {
+        this.$store.commit("stream/removeRoomMember", data.member);
+        this.$toast.show(data.member.nickname + " 님이 퇴장하셨습니다.");
+      }
     });
 
     this.socket.emit(GameRoomEvent.JOIN, {
