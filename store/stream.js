@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 export const state = () => ({
   joinedRoom: null,
   currentRoomInfo: null,
@@ -22,20 +24,40 @@ export const mutations = {
         return true;
       }
     }
-    if (state.subscribedStreams.some(findrfid)) return;
-    state.subscribedStreams.push(data)
-    console.log("added subscStream: (rfid)", data.rfid);
-    state.entered = data.display;
+    function findnick(array, goal) {
+      if (array === null) return;
+      for (const val of array) {
+        if (val.nickname === goal.nickname) return val;
+      }
+    }
+    // if (state.subscribedStreams.some(findrfid)) return;
+    // state.subscribedStreams.push(data)
+    // console.log("added subscStream: (rfid)", data.rfid);
+    // state.entered = data.nickname;
+
+    let target = findnick(state.roomMembers, data);
+    if (target) {
+      if (target.stream) return;
+      // let d = state.roomMembers.find(e => e.nickname === data.nickname);
+
+      // Object.assign(target, data);
+      console.log("여기까지 왔냐");
+      // target = { ...target, ...{stream: data["stream"], rfid: data["rfid"]} };
+      // target.stream = data.stream;
+      // target.rfid = data.rfid;
+      Vue.set(target, "stream", data.stream);
+      Vue.set(target, "rfid", data.rfid);
+      console.log("target: ", target);
+      // target = d;
+    }
   },
   removeSubscriber(state, rfid) {
     console.log(rfid);
-    // let filtered = state.subscribedStreams.filter((e) => e.rfid !== rfid)
-    // state.subscribedStreams = filtered;
 
     for (let i = 0; i<state.subscribedStreams.length; i++) {
       console.log('index: ', i, 'rfid: ', state.subscribedStreams[i].rfid);
       if (state.subscribedStreams[i].rfid == rfid) {
-        state.left = state.subscribedStreams[i].display;
+        state.left = state.subscribedStreams[i].nickname;
         state.subscribedStreams.splice(i, 1);
         console.log("deleted rfid: ", rfid);
         i--;
@@ -50,7 +72,6 @@ export const mutations = {
     // });
   },
   removeAllSubscribers(state) {
-    // state.subscribedStreams = [];
     function stopAndRemoveTrack(mediaStream) {
       return function(track) {
         track.stop();
@@ -67,31 +88,42 @@ export const mutations = {
     }
 
     function kill_own_feed() {
-      // for (const [key, value] of Object.entries(localTracks)) {
-      //   stopMediaStream(localTracks[key]);
-      // }
-
-      for (let mediaStream in state.subscribedStreams) {
+      for (let mediaStream of state.roomMembers) {
         stopMediaStream(mediaStream.stream)
       }
 
-      if (state.publishStream) {
-        stopMediaStream(state.publishStream.stream)
-      }
+      // if (state.publishStream) {
+      //   stopMediaStream(state.publishStream.stream)
+      // }
     }
 
     kill_own_feed();
 
-    state.subscribedStreams = [];
+    // state.subscribedStreams = [];
+    state.roomMembers = null;
     state.joinedRoom = null;
     state.entered = null;
     state.left = null;
 
     console.log("deleted all subscStreams");
   },
-  setPublishStream(state, data) {
-    state.publishStream = data;
-  },
+  // setPublishStream(state, data) {
+
+  //   function findnick(array, goal) {
+  //     if (array === null) return;
+  //     for (const val of array) {
+  //       if (val.nickname === goal.nickname) return val;
+  //     }
+  //   }
+  //   let target = findnick(state.roomMembers, data);
+  //   if (target) {
+  //     if (target.stream) return;
+  //     Object.assign(target, data);
+  //   }
+
+
+  //   // state.publishStream = data;
+  // },
   subscribeFeed(state, data) {
     state.subscribedFeeds.push(data);
   },
@@ -131,7 +163,8 @@ export const mutations = {
           if (found) {
             Object.assign(found, member);
           } else {
-            state.roomMembers.push(member);
+            // member.stream = null;
+            state.roomMembers = [...state.roomMembers, member];
           }
           // if (!state.roomMembers.filter(e => e.id === member.id).length) {
           //   state.roomMembers.push(member);
@@ -152,9 +185,10 @@ export const mutations = {
   },
   addRoomMember(state, data) {
     if (state.roomMembers === null) {
+      // data.stream = null;
       state.roomMembers = [data];
     } else {
-      state.roomMembers.push(data);
+      state.roomMembers = [...state.roomMembers, data];
     }
   },
   removeRoomMember(state, data) {
@@ -175,7 +209,7 @@ export const mutations = {
   readySubscriber(state, data) {
     for (let i=0; i<state.subscribedStreams.length; i++) {
       let sub = state.subscribedStreams[i];
-      if (sub.display === data.nickname) {
+      if (sub.nickname === data.nickname) {
         sub.ready = data.ready;
         break;
       }

@@ -11,16 +11,7 @@
       </div>
       <div class="px-2 mt-10">
         <div class="grid grid-cols-5 justify-evenly">
-          <!-- <template v-for="user in game.members">
-            <div class="justify-self-center px-2 pb-3 w-full">
-              <div
-                class="aspect-video bg-fuchsia-400 border border-red-600"
-              >
-              </div>
-              <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p>
-            </div>
-          </template> -->
-          <div
+          <!-- <div
             v-if="publishStream"
             class="justify-self-center px-2 pb-3 w-full"
           >
@@ -41,26 +32,39 @@
             >
               {{ myInfo.profile ? myInfo.profile.nickname : "Yuuto" }}
             </p>
-          </div>
-          <template v-for="s in subscribedStreams">
-            <div class="justify-self-center px-2 pb-3 w-full">
-              <div class="aspect-video bg-fuchsia-400 border">
+          </div> -->
+          <div
+            class="justify-self-center px-2 pb-3 w-full"
+            v-for="s in roomMembers"
+            :key="s.userId"
+          >
+            <div class="aspect-video bg-fuchsia-400 border">
+              <div v-if="s.stream">
                 <video
-                  :ref="'remote' + s.rfid"
-                  :id="'remote' + s.rfid"
+                  v-if="s.nickname !== myInfo.nickname"
+                  :ref="'remote' + s.userId"
+                  :id="'remote' + s.userId"
                   :src-object.prop.camel="s.stream"
                   autoplay
                 ></video>
+                <video
+                  v-else
+                  :ref="'remote' + s.userId"
+                  :id="'remote' + s.userId"
+                  :src-object.prop.camel="s.stream"
+                  autoplay
+                  muted
+                ></video>
               </div>
-              <p
-                :class="
-                  `${s.ready ? 'bg-green-300' : 'bg-white'}` + ' rounded-b-lg'
-                "
-              >
-                {{ s.display }}
-              </p>
             </div>
-          </template>
+            <p
+              :class="
+                `${s.ready ? 'bg-green-300' : 'bg-white'}` + ' rounded-b-lg'
+              "
+            >
+              {{ s.nickname }}
+            </p>
+          </div>
         </div>
       </div>
       <div class="flex flex-row-reverse px-2">
@@ -78,6 +82,14 @@
             @click="getReady()"
           >
             <p class="text-lg font-bold mx-auto">준비하기</p>
+          </div>
+        </div>
+        <div class="p-2 md:w-40">
+          <div
+            class="flex items-center p-4 bg-blue-200 rounded-lg shadow-xs cursor-pointer hover:bg-blue-500 hover:text-gray-100 transition duration-300"
+            @click="goToGame()"
+          >
+            <p class="text-lg font-bold mx-auto">게임 시작</p>
           </div>
         </div>
       </div>
@@ -127,6 +139,9 @@ export default {
     myInfo() {
       return this.$store.getters["user/getMyInfo"];
     },
+    roomMembers() {
+      return this.$store.state.stream.roomMembers;
+    },
     // ...mapState([
     //   "subscribedStreams",
     //   "mainFeed",
@@ -147,6 +162,11 @@ export default {
         }
       });
     },
+    // checkIsStreamOn(userId) {
+    //   let res = this.roomMembers.find((s) => s.userId === userId).stream;
+    //   console.log(`isStreamOn${userId}`, res);
+    //   return res;
+    // },
     exit() {
       var unpublish = { request: "unpublish" };
       var leave = { request: "leave" };
@@ -444,10 +464,14 @@ export default {
                           console.log("리모트 스트림 입니다:", stream);
                           vrc.$store.commit("stream/addSubscribeStream", {
                             rfid: remoteFeed.rfid,
-                            display: remoteFeed.rfdisplay,
+                            nickname: remoteFeed.rfdisplay,
                             stream: stream,
                             ready: false,
                           });
+                          // var elId = "remote" + vrc.myInfo.profile.userId;
+                          // document.getElementById(elId).pause();
+                          // document.getElementById(elId).load();
+                          // document.getElementById(elId).play();
                         } else {
                           vrc.$store.commit(
                             "stream/removeSubscriber",
@@ -469,7 +493,7 @@ export default {
                     vrc.$store.commit("stream/joinRoom", {
                       room: msg["room"],
                       publisherId: msg["id"],
-                      display: username,
+                      nickname: username,
                       publisherPvtId: msg["private_id"],
                     });
 
@@ -633,10 +657,14 @@ export default {
                 console.log(stream);
                 Janus.debug(" ::: Got a local stream :::", stream);
                 if (stream.active) {
-                  vrc.$store.commit("stream/setPublishStream", {
+                  vrc.$store.commit("stream/addSubscribeStream", {
                     stream: stream,
-                    display: username,
+                    nickname: username,
                   });
+                  // var elId = "remote" + vrc.myInfo.profile.userId;
+                  // document.getElementById(elId).pause();
+                  // document.getElementById(elId).load();
+                  // document.getElementById(elId).play();
                 }
               },
               // onlocaltrack: function (track, on) {
