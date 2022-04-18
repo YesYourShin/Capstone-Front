@@ -20,8 +20,8 @@
           <div class="buttonline2"></div>
           <div class="buttonline3"></div>
           <div class="buttonline4"></div>
-          <NuxtLink to="/lobby" class="gogame" v-if="this.myInfo">
-            <button @click="openFullScreenMode()">게임 하기</button>
+          <NuxtLink to="/lobby" class="gogame" v-if="this.myInfo" @click="openFullScreenMode()">
+            <button>게임 하기</button>
           </NuxtLink>
           <button v-else class="gogame" @click="test">
               게임 하기
