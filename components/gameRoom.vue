@@ -24,7 +24,7 @@
             v-if="publishStream"
             class="justify-self-center px-2 pb-3 w-full"
           >
-            <div class="aspect-video bg-fuchsia-400 border border-red-600">
+            <div class="aspect-video bg-fuchsia-400 border">
               <video
                 v-if="publishStream"
                 id="myVideo"
@@ -34,13 +34,17 @@
                 muted
               ></video>
             </div>
-            <p class="bg-white rounded-b-lg">
+            <p
+              :class="
+                `${isReady ? 'bg-green-300' : 'bg-white'}` + ' rounded-b-lg'
+              "
+            >
               {{ myInfo.profile ? myInfo.profile.nickname : "Yuuto" }}
             </p>
           </div>
           <template v-for="s in subscribedStreams">
             <div class="justify-self-center px-2 pb-3 w-full">
-              <div class="aspect-video bg-fuchsia-400 border border-red-600">
+              <div class="aspect-video bg-fuchsia-400 border">
                 <video
                   :ref="'remote' + s.rfid"
                   :id="'remote' + s.rfid"
@@ -48,7 +52,13 @@
                   autoplay
                 ></video>
               </div>
-              <p class="bg-white rounded-b-lg">{{ s.display }}</p>
+              <p
+                :class="
+                  `${s.ready ? 'bg-green-300' : 'bg-white'}` + ' rounded-b-lg'
+                "
+              >
+                {{ s.display }}
+              </p>
             </div>
           </template>
         </div>
@@ -65,7 +75,7 @@
         <div class="p-2 md:w-40">
           <div
             class="flex items-center p-4 bg-green-200 rounded-lg shadow-xs cursor-pointer hover:bg-green-500 hover:text-gray-100 transition duration-300"
-            @click="goToGame()"
+            @click="getReady()"
           >
             <p class="text-lg font-bold mx-auto">준비하기</p>
           </div>
@@ -95,6 +105,7 @@ export default {
       storePlugin: null,
       janus: null,
       socket: null,
+      isReady: false,
     };
   },
   computed: {
@@ -145,6 +156,7 @@ export default {
         success: function () {
           vrc.$store.commit("stream/removeAllSubscribers");
           vrc.$store.commit("stream/setPublishStream", null);
+          vrc.$store.commit("stream/destroyRoomMembers");
         },
         error: function (error) {
           console.log("unpublish failed:", error);
@@ -160,6 +172,9 @@ export default {
         },
       });
     },
+    getReady() {
+      this.socket.emit(GameRoomEvent.READY);
+    },
     goToGame() {
       this.$router.replace({
         name: "game",
@@ -174,7 +189,7 @@ export default {
     const ServerWS =
       process.env.NODE_ENV === "production"
         ? "wss://gjgjajaj.xyz/janus"
-        : "http://13.125.132.255:8088/janus";
+        : "ws://13.125.132.255:8188/janus";
     let janus = null;
     // const opaqueId = "videoroomtest-" + Janus.randomString(12); //opaqueId 값을 통해서 유저 구분
     const opaqueId = "videoroomtest-" + "dong"; //opaqueId 값을 통해서 유저 구분
@@ -193,7 +208,21 @@ export default {
     });
 
     this.socket.on(GameRoomEvent.JOIN, (data) => {
-      console.log(data);
+      console.log(data.member);
+      this.$store.commit("stream/addRoomMember", data.member);
+    });
+
+    this.socket.on(GameRoomEvent.MEMBER_LIST, (data) => {
+      console.log(data.members);
+      // for (let i = 0; i < data.members.length; i++) {
+      //   let member = data.members[i];
+      //   if (member.nickname === username) {
+      //     this.isReady = member.ready;
+      //   } else {
+      //     this.$store.commit("stream/readySubscriber", member);
+      //   }
+      // }
+      this.$store.commit("stream/setRoomMembers", data.members);
     });
 
     this.socket.emit(GameRoomEvent.JOIN, {
@@ -417,6 +446,7 @@ export default {
                             rfid: remoteFeed.rfid,
                             display: remoteFeed.rfdisplay,
                             stream: stream,
+                            ready: false,
                           });
                         } else {
                           vrc.$store.commit(

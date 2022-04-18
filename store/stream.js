@@ -1,6 +1,7 @@
 export const state = () => ({
   joinedRoom: null,
   currentRoomInfo: null,
+  roomMembers: null,
   publishStream: null,
   subscribedStreams: [],
   subscribedFeeds: [],
@@ -112,11 +113,73 @@ export const mutations = {
   setCurrentRoomMember(state, data) {
     state.currentRoomInfo.members = data;
   },
-  deleteCurrentRoomMember(state, data) {
-    state.currentRoomInfo.members = state.currentRoomInfo.members.filter(e => e !== data);
+  setRoomMembers(state, data) {
+    function find(array, goal) {
+      for (const val of array) {
+        if (val.id === goal.id) return val;
+      }
+    }
+    console.log("setRoomMembers", data);
+    if (state.roomMembers === null) {
+      state.roomMembers = data;
+    } else {
+      if (data.length >= state.roomMembers.length) {
+        for (let i = 0; i < data.length; i++) {
+          const member = data[i];
+
+          const found = find(state.roomMembers, member);
+          if (found) {
+            Object.assign(found, member);
+          } else {
+            state.roomMembers.push(member);
+          }
+          // if (!state.roomMembers.filter(e => e.id === member.id).length) {
+          //   state.roomMembers.push(member);
+          // } else {
+          //   Object.assign(state.roomMembers.find(e => e.id === member.id), member);
+          // }
+        }
+      } else {
+        for (let i = 0; i < state.roomMembers.length; i++) {
+          let member = state.roomMembers[i];
+          if (data.filter(e => e.id === member.id).length === 0) {
+            state.roomMembers.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    }
   },
-  addCurrentRoomMember(state, data) {
-    state.currentRoomInfo.members.push(data);
+  addRoomMember(state, data) {
+    if (state.roomMembers === null) {
+      state.roomMembers = [data];
+    } else {
+      state.roomMembers.push(data);
+    }
+  },
+  removeRoomMember(state, data) {
+    if (state.roomMembers === null) {
+      return;
+    }
+    for (let i = 0; i < state.roomMembers.length; i++) {
+      let member = state.roomMembers[i];
+      if (member.id === data.id) {
+        state.roomMembers.splice(i, 1);
+        i--;
+      }
+    }
+  },
+  destroyRoomMembers(state) {
+    state.roomMembers = null;
+  },
+  readySubscriber(state, data) {
+    for (let i=0; i<state.subscribedStreams.length; i++) {
+      let sub = state.subscribedStreams[i];
+      if (sub.display === data.nickname) {
+        sub.ready = data.ready;
+        break;
+      }
+    }
   }
 }
 

@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { isJoinable, checkPassword } from "@/api/mafiaAPI";
+import { isJoinable, checkPassword, getRoom } from "@/api/mafiaAPI";
 
 export default {
   props: {
@@ -63,14 +63,24 @@ export default {
                 .then((res) => {
                   console.log(res);
                   if (res.data.data.joinable) {
-                    this.$router.push({
-                      name: "room-id",
-                      params: {
-                        id: this.room.id,
-                        room: this.room.room,
-                        pin: pin,
-                      },
-                    });
+                    getRoom(this.room.id)
+                      .then((res) => {
+                        this.$store.commit(
+                          "stream/setRoomMembers",
+                          res.data.data.members
+                        );
+                        this.$router.push({
+                          name: "room-id",
+                          params: {
+                            id: this.room.id,
+                            room: this.room.room,
+                            pin: pin,
+                          },
+                        });
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
                   }
                 })
                 .catch((err) => {
@@ -82,14 +92,24 @@ export default {
                 });
             }
           } else {
-            this.$router.push({
-              name: "room-id",
-              params: {
-                id: this.room.id,
-                room: this.room.room,
-                pin: pin,
-              },
-            });
+            getRoom(this.room.id)
+              .then((res) => {
+                this.$store.commit(
+                  "stream/setRoomMembers",
+                  res.data.data.members
+                );
+                this.$router.push({
+                  name: "room-id",
+                  params: {
+                    id: this.room.id,
+                    room: this.room.room,
+                    pin: pin,
+                  },
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           }
         })
         .catch((err) => {

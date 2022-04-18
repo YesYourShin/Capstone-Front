@@ -49,7 +49,7 @@ export default {
     sockets: [
       {
         name: 'main',
-        url: process.env.NODE_ENV === 'production' ? 'wss://gjgjajaj.xyz/api' : 'ws://localhost:3065',
+        url: process.env.NODE_ENV === 'production' ? 'wss://gjgjajaj.xyz' : 'ws://localhost:3065',
         default: true,
       },
     ]
