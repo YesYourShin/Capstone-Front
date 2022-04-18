@@ -33,7 +33,7 @@
         </div>
       </div> -->
     <div class="videomainbox">
-      <div class="videobox">
+      <!-- <div class="videobox">
         <video
           id="myVideo"
           ref="myVideo"
@@ -41,8 +41,6 @@
           :src-object.prop.camel="publishStream.stream"
           autoplay
         ></video>
-
-        <!-- <p class="bg-white rounded-b-lg">{{user ? user.nickname : ''}}</p> -->
         <canvas
           :class="['aspect-video my_canvas']"
           width="1280"
@@ -58,32 +56,41 @@
             survivePlayer[9]
           }}
         </div>
-      </div>
-      <div class="videobox" v-for="(s, n) in subscribedStreams" :key="n">
-        <video
-          v-if="subscribedStreams.length != n"
-          :class="['aspect-video usercam' + n]"
-          :id="['usercam' + n]"
-          :src-object.prop.camel="s.stream"
-          muted
-          autoplay
-        >
-          {{ n }}
-        </video>
-        <canvas
-          :class="['aspect-video output_canvas' + n]"
-          width="1280"
-          height="720"
-        ></canvas>
-        <div :class="['userInfo' + n]">
-          {{
-            "level : " +
-            userLevel[n - 1] +
-            "   " +
-            userName[n - 1] +
-            " " +
-            survivePlayer[n - 1]
-          }}
+      </div> -->
+      <div class="videobox" v-for="s in roomMembers" :key="s.id">
+        <div v-if="s.stream">
+          <video
+            v-if="s.nickname !== myInfo.profile.nickname"
+            :class="['aspect-video usercam' + s.id]"
+            :id="['usercam' + s.id]"
+            :src-object.prop.camel="s.stream"
+            autoplay
+          >
+            {{ n }}
+          </video>
+          <video
+            v-else
+            :class="['aspect-video usercam' + s.id]"
+            :id="['usercam' + s.id]"
+            :src-object.prop.camel="s.stream"
+            autoplay
+            muted
+          ></video>
+          <canvas
+            :class="['aspect-video output_canvas' + s.id]"
+            width="1280"
+            height="720"
+          ></canvas>
+          <div :class="['userInfo' + s.id]">
+            {{
+              "level : " +
+              userLevel[s.id - 1] +
+              "   " +
+              userName[s.id - 1] +
+              " " +
+              survivePlayer[s.id - 1]
+            }}
+          </div>
         </div>
         <!-- <Memo class="memoInfo" ></Memo> -->
       </div>
@@ -109,11 +116,17 @@ export default {
     Memo,
   },
   computed: {
-    subscribedStreams() {
-      return this.$store.state.stream.subscribedStreams;
+    // subscribedStreams() {
+    //   return this.$store.state.stream.subscribedStreams;
+    // },
+    // publishStream() {
+    //   return this.$store.state.stream.publishStream;
+    // },
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
     },
-    publishStream() {
-      return this.$store.state.stream.publishStream;
+    roomMembers() {
+      return this.$store.state.stream.roomMembers;
     },
   },
   data() {
