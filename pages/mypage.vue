@@ -24,7 +24,7 @@
               name="user_text" v-model="profile.selfIntroduction"></p>
             </div>
           <input type="submit" class="rebtn" value="회원 정보 저장"
-          onclick="document.location.href='/'" >
+          onclick="document.location.href='/'">
 
           </form>
           <div class="mypagebtns">
