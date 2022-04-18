@@ -41,7 +41,7 @@
             <div class="aspect-video bg-fuchsia-400 border">
               <div v-if="s.stream">
                 <video
-                  v-if="s.nickname !== myInfo.nickname"
+                  v-if="s.nickname !== myInfo.profile.nickname"
                   :ref="'remote' + s.userId"
                   :id="'remote' + s.userId"
                   :src-object.prop.camel="s.stream"
