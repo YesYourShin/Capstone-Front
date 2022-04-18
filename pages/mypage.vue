@@ -23,8 +23,9 @@
               <p class="p2">상태 메시지 : <input type="text"
               name="user_text" v-model="profile.selfIntroduction"></p>
             </div>
-          <input type="submit" class="rebtn" value="회원 정보 저장">
-                    <!-- onclick="document.location.href='/'" -->
+          <input type="submit" class="rebtn" value="회원 정보 저장"
+          onclick="document.location.href='/'" >
+
           </form>
           <div class="mypagebtns">
             <button>내가 쓴 글보기</button>
