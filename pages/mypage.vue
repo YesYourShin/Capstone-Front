@@ -9,11 +9,11 @@
               <p>이미지 : <input
               class="imgInput"
               type="file"
-              name="user_img"
-              accept="image/png, image/jpeg"
-              ref="imagedata"
-              @change="myimage">
+              id="myFile"
+              v-on:change="fileSlc">
               </p>
+              <img v-bind:src="this.profile.image">
+              <p>{{this.profile.image}}</p>
             </div> -->
             <div class="mypageInput">
               <p class="p1">닉네임 : <input type="text" name="user_name"
@@ -23,8 +23,8 @@
               <p class="p2">상태 메시지 : <input type="text"
               name="user_text" v-model="profile.selfIntroduction"></p>
             </div>
-          <input type="submit" class="rebtn" value="회원 정보 저장"
-          onclick="document.location.href='/'">
+          <input type="submit" class="rebtn" value="회원 정보 저장">
+                    <!-- onclick="document.location.href='/'" -->
           </form>
           <div class="mypagebtns">
             <button>내가 쓴 글보기</button>
@@ -41,7 +41,7 @@
 <script>
 import Footer from '../components/footer.vue';
 import Header from '../components/header.vue';
-import { makeProfile,editProfile,withdrawUser } from '@/api/mafiaAPI';
+import { makeProfile,editProfile,withdrawUser,storeProfileImage } from '@/api/mafiaAPI';
 
 export default {
   components: { Header, Footer },
@@ -50,7 +50,14 @@ export default {
     return {
         profile:{
           nickname : '',
-          image: null,
+          // image: {
+          //   originalname:'',
+          //   encoding:'',
+          //   mimetype:'',
+          //   size:'',
+          //   key: '',
+          //   location: '',
+          // },
           selfIntroduction : '',
         },
       };
@@ -75,19 +82,31 @@ export default {
           })
        }
      },
-    myimage(){
-      //   this.image = this.$refs.imagedata.files
-      //   // if(){
-      //   // }else if(){
-      //   // } 이미지 디폴트 값
-     },
+    // fileSlc(){
+    //      let ete = document.getElementById('myFile').files[0];
+    //      console.log(ete)
+
+    //      storeProfileImage(ete)
+    //       .then((res)=>{
+    //         console.log(res)
+    //         //  this.profile.image = res.data
+    //       })
+    //       .catch((err)=>{
+    //         console.log(error)
+    //       })
+
+    //  },
     endbtn(){
       withdrawUser()
     }
   },
 
   async mounted(){
-     await this.$store.dispatch('user/fetchMyInfo')
+    await this.$store.dispatch('user/fetchMyInfo')
+
+    if(!this.myInfo.profile){
+     await this.$swal("프로필을 설정해주십시요.");
+    }
 
     if(this.myInfo.profile){
      this.profile.nickname =  this.myInfo.profile.nickname;

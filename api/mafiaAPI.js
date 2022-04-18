@@ -89,7 +89,9 @@ export const getUserInformation = (userId) => {
 
 export const storeProfileImage = (image) => {
   // 프로필 이미지 저장
-  return instance.post(`/users/profile/image`, image);
+  const formData = new FormData();
+  formData.append('image', image);
+  return instance.post(`/users/profile/image`, formData);
 };
 
 export const destroyProfileImage = () => {

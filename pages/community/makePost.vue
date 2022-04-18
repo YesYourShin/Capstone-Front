@@ -17,7 +17,8 @@
 
             <div class="postBoxbiv1">
               <p>글쓰기</p>
-              <input type="submit" class="gobtn" value="등록">
+              <input type="submit" class="gobtn" value="등록"
+              onclick="document.location.href='/community/allCommunity'">
               <!-- onclick="document.location.href='/community/allCommunity'" -->
             </div>
 
