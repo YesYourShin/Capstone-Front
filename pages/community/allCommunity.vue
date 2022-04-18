@@ -36,7 +36,6 @@
           </ul>
         </div>
 
-
       </div>
 
 
@@ -62,10 +61,14 @@
           <p class="mtb6">좋아요</p>
         </div>
 
-        <ul class="communityPostContent" v-for="item in posts.items" :key="item.id" @click="$router.push('/post/' + item.id)">
+        <ul class="communityPostContent" v-for="item in posts.items"
+            :key="item.id"
+            @click="$router.push('/post/' + item.id)">
           <li class="mtb1">{{ item.id }}</li>
           <li class="mtb2">{{ item.title }}</li>
-          <li class="mtb3">{{ item.profile.nickname }}</li>
+          <li class="mtb3" v-if="item.profile === null">알수없음</li>
+          <li class="mtb3" v-else-if="!item.profile"></li>
+          <li class="mtb3" v-else>{{ item.profile.nickname }}</li>
           <li class="mtb4">{{ item.updatedAt }}</li>
           <li class="mtb5">{{ item.views }}</li>
           <li class="mtb6">{{ item.likeCount }}</li>
@@ -79,7 +82,6 @@
           <div class="pageNextBox">다음</div>
         </div>
 
-
       </div>
     </div>
     <Footer/>
@@ -88,13 +90,15 @@
 
 <script>
 import { getPosts } from '@/api/mafiaAPI';
+import dayjs from "dayjs";
 
 export default {
-  name: 'CapstoneCommunity',
+  component: { dayjs },
   data() {
     return {
       posts: {
         items: {
+          updatedAt: '',
         },
         links: [],
         meta: {
@@ -107,6 +111,8 @@ export default {
     };
   },
   async created (){
+
+
    this.$store.dispatch('user/fetchMyInfo')
     try {
       let res = await getPosts({
@@ -114,6 +120,11 @@ export default {
         page: this.posts.meta.currentPage + 1})
       // console.log(res.data.data)
       this.posts = res.data.data
+
+      this.posts.items.forEach(post =>
+        // console.log(post)
+        post.updatedAt = dayjs(post.updatedAt).format("YYYY-MM-DD")
+      )
     } catch (err) {
      console.log(err)
     }

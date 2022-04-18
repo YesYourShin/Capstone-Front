@@ -1,7 +1,7 @@
 <template>
   <div class="postMainBox">
     <Header/>
-    <div class="mainPost">
+    <div class="mainPost" v-if="this.myInfo">
       <Banner/>
 
       <div class="allbox">
@@ -50,7 +50,7 @@
         </div>
         <div class="postBoxContent4">
           <p class="PBC1" v-if="post.profile">{{ post.profile.nickname }}</p>
-          <div>2022.02.23 11:32 조회 199</div>
+          <div>{{ post.updatedAt }} 조회 199</div>
           <div>댓글 3&nbsp;&nbsp;좋아요 {{ post.likeCount }}</div>
         </div>
         <div class="postBoxContent5">
@@ -109,6 +109,7 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 import Header from '../../components/header.vue';
 import Profile from '../../components/profile.vue';
 import { detailPost,deletePost,saveComment } from '@/api/mafiaAPI';
@@ -131,6 +132,8 @@ export default {
   },
   async created (){
    this.$store.dispatch('user/fetchMyInfo')
+   console.log(this.post.updatedAt)
+  //  this.post.updatedAt = dayjs(post.updatedAt).format("YYYY-MM-DD")
     try {
       let res = await detailPost(this.$route.params.id)
       this.post = res.data.data
@@ -144,6 +147,7 @@ export default {
     }
   },
   mounted(){
+
   },
   methods: {
     delet(){

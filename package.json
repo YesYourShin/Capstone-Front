@@ -21,6 +21,7 @@
     "@tensorflow/tfjs-core": "^3.15.0",
     "axios": "^0.26.0",
     "core-js": "^3.19.3",
+    "dayjs": "^1.11.1",
     "fs": "^0.0.1-security",
     "nuxt": "^2.15.8",
     "nuxt-socket-io": "^2.0.3",
