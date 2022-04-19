@@ -91,7 +91,11 @@ export const storeProfileImage = (image) => {
   // 프로필 이미지 저장
   const formData = new FormData();
   formData.append('image', image);
-  return instance.post(`/users/profile/image`, formData);
+  return instance.post(`/users/profile/image`, formData,{
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 };
 
 export const destroyProfileImage = () => {

@@ -5,7 +5,7 @@
         <div class="myProfile">
           <p class="mypageText">MyPage</p>
           <form v-on:submit.prevent="submitForm" class="mypageForm">
-            <!-- <div class="mypageInput">
+            <div class="mypageInput">
               <p>이미지 : <input
               class="imgInput"
               type="file"
@@ -14,7 +14,7 @@
               </p>
               <img v-bind:src="this.profile.image">
               <p>{{this.profile.image}}</p>
-            </div> -->
+            </div>
             <div class="mypageInput">
               <p class="p1">닉네임 : <input type="text" name="user_name"
               v-model="profile.nickname"></p>
@@ -51,14 +51,14 @@ export default {
     return {
         profile:{
           nickname : '',
-          // image: {
-          //   originalname:'',
-          //   encoding:'',
-          //   mimetype:'',
-          //   size:'',
-          //   key: '',
-          //   location: '',
-          // },
+          image: {
+            originalname:'',
+            encoding:'',
+            mimetype:'',
+            size:'',
+            key: '',
+            location: '',
+          },
           selfIntroduction : '',
         },
       };
@@ -83,20 +83,20 @@ export default {
           })
        }
      },
-    // fileSlc(){
-    //      let ete = document.getElementById('myFile').files[0];
-    //      console.log(ete)
+    fileSlc(){
+         let ete = document.getElementById('myFile').files[0];
+         console.log(ete)
 
-    //      storeProfileImage(ete)
-    //       .then((res)=>{
-    //         console.log(res)
-    //         //  this.profile.image = res.data
-    //       })
-    //       .catch((err)=>{
-    //         console.log(error)
-    //       })
+         storeProfileImage(ete)
+          .then((res)=>{
+            console.log(res)
+             this.profile.image = res.data
+          })
+          .catch((err)=>{
+            console.log(error)
+          })
 
-    //  },
+     },
     endbtn(){
       withdrawUser()
     }
