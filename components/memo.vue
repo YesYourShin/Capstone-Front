@@ -755,8 +755,6 @@ export default {
     getLandmarks() {
       this.socket.on("othersFaceLandmarks", (data) => {
         this.testLandmark[data.id] = data.landmarks;
-        console.log(`get landmarks: `);
-        console.log(this.testLandmark[data.id]);
       });
     },
     faceMemo(data) {
