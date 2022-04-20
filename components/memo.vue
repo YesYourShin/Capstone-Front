@@ -65,7 +65,6 @@
 import { Hands, HAND_CONNECTIONS } from "@mediapipe/hands";
 import { Camera } from "@mediapipe/camera_utils";
 import io from "socket.io-client";
-import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 export default {
   name: "App",
   components: {},
@@ -713,7 +712,7 @@ export default {
     ]
     */
         let landmarks = await model.estimateFaces(videoElement, false);
-
+        console.log(`my landmark: ${landmarks}`);
         // console.log(landmarks);
         // canvasCtx.save();
         // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -756,6 +755,7 @@ export default {
     getLandmarks() {
       this.socket.on("othersFaceLandmarks", (data) => {
         this.testLandmark[data.id] = data.landmarks;
+        console.log(`get landmarks: ${this.testLandmark[data.id]}`);
       });
     },
     faceMemo(data) {
