@@ -7,7 +7,6 @@
         >
           <p>{{ roomInfo.description }}</p>
         </div>
-        <sideBar></sideBar>
       </div>
       <div class="px-2 mt-10">
         <div class="grid grid-cols-5 justify-evenly">
