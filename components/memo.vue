@@ -712,7 +712,7 @@ export default {
     ]
     */
         let landmarks = await model.estimateFaces(videoElement, false);
-        console.log(`my landmark: ${landmarks}`);
+
         // console.log(landmarks);
         // canvasCtx.save();
         // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -755,7 +755,8 @@ export default {
     getLandmarks() {
       this.socket.on("othersFaceLandmarks", (data) => {
         this.testLandmark[data.id] = data.landmarks;
-        console.log(`get landmarks: ${this.testLandmark[data.id]}`);
+        console.log(`get landmarks: `);
+        console.log(this.testLandmark[data.id]);
       });
     },
     faceMemo(data) {
@@ -787,6 +788,8 @@ export default {
         );
 
         const landmarks = this.testLandmark[id];
+        console.log("detectFace");
+        console.log(landmarks);
 
         // 랜드마크로 얼굴 그리기
         if (landmarks)
