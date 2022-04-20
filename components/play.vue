@@ -57,7 +57,7 @@
           }}
         </div>
       </div> -->
-      <div class="videobox" v-for="s in roomMembers" :key="s.id">
+      <div class="videobox" v-for="(s, n) in roomMembers" :key="s.id">
         <div v-if="s.stream">
           <video
             v-if="s.nickname !== myInfo.profile.nickname"
@@ -66,7 +66,7 @@
             :src-object.prop.camel="s.stream"
             autoplay
           >
-            {{ n }}
+            {{ s.id }}
           </video>
           <video
             v-else
@@ -78,8 +78,9 @@
           ></video>
           <canvas
             :class="['aspect-video output_canvas' + s.id]"
-            width="1280"
-            height="720"
+            :id="['output_canvas' + n]"
+            width="640"
+            height="360"
           ></canvas>
           <div :class="['userInfo' + s.id]">
             {{
