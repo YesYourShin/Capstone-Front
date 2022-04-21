@@ -754,7 +754,9 @@ export default {
     },
     getLandmarks() {
       this.socket.on("othersFaceLandmarks", (data) => {
+        console.log(data);
         this.testLandmark[data.id] = data.landmarks;
+        console.log(this.testLandmark);
       });
     },
     faceMemo(data) {
@@ -785,13 +787,8 @@ export default {
           canvasElement.height
         );
 
-        // 여기가 문제야
+        // 여기가 문제야?
         const landmarks = this.testLandmark[id];
-        console.log(`현재 id: ${id}`);
-        console.log(`받은 랜드마크 상태`);
-        console.log(this.testLandmark);
-        console.log("detectFace");
-        console.log(landmarks);
 
         // 랜드마크로 얼굴 그리기
         if (landmarks)
