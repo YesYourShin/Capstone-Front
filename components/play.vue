@@ -106,7 +106,7 @@ import Billboard from "@/components/gameFlow_elements/billboard.vue";
 // import StartAndRule from "@/components/gameFlow/startAndRule.vue";
 import SideBar from "@/components/lobby_elements/sideBar.vue";
 import Memo from "@/components/memo.vue";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 export default {
   name: "App",
   components: {
@@ -160,185 +160,140 @@ export default {
       citizenNum: 8,
       voteNum: 0,
       doctorSelected: 0,
-      roomJob: [],
+      myNum : 0,
+      myJob : '',
+      mySocketId: '',
+      userSocketInfo: [],
+      myVote: 0,
     };
   },
   mounted() {
-    /* 
-      해야하는 거
-    */
+    this.socket = this.$nuxtSocket({
+      channel: "/game",
+      withCredentials: true,
+      transports: ["websocket"],
+    });
+    this.gameSocketSet();
+    // this.socket.emit('game:join', {roomid})
+
   },
   created() {
-    // this.socket = io("http://localhost:3065/game", {
-    //   transports: ["websocket"],
-    // });
   },
   methods: {
     exitRoom() {
       this.socket.emit("exitRoom");
     },
+    // 게임에 입장하는 즉시 실행되며, 유저의 소켓 정보 받아옴
+    gameSocketSet() {
+      this.flowMessage = "잠시 후 게임을 시작합니다.";
+      this.socket.emit('gamejoin')
+      this.socket.on('gamejoin', (data)=> {
+        console.log(data.user);
+        this.mySocketId = data.user
+        console.log(this.mySocketId)
+      })
+      // 입장 5초 후에 게임을 시작한다.
+      setTimeout(()=> {
+        this.gameStart()
+      }, 5000)
+    },
     gameStart() {
-      this.flowMessage = "마피아 게임을 시작합니다";
-      setTimeout(() => {
-        this.flowMessage = "직업을 배분했습니다";
-        this.socket.emit("grantJob");
-      }, 3000);
+      this.flowMessage = "마피아 게임 시작";
+      setTimeout(()=> {
+        this.socket.emit('gameMessage')
+        this.socket.on('gameMessage', (data)=> {
+          console.log(data)
+        })
+        this.grantPlayerJob();
+      },3000)
     },
 
+    grantPlayerJob() {
+      this.flowMessage = '직업을 나누고 있습니다...'
+      setTimeout(() => {
+        this.socket.emit("grantJob")
+        this.socket.on('grantJob2', (data, data2) => {
+          console.log(data)
+          console.log(data2)
+          this.userSocketInfo = data2
+          console.log(this.userSocketInfo)
+          for(let i = 0 ; i < this.userSocketInfo.length; i++) {
+            if (this.mySocketId == this.userSocketInfo[i]) {
+              this.myNum = i+1
+            }
+          }
+          console.log(this.myNum);
+          for(let i = 0 ; i < this.userSocketInfo.length; i++) {
+            if (i == this.myNum-1) {
+              this.myJob = data.jobs[i].job
+            }
+          }
+          console.log(this.myJob);
+          // console.log(data.jobs[this.myNum].job)
+          // this.myJob = data.jobs[this.myNum].job
+          // console.log(this.roomJob);
+          this.flowMessage = '당신은 ' + this.myJob + '입니다'
+          setTimeout(() => {
+            if (this.myJob == 'MAFIA') {
+              this.flowMessage = '시민들에게 들키지 않고 다른 마피아와 힘을 합쳐 시민을 제거하면 됩니다.'
+            } else if (this.myJob == 'DOCTOR') {
+              this.flowMessage == '당신은 매일 밤마다 1명의 유저를 선택하여 마피아의 공격으로부터 보호할 수 있습니다. 단, 자신은 보호할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+            } else if (this.myJob == 'POLICE') {
+              this.flowMessage == '당신은 매일 밤마다 1명의 유저를 선택하여 해당 유저의 직업을 알 수 있습니다. 단, 자신은 선택할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+            } else {
+              this.flowMessage == '당신은 다른 시민들과 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+            }
+            setTimeout(() => {
+              this.morningEvent();
+            },3000)
+          },3000)
+        })
+
+      }, 3000)
+    },
     morningEvent() {
-      this.flowMessage = "낮이 되었습니다.";
-      // this.backgroundChange.backgroundImage = url("@/assets/game/night.png");
-      console.log("실행됨");
-      // this.electedPlayer = -1;
-      this.$refs.timer.morningEvent();
-      // this.$refs.timer.startVote()
-      // 지목 유저 삭제 이벤트 발생
-      // this.flowMessage = 'X번 플레이어가 사망하였습니다.'
+      this.flowMessage = '낮이 되었습니다.'
+      console.log('타이머 실행')
+      // this.$refs.timer.morningEvent()
+      setTimeout(()=> {
+        this.startVote();
+      },3000)
       //
+
     },
     startVote() {
-      this.punishmentPros = Math.floor(Math.random() * 5);
       this.flowMessage =
         "해가 저물어갑니다. 밤이 되기 전, 마피아로 의심되는 유저를 지목합니다";
-      this.$refs.timer.startVote();
-      //Timer.vue의 startVote가 실행되게끔 한다.
+      // this.$refs.timer.startVote();
+      //여기서 유저 지목 값 받아올 수 있어야 함.
+      this.myVote = Math.floor(Math.random() * 5);
+      console.log(this.myVote);
+      let voteNum = 0;
+      setTimeout(()=> {
+        this.socket.emit('finishVote', {
+          voteNum : this.myVote,
+        })
+        this.finishVote();
+      },3000)
     },
 
     finishVote() {
-      // 투표결과 취합
-      // 중복된 플레이어가 없고, 특정 플레이어가 가장 많은 표를 받으면
-      // 해당 플레이어를 찬반투표로 넘긴다.
-      this.electedPlayersNum = 1;
-      for (let i = 0; i < this.playerVote.length; i++) {
-        if (this.survivePlayer[i] == true) {
-          // this.playerVote[i] = Math.floor(Math.random()*10);
-          this.voteNum = prompt(i + 1 + "플레이어가 투표합니다.");
-          this.playerVote.splice(
-            this.voteNum - 1,
-            1,
-            this.playerVote[this.voteNum - 1] + 1
-          );
-          console.log(this.playerVote);
-        }
+      // console.log('adf')
+      this.flowMessage =
+        "투표 결과를 발표를 합니다.";
+      setTimeout(()=> {
+        this.socket.on('finishVote', (data) => {
+          console.log(data)
+        })
+        this.finishPunishmentVote();
+      },3000)
 
-        // this.playerVote[i]++;
-        // if(this.electedPlayerVote == this.playerVote[i]) {
-        //   this.electedPlayersNum = this.electedPlayersNum + 1;
-        //   this.electedPlayer = i;
-        // } else if (this.electedPlayerVote < this.playerVote[i]) {
-        //   this.electedPlayerVote = this.playerVote[i]; // 최대득표수
-        //   this.electedPlayer = i; // 최다득표자
-        //   this.electedPlayersNum = 1; // 최다득표자가 중복될 경우
-        // }
-      }
-      for (let i = 0; i < this.playerVote.length; i++) {
-        if (this.electedPlayerVote == this.playerVote[i]) {
-          this.electedPlayersNum = this.electedPlayersNum + 1;
-          this.electedPlayer = i;
-        } else if (this.electedPlayerVote < this.playerVote[i]) {
-          this.electedPlayerVote = this.playerVote[i]; // 최대득표수
-          this.electedPlayer = i; // 최다득표자
-          this.electedPlayersNum = 1; // 최다득표자가 중복될 경우
-        }
-      }
-
-      if (this.electedPlayersNum != 1) {
-        this.electedPlayer = 0;
-        this.electedPlayersNum = 1;
-        this.flowMessage = "투표종료. 중복 혹은 무효처리";
-
-        this.$refs.billboard.voteBillboard();
-        // 밤 & 능력사용 이벤트 (타이머로 이동하여)
-        // this.$refs.timer.nightEvent()
-
-        setTimeout(() => {
-          this.flowMessage = "밤이 되었습니다. 능력을 사용합니다.";
-          this.$refs.timer.nightEvent();
-          this.$refs.billboard.finishAllVote();
-        }, 5000);
-
-        // setTimeout(, 3000);
-      } else {
-        this.flowMessage = "투표완료. 집행대상자 선정 완료";
-        console.log(this.playerVote);
-        setTimeout(() => {
-          this.flowMessage = this.electedPlayer + 1 + "유저의 사형 투표 시작";
-        }, 5000);
-        this.$refs.billboard.voteBillboard();
-        console.log(this.$refs.timer);
-        setTimeout(() => {
-          this.$refs.timer.startPunishmentVote();
-        }, 5000);
-        // setTimeout(this.$refs.timer.startPunishmentVote(), 3000);
-        // this.$refs.timer.startPunishmentVote()
-        // 찬반투표 이벤트. (타이머로 이동하여 )
-      }
     },
-
     finishPunishmentVote() {
-      this.punishmentPros = Math.floor(Math.random() * 5);
-      // this.punishmentCons = Math.floor(Math.random()*5);
-      this.punishmentCons = 0;
-      this.$refs.billboard.punishmentVoteBillboard();
-      if (this.punishmentPros > this.punishmentCons) {
-        this.survivePlayer.splice(this.electedPlayer, 1, false);
-        this.flowMessage =
-          "투표 결과 " + (this.electedPlayer + 1) + " 를 사형합니다.";
-        console.log(this.survivePlayer);
-        console.log("마피아는" + this.mafiaNum);
-        console.log("시민은" + this.citizenNum);
-        if (
-          this.playerJob[this.electedPlayer] == "마피아" &&
-          this.survivePlayer[this.electedPlayer] == false
-        ) {
-          this.mafiaNum = this.mafiaNum - 1;
-        } else if (
-          this.playerJob[this.electedPlayer] != "마피아" &&
-          this.survivePlayer[this.electedPlayer] == false
-        ) {
-          this.citizenNum = this.citizenNum - 1;
-        }
-        console.log("마피아는" + this.mafiaNum);
-        console.log("시민은" + this.citizenNum);
-        // for(let i = 0; i < 10; i++) {
-        //       console.log('마피아는 앞에서' + this.mafiaNum)
-        //       console.log('시민은 앞에서' + this.citizenNum)
-        //       if (this.playerJob[i] == '마피아' && this.survivePlayer[i] == false) {
-        //         this.mafiaNum = this.mafiaNum - 1
-        //       } else if (this.playerJob[i] != '마피아' && this.survivePlayer[i] == false) {
-        //         this.citizenNum = this.citizenNum - 1
-        //       }
-        //     }
-        if (
-          this.mafiaNum == 0 ||
-          this.citizenNum == 0 ||
-          this.mafiaNum >= this.citizenNum
-        ) {
-          this.victorySearch();
-        } else {
-          setTimeout(() => {
-            this.flowMessage = "밤이 되었습니다. 능력을 사용합니다.";
-            this.$refs.timer.nightEvent();
-          }, 5000);
-          this.electedPlayer = 0;
-        }
-      } else {
-        this.flowMessage = "투표가 부결되어 사형하지 않습니다.";
-        // 능력사용 이벤트 진행
-        this.$refs.billboard.punishmentVoteBillboard();
-        // setTimeout(() => {
-        //     this.$refs.billboard.finishAllVote()
-        //   }, 5000);
-        setTimeout(() => {
-          this.flowMessage = "밤이 되었습니다. 능력을 사용합니다.";
-          this.$refs.timer.nightEvent();
-        }, 5000);
-        this.electedPlayer = 0;
-      }
-      // this.$refs.billboard.finishAllVote()
+      console.log('코코마데')
     },
     nightSkillEvent() {
-      this.$refs.billboard.finishAllVote();
+      // this.$refs.billboard.finishAllVote();
       this.flowMessage = "능력 사용이 끝났습니다.";
       this.killPlayer = prompt("마피아가 죽일 유저 선택!");
       console.log(this.survivePlayer[this.killPlayer]);
@@ -419,7 +374,7 @@ export default {
       this.flowMessage =
         "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
     },
-  },
+  }
 };
 </script>
 

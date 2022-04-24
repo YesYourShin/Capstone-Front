@@ -239,11 +239,11 @@ export default {
       await this.myFace();
 
       // 타인의 스트림만큼 캔버스에 메모 그리기
-      for (let i of this.roomMembers) {
-        if (i.id != this.myInfo.profile.id) {
-          await this.faceMemo(i);
-        }
-      }
+      // for (let i of this.roomMembers) {
+      //   if (i.id != this.myInfo.profile.id) {
+      //     await this.faceMemo(i);
+      //   }
+      // }
     };
     main();
   },
