@@ -1,50 +1,44 @@
 <template>
   <div class="canvasmemo">
     <div
-      :class="['canvasmemo' + index]"
-      v-for="index in this.playUsersNum"
-      :key="index"
+      :class="['canvasmemo' + index.id]"
+      v-for="index of this.roomMembers"
+      :key="index.id"
     >
-      {{ index }}
+      {{ index.id }}
       <input
         type="button"
         id="button1"
-        v-on:click="memoJob('citizen', index)"
+        v-on:click="memoJob('citizen', index.id)"
         value="시민"
       />
       <input
         type="button"
         id="button2"
-        v-on:click="memoJob('police', index)"
+        v-on:click="memoJob('police', index.id)"
         value="경찰"
       />
       <input
         type="button"
         id="button3"
-        v-on:click="memoJob('doctor', index)"
+        v-on:click="memoJob('doctor', index.id)"
         value="의사"
       />
       <input
         type="button"
-        id="button4"
-        v-on:click="memoJob('soldier', index)"
-        value="군인"
-      />
-      <input
-        type="button"
         id="button5"
-        v-on:click="memoJob('mafia', index)"
+        v-on:click="memoJob('mafia', index.id)"
         value="마피아"
       />
       <input
         type="button"
         id="button6"
-        v-on:click="memoJob('none', index)"
+        v-on:click="memoJob('none', index.id)"
         value="메모삭제"
       />
     </div>
     <div>
-      {{ "내 번호:" + userNum }}
+      {{ "내 번호:" + this.myInfo.profile.id }}
       <input
         type="checkbox"
         id="checkbox1"
@@ -141,16 +135,12 @@ export default {
       myCtx: false,
       othersLandmarks: [],
       socket: null,
+      testLandmark: {},
+      testImage: {},
     };
   },
   create() {},
   computed: {
-    // publishStream() {
-    //   return this.$store.state.stream.publishStream;
-    // },
-    // subscribedStreams() {
-    //   return this.$store.state.stream.subscribedStreams;
-    // },
     myInfo() {
       return this.$store.getters["user/getMyInfo"];
     },
@@ -159,26 +149,6 @@ export default {
     },
   },
   mounted() {
-    // nestJs socketio 채팅
-    // https://velog.io/@kimgano12/NestJS-Socket.io-RN-Mysql%EB%A1%9C-%EC%B1%84%ED%8C%85-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-1
-    // socketio 클라이언트 api
-    // https://socket.io/docs/v4/client-api/#io-url-options
-    // socketio server api
-    // https://www.zerocho.com/category/NodeJS/post/57edfcf481d46f0015d3f0cd
-    // Socket.io 사용시 Client 와 Server 동시에 개발하기
-    // https://leestrument.tistory.com/entry/Socketio-%EC%82%AC%EC%9A%A9%EC%8B%9C-Client-%EC%99%80-Server-%EB%8F%99%EC%8B%9C%EC%97%90-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0
-
-    // const socket = io("http://localhost:3065", {
-    //   transports: ["websocket"],
-    // });
-    // let socket = io();
-    // console.log(this.socket);
-    // this.socket.emit("ClientEvent", "Hello Server");
-    // this.socket.on("ServerEvent", (serverMessage) =>
-    //   console.log(serverMessage)
-    // );
-    // this.socket.on("connect_error", (err) => console.log(err));
-    // this.socketEvents();
     /*
       해야할 것
       1. 손 인식 -> 얼굴 인식 -> 나머지 영상 순으로 하나 끝나면 하나 켜지게 할 것
@@ -191,7 +161,6 @@ export default {
        -> ?
       4. gameroom에서 replace하면 hand 동작 안 함 이유? 544줄
        -> cdn이었던걸 npm으로 설치해서 해결
-      5. 캔버스 좌우반전 왜 자꾸 ㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈ
 
 
       문제점?
@@ -201,6 +170,7 @@ export default {
       2. 얼굴이 여러개 인식 됨
         하나만 인식되게 지정할 수 없어서 여러 얼굴이 인식됨
         -> 처음 인식된 얼굴만 그리게 해서 해결
+      3. mediapipe 얼굴인식을 사용하니 게임에서 렉?이 발생함
 
       주의사항
       1. [크롬 - 설정 - 시스템 - 가능한 경우 하드웨어 가속 사용] 할 것
@@ -220,36 +190,35 @@ export default {
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
 
-    const main = async () => {
-      // 소켓 연결
-      this.socket = io("http://localhost:3065/game", {
-        transports: ["websocket"],
-      });
+    // const main = async () => {
+    //   // 소켓 연결
+    //   this.socket = io("http://localhost:3065/game", {
+    //     transports: ["websocket"],
+    //   });
+    //   // 자기 비디오랑 캔버스
+    //   this.myVideo = document.getElementById(
+    //     `usercam${this.myInfo.profile.id}`
+    //   );
+    //   this.myCanvas = document.getElementsByClassName(
+    //     `output_canvas${this.myInfo.profile.id}`
+    //   )[0];
+    //   this.myCtx = this.myCanvas.getContext("2d");
 
-      // 자기 비디오랑 캔버스
-      this.myVideo = document.getElementById(
-        `usercam${this.myInfo.profile.id}`
-      );
-      this.myCanvas = document.getElementsByClassName(
-        `output_canvas${this.myInfo.profile.id}`
-      )[0];
-      this.myCtx = this.myCanvas.getContext("2d");
+    //   await this.handCognition();
+    //   await this.myFace();
 
-      await this.handCognition();
-      await this.myFace();
-
-      // 타인의 스트림만큼 캔버스에 메모 그리기
-      // for (let i of this.roomMembers) {
-      //   if (i.id != this.myInfo.profile.id) {
-      //     await this.faceMemo(i);
-      //   }
-      // }
-    };
-    main();
+    //   // 타인의 스트림만큼 캔버스에 메모 그리기
+    //   for (let data of this.roomMembers) {
+    //     if (data.id != this.myInfo.profile.id) {
+    //       await this.faceMemo(data);
+    //     }
+    //   }
+    // };
+    // main();
   },
   // 해야할일, 투표
   methods: {
-    handCognition() {
+    async handCognition() {
       const videoElement = this.myVideo;
       const canvasElement = this.myCanvas;
       const canvasCtx = this.myCtx;
@@ -305,6 +274,41 @@ export default {
         }
       };
 
+      // const model = handPoseDetection.SupportedModels.MediaPipeHands;
+      // const detectorConfig = {
+      //   runtime: "mediapipe",
+      //   solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/hands",
+      //   modelType: "full",
+      // };
+      // const detector = await handPoseDetection.createDetector(
+      //   model,
+      //   detectorConfig
+      // );
+
+      // const test = async () => {
+      //   canvasCtx.save();
+      //   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      //   // 기준점을 지정한 크기(x,y)만큼 평행이동함
+      //   canvasCtx.translate(canvasElement.width, 0);
+      //   // scale(x,y)
+      //   // x : 수평 방향의 배율. 음수 값은 수직 축에서 픽셀을 뒤집음
+      //   // y : 수직 방향의 배율. 음수 값은 가로 축에서 픽셀을 뒤집음
+      //   canvasCtx.scale(-1, 1);
+      //   canvasCtx.drawImage(
+      //     videoElement,
+      //     0,
+      //     0,
+      //     canvasElement.width,
+      //     canvasElement.height
+      //   );
+
+      //   const hands = await detector.estimateHands(videoElement);
+      //   console.log(hands[0]);
+
+      //   canvasCtx.restore();
+      // };
+      // setInterval(test, 16);
+
       const hands = new Hands({
         locateFile: (file) => {
           return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
@@ -327,7 +331,18 @@ export default {
         height: 720,
       });
 
-      return camera.start();
+      camera.start();
+
+      // async function handDetection() {
+      //   if (!videoElement) {
+      //     requestAnimationFrame(handDetection);
+      //   } else {
+      //     await hands.send({ image: videoElement });
+      //     requestAnimationFrame(handDetection);
+      //   }
+      // }
+
+      // handDetection();
     },
     fingersCount(results, canvasElement, canvasCtx, fStatus) {
       let rightHandLandmarks = {};
@@ -697,6 +712,8 @@ export default {
     ]
     */
         let landmarks = await model.estimateFaces(videoElement, false);
+
+        // console.log(landmarks);
         // canvasCtx.save();
         // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         // canvasCtx.translate(canvasElement.width, 0);
@@ -716,16 +733,16 @@ export default {
         //   });
         // }
 
-        // await this.postLandmarks(landmarks);
-        // await this.getLandmarks();
+        await this.postLandmarks(landmarks);
+        await this.getLandmarks();
 
         // canvasCtx.restore();
       };
 
-      return videoElement.addEventListener("loadeddata", async () => {
+      videoElement.addEventListener("loadeddata", async () => {
         const blazeface = require("@tensorflow-models/blazeface");
         model = await blazeface.load();
-        setInterval(detectFaces, 30);
+        setInterval(detectFaces, 16);
       });
     },
     postLandmarks(landmarks) {
@@ -737,28 +754,31 @@ export default {
     },
     getLandmarks() {
       this.socket.on("othersFaceLandmarks", (data) => {
-        this.othersLandmarks[data.number] = data.landmarks;
+        console.log(data);
+        this.testLandmark[data.id] = data.landmarks;
+        console.log(this.testLandmark);
       });
     },
-    faceMemo(i) {
-      // console.log(`faceMemo : ${i - 1}`);
-      const videoElement = document.getElementById(`usercam${i.id}`);
+    faceMemo(data) {
+      const id = data.id;
+      const videoElement = document.getElementById(`usercam${id}`);
       const canvasElement = document.getElementsByClassName(
-        `output_canvas${i.id}`
+        `output_canvas${id}`
       )[0];
       const canvasCtx = canvasElement.getContext("2d");
 
       videoElement.style.display = "none";
 
-      const detectFace = () => {
+      this.testImage[id] = {
+        img: null,
+        imgSrc: null,
+        imgWidth: null,
+        imgHeight: null,
+      };
+
+      const detectFace = async () => {
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        // 기준점을 지정한 크기(x,y)만큼 평행이동함
-        canvasCtx.translate(canvasElement.width, 0);
-        // scale(x,y)
-        // x : 수평 방향의 배율. 음수 값은 수직 축에서 픽셀을 뒤집음
-        // y : 수직 방향의 배율. 음수 값은 가로 축에서 픽셀을 뒤집음
-        canvasCtx.scale(-1, 1);
         canvasCtx.drawImage(
           videoElement,
           0,
@@ -767,21 +787,23 @@ export default {
           canvasElement.height
         );
 
-        // 받아온 자신의 랜드마크를 변수에 저장
-        const landmarks = this.othersLandmarks[i + 1];
+        // 여기가 문제야?
+        const landmarks = this.testLandmark[id];
 
-        // 잘 받아왔는지 확인용 랜드마크 위치에 그림 그리기
-        // if (landmarks) {
-        //   landmarks.landmarks.forEach((landmark) => {
-        //     canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
-        //   });
-        // }
+        // 랜드마크로 얼굴 그리기
+        if (landmarks)
+          this.testLandmark[id].landmarks.forEach((landmark) => {
+            canvasCtx.fillRect(landmark[0], landmark[1], 10, 10);
+          });
 
-        this.img[i] = new Image();
-        if (this.imgSrc[i]) this.img[i].src = this.imgSrc[i];
-        let img = this.img[i];
-        let imgWidth = this.imgWidth[i];
-        let imgHeight = this.imgHeight[i];
+        // 이미지;
+        this.testImage[id].img = new Image();
+        if (this.testImage[id].imgSrc != null)
+          this.testImage[id].img.src = this.testImage[id].imgSrc;
+
+        let img = this.testImage[id].img;
+        let imgWidth = this.testImage[id].imgWidth;
+        let imgHeight = this.testImage[id].imgHeight;
 
         if (!landmarks) {
           const canvasWidth = canvasElement.width / 2;
@@ -827,21 +849,11 @@ export default {
               canvasHeight
             );
           }
-
-          // 랜드마크로 얼굴 그리기
-          // for (let j = 0; j < landmarks.landmarks.length; j++) {
-          //   canvasCtx.fillRect(
-          //     landmarks.landmarks[j][0],
-          //     landmarks.landmarks[j][1],
-          //     5,
-          //     5
-          //   );
-          // }
         }
 
         canvasCtx.restore();
       };
-      setInterval(detectFace, 10);
+      setInterval(detectFace, 16);
     },
     fingersResults() {
       if (!this.fingers) this.fStatus = true;
@@ -861,39 +873,42 @@ export default {
         this.vStatus = false;
       }
     },
-    memoJob(job, index) {
+    memoJob(job, id) {
       switch (job) {
         case "citizen":
-          this.imgSrc[index - 1] = "";
-          this.imgWidth[index - 1] = 0;
-          this.imgHeight[index - 1] = 0;
+          this.testImage[id] = {
+            imgSrc: "",
+            imgWidth: 0,
+            imgHeight: 0,
+          };
           break;
         case "police":
-          this.imgSrc[index - 1] = require("../assets/image/police_hat.png");
-          this.imgWidth[index - 1] = 600;
-          this.imgHeight[index - 1] = 451;
+          this.testImage[id] = {
+            imgSrc: require("../assets/image/police_hat.png"),
+            imgWidth: 600,
+            imgHeight: 451,
+          };
           break;
         case "doctor":
-          this.imgSrc[index - 1] = require("../assets/image/doctor_hat.png");
-          this.imgWidth[index - 1] = 1000;
-          this.imgHeight[index - 1] = 630;
-          break;
-        case "soldier":
-          this.imgSrc[
-            index - 1
-          ] = require("../assets/image/military_helmet.png");
-          this.imgWidth[index - 1] = 246;
-          this.imgHeight[index - 1] = 250;
+          this.testImage[id] = {
+            imgSrc: require("../assets/image/doctor_hat.png"),
+            imgWidth: 1000,
+            imgHeight: 630,
+          };
           break;
         case "mafia":
-          this.imgSrc[index - 1] = require("../assets/image/mafia_hat.png");
-          this.imgWidth[index - 1] = 1125;
-          this.imgHeight[index - 1] = 701;
+          this.testImage[id] = {
+            imgSrc: require("../assets/image/mafia_hat.png"),
+            imgWidth: 1125,
+            imgHeight: 701,
+          };
           break;
         case "none":
-          this.imgSrc[index - 1] = "";
-          this.imgWidth[index - 1] = 0;
-          this.imgHeight[index - 1] = 0;
+          this.testImage[id] = {
+            imgSrc: "",
+            imgWidth: 0,
+            imgHeight: 0,
+          };
           break;
       }
     },

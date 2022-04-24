@@ -57,7 +57,7 @@
           }}
         </div>
       </div> -->
-      <div class="videobox" v-for="s in roomMembers" :key="s.id">
+      <div class="videobox" v-for="(s, n) in roomMembers" :key="s.id">
         <div v-if="s.stream">
           <video
             v-if="s.nickname !== myInfo.profile.nickname"
@@ -66,7 +66,7 @@
             :src-object.prop.camel="s.stream"
             autoplay
           >
-            {{ n }}
+            {{ s.id }}
           </video>
           <video
             v-else
@@ -78,8 +78,9 @@
           ></video>
           <canvas
             :class="['aspect-video output_canvas' + s.id]"
-            width="1280"
-            height="720"
+            :id="['output_canvas' + n]"
+            width="640"
+            height="360"
           ></canvas>
           <div :class="['userInfo' + s.id]">
             {{
@@ -174,7 +175,9 @@ export default {
       transports: ["websocket"],
     });
     this.gameSocketSet();
-    // this.socket.emit('game:join', {roomid})
+    let roomId = parseInt(this.$route.params.room);
+
+    this.socket.emit('game:join', {roomId})
 
   },
   created() {
@@ -188,7 +191,7 @@ export default {
       this.flowMessage = "잠시 후 게임을 시작합니다.";
       this.socket.emit('gamejoin')
       this.socket.on('gamejoin', (data)=> {
-        console.log(data.user);
+        console.log(data);
         this.mySocketId = data.user
         console.log(this.mySocketId)
       })
@@ -212,11 +215,12 @@ export default {
       this.flowMessage = '직업을 나누고 있습니다...'
       setTimeout(() => {
         this.socket.emit("grantJob")
-        this.socket.on('grantJob2', (data, data2) => {
+        this.socket.on('grantJob', (data, data2) => {
           console.log(data)
           console.log(data2)
           this.userSocketInfo = data2
-          console.log(this.userSocketInfo)
+          // this.myJob = data.jobs.job
+          // console.log(this.myJob)
           for(let i = 0 ; i < this.userSocketInfo.length; i++) {
             if (this.mySocketId == this.userSocketInfo[i]) {
               this.myNum = i+1
@@ -228,8 +232,7 @@ export default {
               this.myJob = data.jobs[i].job
             }
           }
-          console.log(this.myJob);
-          // console.log(data.jobs[this.myNum].job)
+          // console.log(this.myJob);
           // this.myJob = data.jobs[this.myNum].job
           // console.log(this.roomJob);
           this.flowMessage = '당신은 ' + this.myJob + '입니다'
