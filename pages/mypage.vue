@@ -5,15 +5,17 @@
         <div class="myProfile">
           <p class="mypageText">MyPage</p>
           <form v-on:submit.prevent="submitForm" class="mypageForm">
+
             <div class="mypageInput">
+              <img v-if="this.profile.image" v-bind:src="this.profile.image.location" class="proimge">
+              <img v-else src="@/assets/pageimg/test.png" class="proimge" />
               <p>이미지 : <input
               class="imgInput"
               type="file"
               id="myFile"
               v-on:change="fileSlc">
               </p>
-              <img v-bind:src="this.profile.image">
-              <p>{{this.profile.image}}</p>
+              <button @click="detimg">이미지 삭제</button>
             </div>
             <div class="mypageInput">
               <p class="p1">닉네임 : <input type="text" name="user_name"
@@ -42,8 +44,8 @@
 <script>
 import Footer from '../components/footer.vue';
 import Header from '../components/header.vue';
-import { makeProfile,editProfile,withdrawUser,storeProfileImage } from '@/api/mafiaAPI';
-
+import { makeProfile,editProfile,withdrawUser,storeProfileImage,destroyProfileImage } from '@/api/mafiaAPI';
+import { copyObj } from '@/common/CopyObj';
 export default {
   components: { Header, Footer },
   name: "CapstoneMypage",
@@ -65,41 +67,47 @@ export default {
     },
 
   methods: {
-     submitForm(){
-       if(!this.myInfo?.profile){
-        makeProfile(this.profile)
-          .then((res)=>{
-            })
-          .catch((err)=>{
-            console.log(error)
-            })
-       }else{
-          editProfile(this.profile)
-          .then((res)=>{
-             console.log(this.profile)
+    detimg(){
+      this.profile.image = null;
+      // destroyProfileImage()
+      // this.$store.dispatch('fetchMyInfo')
+    },
+    submitForm(){
+      if(!this.myInfo?.profile){
+      makeProfile(this.profile)
+        .then((res)=>{
           })
-          .catch((err)=>{
-            console.log(error)
+        .catch((err)=>{
+          console.log(error)
           })
-       }
-     },
-    fileSlc(){
-         let ete = document.getElementById('myFile').files[0];
-         console.log(ete)
+      }else{
+        editProfile(this.profile)
+        .then((res)=>{
+          //  console.log(this.profile)
+        })
+        .catch((err)=>{
+          console.log(error)
+        })
+      }
+    },
 
-         storeProfileImage(ete)
-          .then((res)=>{
-            console.log(res)
-             this.profile.image = res.data
-          })
-          .catch((err)=>{
-            console.log(error)
-          })
+  fileSlc(){
+        let ete = document.getElementById('myFile').files[0];
+        //  console.log(ete)
 
-     },
-    endbtn(){
-      withdrawUser()
-    }
+        storeProfileImage(ete)
+        .then((res)=>{
+          // console.log(res)
+          this.profile.image = res.data.data
+        })
+        .catch((err)=>{
+          console.log(error)
+        })
+    },
+
+  endbtn(){
+    withdrawUser()
+  }
   },
 
   async mounted(){
@@ -110,8 +118,7 @@ export default {
     }
 
     if(this.myInfo.profile){
-     this.profile.nickname =  this.myInfo.profile.nickname;
-     this.profile.selfIntroduction =  this.myInfo.profile.selfIntroduction;
+     this.profile = copyObj(this.myInfo.profile);
     }
 
   },

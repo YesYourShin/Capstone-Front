@@ -124,9 +124,9 @@ export const deleteFriend = (userId) => {
 };
 
 // Posts
-export const getPosts = ({ category, page }) => {
+export const getPosts = ({ category, page, item=10 }) => {
   // 게시물들 불러오기
-  return instance.get(`/posts?category=${category}&page=${page}`);
+  return instance.get(`/posts?category=${category}&page=${page}&item=${item}`);
 };
 
 export const detailPost = (postId) => {
