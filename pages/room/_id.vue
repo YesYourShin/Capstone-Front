@@ -45,8 +45,16 @@ export default {
   },
   async asyncData({ params }) {
     const roomInfo = await getRoom(params.id);
+    console.log('roomId : room ',params)
     return { roomInfo: roomInfo.data.data };
   },
+
+  async fetch({store, params}){
+    const roomId = params.id
+    console.log('this is fetch', roomId)
+    store.commit('roomId/setRoomId', roomId)
+    console.log(store.state.roomId)
+  }
 };
 </script>
 <style lang="scss">

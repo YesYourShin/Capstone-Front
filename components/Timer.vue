@@ -7,8 +7,8 @@
        {{ timerMinutes }}:{{ timerSeconds }}
        </div>
       <div class="button-toggle">
-        <button @click="gameStart" v-show="newGame">시작</button>
-        <button @click="skipEvent" v-show="skipThisEvent">스킵</button>
+        <!-- <button @click="gameStart" v-show="newGame">시작</button> -->
+        <!-- <button @click="skipEvent" v-show="skipThisEvent">스킵</button> -->
       </div>
     </div>
   </div>

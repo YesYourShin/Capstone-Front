@@ -539,7 +539,7 @@ export default {
                           videoRecv: false,
                           audioSend: true,
                           videoSend: true,
-                          video: "stdres-16:9",
+                          video: "hires-16:9",
                         },
 
                         success: function (jsep) {

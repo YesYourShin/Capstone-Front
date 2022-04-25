@@ -15,7 +15,7 @@
       v-on:timeoutVote="finishVote"
       ref="timer"
       class="timerbox"
-    ></Timer>
+    >{{this.counter}}</Timer>
 
     <!-- <div class="itemBox">
         <div class="settingbox">
@@ -129,6 +129,11 @@ export default {
     roomMembers() {
       return this.$store.state.stream.roomMembers;
     },
+    roomId(){
+      const value = this.$store.state.roomId
+      console.log('this is nuxt vue', value)
+      return value;
+    }
   },
   data() {
     return {
@@ -166,6 +171,7 @@ export default {
       mySocketId: '',
       userSocketInfo: [],
       myVote: 0,
+      counter: 60,
     };
   },
   mounted() {
@@ -175,9 +181,6 @@ export default {
       transports: ["websocket"],
     });
     this.gameSocketSet();
-    let roomId = parseInt(this.$route.params.room);
-
-    this.socket.emit('game:join', {roomId})
 
   },
   created() {
@@ -188,13 +191,18 @@ export default {
     },
     // 게임에 입장하는 즉시 실행되며, 유저의 소켓 정보 받아옴
     gameSocketSet() {
+      const roomId = this.$store.state.roomId.roomId
+      console.log('현재 방 번호', roomId)
+      this.socket.emit('game:join', {roomId})
       this.flowMessage = "잠시 후 게임을 시작합니다.";
-      this.socket.emit('gamejoin')
-      this.socket.on('gamejoin', (data)=> {
-        console.log(data);
-        this.mySocketId = data.user
-        console.log(this.mySocketId)
-      })
+      // this.socket.emit('gamejoin')
+      // this.socket.on('gamejoin', (data)=> {
+      //   console.log(data);
+        // this.mySocketId = data.user
+        // console.log(this.mySocketId)
+      // })
+      // this.socket.on()
+
       // 입장 5초 후에 게임을 시작한다.
       setTimeout(()=> {
         this.gameStart()
@@ -214,86 +222,106 @@ export default {
     grantPlayerJob() {
       this.flowMessage = '직업을 나누고 있습니다...'
       setTimeout(() => {
-        this.socket.emit("grantJob")
-        this.socket.on('grantJob', (data, data2) => {
-          console.log(data)
-          console.log(data2)
-          this.userSocketInfo = data2
+        this.morningEvent();
+      },3000)
+      // setTimeout(() => {
+      //   this.socket.emit("grantJob")
+      //   this.socket.on('grantJob', (data) => {
+      //     console.log(data)
+          // console.log(data2)
+          // this.userSocketInfo = data2
           // this.myJob = data.jobs.job
           // console.log(this.myJob)
-          for(let i = 0 ; i < this.userSocketInfo.length; i++) {
-            if (this.mySocketId == this.userSocketInfo[i]) {
-              this.myNum = i+1
-            }
-          }
-          console.log(this.myNum);
-          for(let i = 0 ; i < this.userSocketInfo.length; i++) {
-            if (i == this.myNum-1) {
-              this.myJob = data.jobs[i].job
-            }
-          }
+          // for(let i = 0 ; i < this.userSocketInfo.length; i++) {
+          //   if (this.mySocketId == this.userSocketInfo[i]) {
+          //     this.myNum = i+1
+          //   }
+          // }
+          // console.log(this.myNum);
+          // for(let i = 0 ; i < this.userSocketInfo.length; i++) {
+          //   if (i == this.myNum-1) {
+          //     this.myJob = data.jobs[i].job
+          //   }
+          // }
           // console.log(this.myJob);
           // this.myJob = data.jobs[this.myNum].job
           // console.log(this.roomJob);
-          this.flowMessage = '당신은 ' + this.myJob + '입니다'
-          setTimeout(() => {
-            if (this.myJob == 'MAFIA') {
-              this.flowMessage = '시민들에게 들키지 않고 다른 마피아와 힘을 합쳐 시민을 제거하면 됩니다.'
-            } else if (this.myJob == 'DOCTOR') {
-              this.flowMessage == '당신은 매일 밤마다 1명의 유저를 선택하여 마피아의 공격으로부터 보호할 수 있습니다. 단, 자신은 보호할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-            } else if (this.myJob == 'POLICE') {
-              this.flowMessage == '당신은 매일 밤마다 1명의 유저를 선택하여 해당 유저의 직업을 알 수 있습니다. 단, 자신은 선택할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-            } else {
-              this.flowMessage == '당신은 다른 시민들과 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-            }
-            setTimeout(() => {
-              this.morningEvent();
-            },3000)
-          },3000)
-        })
+          // this.flowMessage = '당신은 ' + this.myJob + '입니다'
+          // setTimeout(() => {
+          //   if (this.myJob == 'MAFIA') {
+          //     this.flowMessage = '시민들에게 들키지 않고 다른 마피아와 힘을 합쳐 시민을 제거하면 됩니다.'
+          //   } else if (this.myJob == 'DOCTOR') {
+          //     this.flowMessage = '당신은 매일 밤마다 1명의 유저를 선택하여 마피아의 공격으로부터 보호할 수 있습니다. 단, 자신은 보호할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+          //   } else if (this.myJob == 'POLICE') {
+          //     this.flowMessage = '당신은 매일 밤마다 1명의 유저를 선택하여 해당 유저의 직업을 알 수 있습니다. 단, 자신은 선택할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+          //   } else {
+          //     this.flowMessage = '당신은 다른 시민들과 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+          //   }
+          //   setTimeout(() => {
+          //     this.morningEvent();
+          //   },3000)
+          // },3000)
+      //   })
 
-      }, 3000)
+      // }, 3000)
     },
     morningEvent() {
       this.flowMessage = '낮이 되었습니다.'
+      const roomId = this.$store.state.roomId.roomId
+      console.log(this.roomId)
       console.log('타이머 실행')
-      // this.$refs.timer.morningEvent()
-      setTimeout(()=> {
+      this.socket.emit('game:timer', this.roomId)
+      while(this.counter == 0) {
+        this.socket.on('game:timer', data)
         this.startVote();
-      },3000)
-      //
-
+      }
+      // setTimeout(()=> {
+      //   this.startVote();
+      // },3000)
     },
     startVote() {
       this.flowMessage =
         "해가 저물어갑니다. 밤이 되기 전, 마피아로 의심되는 유저를 지목합니다";
       // this.$refs.timer.startVote();
       //여기서 유저 지목 값 받아올 수 있어야 함.
-      this.myVote = Math.floor(Math.random() * 5);
+      this.myVote = 1;
       console.log(this.myVote);
       let voteNum = 0;
       setTimeout(()=> {
         this.socket.emit('finishVote', {
           voteNum : this.myVote,
         })
+        // this.finishVote();
+        //         this.socket.on('finishVote', (data) => {
+        //   console.log(data)
+        // })
         this.finishVote();
       },3000)
     },
-
     finishVote() {
       // console.log('adf')
       this.flowMessage =
-        "투표 결과를 발표를 합니다.";
+        "투표 결과를 발표를 합니다";
       setTimeout(()=> {
         this.socket.on('finishVote', (data) => {
           console.log(data)
+          for(let i = 0; i < data.length; i++) {
+            if (data.voteSum[i]>this.electedPlayer) {
+              this.electedPlayer = data.voteSum[i]
+              this.electedPlayersNum = 0
+            } else if (data.voteSum[i] == this.electedPlayer) {
+              this.electedPlayer = 0
+              this.electedPlayersNum++
+            }
+          }
+          console.log(this.electedPlayer)
         })
         this.finishPunishmentVote();
       },3000)
 
     },
     finishPunishmentVote() {
-      console.log('코코마데')
+      console.log('여기까지 개발')
     },
     nightSkillEvent() {
       // this.$refs.billboard.finishAllVote();
@@ -377,7 +405,12 @@ export default {
       this.flowMessage =
         "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
     },
-  }
+  },
+  // async asyncData({ params }) {
+  //   const roomInfo = await getRoom(params.id);
+  //   console.log('roomId : room ',params)
+  //   return { roomInfo: roomInfo.data.data };
+  // },
 };
 </script>
 
