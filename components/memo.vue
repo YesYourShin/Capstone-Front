@@ -190,24 +190,24 @@ export default {
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
 
-    const main = async () => {
-      // 소켓 연결
-    this.socket = this.$nuxtSocket({
-      channel: "/game",
-      withCredentials: true,
-      transports: ["websocket"],
-    });
-      // 자기 비디오랑 캔버스
-      this.myVideo = document.getElementById(
-        `usercam${this.myInfo.profile.id}`
-      );
-      this.myCanvas = document.getElementsByClassName(
-        `output_canvas${this.myInfo.profile.id}`
-      )[0];
-      this.myCtx = this.myCanvas.getContext("2d");
+    // const main = async () => {
+    //   // 소켓 연결
+    // this.socket = this.$nuxtSocket({
+    //   channel: "/game",
+    //   withCredentials: true,
+    //   transports: ["websocket"],
+    // });
+    //   // 자기 비디오랑 캔버스
+    //   this.myVideo = document.getElementById(
+    //     `usercam${this.myInfo.profile.id}`
+    //   );
+    //   this.myCanvas = document.getElementsByClassName(
+    //     `output_canvas${this.myInfo.profile.id}`
+    //   )[0];
+    //   this.myCtx = this.myCanvas.getContext("2d");
 
-      await this.handCognition();
-      await this.myFace();
+    //   await this.handCognition();
+    //   await this.myFace();
 
     //   // 타인의 스트림만큼 캔버스에 메모 그리기
       // for (let data of this.roomMembers) {
@@ -215,8 +215,8 @@ export default {
       //     await this.faceMemo(data);
       //   }
       // }
-    };
-    main();
+    // };
+    // main();
   },
   // 해야할일, 투표
   methods: {

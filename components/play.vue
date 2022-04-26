@@ -15,7 +15,7 @@
       v-on:timeoutVote="finishVote"
       ref="timer"
       class="timerbox"
-    >{{this.counter}}</Timer>
+    >{{counter}}</Timer>
 
     <!-- <div class="itemBox">
         <div class="settingbox">
@@ -107,6 +107,7 @@ import Billboard from "@/components/gameFlow_elements/billboard.vue";
 // import StartAndRule from "@/components/gameFlow/startAndRule.vue";
 import SideBar from "@/components/lobby_elements/sideBar.vue";
 import Memo from "@/components/memo.vue";
+import dayjs from 'dayjs';
 // import io from "socket.io-client";
 export default {
   name: "App",
@@ -171,7 +172,8 @@ export default {
       mySocketId: '',
       userSocketInfo: [],
       myVote: 0,
-      flag: false
+      flag: false,
+      counter: 60
     };
   },
   mounted() {
@@ -196,11 +198,11 @@ export default {
       this.socket.emit('game:join', {roomId})
       this.flowMessage = "잠시 후 게임을 시작합니다.";
       // this.socket.emit('gamejoin')
-      // this.socket.on('gamejoin', (data)=> {
-      //   console.log(data);
-      //   // this.mySocketId = data.user
-      //   // console.log(this.mySocketId)
-      // })
+      this.socket.on('game:join', (data)=> {
+        console.log(data);
+        // this.mySocketId = data.user
+        // console.log(this.mySocketId)
+      })
       // this.socket.on()
 
       // 입장 5초 후에 게임을 시작한다.
@@ -276,19 +278,23 @@ export default {
       this.flowMessage = '낮이 되었습니다.'
       this.flag = !this.flag
       const roomId = this.$store.state.roomId.roomId
+      const dayjs = require("dayjs");
       console.log(this.roomId)
       console.log('타이머 실행')
-      this.socket.emit('game:timer', this.roomId)
+      this.socket.emit('game:timer')
       // while(this.counter == 0) {
       //   this.socket.on('game:timer', data)
       //   console.log(data)
       //   this.startVote();
       // }
-      setTimeout(()=> {
-        this.socket.on('game:timer', data)
-        console.log(data)
-        this.startVote();
-      },3000)
+      //   this.socket.on('game:timer', data => {
+      //     console.log(data)
+      // },3000)
+            this.socket.on('game:timer', (data)=> {
+        console.log(data);
+        // this.mySocketId = data.user
+        // console.log(this.mySocketId)
+      })
 
     },
     startVote() {
