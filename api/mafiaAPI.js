@@ -228,6 +228,21 @@ export const GameRoomEvent = {
   READY: 'room:ready',
   UNREADY: 'room:unready',
 };
+
+export const GameEvent = {
+  Start: 'game:start',
+  Job: 'game:job',
+  Punish: 'game:punish',
+  FinshP: 'game:finishPunishment',
+  Vote: 'game:vote',
+  FinshV: 'game:finishVote',
+  Day: 'game:day',
+  Police: 'game:police',
+  Doctor: 'game:doctor',
+  Mafia: 'game:mafia',
+  Timer: 'game:timer',
+};
+
 // Default
 // axios.default.paramsSerializer = params => {
 //   return qs.stringify(params);

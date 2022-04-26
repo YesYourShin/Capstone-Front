@@ -108,6 +108,7 @@ import Billboard from "@/components/gameFlow_elements/billboard.vue";
 import SideBar from "@/components/lobby_elements/sideBar.vue";
 import Memo from "@/components/memo.vue";
 import dayjs from 'dayjs';
+import { GameEvent } from "@/api/mafiaAPI";
 // import io from "socket.io-client";
 export default {
   name: "App",
@@ -208,35 +209,43 @@ export default {
       // 입장 5초 후에 게임을 시작한다.
       setTimeout(()=> {
         this.gameStart()
-      }, 5000)
+      }, 1000)
     },
     gameStart() {
       this.flowMessage = "마피아 게임 시작";
+      this.socket.emit(GameEvent.Start)
+      this.socket.on(GameEvent.Start, (data)=> {
+        console.log(data)
+      })
       setTimeout(()=> {
-      //   this.socket.emit('gameMessage')
-      //   this.socket.on('gameMessage', (data)=> {
-      //     console.log(data)
-      //   })
+        // this.socket.emit('gameMessage')
+        // this.socket.on('gameMessage', (data)=> {
+        //   console.log(data)
+        // })
         this.grantPlayerJob();
-      },3000)
+      },1000)
     },
 
     grantPlayerJob() {
       this.flowMessage = '직업을 나누고 있습니다...'
-      setTimeout(() => {
-        this.flowMessage = '당신은 테스트입니다.'
-        setTimeout(()=> {
-          this.flowMessage = '빨리 만드시기 바랍니다.'
-          setTimeout(()=> {
-        this.morningEvent();
-          }, 3000)
-        }, 3000)
-      },3000)
+      // setTimeout(() => {
+      //   // this.flowMessage = '당신은 테스트입니다.'
+      //   // setTimeout(()=> {
+      //   //   this.flowMessage = '빨리 만드시기 바랍니다.'
+      //   //   setTimeout(()=> {
+      //   // this.morningEvent();
+      //   //   }, 1000)
+      //   // }, 1000)
+      // },1000)
+        this.socket.emit(GameEvent.Job)
+        this.socket.on(GameEvent.Job, (data) => {
+          console.log(data)
+        })
 
       // setTimeout(() => {
-      //   this.socket.emit("grantJob")
-      //   this.socket.on('grantJob', (data) => {
-      //     console.log(data)
+        // this.socket.emit("grantJob")
+        // this.socket.on('grantJob', (data) => {
+        //   console.log(data)
           // console.log(data2)
           // this.userSocketInfo = data2
           // this.myJob = data.jobs.job
@@ -244,7 +253,7 @@ export default {
           // for(let i = 0 ; i < this.userSocketInfo.length; i++) {
           //   if (this.mySocketId == this.userSocketInfo[i]) {
           //     this.myNum = i+1
-          //   }
+            // }
           // }
           // console.log(this.myNum);
           // for(let i = 0 ; i < this.userSocketInfo.length; i++) {
@@ -280,8 +289,8 @@ export default {
       const roomId = this.$store.state.roomId.roomId
       const dayjs = require("dayjs");
       console.log(this.roomId)
-      console.log('타이머 실행')
-      this.socket.emit('game:timer')
+
+      this.socket.emit(GameEvent.Timer)
       // while(this.counter == 0) {
       //   this.socket.on('game:timer', data)
       //   console.log(data)
@@ -290,12 +299,13 @@ export default {
       //   this.socket.on('game:timer', data => {
       //     console.log(data)
       // },3000)
-            this.socket.on('game:timer', (data)=> {
+      this.socket.on(GameEvent.Timer, (data)=> {
         console.log(data);
         // this.mySocketId = data.user
         // console.log(this.mySocketId)
       })
-
+      console.log('타이머 실행')
+      this.startVote();
     },
     startVote() {
       this.flowMessage =
@@ -305,24 +315,25 @@ export default {
       // this.myVote = 1;
       // console.log(this.myVote);
       // let voteNum = 0;
-      setTimeout(()=> {
-      //   this.socket.emit('finishVote', {
-      //     voteNum : this.myVote,
-      //   })
+      // setTimeout(()=> {
+        this.socket.emit(GameEvent.Vote, {
+          // voteNum : this.myVote,
+        })
       //   // this.finishVote();
-      //   //         this.socket.on('finishVote', (data) => {
-      //   //   console.log(data)
-      //   // })
-        this.finishVote();
-      },3000)
-      // this.finishVote();
+
+        // this.finishVote();
+      // },3000)
+      this.finishVote();
     },
     finishVote() {
       // console.log('adf')
       this.flowMessage =
         "투표 결과를 발표를 합니다";
+        this.socket.on(GameEvent.FinshV, (data) => {
+          console.log(data)
+        })
         // this.finishPunishmentVote();
-      setTimeout(()=> {
+      // setTimeout(()=> {
       // //   this.socket.on('finishVote', (data) => {
       // //     console.log(data)
       // //     for(let i = 0; i < data.length; i++) {
@@ -336,15 +347,19 @@ export default {
       // //     }
       // //     console.log(this.electedPlayer)
       // //   })
-        this.finishPunishmentVote();
-      },3000)
+        this.PunishmentVote();
+      // },3000)
 
     },
-    finishPunishmentVote() {
+    PunishmentVote() {
       // console.log('여기까지 개발')
-      setTimeout(() => {
+      // setTimeout(() => {
+        this.socket.emit(GameEvent.Punish)
+        this.socket.on(GameEvent.FinshP, (data) => {
+          console.log(data)
+        })
         this.nightEvent();
-      },3000)
+      // },3000)
 
 
     },
@@ -352,13 +367,30 @@ export default {
     nightEvent() {
       this.flag = !this.flag
       this.flowMessage = '밤이 되었습니다.'
-      setTimeout(() => {
-        this.nightSkillEvent();
-      },3000)
+      if(this.myJob == 'MAFIA') {
+        this.socket.emit(GameEvent.Mafia)
+      } else if (this.myJob == 'DOCTOR') {
+        this.socket.emit(GameEvent.Doctor)
+      } else if (this.myJob == 'POLICE') {
+        this.socket.emit(GameEvent.Police)
+        this.socket.on(GameEvent.Police, (data)=> {
+          console.log(data)
+        })
+      } else {
+
+      }
+      this.socket.emit(GameEvent.Punish)
+      this.socket.on(GameEvent.FinshP, (data) => {
+        console.log(data)
+      })
+      // setTimeout(() => {
+        this.nightResult();
+      // },3000)
     },
-    nightSkillEvent() {
+    nightResult() {
       // this.$refs.billboard.finishAllVote();
       this.flowMessage = "능력 사용이 끝났습니다.";
+
       // this.killPlayer = prompt("마피아가 죽일 유저 선택!");
       // console.log(this.survivePlayer[this.killPlayer]);
       // console.log(this.killPlayer);
