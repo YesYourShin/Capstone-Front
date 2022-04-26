@@ -1,5 +1,5 @@
 <template>
-  <div class="gamebox">
+  <div :class="{'gamebox-first': this.flag, 'gamebox-second': !this.flag}" >
     <!-- <Billboard blilboard-vote="vote-result"/> -->
     <div class="chatbox">
       <button v-on:click="exitRoom">
@@ -171,7 +171,7 @@ export default {
       mySocketId: '',
       userSocketInfo: [],
       myVote: 0,
-      counter: 60,
+      flag: false
     };
   },
   mounted() {
@@ -198,8 +198,8 @@ export default {
       // this.socket.emit('gamejoin')
       // this.socket.on('gamejoin', (data)=> {
       //   console.log(data);
-        // this.mySocketId = data.user
-        // console.log(this.mySocketId)
+      //   // this.mySocketId = data.user
+      //   // console.log(this.mySocketId)
       // })
       // this.socket.on()
 
@@ -211,10 +211,10 @@ export default {
     gameStart() {
       this.flowMessage = "마피아 게임 시작";
       setTimeout(()=> {
-        this.socket.emit('gameMessage')
-        this.socket.on('gameMessage', (data)=> {
-          console.log(data)
-        })
+      //   this.socket.emit('gameMessage')
+      //   this.socket.on('gameMessage', (data)=> {
+      //     console.log(data)
+      //   })
         this.grantPlayerJob();
       },3000)
     },
@@ -222,8 +222,15 @@ export default {
     grantPlayerJob() {
       this.flowMessage = '직업을 나누고 있습니다...'
       setTimeout(() => {
+        this.flowMessage = '당신은 테스트입니다.'
+        setTimeout(()=> {
+          this.flowMessage = '빨리 만드시기 바랍니다.'
+          setTimeout(()=> {
         this.morningEvent();
+          }, 3000)
+        }, 3000)
       },3000)
+
       // setTimeout(() => {
       //   this.socket.emit("grantJob")
       //   this.socket.on('grantJob', (data) => {
@@ -267,123 +274,146 @@ export default {
     },
     morningEvent() {
       this.flowMessage = '낮이 되었습니다.'
+      this.flag = !this.flag
       const roomId = this.$store.state.roomId.roomId
       console.log(this.roomId)
       console.log('타이머 실행')
       this.socket.emit('game:timer', this.roomId)
-      while(this.counter == 0) {
-        this.socket.on('game:timer', data)
-        this.startVote();
-      }
-      // setTimeout(()=> {
+      // while(this.counter == 0) {
+      //   this.socket.on('game:timer', data)
+      //   console.log(data)
       //   this.startVote();
-      // },3000)
+      // }
+      setTimeout(()=> {
+        this.socket.on('game:timer', data)
+        console.log(data)
+        this.startVote();
+      },3000)
+
     },
     startVote() {
       this.flowMessage =
         "해가 저물어갑니다. 밤이 되기 전, 마피아로 의심되는 유저를 지목합니다";
       // this.$refs.timer.startVote();
       //여기서 유저 지목 값 받아올 수 있어야 함.
-      this.myVote = 1;
-      console.log(this.myVote);
-      let voteNum = 0;
+      // this.myVote = 1;
+      // console.log(this.myVote);
+      // let voteNum = 0;
       setTimeout(()=> {
-        this.socket.emit('finishVote', {
-          voteNum : this.myVote,
-        })
-        // this.finishVote();
-        //         this.socket.on('finishVote', (data) => {
-        //   console.log(data)
-        // })
+      //   this.socket.emit('finishVote', {
+      //     voteNum : this.myVote,
+      //   })
+      //   // this.finishVote();
+      //   //         this.socket.on('finishVote', (data) => {
+      //   //   console.log(data)
+      //   // })
         this.finishVote();
       },3000)
+      // this.finishVote();
     },
     finishVote() {
       // console.log('adf')
       this.flowMessage =
         "투표 결과를 발표를 합니다";
+        // this.finishPunishmentVote();
       setTimeout(()=> {
-        this.socket.on('finishVote', (data) => {
-          console.log(data)
-          for(let i = 0; i < data.length; i++) {
-            if (data.voteSum[i]>this.electedPlayer) {
-              this.electedPlayer = data.voteSum[i]
-              this.electedPlayersNum = 0
-            } else if (data.voteSum[i] == this.electedPlayer) {
-              this.electedPlayer = 0
-              this.electedPlayersNum++
-            }
-          }
-          console.log(this.electedPlayer)
-        })
+      // //   this.socket.on('finishVote', (data) => {
+      // //     console.log(data)
+      // //     for(let i = 0; i < data.length; i++) {
+      // //       if (data.voteSum[i]>this.electedPlayer) {
+      // //         this.electedPlayer = data.voteSum[i]
+      // //         this.electedPlayersNum = 0
+      // //       } else if (data.voteSum[i] == this.electedPlayer) {
+      // //         this.electedPlayer = 0
+      // //         this.electedPlayersNum++
+      // //       }
+      // //     }
+      // //     console.log(this.electedPlayer)
+      // //   })
         this.finishPunishmentVote();
       },3000)
 
     },
     finishPunishmentVote() {
-      console.log('여기까지 개발')
+      // console.log('여기까지 개발')
+      setTimeout(() => {
+        this.nightEvent();
+      },3000)
+
+
+    },
+
+    nightEvent() {
+      this.flag = !this.flag
+      this.flowMessage = '밤이 되었습니다.'
+      setTimeout(() => {
+        this.nightSkillEvent();
+      },3000)
     },
     nightSkillEvent() {
       // this.$refs.billboard.finishAllVote();
       this.flowMessage = "능력 사용이 끝났습니다.";
-      this.killPlayer = prompt("마피아가 죽일 유저 선택!");
-      console.log(this.survivePlayer[this.killPlayer]);
-      console.log(this.killPlayer);
-      for (let i = 0; i < 10; i++) {
-        if (this.playerJob[i] == "의사" && this.survivePlayer[i] == true) {
-          this.doctorSelected = prompt("의사가 살릴 유저 선택");
-        }
-      }
-      if (this.survivePlayer[this.killPlayer - 1] == false) {
-        this.killPlayer = prompt("죽일 유저 다시 선택");
-      } else {
-        if (
-          this.doctorSelected == this.killPlayer &&
-          this.killPlayer != this.survivePlayer[this.killPlayer - 1]
-        ) {
-          this.flowMessage =
-            "마피아가 " +
-            this.killPlayer +
-            "를 공격하였으나 의사의 도움으로 플레이어는 생존하였습니다.";
-          this.electedPlayersNum = 1;
-          this.electedPlayerVote = 0;
-          (this.electedPlayer = 0), // 지목된 플레이어
-            (this.electedPlayerVote = 0), // 지목된 플레이어가 받은 득표
-            (this.playerVote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); // 각 유저의 투표수
-          setTimeout(() => {
-            this.flowMessage = "아침이 되었습니다.";
-            this.$refs.timer.morningEvent();
-          }, 5000);
-        } else {
-          if (this.playerJob[this.killPlayer - 1] == "마피아") {
-            this.mafiaNum = this.mafiaNum - 1;
-          } else {
-            this.citizenNum = this.citizenNum - 1;
-          }
-          console.log("마피아는" + this.mafiaNum);
-          console.log("시민은" + this.citizenNum);
-          this.survivePlayer.splice(this.killPlayer - 1, 1, false);
-          console.log(this.survivePlayer);
-          this.electedPlayersNum = 1;
-          this.electedPlayerVote = 0;
-          (this.electedPlayer = 0), // 지목된 플레이어
-            (this.electedPlayerVote = 0), // 지목된 플레이어가 받은 득표
-            (this.playerVote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); // 각 유저의 투표수
+      // this.killPlayer = prompt("마피아가 죽일 유저 선택!");
+      // console.log(this.survivePlayer[this.killPlayer]);
+      // console.log(this.killPlayer);
+      // for (let i = 0; i < 10; i++) {
+      //   if (this.playerJob[i] == "의사" && this.survivePlayer[i] == true) {
+      //     this.doctorSelected = prompt("의사가 살릴 유저 선택");
+      //   }
+      // }
+      // if (this.survivePlayer[this.killPlayer - 1] == false) {
+      //   this.killPlayer = prompt("죽일 유저 다시 선택");
+      // } else {
+      //   if (
+      //     this.doctorSelected == this.killPlayer &&
+      //     this.killPlayer != this.survivePlayer[this.killPlayer - 1]
+      //   ) {
+      //     this.flowMessage =
+      //       "마피아가 " +
+      //       this.killPlayer +
+      //       "를 공격하였으나 의사의 도움으로 플레이어는 생존하였습니다.";
+      //     this.electedPlayersNum = 1;
+      //     this.electedPlayerVote = 0;
+      //     (this.electedPlayer = 0), // 지목된 플레이어
+      //       (this.electedPlayerVote = 0), // 지목된 플레이어가 받은 득표
+      //       (this.playerVote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); // 각 유저의 투표수
+      //     setTimeout(() => {
+      //       this.flowMessage = "아침이 되었습니다.";
+      //       this.$refs.timer.morningEvent();
+      //     }, 5000);
+      //   } else {
+      //     if (this.playerJob[this.killPlayer - 1] == "마피아") {
+      //       this.mafiaNum = this.mafiaNum - 1;
+      //     } else {
+      //       this.citizenNum = this.citizenNum - 1;
+      //     }
+      //     console.log("마피아는" + this.mafiaNum);
+      //     console.log("시민은" +this.citizenNum);
+      //     this.survivePlayer.splce(this.killPlayer - 1, 1, false);
+      //     console.log(this.surviePlayer);
+      //     this.electedPlayersNum= 1;
+      //     this.electedPlayerVote = 0;
+      //     (this.electedPlayer = 0), // 지목된 플레이어
+      //       (this.electedPlayerVote = 0), // 지목된 플레이어가 받은 득표
+      //       (this.playerVote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); // 각 유저의 투표수
 
-          if (
-            this.mafiaNum == 0 ||
-            this.citizenNum == 0 ||
-            this.mafiaNum >= this.citizenNum
-          ) {
-            this.victorySearch();
-          } else {
-            setTimeout(() => {
-              this.flowMessage = "아침이 되었습니다.";
-              this.$refs.timer.morningEvent();
-            }, 5000);
-            // 낮 이벤트 진행
-          }
-        }
+      //     if (
+      //       this.mafiaNum == 0 ||
+      //       this.citizenNum == 0 ||
+      //       this.mafiaNum >= this.citizenNum
+      //     ) {
+      //       this.victorySearch();
+      //     } else {
+      //       setTimeout(() => {
+      //         this.flowMessage = "아침이 되었습니다.";
+      //         this.$refs.timer.morningEvent();
+      //       }, 5000);
+      //       // 낮 이벤트 진행
+      //     }
+        // }
+      setTimeout(() => {
+        this.morningEvent();
+      },3000)
       }
     },
     victorySearch() {
@@ -405,7 +435,7 @@ export default {
       this.flowMessage =
         "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
     },
-  },
+
   // async asyncData({ params }) {
   //   const roomInfo = await getRoom(params.id);
   //   console.log('roomId : room ',params)
