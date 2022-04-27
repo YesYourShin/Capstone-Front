@@ -2,7 +2,12 @@
   <div class="fullProfile h-screen flex flex-col">
     <div class="profileBox">
       <div class="profile1">
-        <img src="@/assets/pageimg/test.jpg" class="profileImg" />
+        <img
+          v-if="this.myInfo.profile.image"
+          v-bind:src="this.myInfo.profile.image.location"
+          class="profileimg"
+        />
+        <img v-else src="@/assets/pageimg/test.png" class="profileimg" />
       </div>
 
       <div class="profile2" v-if="this.myInfo">

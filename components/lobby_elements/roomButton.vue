@@ -4,16 +4,10 @@
     @click="onClickRoomButton()"
   >
     <div
-      class="bg-yellow-700/90 h-9 flex justify-between items-center px-2 mb-2 rounded-md"
+      class="bg-yellow-200/90 h-9 flex justify-between items-center px-2 rounded-md"
     >
       <span class="font-bold">[No.{{ room.id }}] {{ room.description }}</span>
-      <span>{{ room.memberCount }}/{{ room.publishers }}</span>
-    </div>
-    <div
-      class="h-9 p-2 w-3/4 bg-yellow-200/90 rounded-md flex items-center justify-between"
-    >
-      <div></div>
-      <div class="">
+      <span>
         <svg
           v-if="room.isPrivate"
           xmlns="http://www.w3.org/2000/svg"
@@ -25,9 +19,9 @@
             fill-rule="evenodd"
             d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
             clip-rule="evenodd"
-          />
-        </svg>
-      </div>
+          /></svg
+        >{{ room.memberCount }}/{{ room.publishers }}</span
+      >
     </div>
   </div>
 </template>

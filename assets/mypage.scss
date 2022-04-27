@@ -23,7 +23,7 @@
       overflow: auto;
       width: 80%;
       max-width: 1500px;
-      height: 85%;
+      height: 90%;
       margin: auto;
       border: 4px solid white;
       background-color: rgba(68, 68, 68, 0.39);
@@ -41,7 +41,7 @@
       }
       .mypageForm{
         width: 100%;
-        height: 400px;
+        height: 600px;
         display: flex;
         flex-wrap: wrap;
         margin: auto;
@@ -50,6 +50,17 @@
           width: 100%;
           margin: 10px auto;
           font-size: 30px;
+
+          .proimge{
+            width: 200px;
+            height: 200px;
+            border-radius: 100px;
+            margin: auto;
+            margin-bottom: 20px;
+            border: 5px solid white;
+            background-color: white;
+          }
+
 
           .p1{
             text-align: center;
