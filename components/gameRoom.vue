@@ -2,10 +2,21 @@
   <div class="flex flex-col min-h-screen w-full">
     <div class="flex-grow">
       <div class="flex">
-        <div
-          class="bg-gradient-to-r via-gray-300 from-transparent flex justify-center items-center"
-        >
-          <p>{{ roomInfo.description }}</p>
+        <div class="bg-white rounded-md flex items-center justify-between px-2">
+          <div>
+            <p class="font-bold">
+              [No.{{ roomInfo.id }}] {{ roomInfo.description }}
+            </p>
+          </div>
+          <div>
+            <p class="font-bold">FAFIA - gjgjajaj.xyz</p>
+          </div>
+          <div>
+            <p class="font-bold">
+              {{ roomInfo.mode === "classic" ? "클래식 모드" : "확장 모드" }} |
+              {{ roomMembers.length }}/{{ roomInfo.publishers }}
+            </p>
+          </div>
         </div>
       </div>
       <div class="px-2 mt-10">
