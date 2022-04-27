@@ -5,11 +5,12 @@
     <div>
       <div v-show="timerStart" class="timerSet" >
             <div class="flex flex-wrap p-4 ">
-            <BaseProgress :percentage="contentProgress" class="mx-2 mb-2 h-8 text-center">{{ timerMinutes }}:{{ timerSeconds }}</BaseProgress>
+            <BaseProgress :percentage="contentProgress" class="mx-2 mb-2 h-5">
+             <span class="text-xs text-black w-full flex justify-end pr-2">{{totalSeconds}}</span>
+            </BaseProgress>
           </div>
-
+          {{ timerMinutes }}:{{ timerSeconds }}
        </div>
-
       <div class="button-toggle">
       </div>
     </div>
@@ -33,7 +34,19 @@ export default {
       timerStart: true,
       striped: true,
       progressStart: 0,
-      contentProgress: 0
+      contentProgress: 0,
+      colors: [
+        "gray",
+        "yellow",
+        "orange",
+        "red",
+        "green",
+        "teal",
+        "blue",
+        "indigo",
+        "purple",
+        "pink"
+      ],
     };
   },
   components: {
@@ -142,6 +155,5 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped="scoped">
-@import "~assets/timer.scss";
-</style>
+<style lang=""></style>
+
