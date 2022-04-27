@@ -1,6 +1,6 @@
 <template lang="">
-  <div class="flex flex-col min-h-screen w-full">
-    <div class="px-5 flex-grow">
+  <div class="flex flex-col h-screen w-full relative">
+    <div class="px-5">
       <div class="flex items-center py-2">
         <!--로비 위쪽 검색창 및 체크박스 등-->
 
@@ -19,16 +19,17 @@
         <leaveButton :pathToGo="'/'"></leaveButton>
         <!-- 나가기 버튼 -->
       </div>
-      <div class="grid grid-cols-2 gap-2">
-        <!--방 목록-->
-        <template v-for="room in rooms">
+      <!-- <div class="grid grid-cols-2 gap-2"> -->
+      <!--방 목록-->
+      <!-- <template v-for="room in rooms">
           <roomButton :room="room"></roomButton>
-        </template>
-      </div>
+        </template> -->
+      <!-- </div> -->
 
-      <pageNavigator></pageNavigator>
+      <!-- <pageNavigator></pageNavigator> -->
       <!-- 페이지네이션 (임시)-->
     </div>
+    <RoomTable :rooms="rooms"></RoomTable>
     <chatBox></chatBox>
   </div>
 </template>
@@ -40,6 +41,7 @@ import createRoomButton from "@/components/lobby_elements/createRoomButton.vue";
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import leaveButton from "@/components/lobby_elements/leaveButton.vue";
 import pageNavigator from "@/components/lobby_elements/pageNavigator.vue";
+import RoomTable from "@/components/lobby_elements/RoomTable.vue";
 // import videoComponent from '@/components/videoComponent.vue';
 import { getRooms } from "@/api/mafiaAPI";
 
@@ -52,6 +54,7 @@ export default {
     chatBox,
     leaveButton,
     pageNavigator,
+    RoomTable,
   },
   data() {
     return {

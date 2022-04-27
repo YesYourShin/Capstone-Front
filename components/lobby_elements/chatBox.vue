@@ -1,5 +1,5 @@
 <template>
-  <div class="chatBox">
+  <div class="chatBox w-full">
     <transition-group
       name="list"
       tag="div"

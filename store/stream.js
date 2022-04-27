@@ -3,7 +3,7 @@ import Vue from 'vue'
 export const state = () => ({
   joinedRoom: null,
   currentRoomInfo: null,
-  roomMembers: null,
+  roomMembers: [],
   publishStream: null,
   subscribedStreams: [],
   subscribedFeeds: [],
@@ -184,7 +184,7 @@ export const mutations = {
     }
   },
   addRoomMember(state, data) {
-    if (state.roomMembers === null) {
+    if (!state.roomMembers.length) {
       // data.stream = null;
       state.roomMembers = [data];
     } else {
@@ -192,7 +192,7 @@ export const mutations = {
     }
   },
   removeRoomMember(state, data) {
-    if (state.roomMembers === null) {
+    if (!state.roomMembers.length) {
       return;
     }
     for (let i = 0; i < state.roomMembers.length; i++) {
@@ -204,7 +204,7 @@ export const mutations = {
     }
   },
   destroyRoomMembers(state) {
-    state.roomMembers = null;
+    state.roomMembers = [];
   },
   readySubscriber(state, data) {
     for (let i=0; i<state.subscribedStreams.length; i++) {
