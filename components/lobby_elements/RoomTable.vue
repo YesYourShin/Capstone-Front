@@ -26,33 +26,33 @@
             >
               <div class="h-full bg-transparent">&nbsp</div>
               <div
-                class="px-6 py-3 text-sm uppercase font-semibold text-left text-black"
+                class="px-6 py-2 text-base uppercase font-semibold text-left text-black"
               >
                 No.
               </div>
             </div>
             <div
-              class="col-span-5 px-6 align-middle border border-solid py-3 text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="col-span-5 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
             >
               Room Name
             </div>
             <div
-              class="px-6 align-middle border border-solid py-3 text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
             >
               Mode
             </div>
             <div
-              class="px-6 align-middle border border-solid py-3 text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
             >
               Host
             </div>
             <div
-              class="col-span-2 px-6 align-middle border border-solid py-3 text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="col-span-2 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
             >
               Users
             </div>
             <div
-              class="col-span-2 px-6 align-middle border border-solid py-3 text-sm uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="col-span-2 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
             >
               Capacity
             </div>
@@ -116,7 +116,7 @@
                     <img
                       v-for="member in room.members"
                       :key="member.userId"
-                      :src="member.avatar"
+                      :src="member.image ? member.image.location : null"
                       :alt="member.nickname"
                       class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
                     />
