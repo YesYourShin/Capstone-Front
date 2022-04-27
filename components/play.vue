@@ -9,10 +9,10 @@
     <Billboard ref="billboard" />
     <Timer
       v-on:startThisGame="gameStart"
-      v-on:timeoutPunishmentVote="finishPunishmentVote"
-      v-on:nightSkillEvent="nightSkillEvent"
+      v-on:finishPunishmentVote="nightEvent"
+      v-on:nightFinishEvent="nightResult"
       v-on:startVote="startVote"
-      v-on:timeoutVote="finishVote"
+      v-on:finishVote="finishVote"
       ref="timer"
       class="timerbox"
     >{{counter}}</Timer>
@@ -112,6 +112,9 @@ import { GameEvent } from "@/api/mafiaAPI";
 // import io from "socket.io-client";
 export default {
   name: "App",
+  props: {
+    roomInfo: Object,
+  },
   components: {
     Timer,
     Billboard,
@@ -237,10 +240,10 @@ export default {
       //   //   }, 1000)
       //   // }, 1000)
       // },1000)
-        this.socket.emit(GameEvent.Job)
-        this.socket.on(GameEvent.Job, (data) => {
-          console.log(data)
-        })
+        // this.socket.emit(GameEvent.Job)
+        // this.socket.on(GameEvent.Job, (data) => {
+        //   console.log(data)
+        // })
 
       // setTimeout(() => {
         // this.socket.emit("grantJob")
@@ -275,9 +278,9 @@ export default {
           //   } else {
           //     this.flowMessage = '당신은 다른 시민들과 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
           //   }
-          //   setTimeout(() => {
-          //     this.morningEvent();
-          //   },3000)
+            setTimeout(() => {
+              this.morningEvent();
+            },3000)
           // },3000)
       //   })
 
@@ -291,6 +294,7 @@ export default {
       console.log(this.roomId)
 
       this.socket.emit(GameEvent.Timer)
+      this.$refs.timer.morningTimer();
       // while(this.counter == 0) {
       //   this.socket.on('game:timer', data)
       //   console.log(data)
@@ -305,33 +309,37 @@ export default {
         // console.log(this.mySocketId)
       })
       console.log('타이머 실행')
-      this.startVote();
+      // 타이머에서 다음 메서드를 실행하게 한다!
     },
     startVote() {
+      console.log('1')
       this.flowMessage =
         "해가 저물어갑니다. 밤이 되기 전, 마피아로 의심되는 유저를 지목합니다";
-      // this.$refs.timer.startVote();
+      setTimeout(()=> {
+        this.$refs.timer.voteTimer();
+      }, 3000)
+
       //여기서 유저 지목 값 받아올 수 있어야 함.
       // this.myVote = 1;
       // console.log(this.myVote);
       // let voteNum = 0;
       // setTimeout(()=> {
-        this.socket.emit(GameEvent.Vote, {
+        // this.socket.emit(GameEvent.Vote, {
           // voteNum : this.myVote,
-        })
+        // })
       //   // this.finishVote();
 
         // this.finishVote();
       // },3000)
-      this.finishVote();
+      // this.finishVote();
     },
     finishVote() {
-      // console.log('adf')
+      console.log('adf')
       this.flowMessage =
         "투표 결과를 발표를 합니다";
-        this.socket.on(GameEvent.FinshV, (data) => {
-          console.log(data)
-        })
+        // this.socket.on(GameEvent.FinshV, (data) => {
+        //   console.log(data)
+        // })
         // this.finishPunishmentVote();
       // setTimeout(()=> {
       // //   this.socket.on('finishVote', (data) => {
@@ -352,42 +360,53 @@ export default {
 
     },
     PunishmentVote() {
-      // console.log('여기까지 개발')
+      console.log('여기까지 개발')
+            this.flowMessage =
+        "지목된 유저의 사형 찬반투표를 진행합니다";
+      setTimeout(()=> {
+        this.$refs.timer.punishmentTimer();
+      }, 3000)
       // setTimeout(() => {
         this.socket.emit(GameEvent.Punish)
         this.socket.on(GameEvent.FinshP, (data) => {
           console.log(data)
         })
-        this.nightEvent();
+        // this.nightEvent();
       // },3000)
 
 
     },
 
     nightEvent() {
+      console.log('2')
       this.flag = !this.flag
       this.flowMessage = '밤이 되었습니다.'
-      if(this.myJob == 'MAFIA') {
-        this.socket.emit(GameEvent.Mafia)
-      } else if (this.myJob == 'DOCTOR') {
-        this.socket.emit(GameEvent.Doctor)
-      } else if (this.myJob == 'POLICE') {
-        this.socket.emit(GameEvent.Police)
-        this.socket.on(GameEvent.Police, (data)=> {
+      setTimeout(()=> {
+        this.$refs.timer.nightEvent();
+          if(this.myJob == 'MAFIA') {
+          this.socket.emit(GameEvent.Mafia)
+        } else if (this.myJob == 'DOCTOR') {
+          this.socket.emit(GameEvent.Doctor)
+        } else if (this.myJob == 'POLICE') {
+          this.socket.emit(GameEvent.Police)
+          this.socket.on(GameEvent.Police, (data)=> {
+            console.log(data)
+          })
+        } else {
+
+        }
+        this.socket.emit(GameEvent.Punish)
+        this.socket.on(GameEvent.FinshP, (data) => {
           console.log(data)
         })
-      } else {
+      }, 3000)
 
-      }
-      this.socket.emit(GameEvent.Punish)
-      this.socket.on(GameEvent.FinshP, (data) => {
-        console.log(data)
-      })
       // setTimeout(() => {
-        this.nightResult();
+        // this.nightResult();
       // },3000)
     },
     nightResult() {
+      console.log('3')
       // this.$refs.billboard.finishAllVote();
       this.flowMessage = "능력 사용이 끝났습니다.";
 

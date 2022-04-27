@@ -4,7 +4,7 @@
     @click="onClickRoomButton()"
   >
     <div
-      class="bg-yellow-200/90 h-9 flex justify-between items-center px-2 mb-2 rounded-md"
+      class="bg-yellow-700/90 h-9 flex justify-between items-center px-2 mb-2 rounded-md"
     >
       <span class="font-bold">[No.{{ room.id }}] {{ room.description }}</span>
       <span>{{ room.memberCount }}/{{ room.publishers }}</span>

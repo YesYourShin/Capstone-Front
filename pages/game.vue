@@ -1,6 +1,6 @@
 <template lang="">
   <div class="body">
-    <Play></Play>
+    <Play :roomInfo="roomInfo"></Play>
   </div>
 </template>
 <script>
@@ -48,6 +48,7 @@ export default {
     return {
       janus: params.janus,
       storePlugin: params.storePlugin,
+      roomInfo: params.roomInfo,
     };
   },
   beforeDestroy() {

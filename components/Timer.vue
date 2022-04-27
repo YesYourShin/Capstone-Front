@@ -1,19 +1,22 @@
 <template>
   <!--Timer Componenent -->
-  <div class="timer">
+  <div class="timer h-screen">
     <!-- start of the timer section -->
     <div>
       <div v-show="timerStart" class="timerSet" >
-       {{ timerMinutes }}:{{ timerSeconds }}
+            <div class="flex flex-wrap p-4 ">
+            <BaseProgress :percentage="contentProgress" class="mx-2 mb-2 h-8 text-center">{{ timerMinutes }}:{{ timerSeconds }}</BaseProgress>
+          </div>
+
        </div>
+
       <div class="button-toggle">
-        <!-- <button @click="gameStart" v-show="newGame">시작</button> -->
-        <!-- <button @click="skipEvent" v-show="skipThisEvent">스킵</button> -->
       </div>
     </div>
   </div>
 </template>
 <script>
+import BaseProgress from "@/components/gameFlow_elements/BaseProgress.vue";
 
 export default {
   name: "Timer",
@@ -27,8 +30,14 @@ export default {
       skipAdd: false,
       newGame: true,
       skipThisEvent: false,
-      timerStart: false,
+      timerStart: true,
+      striped: true,
+      progressStart: 0,
+      contentProgress: 0
     };
+  },
+  components: {
+    BaseProgress
   },
   computed: {
     // show minutes
@@ -43,11 +52,11 @@ export default {
     },
   },
   methods: {
-    skipEvent() {
-      this.totalSeconds = 5;
-      this.skipThisEvent = false;
-    },
-
+    // 스킵은 아직 구현 안됨
+    // skipEvent() {
+    //   this.totalSeconds = 5;
+    //   this.skipThisEvent = false;
+    // },
     // formats time function
     formatTime(time) {
       if (time < 10) {
@@ -55,75 +64,78 @@ export default {
       }
       return time.toString();
     },
-    gameStart() {
-      this.timerStart = false;
-      this.skipAdd = true;
-      this.newGame = false;
-      this.$emit("startThisGame")
-    },
-    startVote() {
+    // 아침이 되었을 때 움직이는 타이머
+    morningTimer() {
       this.timerStart = true;
       this.skipThisEvent = true;
       this.pomodoroInstance = setInterval(() => {
         this.totalSeconds -= 1;
-
+        this.contentProgress += 100/60;
         if (
           Math.floor(this.totalSeconds / 60) === 0 &&
           this.totalSeconds % 60 === 0
         ) {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
-          this.$emit("timeoutVote")
+          (this.contentProgress = 0),
+          this.$emit("startVote")
         }
       }, 1000);
     },
-    startPunishmentVote() {
+    // 마피아로 의심되는 유저를 지목할 때 쓰이는 타이머
+    voteTimer() {
       this.timerStart = true;
       this.skipThisEvent = true;
-      // alert(this.$parent.electedPlayers + '유저의 사형 투표를 시작하겠습니다.')
       this.pomodoroInstance = setInterval(() => {
         this.totalSeconds -= 1;
-
+        this.contentProgress += 100/60;
         if (
           Math.floor(this.totalSeconds / 60) === 0 &&
           this.totalSeconds % 60 === 0
         ) {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
-          this.$emit("timeoutPunishmentVote")
+          (this.contentProgress = 0),
+          this.$emit("finishVote")
+          this.pomodoroInstance = null
         }
       }, 1000);
-
     },
+    // 특정 유저가 지목되고, 사형 찬반투표를 할 때 쓰이는 타이머
+    punishmentTimer() {
+      this.timerStart = true;
+      this.skipThisEvent = true;
+      this.pomodoroInstance = setInterval(() => {
+        this.totalSeconds -= 1;
+        this.contentProgress += 100/60;
+        if (
+          Math.floor(this.totalSeconds / 60) === 0 &&
+          this.totalSeconds % 60 === 0
+        ) {
+          clearInterval(this.pomodoroInstance);
+          (this.totalSeconds = 60),
+          (this.contentProgress = 0),
+          this.$emit("finishPunishmentVote")
+          this.pomodoroInstance = null
+        }
+      }, 1000);
+    },
+    // 밤이 되었을 때 쓰이는 타이머
     nightEvent() {
       this.timerStart = true;
       this.skipThisEvent = true;
       this.pomodoroInstance = setInterval(() => {
         this.totalSeconds -= 1;
-
+        this.contentProgress += 100/60;
         if (
           Math.floor(this.totalSeconds / 60) === 0 &&
           this.totalSeconds % 60 === 0
         ) {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
-          this.$emit("nightSkillEvent")
-        }
-      }, 1000);
-    },
-    morningEvent() {
-      this.timerStart = true;
-      this.skipThisEvent = true;
-      this.pomodoroInstance = setInterval(() => {
-        this.totalSeconds -= 1;
-
-        if (
-          Math.floor(this.totalSeconds / 60) === 0 &&
-          this.totalSeconds % 60 === 0
-        ) {
-          clearInterval(this.pomodoroInstance);
-          (this.totalSeconds = 60),
-          this.$emit("startVote")
+          (this.contentProgress = 0),
+          this.$emit("nightFinishEvent")
+          this.pomodoroInstance = null
         }
       }, 1000);
     },

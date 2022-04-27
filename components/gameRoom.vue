@@ -211,6 +211,7 @@ export default {
         params: {
           janus: this.janus,
           storePlugin: this.storePlugin,
+          roomInfo: this.roomInfo,
         },
       });
     },
