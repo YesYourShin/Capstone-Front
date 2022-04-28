@@ -9,6 +9,7 @@
 <script>
 import profile from "@/components/profileInGame.vue";
 import gameLobby from "@/components/gameLobby.vue";
+import { getMyInformation } from "@/api/mafiaAPI";
 
 export default {
   transition: "lobby",
@@ -17,6 +18,14 @@ export default {
     profile,
     gameLobby,
   },
+  // asyncData({ store }) {
+  //   // const response = getMyInformation();
+  //   // store.commit("user/setMyInfo", response.data);
+  //   if (store.getters["user/getMyInfo"]) {
+  //     return;
+  //   }
+  //   store.dispatch("user/fetchMyInfo");
+  // },
 };
 </script>
 <style lang="scss">

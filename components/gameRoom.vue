@@ -1,8 +1,10 @@
 <template lang="">
   <div class="flex flex-col min-h-screen w-full">
-    <div class="flex-grow">
-      <div class="flex">
-        <div class="bg-white rounded-md flex items-center justify-between px-2">
+    <div class="flex-grow relative">
+      <div
+        class="flex align-middle border border-solid border-l-0 border-r-0 whitespace-nowrap bg-amber-400 border-amber-300"
+      >
+        <div class="px-6 py-2 rounded-md flex items-center justify-between">
           <div>
             <p class="font-bold">
               [No.{{ roomInfo.id }}] {{ roomInfo.description }}
@@ -20,7 +22,7 @@
         </div>
       </div>
       <div class="px-2 mt-10">
-        <div class="grid grid-cols-5 justify-evenly">
+        <div class="grid grid-cols-5 gap-4 justify-evenly">
           <!-- <div
             v-if="publishStream"
             class="justify-self-center px-2 pb-3 w-full"
@@ -44,11 +46,14 @@
             </p>
           </div> -->
           <div
-            class="justify-self-center px-2 pb-3 w-full"
+            class="justify-self-center mx-2 mb-3 w-full border-2"
+            :class="`${
+              s.ready || index === 0 ? 'border-green-500' : 'border-black'
+            }`"
             v-for="(s, index) in roomMembers"
             :key="s.userId"
           >
-            <div class="aspect-video bg-fuchsia-400 border">
+            <div class="aspect-video">
               <div v-if="s.stream">
                 <video
                   v-if="s.nickname !== myInfo.profile.nickname"
@@ -67,45 +72,75 @@
                 ></video>
               </div>
             </div>
-            <p
-              :class="
-                `${s.ready || index === 0 ? 'bg-green-300' : 'bg-white'}` +
-                ' rounded-b-lg'
-              "
-            >
-              {{ s.nickname }}
-            </p>
+            <div class="grid grid-cols-4 font-semibold">
+              <div
+                :class="`
+                col-span-1 text-center ${
+                  s.ready || index === 0
+                    ? 'bg-green-500'
+                    : 'bg-black text-white'
+                }`"
+              >
+                Lv.{{ s.level }}
+              </div>
+              <div class="col-span-3 bg-white px-1">
+                {{ s.nickname }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="flex flex-row-reverse px-2">
-        <div class="p-2 w-40 justify-center items-center">
-          <div
+      <div class="flex flex-row-reverse px-2 absolute inset-x-0 bottom-0">
+        <div class="m-4 w-40 justify-center items-center">
+          <!-- <div
             class="flex items-center p-4 bg-yellow-200 rounded-lg shadow-xs cursor-pointer hover:bg-yellow-500 hover:text-gray-100 transition duration-300"
             @click="leave()"
           >
             <p class="text-lg font-bold mx-auto">나가기</p>
+          </div> -->
+          <div class="leaveBox">
+            <div class="buttonLine1"></div>
+            <div class="buttonLine2"></div>
+            <div class="buttonLine3"></div>
+            <div class="buttonLine4"></div>
+            <button class="buttonCore" @click="leave()">나가기</button>
           </div>
         </div>
         <template v-if="roomMembers">
           <template v-if="roomMembers.length">
             <div
-              class="p-2 md:w-40"
+              class="m-4 md:w-40"
               v-if="roomMembers[0].userId !== myInfo.profile.userId"
             >
-              <div
+              <!-- <div
                 class="flex items-center p-4 bg-green-200 rounded-lg shadow-xs cursor-pointer hover:bg-green-500 hover:text-gray-100 transition duration-300"
                 @click="getReady()"
               >
                 <p class="text-lg font-bold mx-auto">준비하기</p>
+              </div> -->
+              <div class="readyBox">
+                <div class="buttonLine1"></div>
+                <div class="buttonLine2"></div>
+                <div class="buttonLine3"></div>
+                <div class="buttonLine4"></div>
+                <button class="buttonCore" @click="getReady()">준비하기</button>
               </div>
             </div>
-            <div class="p-2 md:w-40" v-else>
-              <div
+            <div class="m-4 md:w-40" v-else>
+              <!-- <div
                 class="flex items-center p-4 bg-blue-200 rounded-lg shadow-xs cursor-pointer hover:bg-blue-500 hover:text-gray-100 transition duration-300"
                 @click="getStart()"
               >
                 <p class="text-lg font-bold mx-auto">게임 시작</p>
+              </div> -->
+              <div class="startBox">
+                <div class="buttonLine1"></div>
+                <div class="buttonLine2"></div>
+                <div class="buttonLine3"></div>
+                <div class="buttonLine4"></div>
+                <button class="buttonCore" @click="getStart()">
+                  게임 시작
+                </button>
               </div>
             </div>
           </template>
@@ -768,4 +803,334 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style lang="scss" scoped>
+.leaveBox {
+  width: 180px;
+  height: 70px;
+  margin: auto 75px auto auto;
+  //border: 3px solid rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  &:hover {
+    .buttonCore {
+      animation: color1 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine1 {
+      animation: buttonLineW 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine3 {
+      animation: buttonLineW 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine2 {
+      animation: buttonLineH 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine4 {
+      animation: buttonLineH 0.3s;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  .buttonCore {
+    margin: auto 0;
+    width: 150px;
+    height: 40px;
+    font-size: 20px;
+    --tw-bg-opacity: 1;
+    background-color: rgb(0 0 0 / 80%);
+    color: rgb(254 240 138 / var(--tw-bg-opacity));
+    font-weight: bold;
+    border: 3px solid rgb(254 240 138);
+
+    &:active {
+      width: 140px;
+      height: 35px;
+      font-size: 20px;
+    }
+    button {
+      width: 140px;
+      height: 34px;
+    }
+  }
+
+  .buttonLine1 {
+    width: 30px;
+    height: 3px;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine2 {
+    width: 4px;
+    height: 25px;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine3 {
+    width: 30px;
+    height: 3px;
+    bottom: 5px;
+    right: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine4 {
+    width: 3px;
+    height: 25px;
+    bottom: 5px;
+    right: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
+  }
+}
+.readyBox {
+  width: 180px;
+  height: 70px;
+  margin: auto 75px auto auto;
+  //border: 3px solid rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  &:hover {
+    .buttonCore {
+      animation: color2 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine1 {
+      animation: buttonLineW 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine3 {
+      animation: buttonLineW 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine2 {
+      animation: buttonLineH 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine4 {
+      animation: buttonLineH 0.3s;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  .buttonCore {
+    margin: auto 0;
+    width: 150px;
+    height: 40px;
+    font-size: 20px;
+    --tw-bg-opacity: 1;
+    background-color: rgb(0 0 0 / 80%);
+    color: rgb(187 247 208 / var(--tw-bg-opacity));
+    font-weight: bold;
+    border: 3px solid rgb(187 247 208);
+
+    &:active {
+      width: 140px;
+      height: 35px;
+      font-size: 20px;
+    }
+    button {
+      width: 140px;
+      height: 34px;
+    }
+  }
+
+  .buttonLine1 {
+    width: 30px;
+    height: 3px;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine2 {
+    width: 4px;
+    height: 25px;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine3 {
+    width: 30px;
+    height: 3px;
+    bottom: 5px;
+    right: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine4 {
+    width: 3px;
+    height: 25px;
+    bottom: 5px;
+    right: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
+  }
+}
+.startBox {
+  width: 180px;
+  height: 70px;
+  margin: auto 75px auto auto;
+  //border: 3px solid rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  &:hover {
+    .buttonCore {
+      animation: color3 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine1 {
+      animation: buttonLineW 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine3 {
+      animation: buttonLineW 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine2 {
+      animation: buttonLineH 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .buttonLine4 {
+      animation: buttonLineH 0.3s;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  .buttonCore {
+    margin: auto 0;
+    width: 150px;
+    height: 40px;
+    font-size: 20px;
+    --tw-bg-opacity: 1;
+    background-color: rgb(0 0 0 / 80%);
+    color: rgb(191 219 254 / var(--tw-bg-opacity));
+    font-weight: bold;
+    border: 3px solid rgb(191 219 254);
+
+    &:active {
+      width: 140px;
+      height: 35px;
+      font-size: 20px;
+    }
+    button {
+      width: 140px;
+      height: 34px;
+    }
+  }
+
+  .buttonLine1 {
+    width: 30px;
+    height: 3px;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine2 {
+    width: 4px;
+    height: 25px;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine3 {
+    width: 30px;
+    height: 3px;
+    bottom: 5px;
+    right: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+  }
+
+  .buttonLine4 {
+    width: 3px;
+    height: 25px;
+    bottom: 5px;
+    right: 5px;
+    position: absolute;
+    --tw-bg-opacity: 1;
+    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+  }
+}
+@keyframes buttonLineW {
+  0% {
+  }
+  100% {
+    width: 170px;
+  }
+}
+@keyframes buttonLineH {
+  0% {
+  }
+  100% {
+    height: 60px;
+  }
+}
+@keyframes color1 {
+  0% {
+  }
+  100% {
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
+    border-color: rgb(254 240 138 / var(--tw-bg-opacity));
+    /* background-color: white; */
+    color: #000;
+  }
+}
+@keyframes color2 {
+  0% {
+  }
+  100% {
+    --tw-bg-opacity: 1;
+    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
+    border-color: rgb(187 247 208 / var(--tw-bg-opacity));
+    /* background-color: white; */
+    color: #000;
+  }
+}
+@keyframes color3 {
+  0% {
+  }
+  100% {
+    --tw-bg-opacity: 1;
+    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+    border-color: rgb(191 219 254 / var(--tw-bg-opacity));
+    /* background-color: white; */
+    color: #000;
+  }
+}
+</style>
