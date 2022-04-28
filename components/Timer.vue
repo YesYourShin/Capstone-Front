@@ -5,7 +5,7 @@
     <div>
       <div v-show="timerStart" class="timerSet" >
             <div class="flex flex-wrap p-4 ">
-            <BaseProgress :percentage="contentProgress" class="mx-2 mb-2 h-5">
+            <BaseProgress :percentage="contentProgress" class="mx-2 mb-2 h-6">
              <span class="text-xs text-black w-full flex justify-end pr-2">{{totalSeconds}}</span>
             </BaseProgress>
           </div>

@@ -14,7 +14,7 @@
           <div>
             <p class="font-bold">
               {{ roomInfo.mode === "classic" ? "클래식 모드" : "확장 모드" }} |
-              {{ roomMembers.length }}/{{ roomInfo.publishers }}
+              {{ roomMembers.length ? null : 0 }}/{{ roomInfo.publishers }}
             </p>
           </div>
         </div>

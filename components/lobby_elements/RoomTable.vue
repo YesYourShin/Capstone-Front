@@ -108,7 +108,9 @@
                   <div
                     class="border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"
                   >
-                    {{ room.members[0].nickname }}
+                    <!-- {{ room.members[0].nickname }} -->
+                    {{ room.members[0] ? room.members[0].nickname : "" }}
+                    <!-- {{ members }} -->
                   </div>
                   <div
                     class="col-span-2 border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"

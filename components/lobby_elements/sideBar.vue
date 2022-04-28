@@ -2,7 +2,11 @@
   <div>
     <input type="checkbox" id="menuIcon" />
     <label for="menuIcon"> <span></span><span></span><span></span> </label>
-    <div class="sideBar"></div>
+    <div class="sideBar">
+      <div class="">
+
+      </div>
+    </div>
   </div>
 </template>
 <script>

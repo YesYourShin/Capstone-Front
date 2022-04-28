@@ -2,9 +2,7 @@
   <div :class="{'gamebox-first': this.flag, 'gamebox-second': !this.flag}" >
     <!-- <Billboard blilboard-vote="vote-result"/> -->
     <div class="chatbox">
-      <button v-on:click="exitRoom">
-        게임 채팅방 여기에! (지금은 소켓 제거)
-      </button>
+      <DayCount ref="dayCount"></DayCount>
     </div>
     <Billboard ref="billboard" />
     <Timer
@@ -104,12 +102,12 @@
 <script>
 import Timer from "@/components/Timer.vue";
 import Billboard from "@/components/gameFlow_elements/billboard.vue";
-// import StartAndRule from "@/components/gameFlow/startAndRule.vue";
 import SideBar from "@/components/lobby_elements/sideBar.vue";
 import Memo from "@/components/memo.vue";
 import dayjs from 'dayjs';
 import { GameEvent } from "@/api/mafiaAPI";
-// import io from "socket.io-client";
+import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
+
 export default {
   name: "App",
   props: {
@@ -120,6 +118,7 @@ export default {
     Billboard,
     SideBar,
     Memo,
+    DayCount,
   },
   computed: {
     // subscribedStreams() {
@@ -177,7 +176,8 @@ export default {
       userSocketInfo: [],
       myVote: 0,
       flag: false,
-      counter: 60
+      counter: 60,
+      day: false,
     };
   },
   mounted() {
@@ -201,7 +201,6 @@ export default {
       console.log('현재 방 번호', roomId)
       this.socket.emit('game:join', {roomId})
       this.flowMessage = "잠시 후 게임을 시작합니다.";
-      // this.socket.emit('gamejoin')
       this.socket.on('game:join', (data)=> {
         console.log(data);
         // this.mySocketId = data.user
@@ -219,13 +218,13 @@ export default {
       this.socket.emit(GameEvent.Start)
       this.socket.on(GameEvent.Start, (data)=> {
         console.log(data)
+        this.grantPlayerJob();
       })
       setTimeout(()=> {
         // this.socket.emit('gameMessage')
         // this.socket.on('gameMessage', (data)=> {
         //   console.log(data)
         // })
-        this.grantPlayerJob();
       },1000)
     },
 
@@ -292,9 +291,10 @@ export default {
       const roomId = this.$store.state.roomId.roomId
       const dayjs = require("dayjs");
       console.log(this.roomId)
-
-      this.socket.emit(GameEvent.Timer)
+      this.socket.emit(GameEvent.Day, this.flag)
+      this.socket.emit()
       this.$refs.timer.morningTimer();
+      this.$refs.dayCount.nextDay()
       // while(this.counter == 0) {
       //   this.socket.on('game:timer', data)
       //   console.log(data)

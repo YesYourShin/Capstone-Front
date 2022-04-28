@@ -15,28 +15,6 @@
   background-size: 100%;
   background-position: center;
 
-  .itemBox {
-    padding: 20px 0;
-    width: 100%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    .settingbox {
-      width: 400px;
-      height: 50px;
-      background-color: #ff0000;
-
-      .settingCamAndMic {
-        display: flex;
-        margin: 7px 0;
-      }
-    }
-    .timebox {
-      width: 200px;
-      height: 50px;
-      background-color: #ff00ff;
-    }
-  }
 
   .videomainbox {
     display: flex;
@@ -108,28 +86,7 @@
   background-size: 100%;
   background-position: center;
 
-  .itemBox {
-    padding: 20px 0;
-    width: 100%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    .settingbox {
-      width: 400px;
-      height: 50px;
-      background-color: #ff0000;
 
-      .settingCamAndMic {
-        display: flex;
-        margin: 7px 0;
-      }
-    }
-    .timebox {
-      width: 200px;
-      height: 50px;
-      background-color: #ff00ff;
-    }
-  }
 
   .videomainbox {
     display: flex;

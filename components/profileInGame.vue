@@ -16,7 +16,7 @@
         </button>
         <button class="userlink" @click="logout">Logout</button>
         <p class="userlevel">
-          Lv.250
+          Lv.250z
           <span class="username" v-if="this.myInfo.profile">
             {{ this.myInfo.profile.nickname }}
           </span>
