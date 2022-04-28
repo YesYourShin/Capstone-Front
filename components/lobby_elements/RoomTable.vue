@@ -63,7 +63,7 @@
             <div class="">
               <div v-for="room in rooms">
                 <div
-                  class="grid grid-cols-12 group hover:bg-gradient-to-r hover:from-white/20 hover:to-black/0 cursor-pointer"
+                  class="grid grid-cols-12 transition duration-200 ease-in group hover:bg-gradient-to-r hover:from-white/20 hover:to-black/0 cursor-pointer"
                   @click="onClickRoomButton(room)"
                 >
                   <div
@@ -108,7 +108,7 @@
                   <div
                     class="border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"
                   >
-                    {{ room.members[0].nickname }}
+                    {{ room.members[0] ? room.members[0].nickname : "" }}
                   </div>
                   <div
                     class="col-span-2 border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"
@@ -127,12 +127,22 @@
                     <div class="flex flex-col items-center">
                       <div class="relative w-full">
                         <div
-                          class="overflow-hidden h-2 text-s flex rounded bg-red-200"
+                          :class="`overflow-hidden h-2 text-s flex rounded ${
+                            getRound(room) >= 100
+                              ? 'bg-red-200'
+                              : getRound(room) > 60
+                              ? 'bg-yellow-100'
+                              : 'bg-green-100'
+                          }`"
                         >
                           <div
-                            :class="`shadow-none text-center whitespace-nowrap text-white justify-center bg-red-500 w-[${Math.round(
-                              (room.members.length / room.publishers) * 100
-                            )}%]`"
+                            :class="`shadow-none text-center whitespace-nowrap text-white justify-center ${
+                              getRound(room) >= 100
+                                ? 'bg-red-500'
+                                : getRound(room) > 60
+                                ? 'bg-yellow-500'
+                                : 'bg-green-500'
+                            } w-[${getRound(room)}%]`"
                           ></div>
                         </div>
                       </div>
@@ -240,6 +250,9 @@ export default {
             title: err.response.data.data.message,
           });
         });
+    },
+    getRound(room) {
+      return Math.round((room.members.length / room.publishers) * 100);
     },
   },
 };

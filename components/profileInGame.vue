@@ -8,6 +8,7 @@
           class="profileimg"
         />
         <img v-else src="@/assets/pageimg/test.png" class="profileimg" />
+        <!-- <img src="@/assets/pageimg/test.png" class="profileimg" /> -->
       </div>
 
       <div class="profile2" v-if="this.myInfo">
