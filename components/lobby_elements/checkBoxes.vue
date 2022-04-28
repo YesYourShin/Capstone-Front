@@ -48,7 +48,7 @@ export default {};
 
 .checkbox input:checked ~ .icon {
   border-color: transparent;
-  background: #ff1616;
+  background: #fbbf24;
   animation: jelly 0.6s ease;
 }
 
