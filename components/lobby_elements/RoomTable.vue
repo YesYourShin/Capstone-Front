@@ -135,7 +135,7 @@
                               : 'bg-green-100'
                           }`"
                         >
-                          <div
+                          <!-- <div
                             :class="`shadow-none text-center whitespace-nowrap text-white justify-center ${
                               getRound(room) >= 100
                                 ? 'bg-red-500'
@@ -143,7 +143,8 @@
                                 ? 'bg-yellow-500'
                                 : 'bg-green-500'
                             } w-[${getRound(room)}%]`"
-                          ></div>
+                          ></div> -->
+                          <ProgressBar :room="room"></ProgressBar>
                         </div>
                       </div>
                       <span class="mr-2"
@@ -161,7 +162,38 @@
   </div>
 </template>
 <script>
+import styled from "vue-styled-components";
 import { isJoinable, checkPassword, getRoom } from "@/api/mafiaAPI";
+
+const ProgressBar = styled("div", { room: Object })`
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-text-opacity: 1;
+  --tw-bg-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  text-align: center;
+  white-space: nowrap;
+  justify-content: center;
+  background-color: ${(props) => {
+    return `${
+      Math.round((props.room.members.length / props.room.publishers) * 100) >=
+      100
+        ? "rgb(239 68 68 / var(--tw-bg-opacity))"
+        : Math.round(
+            (props.room.members.length / props.room.publishers) * 100
+          ) >= 60
+        ? "rgb(234 179 8 / var(--tw-bg-opacity))"
+        : "rgb(34 197 94 / var(--tw-bg-opacity))"
+    }`;
+  }};
+  width: ${(props) => {
+    return `${Math.round(
+      (props.room.members.length / props.room.publishers) * 100
+    )}%`;
+  }};
+`;
 
 export default {
   props: {
@@ -169,6 +201,9 @@ export default {
       type: Array,
       default: () => [],
     },
+  },
+  components: {
+    ProgressBar,
   },
   methods: {
     async onClickRoomButton(room) {

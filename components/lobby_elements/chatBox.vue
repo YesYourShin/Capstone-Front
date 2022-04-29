@@ -132,20 +132,15 @@ export default {
       this.$store.commit("tabClose", index);
     },
     sendMessage() {
-      this.socket.emit(GameRoomEvent.MESSAGE, { message: this.input });
+      this.$root.mySocket.emit(GameRoomEvent.MESSAGE, { message: this.input });
       this.input = "";
     },
   },
   mounted() {
     if (this.$route.name == "room-id") {
-      this.socket = this.$nuxtSocket({
-        channel: "/room",
-        withCredentials: true,
-        transports: ["websocket"],
-      });
-      this.socket.on(GameRoomEvent.MESSAGE, (data) => {
+      this.$root.mySocket.on(GameRoomEvent.MESSAGE, (data) => {
         console.log(data);
-        const msg = `${data.member.nickname} : ${data.message}`;
+        const msg = `${data.member.name} : ${data.message}`;
         this.messages = [...this.messages, msg];
       });
     }
