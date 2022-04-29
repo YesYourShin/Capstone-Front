@@ -6,15 +6,15 @@
       class="h-fit flex flex-wrap-reverse group"
     >
       <Tab
-        v-for="(chat, index) in $store.state.chats"
-        :key="chat.id"
+        v-for="(chat, index) in chats"
+        :key="chat.name"
         class="group-hover:translate-y-0"
         :index="index"
         :selectedIndex="$store.state.selectedIndex"
       >
         <div class="flex justify-between items-center px-1">
           <p class="font-bold inline-block w-full" @click="tabClicked(index)">
-            {{ chat.social_id }}
+            {{ chat.name }}
           </p>
 
           <svg
@@ -22,6 +22,7 @@
             class="h-5 w-5 hidden group-hover:inline-block text-red-600/50 hover:text-red-600"
             viewBox="0 0 20 20"
             fill="currentColor"
+            v-if="chat.closable"
             @click="tabClose(index)"
           >
             <path
@@ -33,10 +34,14 @@
         </div>
       </Tab>
     </transition-group>
-    <div class="h-52 bg-black/75 flex flex-col overflow-auto">
-      <div class="grow">
-        <div class="">
-          <!-- <p v-for="message in currentMessages">{{ message }}</p> -->
+    <div class="h-52 bg-black/75">
+      <div class="h-full flex flex-col-reverse overflow-auto">
+        <div
+          v-for="(message, index) in chats[selectedIndex].messages"
+          :key="index"
+          class="text-white font-semibold"
+        >
+          {{ message }}
         </div>
       </div>
     </div>
@@ -116,11 +121,18 @@ export default {
   },
   data() {
     return {
-      currentMessages: [],
       input: "",
       socket: null,
       messages: [],
     };
+  },
+  computed: {
+    chats() {
+      return this.$store.state.chats;
+    },
+    selectedIndex() {
+      return this.$store.state.selectedIndex;
+    },
   },
   methods: {
     tabClicked(index) {
@@ -132,16 +144,18 @@ export default {
       this.$store.commit("tabClose", index);
     },
     sendMessage() {
-      this.$root.mySocket.emit(GameRoomEvent.MESSAGE, { message: this.input });
-      this.input = "";
+      if (this.input) {
+        const msg = this.input;
+        this.input = "";
+        this.$root.mySocket.emit(GameRoomEvent.MESSAGE, { message: msg });
+      }
     },
   },
   mounted() {
     if (this.$route.name == "room-id") {
       this.$root.mySocket.on(GameRoomEvent.MESSAGE, (data) => {
         console.log(data);
-        const msg = `${data.member.name} : ${data.message}`;
-        this.messages = [...this.messages, msg];
+        this.$store.commit("newMessageOnMain", data);
       });
     }
   },

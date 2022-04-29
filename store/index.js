@@ -1,5 +1,4 @@
-import { UserModule } from "./user";
-import io from "socket.io-client";
+import Vue from 'vue'
 
 export const state = () => ({
   friends: Array(12)
@@ -24,10 +23,51 @@ export const state = () => ({
 });
 
 export const mutations = {
+  mainChatInit(state, chatName) {
+    if (state.chats.length) {
+      state.chats[0] = {
+        name: chatName,
+        messages: [],
+        closable: false,
+      }
+    } else {
+      state.chats = [{
+        name: chatName,
+        messages: [],
+        closable: false,
+      }]
+      state.selectedIndex = 0;
+    }
+  },
   newChat(state, user) {
-    if (!state.chats.includes(user)) {
-      state.chats.push(user);
+    function find(arr, user) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].name === user.social_id) {
+          return arr[i];
+        }
+      }
+      return null;
+    }
+    let chat = find(state.chats, user);
+    if (!chat) {
+      let newChat = {
+        name: user.social_id,
+        messages: [],
+        closable: true,
+      }
+      state.chats.push(newChat);
       state.selectedIndex = state.chats.length - 1;
+    } else {
+      state.selectedIndex = state.chats.indexOf(chat);
+    }
+  },
+  newMessageOnMain(state, data) {
+    if (state.chats.length) {
+      // state.chats[0].messages.unshift(`${data.member.name}: ${data.message}`);
+      let newChat = {...state.chats[0]};
+      newChat.messages.unshift(`${data.member.name}: ${data.message}`);
+      // state.chats[0] = newChats;
+      Vue.set(state.chats, 0, newChat);
     }
   },
   tabClicked(state, index) {

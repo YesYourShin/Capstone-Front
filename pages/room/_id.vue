@@ -49,6 +49,7 @@ export default {
       withCredentials: true,
       transports: ["websocket"],
     });
+    this.$store.commit("mainChatInit", "#room");
   },
   async asyncData({ params }) {
     const roomInfo = await getRoom(params.id);

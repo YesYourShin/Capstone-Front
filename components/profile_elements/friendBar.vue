@@ -26,37 +26,10 @@
       :ref="'vueSimpleContextMenu'"
       @option-clicked="optionClicked"
     />
-    <!-- 컴포넌트 MyModal -->
-    <MyModal @close="modal = false" v-if="modal">
-      <!-- default 슬롯 콘텐츠 -->
-      <p>Vue.js Modal Window!</p>
-      <div class="flex">
-        <div class="aspect-square w-8">
-          <img class="" src="@/assets/pageimg/test.jpg" />
-        </div>
-        <div>
-          <p>닉네임 : {{ showingUser.social_id }}</p>
-          <p>접속상태 :</p>
-          <p>상태메시지 : {{ showingUser.provider }}</p>
-          <p>전적 :</p>
-        </div>
-      </div>
-      <!-- /default -->
-      <!-- footer 슬롯 콘텐츠 -->
-      <template slot="footer">
-        <button>제출</button>
-      </template>
-      <!-- /footer -->
-    </MyModal>
   </div>
 </template>
 <script>
-import MyModal from "@/components/myModal.vue";
-
 export default {
-  components: {
-    MyModal,
-  },
   data() {
     return {
       options: [
