@@ -78,7 +78,7 @@
 </template>
 <script>
 import styled from "vue-styled-components";
-import axios from "axios";
+import { GameRoomEvent } from "@/api/mafiaAPI";
 
 const tapProps = { index: Number, selectedIndex: Number };
 const Tab = styled("div", tapProps)`
@@ -114,17 +114,12 @@ export default {
   components: {
     Tab,
   },
-  head: {
-    script: [
-      {
-        src: "https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js",
-      },
-    ],
-  },
   data() {
     return {
       currentMessages: [],
       input: "",
+      socket: null,
+      messages: [],
     };
   },
   methods: {
@@ -137,16 +132,24 @@ export default {
       this.$store.commit("tabClose", index);
     },
     sendMessage() {
-      this.socket.emit("msg", this.input);
+      this.socket.emit(GameRoomEvent.MESSAGE, { message: this.input });
       this.input = "";
     },
   },
-  // async mounted() {
-  //   await axios.get("/ws/init").then((resp) => {
-  //     this.socket = io();
-  //     this.socket.on("msg", (msg) => this.currentMessages.push(msg));
-  //   });
-  // },
+  mounted() {
+    if (this.$route.name == "room-id") {
+      this.socket = this.$nuxtSocket({
+        channel: "/room",
+        withCredentials: true,
+        transports: ["websocket"],
+      });
+      this.socket.on(GameRoomEvent.MESSAGE, (data) => {
+        console.log(data);
+        const msg = `${data.member.nickname} : ${data.message}`;
+        this.messages = [...this.messages, msg];
+      });
+    }
+  },
 };
 </script>
 <style lang="css" scoped>

@@ -171,6 +171,7 @@ export default {
       janus: null,
       socket: null,
       isReady: false,
+      messages: [],
     };
   },
   computed: {
