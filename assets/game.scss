@@ -52,19 +52,35 @@
 
     .videobox {
       margin: 10px;
+      position: relative;
+
+      .myVideo {
+        transform: rotate(90deg);
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+      }
 
       video {
-        width: 355px;
+        width: 360px;
         background-color: orange;
         border: 3px solid white;
+        position: relative;
+        z-index: 1;
       }
       canvas {
         width: 355px;
-        background-color: orange;
+
         border: 3px solid white;
+        top: -200px;
+        position: relative;
+        z-index: 2;
       }
       div {
-        width: 355px;
+        width: 360px;
         height: 30px;
         line-height: 30px;
         padding-left: 5px;
@@ -137,16 +153,31 @@
 
     .videobox {
       margin: 10px;
+      position: relative;
+
+      .myVideo {
+        transform: rotate(90deg);
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+      }
 
       video {
-        width: 355px;
+        width: 360px;
         background-color: orange;
         border: 3px solid white;
+        position: relative;
+        z-index: 1;
       }
       canvas {
         width: 355px;
-        background-color: orange;
         border: 3px solid white;
+        top: -200px;
+        position: relative;
+        z-index: 2;
       }
       div {
         width: 355px;

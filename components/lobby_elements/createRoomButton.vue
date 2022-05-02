@@ -145,7 +145,7 @@ export default {
 .buttonbox {
   width: 180px;
   height: 70px;
-  margin: auto 75px auto auto;
+  margin: auto 25px auto auto;
   //border: 3px solid rgb(255, 255, 255);
   display: flex;
   justify-content: center;

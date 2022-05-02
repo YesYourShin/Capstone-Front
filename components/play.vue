@@ -154,7 +154,7 @@ export default {
       ], // 각 유저의 닉네임(더미)
       electedPlayer: 0, // 마피아로 의심되는 유저 투표
       punishmentPlayer: false, // 찬반 투표, 디폴트는 반대
-      selectedDecided: false, // 자신의 선택 확정, 디폴트는 미승인 (true가 되야 선택값 넘어감)
+      selectedUser : false, // 자신의 선택 확정, 디폴트는 미승인 (true가 되야 선택값 넘어감)
       mafiaSelected: 0, // 마피아일 경우 유저 지목
       doctorSelected: 0, // 의사일 경우 유저 지목
       policeSelected : 0, // 경찰일 경우 유저 지목
@@ -210,11 +210,8 @@ export default {
         this.grantPlayerJob();
       })
       this.$refs.billboard.grantPlayerJobBeforeBoard()
-
-
-
     },
-
+    // 직업 배분 결과 통지, 지금 빌보드에 뜨는건 더미라서 마피아라고 뜬다.
     grantPlayerJob() {
       this.$refs.billboard.grantPlayerJobAfterBoard()
       // setTimeout(() => {
@@ -229,8 +226,8 @@ export default {
      this.socket.emit(GameEvent.Job)
        console.log("직업 분배 소켓")
         this.socket.on(GameEvent.Job, (data) => {
-           console.log("직업 분배 소켓")
-          console.log(data)
+          console.log(data.job)
+          // this.myJob = data.
         })
 
       // setTimeout(() => {
@@ -303,10 +300,12 @@ export default {
       // 타이머에서 다음 메서드를 실행하게 한다!
     },
     startVote() {
-      console.log('1')
+      console.log('투표는 소켓 없음')
       this.$refs.billboard.startVoteBoard()
       setTimeout(()=> {
         this.$refs.timer.voteTimer();
+        this.electedPlayer = 1;
+        this.selectedUser = true;
       }, 3000)
 
       //여기서 유저 지목 값 받아올 수 있어야 함.
@@ -323,8 +322,25 @@ export default {
       // },3000)
       // this.finishVote();
     },
+
+    // 투표값 전송을 위한 메서드로, 집계는 startVote에서 한다.
+    // 자신의 투표값
+    voteNumCheck() {
+      if (this.selectedUser === true) {
+        this.electedPlayer = 1;
+        this.socket.emit(GameEvent.Vote, {
+          vote : this.electedPlayer
+        }, this.finishVote())
+      }
+    },
+
     finishVote() {
-      console.log('adf')
+      setTimeout(() => {
+        this.socket.on(GameEvent.FinishV, (data) => {
+          console.log(data);
+          this.PunishmentVote();
+        })
+      }, 3000)
       this.$refs.billboard.finishVoteBoard()
         // this.socket.on(GameEvent.FinishV, (data) => {
         //   console.log(data)
@@ -344,7 +360,7 @@ export default {
       // //     }
       // //     console.log(this.electedPlayer)
       // //   })
-        this.PunishmentVote();
+
       // },3000)
 
     },
@@ -352,14 +368,31 @@ export default {
       this.$refs.billboard.startPunishmentVoteBoard()
       setTimeout(()=> {
         this.$refs.timer.punishmentTimer();
+        this.punishmentPlayer = true;
       }, 3000)
       // setTimeout(() => {
-        this.socket.emit(GameEvent.Punish)
-        this.socket.on(GameEvent.FinishP, (data) => {
-          console.log(data)
-        })
+        // this.socket.emit(GameEvent.Punish)
+        // this.socket.on(GameEvent.FinishP, (data) => {
+        //   console.log(data)
+        // })
         // this.nightEvent();
       // },3000)
+    },
+
+    punishmentVoteCheck() {
+      this.socket.emit(GameEvent.FinishP, {
+        punishVote : this.punishmentPlayer
+      }, this.finishPunishmentVote())
+    },
+
+    finishPunishmentVote() {
+      setTimeout(() => {
+        this.socket.on(GameEvent.FinishP, (data) => {
+          console.log(data);
+          this.nightEvent();
+        })
+      }, 3000)
+      this.$refs.billboard.finishPunishmentVoteBoard()
     },
 
     nightEvent() {
@@ -372,11 +405,7 @@ export default {
       })
       this.socket.emit(GameEvent.Timer)
       this.socket.on(GameEvent.Timer, (data) => {
-
         console.log(data)
-        // while(dayjs.format === data.start) {
-        //   this.$refs.timer.morningTimer();
-        // }
       })
       this.$refs.billboard.nightEventBoard()
       setTimeout(()=> {

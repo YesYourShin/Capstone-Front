@@ -6,15 +6,15 @@
       class="h-fit flex flex-wrap-reverse group"
     >
       <Tab
-        v-for="(chat, index) in $store.state.chats"
-        :key="chat.id"
+        v-for="(chat, index) in chats"
+        :key="chat.name"
         class="group-hover:translate-y-0"
         :index="index"
         :selectedIndex="$store.state.selectedIndex"
       >
         <div class="flex justify-between items-center px-1">
           <p class="font-bold inline-block w-full" @click="tabClicked(index)">
-            {{ chat.social_id }}
+            {{ chat.name }}
           </p>
 
           <svg
@@ -22,6 +22,7 @@
             class="h-5 w-5 hidden group-hover:inline-block text-red-600/50 hover:text-red-600"
             viewBox="0 0 20 20"
             fill="currentColor"
+            v-if="chat.closable"
             @click="tabClose(index)"
           >
             <path
@@ -33,10 +34,14 @@
         </div>
       </Tab>
     </transition-group>
-    <div class="h-52 bg-black/75 flex flex-col overflow-auto">
-      <div class="grow">
-        <div class="">
-          <!-- <p v-for="message in currentMessages">{{ message }}</p> -->
+    <div class="h-52 bg-black/75">
+      <div class="h-full flex flex-col-reverse overflow-auto">
+        <div
+          v-for="(message, index) in chats[selectedIndex].messages"
+          :key="index"
+          class="text-white font-semibold"
+        >
+          {{ message }}
         </div>
       </div>
     </div>
@@ -78,7 +83,7 @@
 </template>
 <script>
 import styled from "vue-styled-components";
-import axios from "axios";
+import { GameRoomEvent } from "@/api/mafiaAPI";
 
 const tapProps = { index: Number, selectedIndex: Number };
 const Tab = styled("div", tapProps)`
@@ -114,18 +119,20 @@ export default {
   components: {
     Tab,
   },
-  head: {
-    script: [
-      {
-        src: "https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js",
-      },
-    ],
-  },
   data() {
     return {
-      currentMessages: [],
       input: "",
+      socket: null,
+      messages: [],
     };
+  },
+  computed: {
+    chats() {
+      return this.$store.state.chats;
+    },
+    selectedIndex() {
+      return this.$store.state.selectedIndex;
+    },
   },
   methods: {
     tabClicked(index) {
@@ -137,16 +144,21 @@ export default {
       this.$store.commit("tabClose", index);
     },
     sendMessage() {
-      this.socket.emit("msg", this.input);
-      this.input = "";
+      if (this.input) {
+        const msg = this.input;
+        this.input = "";
+        this.$root.mySocket.emit(GameRoomEvent.MESSAGE, { message: msg });
+      }
     },
   },
-  // async mounted() {
-  //   await axios.get("/ws/init").then((resp) => {
-  //     this.socket = io();
-  //     this.socket.on("msg", (msg) => this.currentMessages.push(msg));
-  //   });
-  // },
+  mounted() {
+    if (this.$route.name == "room-id") {
+      this.$root.mySocket.on(GameRoomEvent.MESSAGE, (data) => {
+        console.log(data);
+        this.$store.commit("newMessageOnMain", data);
+      });
+    }
+  },
 };
 </script>
 <style lang="css" scoped>

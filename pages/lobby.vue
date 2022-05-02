@@ -18,6 +18,14 @@ export default {
     profile,
     gameLobby,
   },
+  created() {
+    this.$root.mySocket = this.$nuxtSocket({
+      channel: "/lobby",
+      withCredentials: true,
+      transports: ["websocket"],
+    });
+    this.$store.commit("mainChatInit", "#lobby");
+  },
   // asyncData({ store }) {
   //   // const response = getMyInformation();
   //   // store.commit("user/setMyInfo", response.data);

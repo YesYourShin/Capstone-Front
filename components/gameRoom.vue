@@ -171,6 +171,7 @@ export default {
       janus: null,
       socket: null,
       isReady: false,
+      messages: [],
     };
   },
   computed: {
@@ -209,7 +210,7 @@ export default {
     //   this.$router.push(`/lobby`)
     // }
     leave() {
-      this.socket.emit(GameRoomEvent.LEAVE);
+      this.$root.mySocket.emit(GameRoomEvent.LEAVE);
       this.$router.push("/lobby");
       // leaveRoom(this.$route.params.id).then((res) => {
       //   if (res.data.success) {
@@ -225,12 +226,11 @@ export default {
       var unpublish = { request: "unpublish" };
       var leave = { request: "leave" };
       let vrc = this;
-      this.socket.emit(GameRoomEvent.LEAVE);
+      this.$root.mySocket.emit(GameRoomEvent.LEAVE);
       this.storePlugin.send({
         message: unpublish,
         success: function () {
           vrc.$store.commit("stream/removeAllSubscribers");
-          vrc.$store.commit("stream/setPublishStream", null);
           vrc.$store.commit("stream/destroyRoomMembers");
         },
         error: function (error) {
@@ -248,7 +248,7 @@ export default {
       });
     },
     getReady() {
-      this.socket.emit(GameRoomEvent.READY);
+      this.$root.mySocket.emit(GameRoomEvent.READY);
     },
     goToGame() {
       this.$router.replace({
@@ -261,7 +261,7 @@ export default {
       });
     },
     getStart() {
-      this.socket.emit(GameRoomEvent.START);
+      this.$root.mySocket.emit(GameRoomEvent.START);
     },
   },
   mounted() {
@@ -280,13 +280,7 @@ export default {
     let roomId = parseInt(this.$route.params.room);
     // let newRemoteFeed = null;
 
-    this.socket = this.$nuxtSocket({
-      channel: "/room",
-      withCredentials: true,
-      transports: ["websocket"],
-    });
-
-    this.socket.on(GameRoomEvent.JOIN, (data) => {
+    this.$root.mySocket.on(GameRoomEvent.JOIN, (data) => {
       console.log(data.member);
       this.$store.commit("stream/addRoomMember", data.member);
       if (data.member.userId !== this.myInfo.id) {
@@ -294,7 +288,7 @@ export default {
       }
     });
 
-    this.socket.on(GameRoomEvent.MEMBER_LIST, (data) => {
+    this.$root.mySocket.on(GameRoomEvent.MEMBER_LIST, (data) => {
       console.log(data.members);
       // for (let i = 0; i < data.members.length; i++) {
       //   let member = data.members[i];
@@ -307,21 +301,21 @@ export default {
       this.$store.commit("stream/setRoomMembers", data.members);
     });
 
-    this.socket.on(GameRoomEvent.START, (data) => {
+    this.$root.mySocket.on(GameRoomEvent.START, (data) => {
       console.log(data);
       if (data.start) {
         this.goToGame();
       }
     });
 
-    this.socket.on(GameRoomEvent.LEAVE, (data) => {
+    this.$root.mySocket.on(GameRoomEvent.LEAVE, (data) => {
       if (data.member.userId !== this.myInfo.id) {
         this.$store.commit("stream/removeRoomMember", data.member);
         this.$toast.show(data.member.nickname + " 님이 퇴장하셨습니다.");
       }
     });
 
-    this.socket.emit(GameRoomEvent.JOIN, {
+    this.$root.mySocket.emit(GameRoomEvent.JOIN, {
       roomId: this.$route.params.id,
     });
 
@@ -585,7 +579,7 @@ export default {
                           videoRecv: false,
                           audioSend: true,
                           videoSend: true,
-                          video: "hires-16:9",
+                          video: "stdres-16:9",
                         },
 
                         success: function (jsep) {

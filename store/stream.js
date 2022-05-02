@@ -47,7 +47,6 @@ export const mutations = {
       // target.rfid = data.rfid;
       Vue.set(target, "stream", data.stream);
       Vue.set(target, "rfid", data.rfid);
-      console.log("target: ", target);
       // target = d;
     }
   },

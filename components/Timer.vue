@@ -110,7 +110,7 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$emit("finishVote")
+          this.$emit("voteNumCheck")
           this.pomodoroInstance = null
         }
       }, 1000);
@@ -129,7 +129,7 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$emit("finishPunishmentVote")
+          this.$emit("punishmentVoteCheck")
           this.pomodoroInstance = null
         }
       }, 1000);
