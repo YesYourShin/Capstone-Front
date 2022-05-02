@@ -147,13 +147,22 @@ export default {
       if (this.input) {
         const msg = this.input;
         this.input = "";
-        this.$root.mySocket.emit(GameRoomEvent.MESSAGE, { message: msg });
+        if (this.$route.name == "room-id") {
+          this.$root.roomSocket.emit(GameRoomEvent.MESSAGE, { message: msg });
+        } else if (this.$route.name == "lobby") {
+          this.$root.lobbySocket.emit(GameRoomEvent.MESSAGE, { message: msg });
+        }
       }
     },
   },
   mounted() {
     if (this.$route.name == "room-id") {
-      this.$root.mySocket.on(GameRoomEvent.MESSAGE, (data) => {
+      this.$root.roomSocket.on(GameRoomEvent.MESSAGE, (data) => {
+        console.log(data);
+        this.$store.commit("newMessageOnMain", data);
+      });
+    } else if (this.$route.name == "lobby") {
+      this.$root.lobbySocket.on(GameRoomEvent.MESSAGE, (data) => {
         console.log(data);
         this.$store.commit("newMessageOnMain", data);
       });

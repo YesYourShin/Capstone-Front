@@ -27,6 +27,7 @@
     "core-js": "^3.19.3",
     "dayjs": "^1.11.1",
     "fs": "^0.0.1-security",
+    "hark": "^1.2.3",
     "nuxt": "^2.15.8",
     "nuxt-socket-io": "^2.0.3",
     "socket.io": "^4.4.1",

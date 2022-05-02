@@ -9,7 +9,7 @@
 <script>
 import profile from "@/components/profileInGame.vue";
 import gameLobby from "@/components/gameLobby.vue";
-import { getMyInformation } from "@/api/mafiaAPI";
+import { GameRoomEvent } from "@/api/mafiaAPI";
 
 export default {
   transition: "lobby",
@@ -19,12 +19,17 @@ export default {
     gameLobby,
   },
   created() {
-    this.$root.mySocket = this.$nuxtSocket({
-      channel: "/lobby",
+    this.$root.lobbySocket = this.$nuxtSocket({
+      channel: "/room",
       withCredentials: true,
       transports: ["websocket"],
     });
     this.$store.commit("mainChatInit", "#lobby");
+  },
+  mounted() {
+    this.$root.lobbySocket.emit(GameRoomEvent.JOIN, {
+      roomId: 0,
+    });
   },
   // asyncData({ store }) {
   //   // const response = getMyInformation();
@@ -34,6 +39,9 @@ export default {
   //   }
   //   store.dispatch("user/fetchMyInfo");
   // },
+  beforeDestroy() {
+    this.$root.lobbySocket.emit(GameRoomEvent.LEAVE);
+  },
 };
 </script>
 <style lang="scss">
