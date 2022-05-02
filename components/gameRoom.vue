@@ -154,7 +154,8 @@
 import chatBox from "@/components/lobby_elements/chatBox.vue";
 import sideBar from "@/components/lobby_elements/sideBar.vue";
 import Janus from "@/plugins/janus";
-import { leaveRoom, getRoom, GameRoomEvent } from "@/api/mafiaAPI";
+import hark from "@/plugins/hark";
+import { GameRoomEvent } from "@/api/mafiaAPI";
 
 export default {
   components: {
@@ -172,6 +173,7 @@ export default {
       socket: null,
       isReady: false,
       messages: [],
+      speechEvents: null,
     };
   },
   computed: {
@@ -210,7 +212,6 @@ export default {
     //   this.$router.push(`/lobby`)
     // }
     leave() {
-      this.$root.mySocket.emit(GameRoomEvent.LEAVE);
       this.$router.push("/lobby");
       // leaveRoom(this.$route.params.id).then((res) => {
       //   if (res.data.success) {
@@ -226,7 +227,7 @@ export default {
       var unpublish = { request: "unpublish" };
       var leave = { request: "leave" };
       let vrc = this;
-      this.$root.mySocket.emit(GameRoomEvent.LEAVE);
+      this.$root.roomSocket.emit(GameRoomEvent.LEAVE);
       this.storePlugin.send({
         message: unpublish,
         success: function () {
@@ -246,9 +247,13 @@ export default {
           console.log("leave failed:", error);
         },
       });
+      if (this.speechEvents) {
+        this.speechEvents.stop();
+        this.speechEvents = null;
+      }
     },
     getReady() {
-      this.$root.mySocket.emit(GameRoomEvent.READY);
+      this.$root.roomSocket.emit(GameRoomEvent.READY);
     },
     goToGame() {
       this.$router.replace({
@@ -261,7 +266,7 @@ export default {
       });
     },
     getStart() {
-      this.$root.mySocket.emit(GameRoomEvent.START);
+      this.$root.roomSocket.emit(GameRoomEvent.START);
     },
   },
   mounted() {
@@ -280,7 +285,7 @@ export default {
     let roomId = parseInt(this.$route.params.room);
     // let newRemoteFeed = null;
 
-    this.$root.mySocket.on(GameRoomEvent.JOIN, (data) => {
+    this.$root.roomSocket.on(GameRoomEvent.JOIN, (data) => {
       console.log(data.member);
       this.$store.commit("stream/addRoomMember", data.member);
       if (data.member.userId !== this.myInfo.id) {
@@ -288,7 +293,7 @@ export default {
       }
     });
 
-    this.$root.mySocket.on(GameRoomEvent.MEMBER_LIST, (data) => {
+    this.$root.roomSocket.on(GameRoomEvent.MEMBER_LIST, (data) => {
       console.log(data.members);
       // for (let i = 0; i < data.members.length; i++) {
       //   let member = data.members[i];
@@ -301,21 +306,21 @@ export default {
       this.$store.commit("stream/setRoomMembers", data.members);
     });
 
-    this.$root.mySocket.on(GameRoomEvent.START, (data) => {
+    this.$root.roomSocket.on(GameRoomEvent.START, (data) => {
       console.log(data);
       if (data.start) {
         this.goToGame();
       }
     });
 
-    this.$root.mySocket.on(GameRoomEvent.LEAVE, (data) => {
+    this.$root.roomSocket.on(GameRoomEvent.LEAVE, (data) => {
       if (data.member.userId !== this.myInfo.id) {
         this.$store.commit("stream/removeRoomMember", data.member);
         this.$toast.show(data.member.nickname + " 님이 퇴장하셨습니다.");
       }
     });
 
-    this.$root.mySocket.emit(GameRoomEvent.JOIN, {
+    this.$root.roomSocket.emit(GameRoomEvent.JOIN, {
       roomId: this.$route.params.id,
     });
 
@@ -730,6 +735,14 @@ export default {
                   vrc.$store.commit("stream/addSubscribeStream", {
                     stream: stream,
                     nickname: username,
+                  });
+                  vrc.speechEvents = hark(stream, {});
+                  vrc.speechEvents.on("speaking", function () {
+                    console.log("speaking");
+                  });
+
+                  vrc.speechEvents.on("stopped_speaking", function () {
+                    console.log("stopped_speaking");
                   });
                   // var elId = "remote" + vrc.myInfo.profile.userId;
                   // document.getElementById(elId).pause();
