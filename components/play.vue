@@ -271,13 +271,13 @@ export default {
         // x : 수평 방향의 배율. 음수 값은 수직 축에서 픽셀을 뒤집음
         // y : 수직 방향의 배율. 음수 값은 가로 축에서 픽셀을 뒤집음
         canvasCtx.scale(-1, 1);
-        canvasCtx.drawImage(
-          results.image,
-          0,
-          0,
-          canvasElement.width,
-          canvasElement.height
-        );
+        // canvasCtx.drawImage(
+        //   results.image,
+        //   0,
+        //   0,
+        //   canvasElement.width,
+        //   canvasElement.height
+        // );
 
         let fStatus = this.fStatus;
         let cStatus = this.cStatus;
