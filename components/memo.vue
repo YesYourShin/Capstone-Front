@@ -126,23 +126,23 @@ export default {
         transports: ["websocket"],
       });
       // 자기 비디오랑 캔버스
-      this.myVideo = document.getElementById(
-        `usercam${this.myInfo.profile.id}`
-      );
-      this.myCanvas = document.getElementsByClassName(
-        `output_canvas${this.myInfo.profile.id}`
-      )[0];
-      this.myCtx = this.myCanvas.getContext("2d");
+      // this.myVideo = document.getElementById(
+      //   `usercam${this.myInfo.profile.id}`
+      // );
+      // this.myCanvas = document.getElementsByClassName(
+      //   `output_canvas${this.myInfo.profile.id}`
+      // )[0];
+      // this.myCtx = this.myCanvas.getContext("2d");
 
-      // await this.handCognition();
-      await this.myFace();
+      // // await this.handCognition();
+      // await this.myFace();
 
       // 타인의 스트림만큼 캔버스에 메모 그리기
-      for (let data of this.roomMembers) {
-        if (data.id != this.myInfo.profile.id) {
-          await this.faceMemo(data);
-        }
-      }
+      // for (let data of this.roomMembers) {
+      //   if (data.id != this.myInfo.profile.id) {
+      //     await this.faceMemo(data);
+      //   }
+      // }
     };
     main();
   },
