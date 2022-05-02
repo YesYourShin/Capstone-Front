@@ -3,11 +3,11 @@
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
           <Timer
-      v-on:startThisGame="gameStart"
       v-on:finishPunishmentVote="nightEvent"
       v-on:nightFinishEvent="nightResult"
       v-on:startVote="startVote"
-      v-on:finishVote="finishVote"
+      v-on:voteNumCheck=" voteNumCheck"
+      v-on:punishmentVoteCheck="punishmentVoteCheck"
       ref="timer"
       class="timerbox"
     >{{counter}}</Timer>
@@ -226,8 +226,7 @@ export default {
      this.socket.emit(GameEvent.Job)
        console.log("직업 분배 소켓")
         this.socket.on(GameEvent.Job, (data) => {
-          console.log(data.job)
-          // this.myJob = data.
+          console.log(data)
         })
 
       // setTimeout(() => {
@@ -326,22 +325,21 @@ export default {
     // 투표값 전송을 위한 메서드로, 집계는 startVote에서 한다.
     // 자신의 투표값
     voteNumCheck() {
-      if (this.selectedUser === true) {
         this.electedPlayer = 1;
         this.socket.emit(GameEvent.Vote, {
           vote : this.electedPlayer
-        }, this.finishVote())
-      }
+        })
+        this.finishVote()
+
     },
 
     finishVote() {
-      setTimeout(() => {
+        this.socket.emit(GameEvent.FinishV);
         this.socket.on(GameEvent.FinishV, (data) => {
           console.log(data);
-          this.PunishmentVote();
         })
-      }, 3000)
       this.$refs.billboard.finishVoteBoard()
+      this.PunishmentVote();
         // this.socket.on(GameEvent.FinishV, (data) => {
         //   console.log(data)
         // })
@@ -423,7 +421,7 @@ export default {
 
         }
         this.socket.emit(GameEvent.Punish)
-        this.socket.on(GameEvent.FinshP, (data) => {
+        this.socket.on(GameEvent.FinishP, (data) => {
           console.log(data)
         })
       }, 3000)
@@ -497,7 +495,7 @@ export default {
       setTimeout(() => {
         this.morningEvent();
       },3000)
-      }
+
     },
     victorySearch() {
       console.log("test", this.mafiaNum);
@@ -518,7 +516,7 @@ export default {
       this.flowMessage =
         "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
     },
-
+  }
   // async asyncData({ params }) {
   //   const roomInfo = await getRoom(params.id);
   //   console.log('roomId : room ',params)
