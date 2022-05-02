@@ -16,7 +16,7 @@
           <div>
             <p class="font-bold">
               {{ roomInfo.mode === "classic" ? "클래식 모드" : "확장 모드" }} |
-              {{ roomMembers.length }}/{{ roomInfo.publishers }}
+              {{ roomMembers.length ? null : 0 }}/{{ roomInfo.publishers }}
             </p>
           </div>
         </div>
@@ -579,7 +579,7 @@ export default {
                           videoRecv: false,
                           audioSend: true,
                           videoSend: true,
-                          video: "hires-16:9",
+                          video: "stdres-16:9",
                         },
 
                         success: function (jsep) {
