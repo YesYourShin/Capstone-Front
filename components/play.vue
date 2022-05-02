@@ -84,7 +84,7 @@
             width="640"
             height="360"
           ></canvas>
-          <div :class="['userInfo' + s.id]">
+          <div class="userInfo" :class="['userInfo' + s.id]">
             {{
               "level : " +
               userLevel[s.id - 1] +

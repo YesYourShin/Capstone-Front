@@ -64,24 +64,27 @@
       video {
         width: 360px;
         background-color: orange;
-        border: 3px solid white;
+        // border: 3px solid white;
         position: relative;
         z-index: 1;
       }
       canvas {
-        width: 355px;
-
+        width: 361px;
         border: 3px solid white;
-        top: -200px;
+        top: -203px;
         position: relative;
         z-index: 2;
       }
       div {
-        width: 360px;
+        width: 361px;
         height: 30px;
         line-height: 30px;
-        padding-left: 5px;
+        // padding-left: 5px;
+        top: -203px;
         background-color: #ffffff;
+      }
+      .userInfo {
+        position: relative;
       }
     }
   }
@@ -173,23 +176,27 @@
       video {
         width: 360px;
         background-color: orange;
-        border: 3px solid white;
+        // border: 3px solid white;
         position: relative;
         z-index: 1;
       }
       canvas {
-        width: 355px;
+        width: 361px;
         border: 3px solid white;
-        top: -200px;
+        top: -203px;
         position: relative;
         z-index: 2;
       }
       div {
-        width: 355px;
+        width: 361px;
         height: 30px;
         line-height: 30px;
-        padding-left: 5px;
+        // padding-left: 5px;
+        top: -203px;
         background-color: #ffffff;
+      }
+      .userInfo {
+        position: relative;
       }
     }
   }
