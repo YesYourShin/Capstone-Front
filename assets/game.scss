@@ -16,12 +16,12 @@
   background-size: 100%;
   background-position: center;
 
-  .dayTimeBox{
+  .dayTimeBox {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     margin: 20px 0 20px 0;
-    vertical-align:middle;
+    vertical-align: middle;
 
     .timerbox {
       height: 50px;
@@ -38,7 +38,6 @@
       padding: 10px 0;
     }
   }
-
 
   .videomainbox {
     display: flex;
@@ -99,7 +98,7 @@
     width: 620px;
     height: 360px;
     // margin: auto;
-    background-color: grey  ;
+    background-color: grey;
     border: 3px solid whitesmoke;
   }
 }
@@ -120,12 +119,12 @@
   background-size: 100%;
   background-position: center;
 
-  .dayTimeBox{
+  .dayTimeBox {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     margin: 20px 0 20px 0;
-    vertical-align:middle;
+    vertical-align: middle;
 
     .timerbox {
       height: 50px;
@@ -142,7 +141,6 @@
       padding: 10px 0;
     }
   }
-
 
   .videomainbox {
     display: flex;
@@ -203,7 +201,7 @@
     width: 620px;
     height: 360px;
     // margin: auto;
-    background-color: grey  ;
+    background-color: grey;
     border: 3px solid whitesmoke;
   }
 }

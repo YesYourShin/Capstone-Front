@@ -68,6 +68,7 @@
           </video>
           <video
             v-else
+            class="myVideo"
             :class="['aspect-video usercam' + s.id]"
             :id="['usercam' + s.id]"
             :src-object.prop.camel="s.stream"
@@ -80,7 +81,7 @@
             width="640"
             height="360"
           ></canvas>
-          <div :class="['userInfo' + s.id]">
+          <div class="userInfo" :class="['userInfo' + s.id]">
             {{ "level : " + userLevel[s.id - 1] + "   " + userName[s.id - 1] }}
           </div>
         </div>
