@@ -20,7 +20,7 @@ export default {
     nextDay() {
       this.dayCount++
       console.log(this.dayCount)
-      if (dayCount > 0) {
+      if (this.dayCount > 0) {
         this.countStart = true;
       }
     }

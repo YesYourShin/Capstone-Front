@@ -108,13 +108,7 @@
                   <div
                     class="border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"
                   >
-<<<<<<< HEAD
-                    <!-- {{ room.members[0].nickname }} -->
                     {{ room.members[0] ? room.members[0].nickname : "" }}
-                    <!-- {{ members }} -->
-=======
-                    {{ room.members[0] ? room.members[0].nickname : "" }}
->>>>>>> 5924958b1dc4d7ec1a25b4a4f09f4c091f953af3
                   </div>
                   <div
                     class="col-span-2 border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"

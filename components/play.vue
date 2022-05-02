@@ -1,11 +1,8 @@
 <template>
   <div :class="{'gamebox-first': this.flag, 'gamebox-second': !this.flag}" >
-    <!-- <Billboard blilboard-vote="vote-result"/> -->
-    <div class="chatbox">
-      <DayCount ref="dayCount"></DayCount>
-    </div>
-    <Billboard ref="billboard" />
-    <Timer
+    <div class="dayTimeBox">
+      <DayCount ref="dayCount" class="chatbox"></DayCount>
+          <Timer
       v-on:startThisGame="gameStart"
       v-on:finishPunishmentVote="nightEvent"
       v-on:nightFinishEvent="nightResult"
@@ -14,6 +11,9 @@
       ref="timer"
       class="timerbox"
     >{{counter}}</Timer>
+    </div>
+    <Billboard ref="billboard" />
+
 
     <!-- <div class="itemBox">
         <div class="settingbox">
@@ -85,9 +85,7 @@
               "level : " +
               userLevel[s.id - 1] +
               "   " +
-              userName[s.id - 1] +
-              " " +
-              survivePlayer[s.id - 1]
+              userName[s.id - 1]
             }}
           </div>
         </div>
@@ -141,11 +139,6 @@ export default {
   },
   data() {
     return {
-      memoFor: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      flowMessage: "게임 시작버튼 눌러주세요", //전광판에 나올 메세지
-      playerVote: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 각 유저의 투표수
-      playerJob: [], // 각 유저의 직업
-      survivePlayer: [], // 각 유저의 생존여부
       userLevel: [108, 17, 9, 666, 722, 15, 11, 12, 13, 14], // 각 유저의 레벨 (더미)
       userName: [
         "유저1",
@@ -159,28 +152,22 @@ export default {
         "유저9",
         "유저10",
       ], // 각 유저의 닉네임(더미)
-      electedPlayersNum: 1, // 최다 투표 유저가 중복될 경우, 그만큼 +1한다.
-      electedPlayer: 0, // 지목된 플레이어
-      electedPlayerVote: 0, // 지목된 플레이어가 받은 득표
-      punishmentPlayer: 0, // 찬반투표로 죽을 유저
-      punishmentPros: 0, // 찬성표
-      punishmentCons: 0, // 반대표
-      killPlayer: 0,
-      mafiaNum: 2,
-      citizenNum: 8,
-      voteNum: 0,
-      doctorSelected: 0,
+      electedPlayer: 0, // 마피아로 의심되는 유저 투표
+      punishmentPlayer: false, // 찬반 투표, 디폴트는 반대
+      selectedDecided: false, // 자신의 선택 확정, 디폴트는 미승인 (true가 되야 선택값 넘어감)
+      mafiaSelected: 0, // 마피아일 경우 유저 지목
+      doctorSelected: 0, // 의사일 경우 유저 지목
+      policeSelected : 0, // 경찰일 경우 유저 지목
       myNum : 0,
       myJob : '',
-      mySocketId: '',
-      userSocketInfo: [],
-      myVote: 0,
+      myNick : '',
       flag: false,
-      counter: 60,
       day: false,
+      counter: 60,
     };
   },
   mounted() {
+    // let newRemoteFeed = null;
     this.socket = this.$nuxtSocket({
       channel: "/game",
       withCredentials: true,
@@ -190,19 +177,21 @@ export default {
 
   },
   created() {
+
   },
   methods: {
-    exitRoom() {
-      this.socket.emit("exitRoom");
-    },
     // 게임에 입장하는 즉시 실행되며, 유저의 소켓 정보 받아옴
     gameSocketSet() {
-      const roomId = this.$store.state.roomId.roomId
-      console.log('현재 방 번호', roomId)
-      this.socket.emit('game:join', {roomId})
-      this.flowMessage = "잠시 후 게임을 시작합니다.";
-      this.socket.on('game:join', (data)=> {
+      // this.myNum = this.myInfo.profile.nickname
+      console.log('현재 방 번호', this.$store.state.roomId.roomId)
+          this.socket.emit('game:join', {
+            roomId: this.$store.state.roomId.roomId
+          });
+      this.$refs.billboard.gameStartBoard()
+      this.socket.on('gamejoin', (data)=> {
         console.log(data);
+        this.myNick = data.profile.nickname
+        console.log(this.myNick)
         // this.mySocketId = data.user
         // console.log(this.mySocketId)
       })
@@ -211,110 +200,111 @@ export default {
       // 입장 5초 후에 게임을 시작한다.
       setTimeout(()=> {
         this.gameStart()
-      }, 1000)
+      }, 5000)
     },
+    // 게임 스타트, 게임 스타트 관련 데이터
     gameStart() {
-      this.flowMessage = "마피아 게임 시작";
       this.socket.emit(GameEvent.Start)
-      this.socket.on(GameEvent.Start, (data)=> {
+      this.socket.on(GameEvent.Start, (data) => {
         console.log(data)
         this.grantPlayerJob();
       })
-      setTimeout(()=> {
-        // this.socket.emit('gameMessage')
-        // this.socket.on('gameMessage', (data)=> {
-        //   console.log(data)
-        // })
-      },1000)
+      this.$refs.billboard.grantPlayerJobBeforeBoard()
+
+
+
     },
 
     grantPlayerJob() {
-      this.flowMessage = '직업을 나누고 있습니다...'
+      this.$refs.billboard.grantPlayerJobAfterBoard()
       // setTimeout(() => {
-      //   // this.flowMessage = '당신은 테스트입니다.'
-      //   // setTimeout(()=> {
-      //   //   this.flowMessage = '빨리 만드시기 바랍니다.'
-      //   //   setTimeout(()=> {
-      //   // this.morningEvent();
-      //   //   }, 1000)
-      //   // }, 1000)
+        // this.flowMessage = '당신은 테스트입니다.'
+        // setTimeout(()=> {
+        //   this.flowMessage = '빨리 만드시기 바랍니다.'
+        //   setTimeout(()=> {
+        // this.morningEvent();
+        //   }, 1000)
+        // }, 1000)
       // },1000)
-        // this.socket.emit(GameEvent.Job)
-        // this.socket.on(GameEvent.Job, (data) => {
-        //   console.log(data)
-        // })
+     this.socket.emit(GameEvent.Job)
+       console.log("직업 분배 소켓")
+        this.socket.on(GameEvent.Job, (data) => {
+           console.log("직업 분배 소켓")
+          console.log(data)
+        })
 
       // setTimeout(() => {
-        // this.socket.emit("grantJob")
-        // this.socket.on('grantJob', (data) => {
-        //   console.log(data)
-          // console.log(data2)
-          // this.userSocketInfo = data2
-          // this.myJob = data.jobs.job
-          // console.log(this.myJob)
-          // for(let i = 0 ; i < this.userSocketInfo.length; i++) {
-          //   if (this.mySocketId == this.userSocketInfo[i]) {
-          //     this.myNum = i+1
-            // }
-          // }
-          // console.log(this.myNum);
-          // for(let i = 0 ; i < this.userSocketInfo.length; i++) {
-          //   if (i == this.myNum-1) {
-          //     this.myJob = data.jobs[i].job
-          //   }
-          // }
-          // console.log(this.myJob);
-          // this.myJob = data.jobs[this.myNum].job
-          // console.log(this.roomJob);
-          // this.flowMessage = '당신은 ' + this.myJob + '입니다'
-          // setTimeout(() => {
-          //   if (this.myJob == 'MAFIA') {
-          //     this.flowMessage = '시민들에게 들키지 않고 다른 마피아와 힘을 합쳐 시민을 제거하면 됩니다.'
-          //   } else if (this.myJob == 'DOCTOR') {
-          //     this.flowMessage = '당신은 매일 밤마다 1명의 유저를 선택하여 마피아의 공격으로부터 보호할 수 있습니다. 단, 자신은 보호할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-          //   } else if (this.myJob == 'POLICE') {
-          //     this.flowMessage = '당신은 매일 밤마다 1명의 유저를 선택하여 해당 유저의 직업을 알 수 있습니다. 단, 자신은 선택할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-          //   } else {
-          //     this.flowMessage = '당신은 다른 시민들과 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-          //   }
+      //   this.socket.emit("grantJob")
+      //   this.socket.on('grantJob', (data) => {
+      //     console.log(data)
+      //     console.log(data2)
+      //     this.userSocketInfo = data2
+      //     this.myJob = data.jobs.job
+      //     console.log(this.myJob)
+      //     for(let i = 0 ; i < this.userSocketInfo.length; i++) {
+      //       if (this.mySocketId == this.userSocketInfo[i]) {
+      //         this.myNum = i+1
+      //       }
+      //     }
+      //     console.log(this.myNum);
+      //     for(let i = 0 ; i < this.userSocketInfo.length; i++) {
+      //       if (i == this.myNum-1) {
+      //         this.myJob = data.jobs[i].job
+      //       }
+      //     }
+      //     console.log(this.myJob);
+      //     this.myJob = data.jobs[this.myNum].job
+      //     console.log(this.roomJob);
+      //     this.flowMessage = '당신은 ' + this.myJob + '입니다'
+      //     setTimeout(() => {
+      //       if (this.myJob == 'MAFIA') {
+      //         this.flowMessage = '시민들에게 들키지 않고 다른 마피아와 힘을 합쳐 시민을 제거하면 됩니다.'
+      //       } else if (this.myJob == 'DOCTOR') {
+      //         this.flowMessage = '당신은 매일 밤마다 1명의 유저를 선택하여 마피아의 공격으로부터 보호할 수 있습니다. 단, 자신은 보호할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+      //       } else if (this.myJob == 'POLICE') {
+      //         this.flowMessage = '당신은 매일 밤마다 1명의 유저를 선택하여 해당 유저의 직업을 알 수 있습니다. 단, 자신은 선택할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+      //       } else {
+      //         this.flowMessage = '당신은 다른 시민들과 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
+      //       }
             setTimeout(() => {
               this.morningEvent();
             },3000)
           // },3000)
-      //   })
+        // })
 
       // }, 3000)
     },
+    // 아침 이벤트 시작
+    // 빌보드에서 아침 메서드 실행
+    //
     morningEvent() {
-      this.flowMessage = '낮이 되었습니다.'
-      this.flag = !this.flag
-      const roomId = this.$store.state.roomId.roomId
+      this.$refs.billboard.morningEventBoard()
       const dayjs = require("dayjs");
-      console.log(this.roomId)
-      this.socket.emit(GameEvent.Day, this.flag)
-      this.socket.emit()
+      const morningStart = dayjs();
+      morningStart.format();
+      console.log(morningStart);
+      this.socket.emit(GameEvent.Day, {
+        day: this.flag
+      });
+      this.socket.on(GameEvent.Day, (data) => {
+          console.log(data);
+          this.flag = data.day
+      })
+      this.socket.emit(GameEvent.Timer)
+      this.socket.on(GameEvent.Timer, (data) => {
+        console.log(data)
+        // while(dayjs.format === data.start) {
+        //   this.$refs.timer.morningTimer();
+        // }
+      })
       this.$refs.timer.morningTimer();
       this.$refs.dayCount.nextDay()
-      // while(this.counter == 0) {
-      //   this.socket.on('game:timer', data)
-      //   console.log(data)
-      //   this.startVote();
-      // }
-      //   this.socket.on('game:timer', data => {
-      //     console.log(data)
-      // },3000)
-      this.socket.on(GameEvent.Timer, (data)=> {
-        console.log(data);
-        // this.mySocketId = data.user
-        // console.log(this.mySocketId)
-      })
       console.log('타이머 실행')
       // 타이머에서 다음 메서드를 실행하게 한다!
     },
     startVote() {
       console.log('1')
-      this.flowMessage =
-        "해가 저물어갑니다. 밤이 되기 전, 마피아로 의심되는 유저를 지목합니다";
+      this.$refs.billboard.startVoteBoard()
       setTimeout(()=> {
         this.$refs.timer.voteTimer();
       }, 3000)
@@ -335,9 +325,8 @@ export default {
     },
     finishVote() {
       console.log('adf')
-      this.flowMessage =
-        "투표 결과를 발표를 합니다";
-        // this.socket.on(GameEvent.FinshV, (data) => {
+      this.$refs.billboard.finishVoteBoard()
+        // this.socket.on(GameEvent.FinishV, (data) => {
         //   console.log(data)
         // })
         // this.finishPunishmentVote();
@@ -360,27 +349,36 @@ export default {
 
     },
     PunishmentVote() {
-      console.log('여기까지 개발')
-            this.flowMessage =
-        "지목된 유저의 사형 찬반투표를 진행합니다";
+      this.$refs.billboard.startPunishmentVoteBoard()
       setTimeout(()=> {
         this.$refs.timer.punishmentTimer();
       }, 3000)
       // setTimeout(() => {
         this.socket.emit(GameEvent.Punish)
-        this.socket.on(GameEvent.FinshP, (data) => {
+        this.socket.on(GameEvent.FinishP, (data) => {
           console.log(data)
         })
         // this.nightEvent();
       // },3000)
-
-
     },
 
     nightEvent() {
-      console.log('2')
-      this.flag = !this.flag
-      this.flowMessage = '밤이 되었습니다.'
+      this.socket.emit(GameEvent.Day, {
+        day: this.flag
+      });
+      this.socket.on(GameEvent.Day, (data) => {
+          console.log(data);
+          this.flag = data.day
+      })
+      this.socket.emit(GameEvent.Timer)
+      this.socket.on(GameEvent.Timer, (data) => {
+
+        console.log(data)
+        // while(dayjs.format === data.start) {
+        //   this.$refs.timer.morningTimer();
+        // }
+      })
+      this.$refs.billboard.nightEventBoard()
       setTimeout(()=> {
         this.$refs.timer.nightEvent();
           if(this.myJob == 'MAFIA') {
@@ -408,8 +406,7 @@ export default {
     nightResult() {
       console.log('3')
       // this.$refs.billboard.finishAllVote();
-      this.flowMessage = "능력 사용이 끝났습니다.";
-
+      this.$refs.billboard.nightResultBoard()
       // this.killPlayer = prompt("마피아가 죽일 유저 선택!");
       // console.log(this.survivePlayer[this.killPlayer]);
       // console.log(this.killPlayer);
