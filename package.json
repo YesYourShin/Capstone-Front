@@ -42,7 +42,8 @@
     "vue-template-compiler": "^2.6.14",
     "vuetify": "^2.6.1",
     "webpack": "^4.46.0",
-    "webrtc-adapter": "^7.5.0"
+    "webrtc-adapter": "^7.5.0",
+    "wildemitter": "^1.2.1"
   },
   "devDependencies": {
     "@nuxt/postcss8": "^1.1.3",

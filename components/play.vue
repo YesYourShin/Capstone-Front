@@ -2,7 +2,6 @@
   <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }">
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
-<<<<<<< HEAD
           <Timer
       v-on:finishPunishmentVote="nightEvent"
       v-on:nightFinishEvent="nightResult"
@@ -12,18 +11,6 @@
       ref="timer"
       class="timerbox"
     >{{counter}}</Timer>
-=======
-      <Timer
-        v-on:startThisGame="gameStart"
-        v-on:finishPunishmentVote="nightEvent"
-        v-on:nightFinishEvent="nightResult"
-        v-on:startVote="startVote"
-        v-on:finishVote="finishVote"
-        ref="timer"
-        class="timerbox"
-        >{{ counter }}</Timer
-      >
->>>>>>> b2337c133cca3344aaa6680ffd7e7168aa08e396
     </div>
     <Billboard ref="billboard" />
 
@@ -210,11 +197,11 @@ export default {
   },
   async mounted() {
     // let newRemoteFeed = null;
-    this.socket = this.$nuxtSocket({
-      channel: "/game",
-      withCredentials: true,
-      transports: ["websocket"],
-    });
+    // this.socket = this.$nuxtSocket({
+    //   channel: "/game",
+    //   withCredentials: true,
+    //   transports: ["websocket"],
+    // });
     this.gameSocketSet();
     this.myVideo = document.getElementById(`usercam${this.myInfo.profile.id}`);
     this.myCanvas = document.getElementsByClassName(
@@ -388,11 +375,11 @@ export default {
     gameSocketSet() {
       // this.myNum = this.myInfo.profile.nickname
       console.log("현재 방 번호", this.$store.state.roomId.roomId);
-      this.socket.emit("game:join", {
+      this.$root.gameSocket.emit("game:join", {
         roomId: this.$store.state.roomId.roomId,
       });
       this.$refs.billboard.gameStartBoard();
-      this.socket.on("gamejoin", (data) => {
+      this.$root.gameSocket.on("gamejoin", (data) => {
         console.log(data);
         this.myNick = data.profile.nickname;
         console.log(this.myNick);
@@ -408,8 +395,8 @@ export default {
     },
     // 게임 스타트, 게임 스타트 관련 데이터
     gameStart() {
-      this.socket.emit(GameEvent.Start);
-      this.socket.on(GameEvent.Start, (data) => {
+      this.$root.gameSocket.emit(GameEvent.Start);
+      this.$root.gameSocket.on(GameEvent.Start, (data) => {
         console.log(data);
         this.grantPlayerJob();
       });
@@ -427,20 +414,11 @@ export default {
       //   }, 1000)
       // }, 1000)
       // },1000)
-<<<<<<< HEAD
-     this.socket.emit(GameEvent.Job)
-       console.log("직업 분배 소켓")
-        this.socket.on(GameEvent.Job, (data) => {
-          console.log(data)
-        })
-=======
-      this.socket.emit(GameEvent.Job);
-      console.log("직업 분배 소켓");
-      this.socket.on(GameEvent.Job, (data) => {
-        console.log(data.job);
-        // this.myJob = data.
-      });
->>>>>>> b2337c133cca3344aaa6680ffd7e7168aa08e396
+    this.$root.gameSocket.emit(GameEvent.Job)
+      console.log("직업 분배 소켓")
+      this.$root.gameSocket.on(GameEvent.Job, (data) => {
+      console.log(data)
+    })
 
       // setTimeout(() => {
       //   this.socket.emit("grantJob")
@@ -492,15 +470,15 @@ export default {
       const morningStart = dayjs();
       morningStart.format();
       console.log(morningStart);
-      this.socket.emit(GameEvent.Day, {
+      this.$root.gameSocket.emit(GameEvent.Day, {
         day: this.flag,
       });
-      this.socket.on(GameEvent.Day, (data) => {
+      this.$root.gameSocket.on(GameEvent.Day, (data) => {
         console.log(data);
         this.flag = data.day;
       });
-      this.socket.emit(GameEvent.Timer);
-      this.socket.on(GameEvent.Timer, (data) => {
+      this.$root.gameSocket.emit(GameEvent.Timer);
+      this.$root.gameSocket.on(GameEvent.Timer, (data) => {
         console.log(data);
         // while(dayjs.format === data.start) {
         //   this.$refs.timer.morningTimer();
@@ -539,29 +517,17 @@ export default {
     // 자신의 투표값
     voteNumCheck() {
         this.electedPlayer = 1;
-<<<<<<< HEAD
-        this.socket.emit(GameEvent.Vote, {
+        this.$root.gameSocket.emit(GameEvent.Vote, {
           vote : this.electedPlayer
         })
         this.finishVote()
 
-=======
-        this.socket.emit(
-          GameEvent.Vote,
-          {
-            vote: this.electedPlayer,
-          },
-          this.finishVote()
-        );
-      }
->>>>>>> b2337c133cca3344aaa6680ffd7e7168aa08e396
     },
 
     finishVote() {
-        this.socket.emit(GameEvent.FinishV);
-        this.socket.on(GameEvent.FinishV, (data) => {
+        this.$root.gameSocket.emit(GameEvent.FinishV);
+        this.$root.gameSocket.on(GameEvent.FinishV, (data) => {
           console.log(data);
-<<<<<<< HEAD
         })
       this.$refs.billboard.finishVoteBoard()
       this.PunishmentVote();
@@ -569,16 +535,6 @@ export default {
         //   console.log(data)
         // })
         // this.finishPunishmentVote();
-=======
-          this.PunishmentVote();
-        });
-      }, 3000);
-      this.$refs.billboard.finishVoteBoard();
-      // this.socket.on(GameEvent.FinishV, (data) => {
-      //   console.log(data)
-      // })
-      // this.finishPunishmentVote();
->>>>>>> b2337c133cca3344aaa6680ffd7e7168aa08e396
       // setTimeout(()=> {
       // //   this.socket.on('finishVote', (data) => {
       // //     console.log(data)
@@ -612,7 +568,7 @@ export default {
     },
 
     punishmentVoteCheck() {
-      this.socket.emit(
+      this.$root.gameSocket.emit(
         GameEvent.FinishP,
         {
           punishVote: this.punishmentPlayer,
@@ -623,7 +579,7 @@ export default {
 
     finishPunishmentVote() {
       setTimeout(() => {
-        this.socket.on(GameEvent.FinishP, (data) => {
+        this.$root.gameSocket.on(GameEvent.FinishP, (data) => {
           console.log(data);
           this.nightEvent();
         });
@@ -632,44 +588,36 @@ export default {
     },
 
     nightEvent() {
-      this.socket.emit(GameEvent.Day, {
+      this.$root.gameSocket.emit(GameEvent.Day, {
         day: this.flag,
       });
-      this.socket.on(GameEvent.Day, (data) => {
+      this.$root.gameSocket.on(GameEvent.Day, (data) => {
         console.log(data);
         this.flag = data.day;
       });
-      this.socket.emit(GameEvent.Timer);
-      this.socket.on(GameEvent.Timer, (data) => {
+      this.$root.gameSocket.emit(GameEvent.Timer);
+      this.$root.gameSocket.on(GameEvent.Timer, (data) => {
         console.log(data);
       });
       this.$refs.billboard.nightEventBoard();
       setTimeout(() => {
         this.$refs.timer.nightEvent();
         if (this.myJob == "MAFIA") {
-          this.socket.emit(GameEvent.Mafia);
+          this.$root.gameSocket.emit(GameEvent.Mafia);
         } else if (this.myJob == "DOCTOR") {
-          this.socket.emit(GameEvent.Doctor);
+          this.$root.gameSocket.emit(GameEvent.Doctor);
         } else if (this.myJob == "POLICE") {
-          this.socket.emit(GameEvent.Police);
-          this.socket.on(GameEvent.Police, (data) => {
+          this.$root.gameSocket.emit(GameEvent.Police);
+          this.$root.gameSocket.on(GameEvent.Police, (data) => {
             console.log(data);
           });
         } else {
         }
-<<<<<<< HEAD
-        this.socket.emit(GameEvent.Punish)
-        this.socket.on(GameEvent.FinishP, (data) => {
+        this.$root.gameSocket.emit(GameEvent.Punish)
+        this.$root.gameSocket.on(GameEvent.FinishP, (data) => {
           console.log(data)
         })
       }, 3000)
-=======
-        this.socket.emit(GameEvent.Punish);
-        this.socket.on(GameEvent.FinshP, (data) => {
-          console.log(data);
-        });
-      }, 3000);
->>>>>>> b2337c133cca3344aaa6680ffd7e7168aa08e396
 
       // setTimeout(() => {
       // this.nightResult();
@@ -739,7 +687,6 @@ export default {
       // }
       setTimeout(() => {
         this.morningEvent();
-<<<<<<< HEAD
       },3000)
 
     },
@@ -763,30 +710,6 @@ export default {
         "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
     },
   }
-=======
-      }, 3000);
-    },
-  },
-  victorySearch() {
-    console.log("test", this.mafiaNum);
-    console.log("test", this.citizenNum);
-    if (this.mafiaNum == 0) {
-      this.citizenWin();
-      // 마피아 0명, 시민 승리
-    } else if (this.citizenNum == 0 || this.mafiaNum >= this.citizenNum) {
-      this.mafiaWin();
-      // 시민 팀이 마피아 수보다 같거나 적음, 마피아 승리
-    }
-  },
-  mafiaWin() {
-    this.flowMessage =
-      "마피아가 남아있는 시민의 수와 같거나 많습니다. 마피아가 승리하였습니다.";
-  },
-  citizenWin() {
-    this.flowMessage = "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
-  },
-
->>>>>>> b2337c133cca3344aaa6680ffd7e7168aa08e396
   // async asyncData({ params }) {
   //   const roomInfo = await getRoom(params.id);
   //   console.log('roomId : room ',params)

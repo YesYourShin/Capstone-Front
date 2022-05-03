@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import * as tf from "@tensorflow/tfjs";
 export default {
   name: "App",
@@ -122,9 +122,9 @@ export default {
 
     const main = async () => {
       // 소켓 연결
-      this.socket = io("http://localhost:3065/game", {
-        transports: ["websocket"],
-      });
+      // this.socket = io("http://localhost:3065/game", {
+      //   transports: ["websocket"],
+      // });
       // 자기 비디오랑 캔버스
       this.myVideo = document.getElementById(
         `usercam${this.myInfo.profile.id}`
@@ -213,13 +213,13 @@ export default {
     },
     postLandmarks(landmarks) {
       const id = this.myInfo.profile.id;
-      this.socket.emit("myFaceLandmarks", {
+      this.$root.gameSocket.emit("myFaceLandmarks", {
         landmarks: landmarks[0],
         id: id,
       });
     },
     getLandmarks() {
-      this.socket.on("othersFaceLandmarks", (data) => {
+      this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
         this.testLandmark[data.id] = data.landmarks;
       });
     },
