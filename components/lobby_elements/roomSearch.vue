@@ -5,7 +5,7 @@
         type="search"
         name="search"
         placeholder="Search room name"
-        class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"
+        class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-80"
       />
       <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
         <svg

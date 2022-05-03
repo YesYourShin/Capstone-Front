@@ -46,9 +46,9 @@
             </p>
           </div> -->
           <div
-            class="justify-self-center mx-2 mb-3 w-full border-2"
+            class="justify-self-center mx-2 mb-3 w-full rounded border-[3px]"
             :class="`${
-              s.ready || index === 0 ? 'border-green-500' : 'border-black'
+              s.ready || index === 0 ? 'border-green-500' : 'border-black/0'
             }`"
             v-for="(s, index) in roomMembers"
             :key="s.userId"

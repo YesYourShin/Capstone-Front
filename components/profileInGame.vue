@@ -13,20 +13,20 @@
         <!-- <img src="@/assets/pageimg/test.png" class="profileimg" /> -->
       </div>
 
-      <div class="profile2" v-if="this.myInfo">
+      <div class="profile2" v-if="myInfo">
         <button class="userlink">
           <NuxtLink to="/mypage" class="btnlink">MyPage</NuxtLink>
         </button>
         <button class="userlink" @click="logout">Logout</button>
         <p class="userlevel">
-          Lv.250z
-          <span class="username" v-if="this.myInfo.profile">
-            {{ this.myInfo.profile.nickname }}
+          Lv.{{ myInfo.profile.level }}
+          <span class="username" v-if="myInfo.profile">
+            {{ myInfo.profile.nickname }}
           </span>
-          <span class="username" v-else> ID : {{ this.myInfo.id }} </span>
+          <span class="username" v-else> ID : {{ myInfo.id }} </span>
         </p>
-        <p class="usertext" v-if="this.myInfo.profile">
-          {{ this.myInfo.profile.selfIntroduction }}
+        <p class="usertext" v-if="myInfo.profile">
+          {{ myInfo.profile.selfIntroduction }}
         </p>
         <p class="usertext" v-else>상태메세지를 입력해주세요.</p>
       </div>
