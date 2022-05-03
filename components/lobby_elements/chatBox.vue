@@ -12,8 +12,11 @@
         :index="index"
         :selectedIndex="$store.state.selectedIndex"
       >
-        <div class="flex justify-between items-center px-1">
-          <p class="font-bold inline-block w-full" @click="tabClicked(index)">
+        <div class="flex justify-between relative items-center">
+          <p
+            class="font-bold inline-block w-full px-2"
+            @click="tabClicked(index)"
+          >
             {{ chat.name }}
           </p>
 
@@ -31,10 +34,16 @@
               clip-rule="evenodd"
             />
           </svg>
+          <TabBorder class="h-2/3" :index="index" :chats="chats">
+            &nbsp;
+          </TabBorder>
         </div>
       </Tab>
     </transition-group>
-    <div class="h-52 bg-black/75">
+    <div
+      class="h-52 bg-black/75 border-t-4"
+      style="border-color: rgb(48, 48, 48)"
+    >
       <div class="h-full flex flex-col-reverse overflow-auto">
         <div
           v-for="(message, index) in chats[selectedIndex].messages"
@@ -53,7 +62,10 @@
       type="text"
       name="chatInput"
     /> -->
-    <div class="bg-gray-400 flex align-center py-2 px-3">
+    <div
+      class="flex align-center py-2 px-3"
+      style="background-color: rgb(48, 48, 48)"
+    >
       <!-- <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6 hover:cursor-pointer hover:text-blue-700"
@@ -71,13 +83,40 @@
       <div class="grow mr-3">
         <input
           type="text"
-          class="w-full bg-white rounded-lg px-2 outline-none"
+          class="w-full bg-white rounded-lg px-2 py-1 outline-none"
           placeholder="Type your message here..."
           v-model="input"
           @keyup.enter="sendMessage"
         />
       </div>
-      <v-icon>mdi-send</v-icon>
+      <!-- <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+        class="h-6 w-6 hover:cursor-pointer inline text-amber-300 hover:text-blue-700"
+        @click="sendMessage"
+      >
+        <path
+          d="M511.6 36.86l-64 415.1c-1.5 9.734-7.375 18.22-15.97 23.05c-4.844 2.719-10.27 4.097-15.68 4.097c-4.188 0-8.319-.8154-12.29-2.472l-122.6-51.1l-50.86 76.29C226.3 508.5 219.8 512 212.8 512C201.3 512 192 502.7 192 491.2v-96.18c0-7.115 2.372-14.03 6.742-19.64L416 96l-293.7 264.3L19.69 317.5C8.438 312.8 .8125 302.2 .0625 289.1s5.469-23.72 16.06-29.77l448-255.1c10.69-6.109 23.88-5.547 34 1.406S513.5 24.72 511.6 36.86z"
+        />
+      </svg> -->
+      <div
+        class="p-1 cursor-pointer rounded-md hover:bg-amber-300/50 transition"
+      >
+        <svg
+          class="w-6 h-6 text-amber-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 5l7 7-7 7M5 5l7 7-7 7"
+          ></path>
+        </svg>
+      </div>
     </div>
   </div>
 </template>
@@ -86,16 +125,28 @@ import styled from "vue-styled-components";
 import { GameRoomEvent } from "@/api/mafiaAPI";
 
 const tapProps = { index: Number, selectedIndex: Number };
+const TabBorder = styled("div", { index: Number, chats: Array })`
+  border-right: ${(props) =>
+    props.index + 1 !== props.chats.length
+      ? "1px solid rgb(48, 48, 48)"
+      : "none"};
+`;
 const Tab = styled("div", tapProps)`
   width: 12.5%;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
+  overflow: hidden;
   background-color: ${(props) => {
-    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#b7b7b7"}`;
+    return `${
+      props.index == props.selectedIndex ? "rgb(48, 48, 48)" : "rgb(15, 15, 15)"
+    }`;
   }};
-  border-width: 2px;
+  color: rgb(216, 216, 216);
+  /* border-width: 2px; */
   border-color: ${(props) => {
-    return `${props.index == props.selectedIndex ? "#f2f2f2" : "#d7d7d7"}`;
+    return `${
+      props.index == props.selectedIndex ? "rgb(48, 48, 48)" : "rgb(15, 15, 15)"
+    }`;
   }};
   position: relative;
   transition-property: color, background-color, border-color,
@@ -110,7 +161,18 @@ const Tab = styled("div", tapProps)`
   cursor: pointer;
   &:hover {
     background-color: ${(props) => {
-      return `${props.index == props.selectedIndex ? "#f2f2f2" : "#d7d7d7"}`;
+      return `${
+        props.index == props.selectedIndex
+          ? "rgb(48, 48, 48)"
+          : "rgb(30, 30, 30)"
+      }`;
+    }};
+    border-color: ${(props) => {
+      return `${
+        props.index == props.selectedIndex
+          ? "rgb(48, 48, 48)"
+          : "rgb(30, 30, 30)"
+      }`;
     }};
   }
 `;
@@ -118,6 +180,7 @@ const Tab = styled("div", tapProps)`
 export default {
   components: {
     Tab,
+    TabBorder,
   },
   data() {
     return {
