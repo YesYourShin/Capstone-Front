@@ -16,12 +16,12 @@
   background-size: 100%;
   background-position: center;
 
-  .dayTimeBox{
+  .dayTimeBox {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     margin: 20px 0 20px 0;
-    vertical-align:middle;
+    vertical-align: middle;
 
     .timerbox {
       height: 50px;
@@ -38,7 +38,6 @@
       padding: 10px 0;
     }
   }
-
 
   .videomainbox {
     display: flex;
@@ -67,24 +66,27 @@
       video {
         width: 360px;
         background-color: orange;
-        border: 3px solid white;
+        // border: 3px solid white;
         position: relative;
         z-index: 1;
       }
       canvas {
-        width: 355px;
-
+        width: 361px;
         border: 3px solid white;
-        top: -200px;
+        top: -203px;
         position: relative;
         z-index: 2;
       }
       div {
-        width: 360px;
+        width: 361px;
         height: 30px;
         line-height: 30px;
-        padding-left: 5px;
+        // padding-left: 5px;
+        top: -203px;
         background-color: #ffffff;
+      }
+      .userInfo {
+        position: relative;
       }
     }
   }
@@ -96,7 +98,7 @@
     width: 620px;
     height: 360px;
     // margin: auto;
-    background-color: grey  ;
+    background-color: grey;
     border: 3px solid whitesmoke;
   }
 }
@@ -117,12 +119,12 @@
   background-size: 100%;
   background-position: center;
 
-  .dayTimeBox{
+  .dayTimeBox {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     margin: 20px 0 20px 0;
-    vertical-align:middle;
+    vertical-align: middle;
 
     .timerbox {
       height: 50px;
@@ -139,7 +141,6 @@
       padding: 10px 0;
     }
   }
-
 
   .videomainbox {
     display: flex;
@@ -168,23 +169,27 @@
       video {
         width: 360px;
         background-color: orange;
-        border: 3px solid white;
+        // border: 3px solid white;
         position: relative;
         z-index: 1;
       }
       canvas {
-        width: 355px;
+        width: 361px;
         border: 3px solid white;
-        top: -200px;
+        top: -203px;
         position: relative;
         z-index: 2;
       }
       div {
-        width: 355px;
+        width: 361px;
         height: 30px;
         line-height: 30px;
-        padding-left: 5px;
+        // padding-left: 5px;
+        top: -203px;
         background-color: #ffffff;
+      }
+      .userInfo {
+        position: relative;
       }
     }
   }
@@ -196,7 +201,7 @@
     width: 620px;
     height: 360px;
     // margin: auto;
-    background-color: grey  ;
+    background-color: grey;
     border: 3px solid whitesmoke;
   }
 }
