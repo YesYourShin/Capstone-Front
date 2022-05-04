@@ -87,6 +87,11 @@ export const getUserInformation = (userId) => {
   return instance.get(`/users/profile/${userId}`);
 };
 
+export const getUserInformationByNickname = (nickname) => {
+  // 특정 유저 정보 불러오기(닉네임으로)
+  return instance.get(`/users/profile?nickname=${nickname}`);
+};
+
 export const storeProfileImage = (image) => {
   // 프로필 이미지 저장
   const formData = new FormData();
@@ -113,14 +118,19 @@ export const editProfile = (data) => {
   return instance.patch(`/users/profile`, data);
 };
 
-export const requestFriend = (userId) => {
+export const requestFriend = (userId, friendId) => {
   // 친구 신청
-  return instance.patch(`/users/friend/${userId}`);
+  return instance.post(`/users/${userId}/friend/${friendId}`);
 };
 
-export const deleteFriend = (userId) => {
+export const confirmFriendRequest = (userId, friendId) => {
+  // 친구 신청 수락 / 거절
+  return instance.patch(`/users/${userId}/friend/${friendId}`);
+}
+
+export const deleteFriend = (userId, friendId) => {
   // 친구 삭제
-  return instance.delete(`/users/friend/${userId}`);
+  return instance.delete(`/users/${userId}/friend/${friendId}`);
 };
 
 // Posts

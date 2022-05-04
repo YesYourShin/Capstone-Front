@@ -1,13 +1,21 @@
 <template lang="">
-  <div class="">
+  <div class="" ondragstart="return false" onselectstart="return false">
     <div class="flex flex-col gap-2">
       <label class="checkbox items-center">
-        <input type="checkbox" class="form-checkbox h-5 w-5 text-gray-600" />
+        <input
+          type="checkbox"
+          class="form-checkbox h-5 w-5 text-gray-600"
+          v-model="getFriendRooms"
+        />
         <span class="icon"></span>
         <span class="text ml-2 text-gray-200">대기중인 방만 보기</span>
       </label>
       <label class="checkbox items-center">
-        <input type="checkbox" class="form-checkbox h-5 w-5 text-gray-600" />
+        <input
+          type="checkbox"
+          class="form-checkbox h-5 w-5 text-gray-600"
+          v-model="getPublicRooms"
+        />
         <span class="icon"></span>
         <span class="text ml-2 text-gray-200">공개 방만 보기</span>
       </label>
@@ -15,7 +23,14 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      getPublicRooms: false,
+      getFriendRooms: false,
+    };
+  },
+};
 </script>
 <style lang="css" scoped>
 @keyframes jelly {
