@@ -37,7 +37,8 @@
         <button class="profileButton" v-on:click="record">전적</button>
       </div>
     </div>
-    <div class="overflow-auto flex flex-col" v-if="show1">
+    <UserSearch v-if="show1"></UserSearch>
+    <div class="flex flex-col overflow-auto" v-if="show1">
       <div class="profile4 grow">
         <friend-bar></friend-bar>
       </div>
@@ -94,12 +95,14 @@
 
 <script>
 import FriendBar from "./profile_elements/friendBar.vue";
+import UserSearch from "./profile_elements/UserSearch.vue";
 import { logout } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
 
   components: {
     FriendBar,
+    UserSearch,
   },
 
   data() {

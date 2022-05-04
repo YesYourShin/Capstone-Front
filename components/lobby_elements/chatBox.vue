@@ -100,10 +100,10 @@
         />
       </svg> -->
       <div
-        class="p-1 cursor-pointer rounded-md hover:bg-amber-300/50 transition"
+        class="p-1 cursor-pointer rounded-md hover:bg-gray-600/50 transition"
       >
         <svg
-          class="w-6 h-6 text-amber-300"
+          class="w-6 h-6 text-amber-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
