@@ -2,23 +2,23 @@
   <div class="flex flex-col min-h-screen w-full">
     <div class="flex-grow relative">
       <div
-        class="flex align-middle border border-solid border-l-0 border-r-0 whitespace-nowrap bg-amber-400 border-amber-300"
+        class="flex px-6 py-2 items-center justify-between align-middle border border-solid border-l-0 border-r-0 bg-amber-400 border-amber-300"
       >
-        <div class="px-6 py-2 rounded-md flex items-center justify-between">
-          <div>
-            <p class="font-bold">
-              [No.{{ roomInfo.id }}] {{ roomInfo.description }}
-            </p>
-          </div>
-          <div>
-            <p class="font-bold">FAFIA - gjgjajaj.xyz</p>
-          </div>
-          <div>
-            <p class="font-bold">
-              {{ roomInfo.mode === "classic" ? "클래식 모드" : "확장 모드" }} |
-              {{ roomMembers.length ? null : 0 }}/{{ roomInfo.publishers }}
-            </p>
-          </div>
+        <div>
+          <p class="font-bold">
+            [No.{{ roomInfo.id }}] {{ roomInfo.description }}
+          </p>
+        </div>
+        <div>
+          <p class="font-bold">FAFIA - gjgjajaj.xyz</p>
+        </div>
+        <div>
+          <p class="font-bold">
+            {{ roomInfo.mode === "classic" ? "클래식 모드" : "확장 모드" }} |
+            {{ roomMembers.length ? roomMembers.length : 0 }}/{{
+              roomInfo.publishers
+            }}
+          </p>
         </div>
       </div>
       <div class="px-2 mt-10">
