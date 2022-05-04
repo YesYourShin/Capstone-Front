@@ -4,7 +4,7 @@
       <div class="flex items-center py-2">
         <!--로비 위쪽 검색창 및 체크박스 등-->
 
-        <roomSearch></roomSearch>
+        <roomSearch ref="search"></roomSearch>
         <!--검색 창-->
 
         <checkBoxes ref="checks"></checkBoxes>
@@ -70,6 +70,11 @@ export default {
     computedRooms() {
       if (!this.isMounted) return [];
       let rooms = this.rooms;
+      if (this.$refs.search.input) {
+        rooms = rooms.filter((room) => {
+          return room.description.includes(this.$refs.search.input);
+        });
+      }
       if (this.$refs.checks.getPublicRooms) {
         rooms = rooms.filter((room) => room.isPrivate === false);
       }

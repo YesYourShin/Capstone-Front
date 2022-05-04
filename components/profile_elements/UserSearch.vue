@@ -7,9 +7,10 @@
       @submit.prevent="search"
     >
       <input
-        class="w-5/6 outline-none h-9 p-1 text-white"
+        class="w-5/6 outline-none h-9 p-1 px-2 text-white"
         style="background-color: rgb(48, 48, 48)"
         type="text"
+        placeholder="Enter nickname"
         v-model="input"
       />
       <button
@@ -69,6 +70,7 @@ export default {
           }).then((result) => {
             if (result.isConfirmed) {
               this.$swal({
+                title: "Success",
                 text: "Your friend request has been sent successfully!",
                 icon: "success",
               });
