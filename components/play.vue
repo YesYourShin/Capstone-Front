@@ -128,7 +128,6 @@ import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
 import { Hands } from "@mediapipe/hands";
 import { fingersCount, check, vote } from "@/common/detection/hand";
-
 export default {
   name: "App",
   props: {
@@ -226,7 +225,6 @@ export default {
   methods: {
     async handCognition(videoElement, canvasElement, canvasCtx) {
       // videoElement.style.display = "none";
-
       let onResults = async (results) => {
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -243,11 +241,9 @@ export default {
         //   canvasElement.width,
         //   canvasElement.height
         // );
-
         let fStatus = this.fStatus;
         let cStatus = this.cStatus;
         let vStatus = this.vStatus;
-
         let status = fStatus
           ? "fStatus"
           : cStatus
@@ -290,7 +286,6 @@ export default {
             canvasCtx.restore();
         }
       };
-
       // setInterval(test, 16);
       let myStream;
       const getMedia = async () => {
@@ -302,7 +297,6 @@ export default {
           });
           videoElement.srcObject = myStream;
           videoElement.play();
-
           // this.cameraSwitch(true);
           this.mediaStatus = true;
           await media();
@@ -312,7 +306,6 @@ export default {
           console.log(e);
         }
       };
-
       const hands = new Hands({
         locateFile: (file) => {
           return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
@@ -324,9 +317,7 @@ export default {
         minDetectionConfidence: 0.5,
         minTrackingConfidence: 0.5,
       });
-
       hands.onResults(onResults);
-
       const media = async () => {
         if (!videoElement) {
           requestAnimationFrame(media);
@@ -390,7 +381,6 @@ export default {
         // console.log(this.mySocketId)
       });
       // this.socket.on()
-
       // 입장 5초 후에 게임을 시작한다.
       setTimeout(() => {
         this.gameStart();
@@ -405,7 +395,6 @@ export default {
         console.log(data);
         this.grantPlayerJob();
       });
-
     },
     // 직업 배분 결과 통지, 지금 빌보드에 뜨는건 더미라서 마피아라고 뜬다.
     grantPlayerJob() {
@@ -415,7 +404,6 @@ export default {
       console.log(data[0].job)
       this.myJob = data[0].job
       console.log(this.myJob)
-
       // 여기에서 사이드바에 직업 뜨게 refs 한다.
       if (this.myJob == 'MAFIA') {
         this.$refs.sideBarSet.myJobMafia();
@@ -436,7 +424,6 @@ export default {
         this.morningEvent();
       }, 3000);
     },
-
     morningEvent() {
       this.$refs.billboard.morningEventBoard();
       const dayjs = require("dayjs");
@@ -468,10 +455,8 @@ export default {
         this.electedPlayer = 1;
         this.selectedUser = true;
       }, 3000);
-
       //여기서 유저 지목 값 받아올 수 있어야 함.
     },
-
     // 투표값 전송을 위한 메서드로, 집계는 startVote에서 한다.
     // 자신의 투표값
     voteNumCheck() {
@@ -482,7 +467,6 @@ export default {
         })
         this.finishVote()
     },
-
     finishVote() {
         this.$root.gameSocket.emit(GameEvent.FinishV);
         this.$root.gameSocket.on(GameEvent.FinishV, (data) => {
@@ -508,7 +492,6 @@ export default {
       // //     }
       // //     console.log(this.electedPlayer)
       // //   })
-
       // },3000)
     },
     PunishmentVote() {
@@ -525,7 +508,6 @@ export default {
       // this.nightEvent();
       // },3000)
     },
-
     punishmentVoteCheck() {
       this.$root.gameSocket.emit(
         GameEvent.FinishP,
@@ -535,7 +517,6 @@ export default {
         this.finishPunishmentVote()
       );
     },
-
     finishPunishmentVote() {
       setTimeout(() => {
         // this.$root.gameSocket.on(GameEvent.FinishP, (data) => {
@@ -545,7 +526,6 @@ export default {
       }, 3000);
       this.$refs.billboard.finishPunishmentVoteBoard();
     },
-
     nightEvent() {
       // 밤으로 배경 변경
       this.$root.gameSocket.emit(GameEvent.Day, {
@@ -588,11 +568,8 @@ export default {
       setTimeout(() => {
         this.morningEvent();
       },3000)
-
     },
     victorySearch() {
-
-
     },
     mafiaWin() {
       this.flowMessage =

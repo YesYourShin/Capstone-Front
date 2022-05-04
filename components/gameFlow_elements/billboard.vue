@@ -60,15 +60,6 @@ export default {
       this.$forceUpdate();
       console.log(this.messageLogs)
     },
-    grantPlayerJobAfterBoard() {
-      // 유저의 직업을 알리는 메세지를 알림
-      // 당신은 시민입니다. 오른쪽의 사이드바에서 자신의 능력과 목표를 확인하세요.
-      // 아침이 밝으면, 자유롭게 대화를 하시고 투표와 능력 사용을 통해 마피아를 찾아내면 됩니다.
-      this.newMessage = '당신은 마피아입니다. 오른쪽의 사이드 바에서 자신의 능력과 목표를 확인하세요.'
-      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
-      this.$forceUpdate();
-      console.log(this.messageLogs)
-    },
     grantMafia() {
       this.newMessage = '당신은 마피아입니다. 오른쪽의 사이드 바에서 자신의 능력과 목표를 확인하세요.'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
