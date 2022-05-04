@@ -69,6 +69,31 @@ export default {
       this.$forceUpdate();
       console.log(this.messageLogs)
     },
+    grantMafia() {
+      this.newMessage = '당신은 마피아입니다. 오른쪽의 사이드 바에서 자신의 능력과 목표를 확인하세요.'
+      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+      this.$forceUpdate();
+      console.log(this.messageLogs)
+    },
+    grantPolice() {
+      this.newMessage = '당신은 경찰입니다. 오른쪽의 사이드 바에서 자신의 능력과 목표를 확인하세요.'
+      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+      this.$forceUpdate();
+      console.log(this.messageLogs)
+    },
+    grantDoctor() {
+      this.newMessage = '당신은 의사입니다. 오른쪽의 사이드 바에서 자신의 능력과 목표를 확인하세요.'
+      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+      this.$forceUpdate();
+      console.log(this.messageLogs)
+    },
+    grantCitizen() {
+      this.newMessage = '당신은 시민입니다. 오른쪽의 사이드 바에서 자신의 목표를 확인하세요.'
+      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+      this.$forceUpdate();
+      console.log(this.messageLogs)
+    },
+
     morningEventBoard() {
       // 아침이 되었음을 알리는 메세지를 남김
       this.newMessage = '==========================='

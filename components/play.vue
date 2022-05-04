@@ -86,7 +86,7 @@
         </div>
         <!-- <Memo class="memoInfo" ></Memo> -->
       </div>
-      <Memo></Memo>
+      <!-- <Memo></Memo> -->
       <div>
         {{ "내 번호:" + this.myInfo.profile.id }}
         <input
@@ -114,7 +114,7 @@
         <button v-on:click="mediaStatus = false">camera off</button>
       </div>
     </div>
-    <SideBar />
+    <sideBar ref="sideBarSet" v-on:myJobMafia="myJobMafia" v-on:myJobPolice="myJobPolice" v-on:myJobDoctor="myJobDoctor" v-on:myJobCitizen="myJobCitizen"></sideBar>
   </div>
 </template>
 
@@ -363,12 +363,15 @@ export default {
       getMedia();
     },
     fingersResults() {
+      console.log('손 인식 시작')
       this.fStatus = this.fingers ? false : true;
     },
     checkResults() {
+      console.log('체크 인식 시작')
       this.cStatus = this.check ? false : true;
     },
     voteResults() {
+      console.log('투표 인식 시작')
       this.vStatus = this.vote ? false : true;
     },
     // 게임에 입장하는 즉시 실행되며, 유저의 소켓 정보 받아옴
@@ -396,74 +399,44 @@ export default {
     // 게임 스타트, 게임 스타트 관련 데이터
     gameStart() {
       this.$root.gameSocket.emit(GameEvent.Start);
+      this.$refs.billboard.grantPlayerJobBeforeBoard();
       this.$root.gameSocket.on(GameEvent.Start, (data) => {
+        console.log('gameStart 부분')
         console.log(data);
         this.grantPlayerJob();
       });
-      this.$refs.billboard.grantPlayerJobBeforeBoard();
+
     },
     // 직업 배분 결과 통지, 지금 빌보드에 뜨는건 더미라서 마피아라고 뜬다.
     grantPlayerJob() {
-      this.$refs.billboard.grantPlayerJobAfterBoard();
-      // setTimeout(() => {
-      // this.flowMessage = '당신은 테스트입니다.'
-      // setTimeout(()=> {
-      //   this.flowMessage = '빨리 만드시기 바랍니다.'
-      //   setTimeout(()=> {
-      // this.morningEvent();
-      //   }, 1000)
-      // }, 1000)
-      // },1000)
-    this.$root.gameSocket.emit(GameEvent.Job)
+      this.$root.gameSocket.emit(GameEvent.Job)
       console.log("직업 분배 소켓")
       this.$root.gameSocket.on(GameEvent.Job, (data) => {
-      console.log(data)
-    })
+      console.log(data[0].job)
+      this.myJob = data[0].job
+      console.log(this.myJob)
 
-      // setTimeout(() => {
-      //   this.socket.emit("grantJob")
-      //   this.socket.on('grantJob', (data) => {
-      //     console.log(data)
-      //     console.log(data2)
-      //     this.userSocketInfo = data2
-      //     this.myJob = data.jobs.job
-      //     console.log(this.myJob)
-      //     for(let i = 0 ; i < this.userSocketInfo.length; i++) {
-      //       if (this.mySocketId == this.userSocketInfo[i]) {
-      //         this.myNum = i+1
-      //       }
-      //     }
-      //     console.log(this.myNum);
-      //     for(let i = 0 ; i < this.userSocketInfo.length; i++) {
-      //       if (i == this.myNum-1) {
-      //         this.myJob = data.jobs[i].job
-      //       }
-      //     }
-      //     console.log(this.myJob);
-      //     this.myJob = data.jobs[this.myNum].job
-      //     console.log(this.roomJob);
-      //     this.flowMessage = '당신은 ' + this.myJob + '입니다'
-      //     setTimeout(() => {
-      //       if (this.myJob == 'MAFIA') {
-      //         this.flowMessage = '시민들에게 들키지 않고 다른 마피아와 힘을 합쳐 시민을 제거하면 됩니다.'
-      //       } else if (this.myJob == 'DOCTOR') {
-      //         this.flowMessage = '당신은 매일 밤마다 1명의 유저를 선택하여 마피아의 공격으로부터 보호할 수 있습니다. 단, 자신은 보호할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-      //       } else if (this.myJob == 'POLICE') {
-      //         this.flowMessage = '당신은 매일 밤마다 1명의 유저를 선택하여 해당 유저의 직업을 알 수 있습니다. 단, 자신은 선택할 수 없습니다. 다른 시민 유저와 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-      //       } else {
-      //         this.flowMessage = '당신은 다른 시민들과 힘을 합쳐 마피아를 찾아내어 제거하여야 합니다.'
-      //       }
+      // 여기에서 사이드바에 직업 뜨게 refs 한다.
+      if (this.myJob == 'MAFIA') {
+        this.$refs.sideBarSet.myJobMafia();
+        this.$refs.billboard.grantMafia();
+      } else if (this.myJob == 'POLICE') {
+        this.$refs.sideBarSet.myJobPolice();
+        this.$refs.billboard.grantPolice();
+      } else if (this.myJob == 'DOCTOR') {
+        this.$refs.sideBarSet.myJobDoctor();
+        this.$refs.billboard.grantDoctor();
+      } else {
+        this.$refs.sideBarSet.myJobCitizen();
+        this.$refs.billboard.grantCitizen();
+      }
+      this.$refs.billboard.grantPlayerJobAfterBoard();
+    })
       setTimeout(() => {
         this.morningEvent();
       }, 3000);
-      // },3000)
-      // })
-
-      // }, 3000)
     },
-    // 아침 이벤트 시작
-    // 빌보드에서 아침 메서드 실행
-    //
+
     morningEvent() {
       this.$refs.billboard.morningEventBoard();
       const dayjs = require("dayjs");
@@ -480,11 +453,9 @@ export default {
       this.$root.gameSocket.emit(GameEvent.Timer);
       this.$root.gameSocket.on(GameEvent.Timer, (data) => {
         console.log(data);
-        // while(dayjs.format === data.start) {
-        //   this.$refs.timer.morningTimer();
-        // }
       });
       this.$refs.timer.morningTimer();
+      // dayCount에서는 빌보드 상단에 표기되는 day의 숫자를 +1
       this.$refs.dayCount.nextDay();
       console.log("타이머 실행");
       // 타이머에서 다음 메서드를 실행하게 한다!
@@ -499,29 +470,17 @@ export default {
       }, 3000);
 
       //여기서 유저 지목 값 받아올 수 있어야 함.
-      // this.myVote = 1;
-      // console.log(this.myVote);
-      // let voteNum = 0;
-      // setTimeout(()=> {
-      // this.socket.emit(GameEvent.Vote, {
-      // voteNum : this.myVote,
-      // })
-      //   // this.finishVote();
-
-      // this.finishVote();
-      // },3000)
-      // this.finishVote();
     },
 
     // 투표값 전송을 위한 메서드로, 집계는 startVote에서 한다.
     // 자신의 투표값
     voteNumCheck() {
         this.electedPlayer = 1;
+        console.log(this.electedPlayer)
         this.$root.gameSocket.emit(GameEvent.Vote, {
           vote : this.electedPlayer
         })
         this.finishVote()
-
     },
 
     finishVote() {
@@ -579,15 +538,16 @@ export default {
 
     finishPunishmentVote() {
       setTimeout(() => {
-        this.$root.gameSocket.on(GameEvent.FinishP, (data) => {
-          console.log(data);
+        // this.$root.gameSocket.on(GameEvent.FinishP, (data) => {
+        //   console.log(data);
           this.nightEvent();
-        });
+        // });
       }, 3000);
       this.$refs.billboard.finishPunishmentVoteBoard();
     },
 
     nightEvent() {
+      // 밤으로 배경 변경
       this.$root.gameSocket.emit(GameEvent.Day, {
         day: this.flag,
       });
@@ -600,6 +560,7 @@ export default {
         console.log(data);
       });
       this.$refs.billboard.nightEventBoard();
+      //
       setTimeout(() => {
         this.$refs.timer.nightEvent();
         if (this.myJob == "MAFIA") {
@@ -618,88 +579,20 @@ export default {
           console.log(data)
         })
       }, 3000)
-
-      // setTimeout(() => {
-      // this.nightResult();
-      // },3000)
     },
     nightResult() {
       console.log("3");
       // this.$refs.billboard.finishAllVote();
       this.$refs.billboard.nightResultBoard();
-      // this.killPlayer = prompt("마피아가 죽일 유저 선택!");
-      // console.log(this.survivePlayer[this.killPlayer]);
-      // console.log(this.killPlayer);
-      // for (let i = 0; i < 10; i++) {
-      //   if (this.playerJob[i] == "의사" && this.survivePlayer[i] == true) {
-      //     this.doctorSelected = prompt("의사가 살릴 유저 선택");
-      //   }
-      // }
-      // if (this.survivePlayer[this.killPlayer - 1] == false) {
-      //   this.killPlayer = prompt("죽일 유저 다시 선택");
-      // } else {
-      //   if (
-      //     this.doctorSelected == this.killPlayer &&
-      //     this.killPlayer != this.survivePlayer[this.killPlayer - 1]
-      //   ) {
-      //     this.flowMessage =
-      //       "마피아가 " +
-      //       this.killPlayer +
-      //       "를 공격하였으나 의사의 도움으로 플레이어는 생존하였습니다.";
-      //     this.electedPlayersNum = 1;
-      //     this.electedPlayerVote = 0;
-      //     (this.electedPlayer = 0), // 지목된 플레이어
-      //       (this.electedPlayerVote = 0), // 지목된 플레이어가 받은 득표
-      //       (this.playerVote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); // 각 유저의 투표수
-      //     setTimeout(() => {
-      //       this.flowMessage = "아침이 되었습니다.";
-      //       this.$refs.timer.morningEvent();
-      //     }, 5000);
-      //   } else {
-      //     if (this.playerJob[this.killPlayer - 1] == "마피아") {
-      //       this.mafiaNum = this.mafiaNum - 1;
-      //     } else {
-      //       this.citizenNum = this.citizenNum - 1;
-      //     }
-      //     console.log("마피아는" + this.mafiaNum);
-      //     console.log("시민은" +this.citizenNum);
-      //     this.survivePlayer.splce(this.killPlayer - 1, 1, false);
-      //     console.log(this.surviePlayer);
-      //     this.electedPlayersNum= 1;
-      //     this.electedPlayerVote = 0;
-      //     (this.electedPlayer = 0), // 지목된 플레이어
-      //       (this.electedPlayerVote = 0), // 지목된 플레이어가 받은 득표
-      //       (this.playerVote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); // 각 유저의 투표수
-
-      //     if (
-      //       this.mafiaNum == 0 ||
-      //       this.citizenNum == 0 ||
-      //       this.mafiaNum >= this.citizenNum
-      //     ) {
-      //       this.victorySearch();
-      //     } else {
-      //       setTimeout(() => {
-      //         this.flowMessage = "아침이 되었습니다.";
-      //         this.$refs.timer.morningEvent();
-      //       }, 5000);
-      //       // 낮 이벤트 진행
-      //     }
-      // }
+      // 만약 승리조건을 on 할 경우에는
       setTimeout(() => {
         this.morningEvent();
       },3000)
 
     },
     victorySearch() {
-      console.log("test", this.mafiaNum);
-      console.log("test", this.citizenNum);
-      if (this.mafiaNum == 0) {
-        this.citizenWin();
-        // 마피아 0명, 시민 승리
-      } else if (this.citizenNum == 0 || this.mafiaNum >= this.citizenNum) {
-        this.mafiaWin();
-        // 시민 팀이 마피아 수보다 같거나 적음, 마피아 승리
-      }
+
+
     },
     mafiaWin() {
       this.flowMessage =

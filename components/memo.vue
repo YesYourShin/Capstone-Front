@@ -144,7 +144,7 @@ export default {
         }
       }
     };
-    main();
+    // main();
   },
   // 해야할일, 투표
   methods: {
