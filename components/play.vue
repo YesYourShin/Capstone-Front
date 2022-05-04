@@ -578,6 +578,7 @@ export default {
     citizenWin() {
       this.flowMessage =
         "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
+        // dd
     },
   }
   // async asyncData({ params }) {
