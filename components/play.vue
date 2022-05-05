@@ -1,5 +1,7 @@
 <template>
   <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }">
+    <!-- <audio class="nightAudio" :src="require('@/assets/ingameBgm/night.wav')" controls></audio>
+    <audio class="morningAudio" :src="require('@/assets/ingameBgm/morning.wav')" controls></audio> -->
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
           <Timer
@@ -14,46 +16,7 @@
     </div>
     <Billboard ref="billboard" />
 
-    <!-- <div class="itemBox">
-        <div class="settingbox">
-          <div class="settingCamAndMic">
-            <img :src="require(`../assets/ingame/muteMic.png`)">
-            <img :src="require(`../assets/ingame/offCam.png`)"></div>
-          </div>
-        <div class="timebox">
-          <Timer
-              v-on:timeoutVote="finishVote"
-              v-on:timeoutPunishmentVote="finishPunishmentVote"
-              v-on:nightEvent="nightEvent"
-              ref="timer">
-          </Timer>
-        </div>
-      </div> -->
     <div class="videomainbox">
-      <!-- <div class="videobox">
-        <video
-          id="myVideo"
-          ref="myVideo"
-          muted
-          :src-object.prop.camel="publishStream.stream"
-          autoplay
-        ></video>
-        <canvas
-          :class="['aspect-video my_canvas']"
-          width="1280"
-          height="720"
-        ></canvas>
-        <div :class="['userInfo' + 9]">
-          {{
-            "level : " +
-            userLevel[9] +
-            "   " +
-            userName[9] +
-            " " +
-            survivePlayer[9]
-          }}
-        </div>
-      </div> -->
       <div class="videobox" v-for="(s, n) in roomMembers" :key="s.id">
         <div v-if="s.stream">
           <video
@@ -84,7 +47,6 @@
             {{ "level : " + userLevel[s.id - 1] + "   " + userName[s.id - 1] }}
           </div>
         </div>
-        <!-- <Memo class="memoInfo" ></Memo> -->
       </div>
       <!-- <Memo></Memo> -->
       <div>
@@ -155,6 +117,7 @@ export default {
   },
   data() {
     return {
+      // 방에 있는 모든 유저의 정보 필요 (더미 지우려고 함)
       userLevel: [108, 17, 9, 666, 722, 15, 11, 12, 13, 14], // 각 유저의 레벨 (더미)
       userName: [
         "유저1",
@@ -192,9 +155,25 @@ export default {
       myVideo: null,
       myCanvas: null,
       myCtx: null,
+      morningAudio: null,
+      nightAudio: null,
     };
   },
+
+  //새로고침 방지 위해서 추가 뒤로가기 하면 로비에서도 적용됨.
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.unLoadEvent);
+  },
+
   async mounted() {
+    window.addEventListener('beforeunload', this.unLoadEvent);
+
+    this.nightAudio = document.querySelector('.nightAudio')
+    this.morningAudio = document.querySelector('.morningAudio')
+    this.nightAudio.volumne = 0.1
+    this.morningAudio.volumne = 0.1
+
+
     // let newRemoteFeed = null;
     // this.socket = this.$nuxtSocket({
     //   channel: "/game",
@@ -206,8 +185,77 @@ export default {
     this.myCanvas = document.getElementsByClassName(
       `output_canvas${this.myInfo.profile.id}`
     )[0];
+    if (this.myCanvas) {
     this.myCtx = this.myCanvas.getContext("2d");
+    }
     await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
+
+
+    // 여기서부터는 백엔드의 emit을 받아 처리
+
+    // 게임 시작과 동시에, 유저 정보를 받아오고, 게임 시작 메서드 실행
+    this.$root.gameSocket.on("gamejoin", (data) => {
+      this.myNick = data.profile.nickname;
+      setTimeout(() => {
+        this.gameStart();
+      }, 5000);
+    });
+
+    // 인게임에서 활용하기 위한 데이터를 가져오고, 직업 배분을 시작함
+    this.$root.gameSocket.on(GameEvent.Start, (data) => {
+      for (let i = 0; i < data.length; i++) {
+        // console.log(data[i].nickname);
+        if (data[i].nickname == this.myNick) {
+          this.myNum = i
+        }
+      }
+      console.log(this.myNum);
+      setTimeout(() => {
+        this.grantPlayerJob();
+      }, 5000)
+    });
+
+    // 유저의 직업을 배분하고, 배분된 직업에 따라 다른 이벤트 부여
+    // 달라지는 것 - 빌보드 메세지, 사이드바 UI 내용
+    this.$root.gameSocket.on(GameEvent.Job, (data) => {
+      this.myJob = data[0].job
+      // 여기에서 사이드바에 직업 뜨게 refs 한다.
+      if (this.myJob == 'MAFIA') {
+        this.$refs.sideBarSet.myJobMafia();
+        this.$refs.billboard.grantMafia();
+      } else if (this.myJob == 'POLICE') {
+        this.$refs.sideBarSet.myJobPolice();
+        this.$refs.billboard.grantPolice();
+      } else if (this.myJob == 'DOCTOR') {
+        this.$refs.sideBarSet.myJobDoctor();
+        this.$refs.billboard.grantDoctor();
+      } else {
+        this.$refs.sideBarSet.myJobCitizen();
+        this.$refs.billboard.grantCitizen();
+      }
+      setTimeout(() => {
+        this.morningEvent();
+      }, 5000);
+    })
+
+    // 변경된 날짜 변경 값을 백 엔드에 저장
+    this.$root.gameSocket.on(GameEvent.Day, (data) => {
+      this.flag = data.day;
+    });
+
+    // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
+    this.$root.gameSocket.on(GameEvent.Timer, (data) => {
+
+      console.log(data);
+    });
+
+    // 투표 결과 종합
+    this.$root.gameSocket.on(GameEvent.FinishV, (data) => {
+
+      console.log(data);
+    })
+
+
   },
   watch: {
     // 질문이 변경될 때 마다 이 기능이 실행됩니다.
@@ -223,6 +271,13 @@ export default {
   },
   created() {},
   methods: {
+    unLoadEvent: function (event) {
+      if (this.isLeaveSite)
+      return;
+      event.preventDefault();
+      event.returnValue = '';
+    },
+
     async handCognition(videoElement, canvasElement, canvasCtx) {
       // videoElement.style.display = "none";
       let onResults = async (results) => {
@@ -367,65 +422,25 @@ export default {
     },
     // 게임에 입장하는 즉시 실행되며, 유저의 소켓 정보 받아옴
     gameSocketSet() {
-      // this.myNum = this.myInfo.profile.nickname
-      console.log("현재 방 번호", this.$store.state.roomId.roomId);
       this.$root.gameSocket.emit("game:join", {
         roomId: this.$store.state.roomId.roomId,
       });
       this.$refs.billboard.gameStartBoard();
-      this.$root.gameSocket.on("gamejoin", (data) => {
-        console.log(data);
-        this.myNick = data.profile.nickname;
-        console.log(this.myNick);
-        // this.mySocketId = data.user
-        // console.log(this.mySocketId)
-      });
-      // this.socket.on()
-      // 입장 5초 후에 게임을 시작한다.
-      setTimeout(() => {
-        this.gameStart();
-      }, 5000);
     },
     // 게임 스타트, 게임 스타트 관련 데이터
     gameStart() {
       this.$root.gameSocket.emit(GameEvent.Start);
       this.$refs.billboard.grantPlayerJobBeforeBoard();
-      this.$root.gameSocket.on(GameEvent.Start, (data) => {
-        console.log('gameStart 부분')
-        console.log(data);
-        this.grantPlayerJob();
-      });
     },
+
     // 직업 배분 결과 통지, 지금 빌보드에 뜨는건 더미라서 마피아라고 뜬다.
     grantPlayerJob() {
       this.$root.gameSocket.emit(GameEvent.Job)
-      console.log("직업 분배 소켓")
-      this.$root.gameSocket.on(GameEvent.Job, (data) => {
-      console.log(data[0].job)
-      this.myJob = data[0].job
-      console.log(this.myJob)
-      // 여기에서 사이드바에 직업 뜨게 refs 한다.
-      if (this.myJob == 'MAFIA') {
-        this.$refs.sideBarSet.myJobMafia();
-        this.$refs.billboard.grantMafia();
-      } else if (this.myJob == 'POLICE') {
-        this.$refs.sideBarSet.myJobPolice();
-        this.$refs.billboard.grantPolice();
-      } else if (this.myJob == 'DOCTOR') {
-        this.$refs.sideBarSet.myJobDoctor();
-        this.$refs.billboard.grantDoctor();
-      } else {
-        this.$refs.sideBarSet.myJobCitizen();
-        this.$refs.billboard.grantCitizen();
-      }
-      this.$refs.billboard.grantPlayerJobAfterBoard();
-    })
-      setTimeout(() => {
-        this.morningEvent();
-      }, 3000);
     },
+
     morningEvent() {
       this.$refs.billboard.morningEventBoard();
+      this.morningAudio.play()
       const dayjs = require("dayjs");
       const morningStart = dayjs();
       morningStart.format();
@@ -433,24 +448,17 @@ export default {
       this.$root.gameSocket.emit(GameEvent.Day, {
         day: this.flag,
       });
-      this.$root.gameSocket.on(GameEvent.Day, (data) => {
-        console.log(data);
-        this.flag = data.day;
-      });
       this.$root.gameSocket.emit(GameEvent.Timer);
-      this.$root.gameSocket.on(GameEvent.Timer, (data) => {
-        console.log(data);
-      });
       this.$refs.timer.morningTimer();
       // dayCount에서는 빌보드 상단에 표기되는 day의 숫자를 +1
       this.$refs.dayCount.nextDay();
-      console.log("타이머 실행");
       // 타이머에서 다음 메서드를 실행하게 한다!
     },
     startVote() {
-      console.log("투표는 소켓 없음");
       this.$refs.billboard.startVoteBoard();
       setTimeout(() => {
+        // mediaStatus == true
+        // fingers
         this.$refs.timer.voteTimer();
         this.electedPlayer = 1;
         this.selectedUser = true;
@@ -467,47 +475,21 @@ export default {
         })
         this.finishVote()
     },
+
     finishVote() {
-        this.$root.gameSocket.emit(GameEvent.FinishV);
-        this.$root.gameSocket.on(GameEvent.FinishV, (data) => {
-          console.log(data);
-        })
+      this.$root.gameSocket.emit(GameEvent.FinishV);
       this.$refs.billboard.finishVoteBoard()
       this.PunishmentVote();
-        // this.socket.on(GameEvent.FinishV, (data) => {
-        //   console.log(data)
-        // })
-        // this.finishPunishmentVote();
-      // setTimeout(()=> {
-      // //   this.socket.on('finishVote', (data) => {
-      // //     console.log(data)
-      // //     for(let i = 0; i < data.length; i++) {
-      // //       if (data.voteSum[i]>this.electedPlayer) {
-      // //         this.electedPlayer = data.voteSum[i]
-      // //         this.electedPlayersNum = 0
-      // //       } else if (data.voteSum[i] == this.electedPlayer) {
-      // //         this.electedPlayer = 0
-      // //         this.electedPlayersNum++
-      // //       }
-      // //     }
-      // //     console.log(this.electedPlayer)
-      // //   })
-      // },3000)
     },
+
     PunishmentVote() {
       this.$refs.billboard.startPunishmentVoteBoard();
       setTimeout(() => {
         this.$refs.timer.punishmentTimer();
         this.punishmentPlayer = true;
       }, 3000);
-      // setTimeout(() => {
-      // this.socket.emit(GameEvent.Punish)
-      // this.socket.on(GameEvent.FinishP, (data) => {
-      //   console.log(data)
-      // })
-      // this.nightEvent();
-      // },3000)
     },
+
     punishmentVoteCheck() {
       this.$root.gameSocket.emit(
         GameEvent.FinishP,
@@ -528,6 +510,7 @@ export default {
     },
     nightEvent() {
       // 밤으로 배경 변경
+      this.nightAudio.play()
       this.$root.gameSocket.emit(GameEvent.Day, {
         day: this.flag,
       });
@@ -578,7 +561,6 @@ export default {
     citizenWin() {
       this.flowMessage =
         "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
-        // dd
     },
   }
   // async asyncData({ params }) {
