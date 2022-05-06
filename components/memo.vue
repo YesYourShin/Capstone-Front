@@ -65,7 +65,7 @@ export default {
       testLandmark: {},
       testImage: {},
       camera: null,
-      mediaStatus: true,
+      // mediaStatus: true,
       btStatus: null,
     };
   },

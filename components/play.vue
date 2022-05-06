@@ -194,6 +194,7 @@ export default {
       myVideo: null,
       myCanvas: null,
       myCtx: null,
+      mediaStatus: true,
     };
   },
   async mounted() {
