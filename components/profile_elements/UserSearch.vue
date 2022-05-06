@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import { getUserInformationByNickname } from "@/api/mafiaAPI";
+import { getUserInformationByNickname, requestFriend } from "@/api/mafiaAPI";
 
 export default {
   data() {
@@ -45,11 +45,12 @@ export default {
   },
   methods: {
     search() {
+      let showingUser;
       getUserInformationByNickname(this.input)
         .then((res) => {
           console.log(res);
 
-          const showingUser = res.data.data;
+          showingUser = res.data.data;
           // this.modal = true
           this.$swal({
             title: "유저 정보",
@@ -69,11 +70,21 @@ export default {
             confirmButtonText: "Add Friend",
           }).then((result) => {
             if (result.isConfirmed) {
-              this.$swal({
-                title: "Success",
-                text: "Your friend request has been sent successfully!",
-                icon: "success",
-              });
+              requestFriend(
+                showingUser.id,
+                this.$store.getters["user/getMyInfo"].id
+              )
+                .then((res) => {
+                  console.log(res);
+                  this.$swal({
+                    title: "Success",
+                    text: "Your friend request has been sent successfully!",
+                    icon: "success",
+                  });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             }
           });
         })

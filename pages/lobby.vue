@@ -9,7 +9,7 @@
 <script>
 import profile from "@/components/profileInGame.vue";
 import gameLobby from "@/components/gameLobby.vue";
-import { GameRoomEvent } from "@/api/mafiaAPI";
+import { GameRoomEvent, UserEvent } from "@/api/mafiaAPI";
 
 export default {
   transition: "lobby",
@@ -25,6 +25,32 @@ export default {
       transports: ["websocket"],
     });
     this.$store.commit("mainChatInit", "#lobby");
+
+    this.$root.userSocket = this.$nuxtSocket({
+      channel: "/user",
+      withCredentials: true,
+      transports: ["websocket"],
+    });
+
+    this.$root.userSocket.on(UserEvent.FRIEND_REQUEST, (data) => {
+      console.log(data);
+      this.$toast.show(data.userName + " 님이 친구 요청을 보냈습니다.");
+    });
+
+    this.$root.userSocket.on(UserEvent.FRIEND_ACCEPT, (data) => {
+      console.log(data);
+      this.$toast.show(data.userName + " 님이 친구 요청을 수락했습니다.");
+    });
+
+    this.$root.userSocket.on(UserEvent.FRIEND_DELETE, (data) => {
+      console.log(data);
+      this.$toast.show(data.userName + " 님이 친구 요청을 삭제했습니다.");
+    });
+
+    this.$root.userSocket.on(UserEvent.DM, (data) => {
+      console.log(data);
+      this.$toast.show(data.userName + " 님이 메세지를 보냈습니다.");
+    });
   },
   mounted() {
     this.$root.lobbySocket.emit(GameRoomEvent.JOIN, {

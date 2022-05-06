@@ -118,19 +118,24 @@ export const editProfile = (data) => {
   return instance.patch(`/users/profile`, data);
 };
 
-export const requestFriend = (userId, friendId) => {
+export const requestFriend = (id, requestId) => {
   // 친구 신청
-  return instance.post(`/users/${userId}/friend/${friendId}`);
+  // id: 친구 신청할 유저의 id
+  // requestId: 친구 신청 이벤트를 발생시킬 유저의 id
+  return instance.post(`/users/${id}/requests/friends/${requestId}`);
 };
 
-export const confirmFriendRequest = (userId, friendId) => {
+export const confirmFriendRequest = (id, requestId) => {
   // 친구 신청 수락 / 거절
-  return instance.patch(`/users/${userId}/friend/${friendId}`);
+  // requestId: 이벤트를 발생시킬 유저의 id
+  return instance.patch(`/users/${id}/requests/friends/${requestId}`);
 }
 
-export const deleteFriend = (userId, friendId) => {
+export const deleteFriend = (id, friendId) => {
   // 친구 삭제
-  return instance.delete(`/users/${userId}/friend/${friendId}`);
+  // id: 내 id
+  // friendId: 삭제할 친구의 id
+  return instance.delete(`/users/${id}/friends/${friendId}`);
 };
 
 // Posts
@@ -232,6 +237,11 @@ export const checkPassword = (roomId, data) => { // 방 비밀번호 확인
   return instance.post(`/games/rooms/check-password/${roomId}`, data)
 }
 
+// DM
+export const sendDM = ({message, friendId}) => { // DM 보내기
+  return instance.post(`/dms/friends/${friendId}`, {message});
+}
+
 export const GameRoomEvent = {
   UPDATE: 'room:update',
   JOIN: 'room:join',
@@ -256,6 +266,13 @@ export const GameEvent = {
   Mafia: 'game:mafia',
   Timer: 'game:timer',
 };
+
+export const UserEvent = {
+  FRIEND_REQUEST: 'user:request-friend',
+  FRIEND_ACCEPT: 'user:accept-friend',
+  FRIEND_DELETE: 'user:delete-friend',
+  DM: 'user:dm',
+}
 
 // Default
 // axios.default.paramsSerializer = params => {
