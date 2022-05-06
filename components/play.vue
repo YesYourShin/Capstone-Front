@@ -168,10 +168,10 @@ export default {
   async mounted() {
     window.addEventListener('beforeunload', this.unLoadEvent);
 
-    this.nightAudio = document.querySelector('.nightAudio')
-    this.morningAudio = document.querySelector('.morningAudio')
-    this.nightAudio.volumne = 0.1
-    this.morningAudio.volumne = 0.1
+    // this.nightAudio = document.querySelector('.nightAudio')
+    // this.morningAudio = document.querySelector('.morningAudio')
+    // this.nightAudio.volumne = 0.1
+    // this.morningAudio.volumne = 0.1
 
 
     // let newRemoteFeed = null;
@@ -440,7 +440,7 @@ export default {
 
     morningEvent() {
       this.$refs.billboard.morningEventBoard();
-      this.morningAudio.play()
+      // this.morningAudio.play()
       const dayjs = require("dayjs");
       const morningStart = dayjs();
       morningStart.format();
@@ -510,7 +510,7 @@ export default {
     },
     nightEvent() {
       // 밤으로 배경 변경
-      this.nightAudio.play()
+      // this.nightAudio.play()
       this.$root.gameSocket.emit(GameEvent.Day, {
         day: this.flag,
       });

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full bg-gray-200 h-2 relative overflow-hidden"
+    class="w-full bg-gray-200 h-4 relative overflow-hidden"
     :class="[{'rounded-full': rounded}, { indeterminate: indeterminate}]"
   >
     <div
