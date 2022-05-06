@@ -184,11 +184,6 @@ export default {
     // this.nightAudio.volumne = 0.1
     // this.morningAudio.volumne = 0.1
 
-    this.nightAudio = document.querySelector(".nightAudio");
-    this.morningAudio = document.querySelector(".morningAudio");
-    this.nightAudio.volumne = 0.1;
-    this.morningAudio.volumne = 0.1;
-
     // let newRemoteFeed = null;
     // this.socket = this.$nuxtSocket({
     //   channel: "/game",
