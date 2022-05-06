@@ -44,7 +44,7 @@ export default {
     },
   },
   created() {
-    this.$root.mySocket = this.$nuxtSocket({
+    this.$root.roomSocket = this.$nuxtSocket({
       channel: "/room",
       withCredentials: true,
       transports: ["websocket"],

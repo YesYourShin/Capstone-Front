@@ -13,6 +13,13 @@ export default {
   data() {
     return {};
   },
+  created() {
+    this.$root.gameSocket = this.$nuxtSocket({
+      channel: "/game",
+      withCredentials: true,
+      transports: ["websocket"],
+    });
+  },
   computed: {
     isRoomOut() {
       return this.$store.state.stream.isRoomOut;

@@ -4,10 +4,10 @@
       <div class="flex items-center py-2">
         <!--로비 위쪽 검색창 및 체크박스 등-->
 
-        <roomSearch></roomSearch>
+        <roomSearch ref="search"></roomSearch>
         <!--검색 창-->
 
-        <checkBoxes></checkBoxes>
+        <checkBoxes ref="checks"></checkBoxes>
         <!--체크박스-->
 
         <div class="grow"></div>
@@ -29,7 +29,7 @@
       <!-- <pageNavigator></pageNavigator> -->
       <!-- 페이지네이션 (임시)-->
     </div>
-    <RoomTable :rooms="rooms"></RoomTable>
+    <RoomTable :rooms="computedRooms"></RoomTable>
     <chatBox></chatBox>
   </div>
 </template>
@@ -60,11 +60,25 @@ export default {
     return {
       rooms: [],
       evtSource: null,
+      isMounted: false,
     };
   },
   computed: {
     subscribedStreams() {
       return this.$store.state.stream.subscribedStreams;
+    },
+    computedRooms() {
+      if (!this.isMounted) return [];
+      let rooms = this.rooms;
+      if (this.$refs.search.input) {
+        rooms = rooms.filter((room) => {
+          return room.description.includes(this.$refs.search.input);
+        });
+      }
+      if (this.$refs.checks.getPublicRooms) {
+        rooms = rooms.filter((room) => room.isPrivate === false);
+      }
+      return rooms;
     },
   },
   methods: {
@@ -79,6 +93,7 @@ export default {
     },
   },
   mounted() {
+    this.isMounted = true;
     getRooms()
       .then((res) => {
         this.rooms = res.data.data;
