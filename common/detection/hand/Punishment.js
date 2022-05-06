@@ -2,15 +2,15 @@ import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 
 import { Hands, HAND_CONNECTIONS } from "@mediapipe/hands";
 
-export const vote = (results, canvasElement, canvasCtx, vStatus) => {
+export const punishment = (results, canvasElement, canvasCtx, pStatus) => {
   let safe = false;
   let kill = false;
   let text = "";
-  let voteResult = null;
+  let punishmentResult = null;
   if (results.multiHandedness[1]) {
     text = "한 손만 인식시켜 주세요.";
   } else if (results.multiHandedness.length == 0) {
-    voteResult = null;
+    punishmentResult = null;
   } else {
     for (const landmarks of results.multiHandLandmarks) {
       if (
@@ -28,14 +28,14 @@ export const vote = (results, canvasElement, canvasCtx, vStatus) => {
       // safe가 true일 경우 투표 결과는 false
       // 둘 다 false일 경우 투표 결과는 null
       if (kill == true) {
-        voteResult = true;
+        punishmentResult = true;
         text = "찬성";
       } else if (safe == true) {
-        voteResult = false;
+        punishmentResult = false;
         text = "반대";
       }
       if (landmarks && kill == false && safe == false) {
-        voteResult = null;
+        punishmentResult = null;
         text = "손을 정확하게 인식시켜 주세요.";
       }
 
@@ -50,7 +50,7 @@ export const vote = (results, canvasElement, canvasCtx, vStatus) => {
     }
   }
   canvasCtx.restore();
-  if (vStatus) {
+  if (pStatus) {
     canvasCtx.font = `${canvasElement.width / 12}px gulim`;
     canvasCtx.fillStyle = "rgba(0,0,0,1)";
     canvasCtx.fillText(
@@ -66,5 +66,5 @@ export const vote = (results, canvasElement, canvasCtx, vStatus) => {
   } else {
     console.log("no vote");
   }
-  return voteResult;
+  return punishmentResult;
 };

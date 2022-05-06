@@ -99,7 +99,7 @@ import { Hands } from "@mediapipe/hands";
 import {
   fingersCount as vote,
   check,
-  vote as punishment,
+  punishment,
 } from "@/common/detection/hand";
 export default {
   name: "App",

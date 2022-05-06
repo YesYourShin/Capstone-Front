@@ -2,7 +2,7 @@ import { rightHand, leftHand, cognitionErrorCheck } from ".";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 
 import { Hands, HAND_CONNECTIONS } from "@mediapipe/hands";
-export const fingersCount = (results, canvasElement, canvasCtx, fStatus) => {
+export const fingersCount = (results, canvasElement, canvasCtx, vStatus) => {
   let rightHandLandmarks = {};
   let leftHandLandmarks = {};
   let rightFingersStatus = {
@@ -49,15 +49,15 @@ export const fingersCount = (results, canvasElement, canvasCtx, fStatus) => {
   }
   canvasCtx.restore();
 
-  const { text, totalFingers } = cognitionErrorCheck(
+  const { text, voteResult } = cognitionErrorCheck(
     rightHandLandmarks,
     rightFingersStatus,
     leftHandLandmarks,
     leftFingersStatus
   );
-  //   this.totalFingers = totalFingers;
+  //   this.voteResult = voteResult;
 
-  if (fStatus) {
+  if (vStatus) {
     canvasCtx.font = `${canvasElement.width / 12}px gulim`;
     canvasCtx.fillStyle = "rgba(255,255,255,1)";
     canvasCtx.fillText(
@@ -74,6 +74,6 @@ export const fingersCount = (results, canvasElement, canvasCtx, fStatus) => {
   } else {
     console.log("no fingers");
   }
-  console.log(totalFingers);
-  return totalFingers;
+  console.log(voteResult);
+  return voteResult;
 };

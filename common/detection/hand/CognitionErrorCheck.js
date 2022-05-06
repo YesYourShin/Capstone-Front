@@ -6,7 +6,7 @@ export const cognitionErrorCheck = (
 ) => {
   let recognitionError;
   let text = "";
-  let totalFingers = 0;
+  let voteResult = 0;
   if (rightHandLandmarks.length > 0) {
     if (
       rightHandLandmarks[0]["y"] < rightHandLandmarks[1]["y"] ||
@@ -48,13 +48,13 @@ export const cognitionErrorCheck = (
       }
     }
 
-    totalFingers = rightFingersCount + leftFingersCount;
-    if (totalFingers == 0) {
+    voteResult = rightFingersCount + leftFingersCount;
+    if (voteResult == 0) {
       text = "0번은 없습니다.";
     } else {
-      text = totalFingers + "번";
+      text = voteResult + "번";
     }
   }
 
-  return { text, totalFingers };
+  return { text, voteResult };
 };
