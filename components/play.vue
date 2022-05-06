@@ -4,15 +4,16 @@
     <audio class="morningAudio" :src="require('@/assets/ingameBgm/morning.wav')" controls></audio> -->
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
-          <Timer
-      v-on:finishPunishmentVote="nightEvent"
-      v-on:nightFinishEvent="nightResult"
-      v-on:startVote="startVote"
-      v-on:voteNumCheck=" voteNumCheck"
-      v-on:punishmentVoteCheck="punishmentVoteCheck"
-      ref="timer"
-      class="timerbox"
-    >{{counter}}</Timer>
+      <Timer
+        v-on:finishPunishmentVote="nightEvent"
+        v-on:nightFinishEvent="nightResult"
+        v-on:startVote="startVote"
+        v-on:voteNumCheck="voteNumCheck"
+        v-on:punishmentVoteCheck="punishmentVoteCheck"
+        ref="timer"
+        class="timerbox"
+        >{{ counter }}</Timer
+      >
     </div>
     <Billboard ref="billboard" />
 
@@ -54,8 +55,8 @@
         <input
           type="checkbox"
           id="checkbox1"
-          v-model="fingers"
-          v-on:click="fingersResults(this)"
+          v-model="vote"
+          v-on:click="voteResults(this)"
         /><label>지목</label>
         <input
           type="checkbox"
@@ -66,8 +67,8 @@
         <input
           type="checkbox"
           id="checkbox3"
-          v-model="vote"
-          v-on:click="voteResults(this)"
+          v-model="punishment"
+          v-on:click="punishmentResults(this)"
         /><label>찬반투표</label>
       </div>
       <div>
@@ -76,7 +77,13 @@
         <button v-on:click="mediaStatus = false">camera off</button>
       </div>
     </div>
-    <sideBar ref="sideBarSet" v-on:myJobMafia="myJobMafia" v-on:myJobPolice="myJobPolice" v-on:myJobDoctor="myJobDoctor" v-on:myJobCitizen="myJobCitizen"></sideBar>
+    <sideBar
+      ref="sideBarSet"
+      v-on:myJobMafia="myJobMafia"
+      v-on:myJobPolice="myJobPolice"
+      v-on:myJobDoctor="myJobDoctor"
+      v-on:myJobCitizen="myJobCitizen"
+    ></sideBar>
   </div>
 </template>
 
@@ -89,7 +96,11 @@ import dayjs from "dayjs";
 import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
 import { Hands } from "@mediapipe/hands";
-import { fingersCount, check, vote } from "@/common/detection/hand";
+import {
+  fingersCount as vote,
+  check,
+  vote as punishment,
+} from "@/common/detection/hand";
 export default {
   name: "App",
   props: {
@@ -143,15 +154,15 @@ export default {
       flag: false,
       day: false,
       counter: 60,
-      fstatus: false, // 손가락 카운트
-      cstatus: false, // ox 체크
-      vstatus: false, // 엄지로 죽이기
-      fingers: false,
-      check: false,
+      vStatus: false, // 손가락 카운트
+      cStatus: false, // ox 체크
+      pStatus: false, // 엄지로 죽이기
       vote: false,
-      totalFingers: null,
-      checkResult: null,
+      check: false,
+      punishment: false,
       voteResult: null,
+      checkResult: null,
+      punishmentResult: null,
       myVideo: null,
       myCanvas: null,
       myCtx: null,
@@ -162,7 +173,7 @@ export default {
 
   //새로고침 방지 위해서 추가 뒤로가기 하면 로비에서도 적용됨.
   beforeUnmount() {
-    window.removeEventListener('beforeunload', this.unLoadEvent);
+    window.removeEventListener("beforeunload", this.unLoadEvent);
   },
 
   async mounted() {
@@ -173,6 +184,10 @@ export default {
     // this.nightAudio.volumne = 0.1
     // this.morningAudio.volumne = 0.1
 
+    this.nightAudio = document.querySelector(".nightAudio");
+    this.morningAudio = document.querySelector(".morningAudio");
+    this.nightAudio.volumne = 0.1;
+    this.morningAudio.volumne = 0.1;
 
     // let newRemoteFeed = null;
     // this.socket = this.$nuxtSocket({
@@ -186,10 +201,9 @@ export default {
       `output_canvas${this.myInfo.profile.id}`
     )[0];
     if (this.myCanvas) {
-    this.myCtx = this.myCanvas.getContext("2d");
+      this.myCtx = this.myCanvas.getContext("2d");
     }
     await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
-
 
     // 여기서부터는 백엔드의 emit을 받아 처리
 
@@ -206,27 +220,27 @@ export default {
       for (let i = 0; i < data.length; i++) {
         // console.log(data[i].nickname);
         if (data[i].nickname == this.myNick) {
-          this.myNum = i
+          this.myNum = i;
         }
       }
       console.log(this.myNum);
       setTimeout(() => {
         this.grantPlayerJob();
-      }, 5000)
+      }, 5000);
     });
 
     // 유저의 직업을 배분하고, 배분된 직업에 따라 다른 이벤트 부여
     // 달라지는 것 - 빌보드 메세지, 사이드바 UI 내용
     this.$root.gameSocket.on(GameEvent.Job, (data) => {
-      this.myJob = data[0].job
+      this.myJob = data[0].job;
       // 여기에서 사이드바에 직업 뜨게 refs 한다.
-      if (this.myJob == 'MAFIA') {
+      if (this.myJob == "MAFIA") {
         this.$refs.sideBarSet.myJobMafia();
         this.$refs.billboard.grantMafia();
-      } else if (this.myJob == 'POLICE') {
+      } else if (this.myJob == "POLICE") {
         this.$refs.sideBarSet.myJobPolice();
         this.$refs.billboard.grantPolice();
-      } else if (this.myJob == 'DOCTOR') {
+      } else if (this.myJob == "DOCTOR") {
         this.$refs.sideBarSet.myJobDoctor();
         this.$refs.billboard.grantDoctor();
       } else {
@@ -236,7 +250,7 @@ export default {
       setTimeout(() => {
         this.morningEvent();
       }, 5000);
-    })
+    });
 
     // 변경된 날짜 변경 값을 백 엔드에 저장
     this.$root.gameSocket.on(GameEvent.Day, (data) => {
@@ -245,22 +259,18 @@ export default {
 
     // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
     this.$root.gameSocket.on(GameEvent.Timer, (data) => {
-
       console.log(data);
     });
 
     // 투표 결과 종합
     this.$root.gameSocket.on(GameEvent.FinishV, (data) => {
-
       console.log(data);
-    })
-
-
+    });
   },
   watch: {
     // 질문이 변경될 때 마다 이 기능이 실행됩니다.
-    totalFingers: function (newTotalFingers) {
-      console.log("total fingers", newTotalFingers);
+    punishmentResult: function (newPunishmentResult) {
+      console.log("Punishment Result", newPunishmentResult);
     },
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
@@ -272,10 +282,9 @@ export default {
   created() {},
   methods: {
     unLoadEvent: function (event) {
-      if (this.isLeaveSite)
-      return;
+      if (this.isLeaveSite) return;
       event.preventDefault();
-      event.returnValue = '';
+      event.returnValue = "";
     },
 
     async handCognition(videoElement, canvasElement, canvasCtx) {
@@ -296,24 +305,24 @@ export default {
         //   canvasElement.width,
         //   canvasElement.height
         // );
-        let fStatus = this.fStatus;
-        let cStatus = this.cStatus;
         let vStatus = this.vStatus;
-        let status = fStatus
-          ? "fStatus"
+        let cStatus = this.cStatus;
+        let pStatus = this.pStatus;
+        let status = vStatus
+          ? "vStatus"
           : cStatus
           ? "cStatus"
-          : vStatus
-          ? "vStatus"
+          : pStatus
+          ? "pStatus"
           : false;
         switch (status) {
-          case "fStatus":
+          case "vStatus":
             if (results.multiHandLandmarks) {
-              this.totalFingers = fingersCount(
+              this.voteResult = vote(
                 results,
                 canvasElement,
                 canvasCtx,
-                fStatus
+                vStatus
               );
             }
             break;
@@ -327,13 +336,13 @@ export default {
               );
             }
             break;
-          case "vStatus":
+          case "pStatus":
             if (results.multiHandLandmarks) {
-              this.voteResult = vote(
+              this.punishmentResult = punishment(
                 results,
                 canvasElement,
                 canvasCtx,
-                vStatus
+                pStatus
               );
             }
             break;
@@ -408,17 +417,17 @@ export default {
       };
       getMedia();
     },
-    fingersResults() {
-      console.log('손 인식 시작')
-      this.fStatus = this.fingers ? false : true;
+    voteResults() {
+      console.log("손 인식 시작");
+      this.vStatus = this.vote ? false : true;
     },
     checkResults() {
-      console.log('체크 인식 시작')
+      console.log("체크 인식 시작");
       this.cStatus = this.check ? false : true;
     },
-    voteResults() {
-      console.log('투표 인식 시작')
-      this.vStatus = this.vote ? false : true;
+    punishmentResults() {
+      console.log("투표 인식 시작");
+      this.pStatus = this.punishment ? false : true;
     },
     // 게임에 입장하는 즉시 실행되며, 유저의 소켓 정보 받아옴
     gameSocketSet() {
@@ -435,7 +444,7 @@ export default {
 
     // 직업 배분 결과 통지, 지금 빌보드에 뜨는건 더미라서 마피아라고 뜬다.
     grantPlayerJob() {
-      this.$root.gameSocket.emit(GameEvent.Job)
+      this.$root.gameSocket.emit(GameEvent.Job);
     },
 
     morningEvent() {
@@ -468,17 +477,17 @@ export default {
     // 투표값 전송을 위한 메서드로, 집계는 startVote에서 한다.
     // 자신의 투표값
     voteNumCheck() {
-        this.electedPlayer = 1;
-        console.log(this.electedPlayer)
-        this.$root.gameSocket.emit(GameEvent.Vote, {
-          vote : this.electedPlayer
-        })
-        this.finishVote()
+      this.electedPlayer = 1;
+      console.log(this.electedPlayer);
+      this.$root.gameSocket.emit(GameEvent.Vote, {
+        vote: this.electedPlayer,
+      });
+      this.finishVote();
     },
 
     finishVote() {
       this.$root.gameSocket.emit(GameEvent.FinishV);
-      this.$refs.billboard.finishVoteBoard()
+      this.$refs.billboard.finishVoteBoard();
       this.PunishmentVote();
     },
 
@@ -503,7 +512,7 @@ export default {
       setTimeout(() => {
         // this.$root.gameSocket.on(GameEvent.FinishP, (data) => {
         //   console.log(data);
-          this.nightEvent();
+        this.nightEvent();
         // });
       }, 3000);
       this.$refs.billboard.finishPunishmentVoteBoard();
@@ -537,11 +546,11 @@ export default {
           });
         } else {
         }
-        this.$root.gameSocket.emit(GameEvent.Punish)
+        this.$root.gameSocket.emit(GameEvent.Punish);
         this.$root.gameSocket.on(GameEvent.FinishP, (data) => {
-          console.log(data)
-        })
-      }, 3000)
+          console.log(data);
+        });
+      }, 3000);
     },
     nightResult() {
       console.log("3");
@@ -550,10 +559,9 @@ export default {
       // 만약 승리조건을 on 할 경우에는
       setTimeout(() => {
         this.morningEvent();
-      },3000)
+      }, 3000);
     },
-    victorySearch() {
-    },
+    victorySearch() {},
     mafiaWin() {
       this.flowMessage =
         "마피아가 남아있는 시민의 수와 같거나 많습니다. 마피아가 승리하였습니다.";
@@ -562,7 +570,7 @@ export default {
       this.flowMessage =
         "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
     },
-  }
+  },
   // async asyncData({ params }) {
   //   const roomInfo = await getRoom(params.id);
   //   console.log('roomId : room ',params)
