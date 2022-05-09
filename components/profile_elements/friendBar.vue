@@ -31,12 +31,14 @@
   </div>
 </template>
 <script>
+import { deleteFriend } from "@/api/mafiaAPI";
+
 export default {
   data() {
     return {
       options: [
         {
-          name: "DirectMessage",
+          name: "Send Message",
         },
         {
           name: "",
@@ -45,9 +47,11 @@ export default {
         {
           name: "See Details",
         },
+        {
+          name: "Delete Friend",
+        },
       ],
       modal: false,
-      showingUser: {},
     };
   },
   computed: {
@@ -58,6 +62,9 @@ export default {
         return [];
       }
     },
+    myInfo() {
+      return this.$store.state.user.myInfo;
+    },
   },
   methods: {
     handleClick(event, item) {
@@ -67,8 +74,9 @@ export default {
     optionClicked(event) {
       // window.alert(JSON.stringify(event.option.name));
       // window.alert(JSON.stringify(event));
+      const showingUser = event.item;
       if (event.option.name == "See Details") {
-        this.showingUser = event.item;
+        console.log(this.showingUser);
         // this.modal = true
         this.$swal({
           title: "유저 정보",
@@ -77,15 +85,34 @@ export default {
           imageWidth: "128",
           html: `
                 <div>
-                  <p>닉네임 : ${this.showingUser.nickname}</p>
-                  <p>상태메시지 : ${this.showingUser.selfIntroduction}</p>
-                  <p>레벨 : ${this.showingUser.level}</p>
+                  <p>닉네임 : ${showingUser.nickname}</p>
+                  <p>상태메시지 : ${showingUser.selfIntroduction}</p>
+                  <p>레벨 : ${showingUser.level}</p>
                   <p>접속상태 :</p>
                 </div>`,
         });
-      } else if (event.option.name == "DirectMessage") {
+      } else if (event.option.name == "Send Message") {
         console.log(event.item);
         this.$store.commit("newChat", event.item);
+      } else if (event.option.name == "Delete Friend") {
+        deleteFriend(this.myInfo.id, event.item.userId)
+          .then((res) => {
+            console.log(res);
+            this.$swal({
+              title: "Success",
+              text: `You are no longer friends with ${showingUser.nickname}!`,
+              icon: "success",
+            });
+            this.$store.dispatch("user/fetchMyInfo");
+          })
+          .catch((err) => {
+            console.log(err);
+            this.$swal({
+              title: "Error",
+              text: "Something went wrong!",
+              icon: "error",
+            });
+          });
       }
     },
   },

@@ -135,7 +135,7 @@ export const deleteFriend = (id, friendId) => {
   // 친구 삭제
   // id: 내 id
   // friendId: 삭제할 친구의 id
-  return instance.delete(`/users/${id}/friends/${friendId}`);
+  return instance.delete(`/users/${id}/friend/${friendId}`);
 };
 
 // Posts
