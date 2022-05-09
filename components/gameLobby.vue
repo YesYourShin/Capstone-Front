@@ -30,6 +30,9 @@
       <!-- 페이지네이션 (임시)-->
     </div>
     <RoomTable :rooms="computedRooms"></RoomTable>
+    <input type="text" v-model="testInput" />
+    <div class="h-12 w-20 bg-green-500" @click="friendReq">친구신청</div>
+    <div class="h-12 w-20 bg-blue-500" @click="directMsg">DM</div>
     <chatBox></chatBox>
   </div>
 </template>
@@ -43,7 +46,7 @@ import leaveButton from "@/components/lobby_elements/leaveButton.vue";
 import pageNavigator from "@/components/lobby_elements/pageNavigator.vue";
 import RoomTable from "@/components/lobby_elements/RoomTable.vue";
 // import videoComponent from '@/components/videoComponent.vue';
-import { getRooms } from "@/api/mafiaAPI";
+import { getRooms, UserEvent, requestFriend, sendDM } from "@/api/mafiaAPI";
 
 export default {
   components: {
@@ -61,6 +64,7 @@ export default {
       rooms: [],
       evtSource: null,
       isMounted: false,
+      testInput: "",
     };
   },
   computed: {
@@ -90,6 +94,19 @@ export default {
         icon: "error",
         confirmButtonText: "Cool",
       });
+    },
+    friendReq() {
+      requestFriend(this.testInput, this.$store.getters["user/getMyInfo"].id)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    directMsg() {
+      // this.$root.userSocket.emit(UserEvent.DM, { message: this.testInput });
+      sendDM({ message: "테스트 중", friendId: this.testInput });
     },
   },
   mounted() {

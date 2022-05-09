@@ -9,7 +9,7 @@
 <script>
 import profile from "@/components/profileInGame.vue";
 import gameLobby from "@/components/gameLobby.vue";
-import { GameRoomEvent } from "@/api/mafiaAPI";
+import { GameRoomEvent, UserEvent } from "@/api/mafiaAPI";
 
 export default {
   transition: "lobby",
@@ -25,6 +25,59 @@ export default {
       transports: ["websocket"],
     });
     this.$store.commit("mainChatInit", "#lobby");
+
+    this.$root.userSocket = this.$nuxtSocket({
+      channel: "/user",
+      withCredentials: true,
+      transports: ["websocket"],
+    });
+
+    this.$root.userSocket.on(UserEvent.FRIEND_REQUEST, (data) => {
+      console.log(data);
+    });
+
+    this.$root.userSocket.on(UserEvent.FRIEND_ACCEPT, (data) => {
+      console.log(data);
+    });
+
+    this.$root.userSocket.on(UserEvent.FRIEND_DELETE, (data) => {
+      console.log(data);
+    });
+
+    this.$root.userSocket.on(UserEvent.DM, (data) => {
+      console.log(data);
+      this.$store.commit("newMessage", data);
+      if (
+        this.$store.state.chats[this.$store.state.selectedIndex].userId !==
+          data.sender.userId &&
+        this.$store.state.chats[this.$store.state.selectedIndex].userId !==
+          data.receiver.userId
+      ) {
+        const senderIndex = this.$store.state.chats.indexOf(
+          this.$store.state.chats.find(
+            (chat) => chat.userId === data.sender.userId
+          )
+        );
+        console.log("senderIndex: " + senderIndex);
+        this.$toast.show(data.sender.nickname + "님이 메시지를 보냈습니다.", {
+          action: [
+            {
+              text: "See",
+              onClick: (e, toastObject) => {
+                this.$store.commit("tabClicked", senderIndex);
+                toastObject.goAway(0);
+              },
+            },
+            {
+              text: "Cancel",
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+              },
+            },
+          ],
+        });
+      }
+    });
   },
   mounted() {
     this.$root.lobbySocket.emit(GameRoomEvent.JOIN, {

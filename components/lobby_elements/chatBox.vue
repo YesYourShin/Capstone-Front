@@ -10,6 +10,7 @@
         :key="chat.name"
         class="group-hover:translate-y-0"
         :index="index"
+        :chat="chat"
         :selectedIndex="$store.state.selectedIndex"
       >
         <div class="flex justify-between relative items-center">
@@ -92,7 +93,7 @@
       <!-- <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
-        class="h-6 w-6 hover:cursor-pointer inline text-amber-300 hover:text-blue-700"
+        class="h-6 w-6 hover:cursor-pointer inline text-amber-500 hover:text-blue-700"
         @click="sendMessage"
       >
         <path
@@ -122,9 +123,9 @@
 </template>
 <script>
 import styled from "vue-styled-components";
-import { GameRoomEvent } from "@/api/mafiaAPI";
+import { GameRoomEvent, sendDM } from "@/api/mafiaAPI";
 
-const tapProps = { index: Number, selectedIndex: Number };
+const tapProps = { index: Number, selectedIndex: Number, chat: Object };
 const TabBorder = styled("div", { index: Number, chats: Array })`
   border-right: ${(props) =>
     props.index + 1 !== props.chats.length
@@ -138,14 +139,22 @@ const Tab = styled("div", tapProps)`
   overflow: hidden;
   background-color: ${(props) => {
     return `${
-      props.index == props.selectedIndex ? "rgb(48, 48, 48)" : "rgb(15, 15, 15)"
+      props.index == props.selectedIndex
+        ? "rgb(48, 48, 48)"
+        : props.chat.read
+        ? "rgb(15, 15, 15)"
+        : "rgb(245 158 11)"
     }`;
   }};
   color: rgb(216, 216, 216);
   /* border-width: 2px; */
   border-color: ${(props) => {
     return `${
-      props.index == props.selectedIndex ? "rgb(48, 48, 48)" : "rgb(15, 15, 15)"
+      props.index == props.selectedIndex
+        ? "rgb(48, 48, 48)"
+        : props.chat.read
+        ? "rgb(15, 15, 15)"
+        : "rgb(245 158 11)"
     }`;
   }};
   position: relative;
@@ -164,14 +173,18 @@ const Tab = styled("div", tapProps)`
       return `${
         props.index == props.selectedIndex
           ? "rgb(48, 48, 48)"
-          : "rgb(30, 30, 30)"
+          : props.chat.read
+          ? "rgb(30, 30, 30)"
+          : "rgb(251 191 36)"
       }`;
     }};
     border-color: ${(props) => {
       return `${
         props.index == props.selectedIndex
           ? "rgb(48, 48, 48)"
-          : "rgb(30, 30, 30)"
+          : props.chat.read
+          ? "rgb(30, 30, 30)"
+          : "rgb(251 191 36)"
       }`;
     }};
   }
@@ -210,10 +223,20 @@ export default {
       if (this.input) {
         const msg = this.input;
         this.input = "";
-        if (this.$route.name == "room-id") {
-          this.$root.roomSocket.emit(GameRoomEvent.MESSAGE, { message: msg });
-        } else if (this.$route.name == "lobby") {
-          this.$root.lobbySocket.emit(GameRoomEvent.MESSAGE, { message: msg });
+        if (this.selectedIndex === 0) {
+          if (this.$route.name == "room-id") {
+            this.$root.roomSocket.emit(GameRoomEvent.MESSAGE, { message: msg });
+          } else if (this.$route.name == "lobby") {
+            this.$root.lobbySocket.emit(GameRoomEvent.MESSAGE, {
+              message: msg,
+            });
+          }
+        } else {
+          console.log("현재 탭 유저 Id", this.chats[this.selectedIndex].userId);
+          sendDM({
+            message: msg,
+            friendId: this.chats[this.selectedIndex].userId,
+          });
         }
       }
     },
