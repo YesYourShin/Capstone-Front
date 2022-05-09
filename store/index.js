@@ -29,6 +29,7 @@ export const mutations = {
         name: chatName,
         messages: [],
         closable: false,
+        read: true,
       }
     } else {
       state.chats = [{
@@ -40,20 +41,15 @@ export const mutations = {
     }
   },
   newChat(state, user) {
-    function find(arr, user) {
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i].name === user.social_id) {
-          return arr[i];
-        }
-      }
-      return null;
-    }
+
     let chat = find(state.chats, user);
     if (!chat) {
       let newChat = {
-        name: user.social_id,
+        name: user.nickname,
+        userId: user.userId,
         messages: [],
         closable: true,
+        read: true,
       }
       state.chats.push(newChat);
       state.selectedIndex = state.chats.length - 1;
@@ -70,8 +66,35 @@ export const mutations = {
       Vue.set(state.chats, 0, newChat);
     }
   },
+  newMessage(state, data) {
+    let user;
+    if (state.user.myInfo.profile) {
+      user = state.user.myInfo.profile.nickname === data.sender.nickname ? data.receiver : data.sender;
+    } else {
+      return
+    }
+    let chat = find(state.chats, user);
+    if (!chat) {
+      let newChat = {
+        name: user.nickname,
+        userId: user.userId,
+        messages: [`${data.sender.nickname}: ${data.message}`],
+        closable: true,
+        read: false,
+      }
+      state.chats.push(newChat);
+    } else {
+      let newChat = chat;
+      const newIndex = state.chats.indexOf(chat);
+      newChat.messages.unshift(`${data.sender.nickname}: ${data.message}`);
+      newChat.read = state.selectedIndex === newIndex ? true : false;
+      Vue.set(state.chats, newIndex, newChat);
+    }
+
+  },
   tabClicked(state, index) {
     state.selectedIndex = index;
+    state.chats[index].read = true;
   },
   tabClose(state, index) {
     console.log(state.chats);
@@ -82,6 +105,15 @@ export const mutations = {
     }
   },
 };
+
+function find(arr, user) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].name === user.nickname) {
+      return arr[i];
+    }
+  }
+  return null;
+}
 
 // export const getters = {
 //   getSocket(state) {
