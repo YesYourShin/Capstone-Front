@@ -1,10 +1,10 @@
 <template>
   <div
-    class="w-full bg-gray-200 h-4 relative overflow-hidden"
+    class="w-full bg-gray-200 h-6 relative overflow-hidden"
     :class="[{'rounded-full': rounded}, { indeterminate: indeterminate}]"
   >
     <div
-      class="h-full progressbar bg-blue-500"
+      class="h-full progressbar bg-teal-500"
 
       :class="[{'absolute top-0': indeterminate}, {'rounded-full': rounded}]"
 
