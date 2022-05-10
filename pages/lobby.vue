@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen" id="lobbyBox">
     <div class="flex">
-      <profile></profile>
+      <profile ref="profileComponent"></profile>
       <gameLobby />
     </div>
   </div>
@@ -34,6 +34,23 @@ export default {
 
     this.$root.userSocket.on(UserEvent.FRIEND_REQUEST, (data) => {
       console.log(data);
+      this.$toast.show(data.data, {
+        action: [
+          {
+            text: "See",
+            onClick: (e, toastObject) => {
+              this.$refs.profileComponent.notification();
+              toastObject.goAway(0);
+            },
+          },
+          {
+            text: "Cancel",
+            onClick: (e, toastObject) => {
+              toastObject.goAway(0);
+            },
+          },
+        ],
+      });
     });
 
     this.$root.userSocket.on(UserEvent.FRIEND_ACCEPT, (data) => {

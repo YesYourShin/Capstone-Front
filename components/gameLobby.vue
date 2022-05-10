@@ -19,20 +19,9 @@
         <leaveButton :pathToGo="'/'"></leaveButton>
         <!-- 나가기 버튼 -->
       </div>
-      <!-- <div class="grid grid-cols-2 gap-2"> -->
-      <!--방 목록-->
-      <!-- <template v-for="room in rooms">
-          <roomButton :room="room"></roomButton>
-        </template> -->
-      <!-- </div> -->
-
-      <!-- <pageNavigator></pageNavigator> -->
-      <!-- 페이지네이션 (임시)-->
     </div>
     <RoomTable :rooms="computedRooms"></RoomTable>
-    <input type="text" v-model="testInput" />
-    <div class="h-12 w-20 bg-green-500" @click="friendReq">친구신청</div>
-    <div class="h-12 w-20 bg-blue-500" @click="directMsg">DM</div>
+    <!--방 목록-->
     <chatBox></chatBox>
   </div>
 </template>
@@ -64,7 +53,6 @@ export default {
       rooms: [],
       evtSource: null,
       isMounted: false,
-      testInput: "",
     };
   },
   computed: {
@@ -94,19 +82,6 @@ export default {
         icon: "error",
         confirmButtonText: "Cool",
       });
-    },
-    friendReq() {
-      requestFriend(this.testInput, this.$store.getters["user/getMyInfo"].id)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    directMsg() {
-      // this.$root.userSocket.emit(UserEvent.DM, { message: this.testInput });
-      sendDM({ message: "테스트 중", friendId: this.testInput });
     },
   },
   mounted() {

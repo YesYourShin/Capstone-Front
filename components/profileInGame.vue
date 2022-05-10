@@ -6,9 +6,9 @@
           <img
             v-if="myInfo.profile.image"
             v-bind:src="myInfo.profile.image.location"
-            class="profileimg"
+            class="profileImg"
           />
-          <img v-else src="@/assets/pageimg/test.png" class="profileimg" />
+          <img v-else src="@/assets/pageimg/test.png" class="profileImg" />
         </template>
         <!-- <img src="@/assets/pageimg/test.png" class="profileimg" /> -->
       </div>
@@ -33,7 +33,7 @@
 
       <div class="profile3">
         <button class="profileButton" v-on:click="friend">친구</button>
-        <button class="profileButton" v-on:click="ball">알림</button>
+        <button class="profileButton" v-on:click="notification">알림</button>
         <button class="profileButton" v-on:click="record">전적</button>
       </div>
     </div>
@@ -45,46 +45,7 @@
     </div>
 
     <div class="profileAlert grow" v-if="show2">
-      <div class="alertBox">
-        <p>???에게 친구 신청이 왔습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-      <div class="alertBox">
-        <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-      <div class="alertBox">
-        <p>???에게 게임 초대가 왔습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-
-      <div class="alertBox">
-        <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-      <div class="alertBox">
-        <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-
-      <div class="cancelButton" :click="cancel">
-        <button>전체 삭제</button>
-      </div>
+      <Notifications></Notifications>
     </div>
 
     <div class="profile6 grow" v-if="show3">
@@ -96,13 +57,15 @@
 <script>
 import FriendBar from "./profile_elements/friendBar.vue";
 import UserSearch from "./profile_elements/UserSearch.vue";
-import { logout } from "@/api/mafiaAPI";
+import Notifications from "./profile_elements/Notifications.vue";
+import { logout, getNotifications } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
 
   components: {
     FriendBar,
     UserSearch,
+    Notifications,
   },
 
   data() {
@@ -110,40 +73,36 @@ export default {
       show1: true,
       show2: false,
       show3: false,
+      myNotifications: [],
     };
   },
 
   methods: {
-    cancel() {},
     friend() {
-      if (this.show1) {
-        return;
-      } else {
-        this.show1 = !this.show1;
-        if (this.show2 == true) {
-          this.show2 = !this.show2;
-        } else if (this.show3 == true) {
-          this.show3 = !this.show3;
-        }
-      }
+      this.show1 = true;
+      this.show2 = false;
+      this.show3 = false;
     },
-    ball() {
-      if (this.show2) return;
-      this.show2 = !this.show2;
-      if (this.show1 == true) {
-        this.show1 = !this.show1;
-      } else if (this.show3 == true) {
-        this.show3 = !this.show3;
-      }
+    notification() {
+      getNotifications({
+        userId: this.myInfo.id,
+        page: 1,
+        perPage: 10,
+      })
+        .then((response) => {
+          this.myNotifications = response.data.data;
+        })
+        .catch((err) => {
+          console.error("Error occurred while getting notification data.", err);
+        });
+      this.show1 = false;
+      this.show2 = true;
+      this.show3 = false;
     },
     record() {
-      if (this.show3) return;
-      this.show3 = !this.show3;
-      if (this.show2 == true) {
-        this.show2 = !this.show2;
-      } else if (this.show1 == true) {
-        this.show1 = !this.show1;
-      }
+      this.show1 = false;
+      this.show2 = false;
+      this.show3 = true;
     },
     logout() {
       const link = "http://localhost:7000";

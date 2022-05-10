@@ -138,6 +138,17 @@ export const deleteFriend = (id, friendId) => {
   return instance.delete(`/users/${id}/friend/${friendId}`);
 };
 
+// Notifications
+export const getNotifications = ({userId, page, perPage}) => {
+  // 내 알림 목록 가져오기
+  return instance.get(`/users/${userId}/notifications?page=${page}&perPage=${perPage}`);
+}
+
+export const readNotification = (id, data) => {
+  // 알림 읽음 처리
+  return instance.patch(`/notifications/${id}`, data);
+}
+
 // Posts
 export const getPosts = ({ category, page, item=10 }) => {
   // 게시물들 불러오기
@@ -251,6 +262,7 @@ export const GameRoomEvent = {
   START: 'room:start',
   READY: 'room:ready',
   UNREADY: 'room:unready',
+  SPEAK: 'room:speak',
 };
 
 export const GameEvent = {

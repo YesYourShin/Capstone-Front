@@ -47,10 +47,8 @@
           </div> -->
           <div
             class="justify-self-center mx-2 mb-3 w-full rounded border-[3px]"
-            :class="`${
-              s.ready || index === 0 ? 'border-green-500' : 'border-black/0'
-            }`"
             v-for="(s, index) in roomMembers"
+            :class="`${s.speaking ? 'border-green-500' : 'border-black/0'}`"
             :key="s.userId"
           >
             <div class="aspect-video">
@@ -92,12 +90,6 @@
       </div>
       <div class="flex flex-row-reverse px-2 absolute inset-x-0 bottom-0">
         <div class="m-4 w-40 justify-center items-center">
-          <!-- <div
-            class="flex items-center p-4 bg-yellow-200 rounded-lg shadow-xs cursor-pointer hover:bg-yellow-500 hover:text-gray-100 transition duration-300"
-            @click="leave()"
-          >
-            <p class="text-lg font-bold mx-auto">나가기</p>
-          </div> -->
           <div class="leaveBox">
             <div class="buttonLine1"></div>
             <div class="buttonLine2"></div>
@@ -112,12 +104,6 @@
               class="m-4 md:w-40"
               v-if="roomMembers[0].userId !== myInfo.profile.userId"
             >
-              <!-- <div
-                class="flex items-center p-4 bg-green-200 rounded-lg shadow-xs cursor-pointer hover:bg-green-500 hover:text-gray-100 transition duration-300"
-                @click="getReady()"
-              >
-                <p class="text-lg font-bold mx-auto">준비하기</p>
-              </div> -->
               <div class="readyBox">
                 <div class="buttonLine1"></div>
                 <div class="buttonLine2"></div>
@@ -127,12 +113,6 @@
               </div>
             </div>
             <div class="m-4 md:w-40" v-else>
-              <!-- <div
-                class="flex items-center p-4 bg-blue-200 rounded-lg shadow-xs cursor-pointer hover:bg-blue-500 hover:text-gray-100 transition duration-300"
-                @click="getStart()"
-              >
-                <p class="text-lg font-bold mx-auto">게임 시작</p>
-              </div> -->
               <div class="startBox">
                 <div class="buttonLine1"></div>
                 <div class="buttonLine2"></div>
@@ -319,6 +299,11 @@ export default {
         this.$store.commit("stream/removeRoomMember", data.member);
         this.$toast.show(data.member.nickname + " 님이 퇴장하셨습니다.");
       }
+    });
+
+    this.$root.roomSocket.on(GameRoomEvent.SPEAK, (data) => {
+      console.log(data);
+      this.$store.commit("stream/setSpeaker", data);
     });
 
     this.$root.roomSocket.emit(GameRoomEvent.JOIN, {
@@ -740,10 +725,20 @@ export default {
                   vrc.speechEvents = hark(stream, {});
                   vrc.speechEvents.on("speaking", function () {
                     console.log("speaking");
+                    vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
+                      userId: vrc.myInfo.profile.userId,
+                      nickname: vrc.myInfo.profile.nickname,
+                      speaking: true,
+                    });
                   });
 
                   vrc.speechEvents.on("stopped_speaking", function () {
                     console.log("stopped_speaking");
+                    vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
+                      userId: vrc.myInfo.profile.userId,
+                      nickname: vrc.myInfo.profile.nickname,
+                      speaking: false,
+                    });
                   });
                   // var elId = "remote" + vrc.myInfo.profile.userId;
                   // document.getElementById(elId).pause();

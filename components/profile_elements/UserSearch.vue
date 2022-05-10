@@ -71,7 +71,7 @@ export default {
           }).then((result) => {
             if (result.isConfirmed) {
               requestFriend(
-                showingUser.id,
+                showingUser.userId,
                 this.$store.getters["user/getMyInfo"].id
               )
                 .then((res) => {
