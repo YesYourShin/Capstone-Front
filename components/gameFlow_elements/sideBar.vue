@@ -34,13 +34,13 @@
           <div class="jobImage">
             <img src="@/assets/sidebar/citizen.svg">
           </div>
-          <div class="jobName">Citizen</div>
+          <div class="jobName">시민</div>
           <div class="jobSkill">특수능력 : 없음</div>
           <div class="jobInformation">시민과 힘을 합쳐 마피아를 찾아내어야 합니다.</div>
         </div>
       </div>
       <div class="gameSettingBox">
-        <exitGame></exitGame>
+        <exitGame :escapeGame="'/lobby'"></exitGame>
       </div>
     </div>
   </div>
@@ -133,7 +133,6 @@ div[class="sideBar"] {
   width: 300px;
   height: 100%;
   background:#171717;
-  opacity:0.8;
   position: fixed;
   top: 0;
   right: -300px;
@@ -153,6 +152,7 @@ div[class="gameJobViewer"] {
   display:flex;
   height:600px;
   width:90%;
+  margin: 0 auto;
   background:#171717;
   justify-content: center;
   align-items: center;
@@ -167,19 +167,19 @@ div[class="gameJobBox"] {
 div[class="jobName"] {
   background: #fbbf24;
   text-align: center;
-  font-size: 30pt;
+  font-size: 24pt;
   color: #000;
 }
 
 div[class="jobInformation"] {
-  font-size: 20pt;
+  font-size: 16pt;
   text-align: center;
   margin: 10px 0 10px 0;
     background:#171717;
 }
 
 div[class="jobSkill"] {
-  font-size: 20pt;
+  font-size: 16pt;
   text-align: center;
   margin: 10px 0 10px 0;
   background:#171717;
@@ -191,5 +191,6 @@ div[class="gameSettingBox"] {
   background:#171717;
   flex-direction: column;
   height:300px;
+  margin: 0 auto;
 }
 </style>

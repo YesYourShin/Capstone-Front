@@ -152,7 +152,6 @@
 </template>
 <script>
 import chatBox from "@/components/lobby_elements/chatBox.vue";
-import sideBar from "@/components/lobby_elements/sideBar.vue";
 import Janus from "@/plugins/janus";
 // import * as hark from "@/plugins/hark";
 import hark from "@/plugins/hark.bundle";
@@ -161,7 +160,6 @@ import { GameRoomEvent } from "@/api/mafiaAPI";
 export default {
   components: {
     chatBox,
-    sideBar,
   },
   props: {
     roomInfo: Object,

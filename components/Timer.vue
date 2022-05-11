@@ -4,13 +4,12 @@
     <!-- start of the timer section -->
     <div>
       <div v-show="timerStart" class="timerSet" >
-            <div class="flex flex-wrap p-4 ">
+            <div class="flex flex-wrap p-3 ">
             <BaseProgress :percentage="contentProgress" >
              {{ timerMinutes }}:{{ timerSeconds }}
              <!-- <span class="text-xs text-black w-full flex justify-end pr-2">{{totalSeconds}}</span> -->
             </BaseProgress>
             </div>
-
        </div>
       <div class="button-toggle">
       </div>

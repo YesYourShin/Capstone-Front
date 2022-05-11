@@ -2,7 +2,7 @@
     <div class="grid grid-cols-5 gap-4 justify-evenly">
       <div class="videobox justify-self-center mx-2 mb-3 w-full rounded " v-for="(s, n) in roomMembers" :key="s.userId">
           <div class="aspect-video">
-            <div v-if="s.stream">
+            <div v-if="s.stream" class="videoCut">
               <video
                     v-if="s.nickname !== myInfo.profile.nickname"
                     :ref="'remote' + s.userId"
@@ -73,6 +73,7 @@ export default {
       voteNum: 0,
       voteCount: 0,
       nextEvent: null,
+      skillTrue: null,
     }
   },
   components: {
@@ -111,14 +112,13 @@ export default {
       this.voteCount = 0
 
       if (this.voteNum != 0) {
-        let ttss = setInterval(() => {
+        let voteLoading = setInterval(() => {
           this.voteCount += 1
           if (newVoteResult != this.voteNum) {
-            clearInterval(ttss);
+            clearInterval(voteLoading);
             this.voteCount = 0
-          } else if (this.voteCount > 3) {
-            clearInterval(ttss);
-            console.log('성공')
+          } else if (this.voteCount > 2) {
+            clearInterval(voteLoading)
             this.mediaStatus = false
             this.vStatus = false
             this.vote = false
@@ -134,17 +134,21 @@ export default {
       this.checkCount = 0
 
       if (this.checkNum == true) {
-        let ttsss = setInterval(() => {
+        let checkLoading = setInterval(() => {
           this.checkCount += 1
           if (newCheckResult != this.checkNum) {
             this.checkCount = 0
-          } else if (this.checkCount > 3) {
-            clearInterval(ttsss)
-            console.log('이것도 성공')
+          } else if (this.checkCount > 2) {
+            clearInterval(checkLoading)
             this.mediaStatus = false
             this.cStatus = false
             this.check = false
-            this.$emit('voteNumEmit', this.voteNum)
+            if (this.skillTrue == false) {
+              this.$emit('voteNumEmit', this.voteNum)
+            } else {
+              this.$emit('skillNumEmit', this.voteNum)
+            }
+
           }
         }, 1000)
       }
@@ -156,15 +160,14 @@ export default {
       this.punishmentNum = newPunishmentResult
       this.punishmentCount = 0
 
-      if (this.punishmentNum == true) {
-        let ttssss = setInterval(() => {
+      if (this.punishmentNum == true || this.punishmentNum == false) {
+        let punishLoading = setInterval(() => {
           this.punishmentCount += 1
           if (newPunishmentResult != this.punishmentNum) {
-            clearInterval(ttssss);
+            clearInterval(punishLoading);
             this.punishmentCount = 0
-          } else if (this.punishmentCount > 3) {
-            clearInterval(ttssss);
-            console.log('성공')
+          } else if (this.punishmentCount > 2) {
+            clearInterval(punishLoading);
             this.mediaStatus = false
             this.pStatus = false
             this.punishment = false
@@ -177,6 +180,7 @@ export default {
   methods: {
     startVoteMotion(){
       this.mediaStatus = true
+      this.skillTrue = false
       this.voteResults()
     },
 
@@ -188,6 +192,12 @@ export default {
     punishmentVoteMotion() {
       this.mediaStatus = true
       this.punishmentResults()
+    },
+
+    skillMotion() {
+      this.mediaStatus = true
+      this.skillTrue = true
+      this.voteResults()
     },
 
     unLoadEvent: function (event) {

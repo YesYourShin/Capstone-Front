@@ -18,8 +18,10 @@
       <UserVideo ref="userVideo"
       v-on:startVoteMotion="startVote"
       v-on:punishmentVoteMotion="punishmentVote"
+      v-on:skillMotion="nightEvent"
       @voteNumEmit="voteNumCheck"
       @punishmentEmit="punishmentVoteCheck"
+      @skillNumEmit="skillNumCheck"
       />
     </div>
     <sideBar
@@ -36,7 +38,7 @@
 <script>
 import Timer from "@/components/Timer.vue";
 import Billboard from "@/components/gameFlow_elements/billboard.vue";
-import SideBar from "@/components/lobby_elements/sideBar.vue";
+import SideBar from "@/components/gameFlow_elements/sideBar.vue";
 import UserVideo from "@/components/gameFlow_elements/userVideo.vue"
 import dayjs from "dayjs";
 import { GameEvent } from "@/api/mafiaAPI";
@@ -87,6 +89,8 @@ export default {
       nightAudio: null,
       startTime: null,
       endTime: null,
+      playersNick: [],
+      playersNum: []
     };
   },
 
@@ -113,11 +117,19 @@ export default {
 
     // 인게임에서 활용하기 위한 데이터를 가져오고, 직업 배분을 시작함
     this.$root.gameSocket.on(GameEvent.START, (data) => {
+      console.log(data)
       for (let i = 0; i < data.length; i++) {
         if (data[i].nickname == this.myNick) {
           this.myNum = i;
+          this.playersNick[i] = data[i].nickname
+          this.playersNum[i] = i
+        } else {
+          this.playersNick[i] = data[i].nickname
+          this.playersNum[i] = i
         }
       }
+      console.log(this.playersNick)
+      console.log(this.playersNum)
       console.log(this.myNum);
       setTimeout(() => {
         this.grantPlayerJob();
@@ -167,6 +179,7 @@ export default {
     // 투표 결과 종합
     this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
       console.log(data);
+
       this.$refs.billboard.finishVoteBoard();
       setTimeout(()=> {
         this.punishmentVote();
@@ -176,11 +189,33 @@ export default {
     // 심판 결과 종합
     this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
       console.log(data);
+      // 경우에 따라서는 유저 정보를 다시 받아서 클라이언트에서 처리
+      // if 받아온 값이 true 일 경우, 클라이언트에서 유저 제거 처리후
+      // nightEvent로 넘어간다.
+      // else 일 경우, nightEvent로 넘어간다.
       this.$refs.billboard.finishPunishmentVoteBoard();
       setTimeout(()=> {
         this.nightEvent();
       }, 3000)
     });
+
+    this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
+      // 경찰은 그 즉시 결과를 확인한다.
+      console.log(data);
+    })
+
+    this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
+      // 의사는 백엔드로 전송 후 다시 받는다.
+      console.log(data);
+    })
+
+    this.$root.gameSocket.on(GameEvent.MAFIA, (data) => {
+      // 마피아는 백엔드로 전송 후 다시 받는다.
+      // 1. 모든 마피아가 한명의 유저를 지목했을 경우
+      // 2. 마피아와 의사가 능력이 겹치지 않았을 경우
+      // 위 조건에 만족하면 유저를 죽인다.
+      console.log(data);
+    })
 
   },
 
@@ -193,6 +228,7 @@ export default {
       });
       this.$refs.billboard.gameStartBoard();
     },
+
     // 게임 스타트, 게임 스타트 관련 데이터
     gameStart() {
       this.$root.gameSocket.emit(GameEvent.START);
@@ -248,8 +284,15 @@ export default {
 
     // 타이머 끝나면 이게 실행되고, 집계된 결과값을 가져온다.
     finishVote() {
-      console.log(this.electedPlayer)
-      this.$root.gameSocket.emit(GameEvent.FINISHV);
+      if(this.electedPlayer != 0) {
+        console.log(this.electedPlayer)
+        this.$root.gameSocket.emit(GameEvent.FINISHV);
+      } else {
+          this.$root.gameSocket.emit(GameEvent.VOTE, {
+          vote: 1,
+          })
+          this.$root.gameSocket.emit(GameEvent.FINISHV);
+      }
     },
 
     // 사형시킬 유저가 특정되면 심판 투표를 진행
@@ -287,27 +330,37 @@ export default {
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
       });
-
       this.$root.gameSocket.emit(GameEvent.TIMER);
-
       this.$refs.billboard.nightEventBoard();
-
       setTimeout(() => {
         this.$refs.timer.nightEvent();
         if (this.myJob == "MAFIA") {
-          this.$root.gameSocket.emit(GameEvent.MAFIA);
+          // select를 추가해야 할듯
+          this.$refs.userVideo.skillMotion();
         } else if (this.myJob == "DOCTOR") {
-          this.$root.gameSocket.emit(GameEvent.DOCTOR);
+          // select를 추가해야 할듯
+          this.$refs.userVideo.skillMotion();
         } else if (this.myJob == "POLICE") {
-          this.$root.gameSocket.emit(GameEvent.POLICE);
-          this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
-            console.log(data);
-          });
-        } else {
+          // select를 추가해야 할듯
+          this.$refs.userVideo.skillMotion();
         }
-        this.$root.gameSocket.emit(GameEvent.PUNISH);
-
       }, 3000);
+    },
+
+    skillNumCheck(voteNum) {
+      if (this.myJob == "MAFIA") {
+        this.$root.gameSocket.emit(GameEvent.MAFIA, {
+          userNum : voteNum
+        });
+      } else if (this.myJob == 'DOCTOR') {
+        this.$root.gameSocket.emit(GameEvent.DOCTOR, {
+          userNum : voteNum
+        });
+      } else if (this.myJob == 'POLICE') {
+        this.$root.gameSocket.emit(GameEvent.POLICE, {
+          userNum : voteNum
+        });
+      }
     },
 
     nightResult() {
@@ -319,7 +372,9 @@ export default {
       }, 3000);
     },
 
-    victorySearch() {},
+    victorySearch() {
+
+    },
     mafiaWin() {
       this.flowMessage =
         "마피아가 남아있는 시민의 수와 같거나 많습니다. 마피아가 승리하였습니다.";
@@ -341,3 +396,4 @@ export default {
 <style lang="scss" scoped="scoped">
 @import "~assets/game.scss";
 </style>
+
