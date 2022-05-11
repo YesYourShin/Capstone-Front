@@ -99,7 +99,6 @@ export const mutations = {
     kill_own_feed();
 
     // state.subscribedStreams = [];
-    state.roomMembers = null;
     state.joinedRoom = null;
     state.entered = null;
     state.left = null;
