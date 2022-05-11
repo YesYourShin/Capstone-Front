@@ -13,6 +13,7 @@
         >{{ counter }}</Timer
       >
     </div>
+    <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
     <Billboard ref="billboard" />
     <div class="videomainbox px-2 mt-10">
       <UserVideo ref="userVideo"
@@ -179,7 +180,9 @@ export default {
     // 투표 결과 종합
     this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
       console.log(data);
-
+      for (let i = 0; i < data.length; i++) {
+        console.log(data[i].userNum + ' ' + data[i].voteNum)
+      }
       this.$refs.billboard.finishVoteBoard();
       setTimeout(()=> {
         this.punishmentVote();

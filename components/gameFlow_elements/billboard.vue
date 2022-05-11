@@ -18,6 +18,9 @@ export default {
       dayCount: 0,
     }
   },
+  props: {
+
+  },
   created() {
     this.messageLogs = ['Fafia Start']
   },
