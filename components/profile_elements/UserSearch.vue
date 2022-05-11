@@ -54,17 +54,24 @@ export default {
           // this.modal = true
           this.$swal({
             title: "유저 정보",
-            imageUrl: showingUser.image
-              ? showingUser.image.location
-              : "test.png",
-            imageHeight: "128",
-            imageWidth: "128",
+            // imageUrl: showingUser.image
+            //   ? showingUser.image.location
+            //   : "test.png",
+            // imageHeight: "128",
+            // imageWidth: "128",
             html: `
                 <div>
+                  <div class="flex items-center justify-center m-4">
+                    <img class="aspect-square w-32 object-cover" src="${
+                      showingUser.image
+                        ? showingUser.image.location
+                        : "test.png"
+                    }">
+                  </div>
                   <p>닉네임 : ${showingUser.nickname}</p>
                   <p>상태 메시지 : ${showingUser.selfIntroduction}</p>
                   <p>레벨 : ${showingUser.level}</p>
-                  <p>접속 상태 :</p>
+                  <p>접속 상태 : ${showingUser.online}</p>
                 </div>`,
             showCancelButton: true,
             confirmButtonText: "Add Friend",

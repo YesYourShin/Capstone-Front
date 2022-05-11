@@ -1,9 +1,11 @@
 <template lang="">
   <div>
     <div
+      v-for="item in notifications.items"
+      :key="item.uuid"
       class="mx-2 my-2 bg-white h-12 flex items-center border-[3px] border-black justify-between px-2"
     >
-      <p>???에게 친구 신청이 왔습니다.</p>
+      <p>{{ item.data }}</p>
       <!-- <div class="cancel">
         <div class="cancel1"></div>
         <div class="cancel2"></div>
@@ -12,6 +14,7 @@
         <div class="flex items-center">
           <div
             class="p-1 ml-1 rounded-full hover:bg-green-500/25 hover:cursor-pointer transition duration-300"
+            @click="onClickApproveButton(item)"
           >
             <svg
               class="w-6 h-6"
@@ -31,6 +34,7 @@
           </div>
           <div
             class="p-1 ml-1 rounded-full hover:bg-red-500/25 hover:cursor-pointer transition duration-300"
+            @click="onClickRejectButton(item)"
           >
             <svg
               class="w-6 h-6"
@@ -51,43 +55,6 @@
         </div>
       </div>
     </div>
-    <div
-      class="mx-2 my-2 bg-white h-12 flex items-center border-[3px] border-black justify-between px-2"
-    >
-      <p>???에게 메세지가 도착했습니다.</p>
-      <div class="cancel">
-        <div class="cancel1"></div>
-        <div class="cancel2"></div>
-      </div>
-    </div>
-    <div
-      class="mx-2 my-2 bg-white h-12 flex items-center border-[3px] border-black justify-between px-2"
-    >
-      <p>???에게 게임 초대가 왔습니다.</p>
-      <div class="cancel">
-        <div class="cancel1"></div>
-        <div class="cancel2"></div>
-      </div>
-    </div>
-
-    <div
-      class="mx-2 my-2 bg-white h-12 flex items-center border-[3px] border-black justify-between px-2"
-    >
-      <p>???에게 메세지가 도착했습니다.</p>
-      <div class="cancel">
-        <div class="cancel1"></div>
-        <div class="cancel2"></div>
-      </div>
-    </div>
-    <div
-      class="mx-2 my-2 bg-white h-12 flex items-center border-[3px] border-black justify-between px-2"
-    >
-      <p>???에게 메세지가 도착했습니다.</p>
-      <div class="cancel">
-        <div class="cancel1"></div>
-        <div class="cancel2"></div>
-      </div>
-    </div>
 
     <div class="cancelButton" :click="cancel">
       <button>전체 삭제</button>
@@ -95,40 +62,72 @@
   </div>
 </template>
 <script>
+import { confirmFriendRequest, readNotification } from "@/api/mafiaAPI";
+
 export default {
+  props: {
+    notifications: {
+      type: Object,
+      required: true,
+    },
+  },
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
+    },
+  },
   methods: {
     cancel() {},
+    async onClickApproveButton(item) {
+      if (!this.myInfo) return;
+      try {
+        const response = await confirmFriendRequest(
+          this.myInfo.id,
+          item.userId,
+          {
+            requestAction: "accept",
+          }
+        );
+        this.$store.commit("user/addFriend", response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const response = await readNotification(this.myInfo.id, {
+          uuid: item.uuid,
+        });
+        this.$store.commit("user/readNotification", response);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async onClickRejectButton(item) {
+      if (!this.myInfo) return;
+      try {
+        const response = await confirmFriendRequest(
+          this.myInfo.id,
+          item.userId,
+          {
+            requestAction: "reject",
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        const response = await readNotification(this.myInfo.id, {
+          uuid: item.uuid,
+        });
+        this.$store.commit("user/readNotification", response);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
-.cancel {
-  width: 30px;
-  height: 30px;
-  margin: auto 0;
-  position: relative;
-
-  .cancel1 {
-    position: absolute;
-    top: 43%;
-    left: -15%;
-    transform: translate(-50%);
-    background-color: black;
-    width: 30px;
-    height: 3px;
-    transform: rotate(45deg);
-  }
-  .cancel2 {
-    position: absolute;
-    top: 43%;
-    left: -15%;
-    transform: translate(-50%);
-    background-color: black;
-    width: 30px;
-    height: 3px;
-    transform: rotate(-45deg);
-  }
-}
 .cancelButton {
   text-align: center;
   color: white;

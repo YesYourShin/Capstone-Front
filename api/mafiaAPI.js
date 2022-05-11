@@ -125,10 +125,10 @@ export const requestFriend = (id, requestId) => {
   return instance.post(`/users/${id}/requests/friends/${requestId}`);
 };
 
-export const confirmFriendRequest = (id, requestId) => {
+export const confirmFriendRequest = (id, requestId, data) => {
   // 친구 신청 수락 / 거절
   // requestId: 이벤트를 발생시킬 유저의 id
-  return instance.patch(`/users/${id}/requests/friends/${requestId}`);
+  return instance.patch(`/users/${id}/requests/friends/${requestId}`, data);
 }
 
 export const deleteFriend = (id, friendId) => {
@@ -139,14 +139,14 @@ export const deleteFriend = (id, friendId) => {
 };
 
 // Notifications
-export const getNotifications = ({userId, page, perPage}) => {
+export const getNotifications = (userId, page, perPage) => {
   // 내 알림 목록 가져오기
   return instance.get(`/users/${userId}/notifications?page=${page}&perPage=${perPage}`);
 }
 
 export const readNotification = (id, data) => {
   // 알림 읽음 처리
-  return instance.patch(`/notifications/${id}`, data);
+  return instance.patch(`/users/${id}/notifications/read`, data);
 }
 
 // Posts
@@ -284,6 +284,9 @@ export const UserEvent = {
   FRIEND_ACCEPT: 'user:accept-friend',
   FRIEND_DELETE: 'user:delete-friend',
   DM: 'user:dm',
+  ONLINE: 'user:online',
+  OFFLINE: 'user:offline',
+  INVITE: 'user:invite',
 }
 
 // Default

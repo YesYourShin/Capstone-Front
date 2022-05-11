@@ -1,7 +1,14 @@
 <template lang="">
   <div class="flex" id="roomBox">
-    <profile></profile>
-    <gameRoom :roomInfo="roomInfo" @setRoomInfo="setRoomInfo"></gameRoom>
+    <profile ref="profileComponent" @handleClick="handleClick"></profile>
+    <gameRoom :roomInfo="roomInfo"></gameRoom>
+
+    <vue-simple-context-menu
+      :elementId="'myUniqueId'"
+      :options="options"
+      :ref="'vueSimpleContextMenu'"
+      @option-clicked="optionClicked"
+    />
   </div>
 </template>
 <script>
@@ -24,9 +31,34 @@ export default {
       return this.$store.state.stream.left;
     },
   },
+  data() {
+    return {
+      options: [
+        {
+          name: "Send Message",
+        },
+        {
+          name: "Invite to Room",
+        },
+        {
+          name: "",
+          type: "divider",
+        },
+        {
+          name: "See Details",
+        },
+        {
+          name: "Delete Friend",
+        },
+      ],
+    };
+  },
   methods: {
-    setRoomInfo(data) {
-      this.roomInfo = data;
+    handleClick(event, item) {
+      this.$refs.vueSimpleContextMenu.showMenu(event, item);
+    },
+    optionClicked(event) {
+      this.$refs.profileComponent.optionClicked(event);
     },
   },
   watch: {

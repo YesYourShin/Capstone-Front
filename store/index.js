@@ -36,6 +36,7 @@ export const mutations = {
         name: chatName,
         messages: [],
         closable: false,
+        read: true,
       }]
       state.selectedIndex = 0;
     }

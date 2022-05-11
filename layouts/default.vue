@@ -16,6 +16,15 @@ export default {
         } else {
           this.$store.commit("stream/offRoomOut");
         }
+
+        if (
+          !(to.name === "lobby" || to.name === "game" || to.name === "room-id")
+        ) {
+          if (this.$root.userSocket) {
+            this.$root.userSocket.disconnect();
+            this.$root.userSocket = null;
+          }
+        }
       },
       deep: true,
       immediate: true,

@@ -40,12 +40,12 @@
     <UserSearch v-if="show1"></UserSearch>
     <div class="flex flex-col overflow-auto" v-if="show1">
       <div class="profile4 grow">
-        <friend-bar></friend-bar>
+        <friend-bar @handleClick="handleClick"></friend-bar>
       </div>
     </div>
 
     <div class="profileAlert grow" v-if="show2">
-      <Notifications></Notifications>
+      <Notifications :notifications="myNotifications"></Notifications>
     </div>
 
     <div class="profile6 grow" v-if="show3">
@@ -58,7 +58,7 @@
 import FriendBar from "./profile_elements/friendBar.vue";
 import UserSearch from "./profile_elements/UserSearch.vue";
 import Notifications from "./profile_elements/Notifications.vue";
-import { logout, getNotifications } from "@/api/mafiaAPI";
+import { logout, deleteFriend } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
 
@@ -73,10 +73,17 @@ export default {
       show1: true,
       show2: false,
       show3: false,
-      myNotifications: [],
     };
   },
 
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
+    },
+    myNotifications() {
+      return this.$store.getters["user/getMyNotifications"];
+    },
+  },
   methods: {
     friend() {
       this.show1 = true;
@@ -84,17 +91,6 @@ export default {
       this.show3 = false;
     },
     notification() {
-      getNotifications({
-        userId: this.myInfo.id,
-        page: 1,
-        perPage: 10,
-      })
-        .then((response) => {
-          this.myNotifications = response.data.data;
-        })
-        .catch((err) => {
-          console.error("Error occurred while getting notification data.", err);
-        });
       this.show1 = false;
       this.show2 = true;
       this.show3 = false;
@@ -117,10 +113,61 @@ export default {
         location.href = link;
       }
     },
-  },
-  computed: {
-    myInfo() {
-      return this.$store.getters["user/getMyInfo"];
+    handleClick(event, item) {
+      this.$emit("handleClick", event, item);
+    },
+    optionClicked(event) {
+      // window.alert(JSON.stringify(event.option.name));
+      // window.alert(JSON.stringify(event));
+      const showingUser = event.item;
+      if (event.option.name == "See Details") {
+        console.log(this.showingUser);
+        // this.modal = true
+        this.$swal({
+          title: "유저 정보",
+          // imageUrl: showingUser.image ? showingUser.image.location : "test.png",
+          // imageHeight: "128",
+          // imageWidth: "128",
+          html: `
+                <div>
+                  <div class="flex items-center justify-center m-4">
+                    <img class="aspect-square w-32 object-cover" src="${
+                      showingUser.image
+                        ? showingUser.image.location
+                        : "test.png"
+                    }">
+                  </div>
+                  <p>닉네임 : ${showingUser.nickname}</p>
+                  <p>상태메시지 : ${showingUser.selfIntroduction}</p>
+                  <p>레벨 : ${showingUser.level}</p>
+                  <p>접속상태 : ${
+                    showingUser.online ? "온라인" : "오프라인"
+                  }</p>
+                </div>`,
+        });
+      } else if (event.option.name == "Send Message") {
+        console.log(event.item);
+        this.$store.commit("newChat", event.item);
+      } else if (event.option.name == "Delete Friend") {
+        deleteFriend(this.myInfo.id, event.item.userId)
+          .then((res) => {
+            console.log(res);
+            this.$store.commit("user/deleteFriend", res.data.data.friendId);
+            this.$swal({
+              title: "Success",
+              text: `You are no longer friends with ${showingUser.nickname}!`,
+              icon: "success",
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            this.$swal({
+              title: "Error",
+              text: "Something went wrong!",
+              icon: "error",
+            });
+          });
+      }
     },
   },
 };
