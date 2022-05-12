@@ -3,34 +3,31 @@
     <Header/>
     <div class="mainPost" v-if="this.myInfo">
       <Banner/>
-
       <div class="allbox">
-
-      <div class="proFileBox">
-        <div class="linebox1">
-          <Profile/>
+        <div class="proFileBox">
+          <div class="linebox1">
+            <Profile/>
+          </div>
+          <div class="linebox2">
+            <ul>
+              <NuxtLink to="/community/allCommunity">
+                <li>전체 게시판</li>
+              </NuxtLink>
+              <NuxtLink to="/community/cement">
+                <li>공지 사항</li>
+              </NuxtLink>
+              <NuxtLink to="/community/posta">
+                <li>자유 게시판</li>
+              </NuxtLink>
+              <NuxtLink to="/community/postb">
+                <li>정보 게시판</li>
+              </NuxtLink>
+              <NuxtLink to="/community/postc">
+                <li>인기 게시판</li>
+              </NuxtLink>
+            </ul>
+          </div>
         </div>
-        <div class="linebox2">
-          <ul>
-            <NuxtLink to="/community/allCommunity">
-              <li>전체 게시판</li>
-            </NuxtLink>
-            <NuxtLink to="/community/cement">
-              <li>공지 사항</li>
-            </NuxtLink>
-            <NuxtLink to="/community/posta">
-              <li>자유 게시판</li>
-            </NuxtLink>
-            <NuxtLink to="/community/postb">
-              <li>정보 게시판</li>
-            </NuxtLink>
-            <NuxtLink to="/community/postc">
-              <li>인기 게시판</li>
-            </NuxtLink>
-          </ul>
-        </div>
-      </div>
-
       <div class="postBox">
         <div class="postBoxContent1">
           <p>{{ post.categoryName }}</p>
@@ -72,36 +69,29 @@
             <div>댓글</div>
             <div>등록순&nbsp;&nbsp;&nbsp;최신순</div>
           </div>
-          <!-- <div class="commentBox2">
+          <div class="commentBox2" v-for="item in comment" :key="item">
             <img src="@/assets/pageimg/test.png">
             <div class="commentBox3">
               <p class="PBC1">Mirai</p>
-              <p class="PBC2">점검 언제끝남?</p>
+              <p class="PBC2">{{ item }}</p>
               <p class="PBC3">2022.02.23 11:41</p>
-            </div>
           </div>
-          <div class="commentBox2">
-            <img src="@/assets/pageimg/test.png">
-            <div class="commentBox3">
-              <p class="PBC1">NOA</p>
-              <p class="PBC2">오류 해결 부탁합니다.</p>
-              <p class="PBC3">2022.02.23 11:41</p>
+          </div>
+            <div class="commentBox4" v-if="this.myInfo">
+              <label for="commentBox"  class="PBC1" v-if="this.myInfo.profile">{{ this.myInfo.profile.nickname }}</label>
+              <label for="commentBox"  class="PBC1" v-else>{{this.myInfo.id}}</label>
+              <form @submit.prevent="submitComment">
+                  <div>
+                    <input type="text" id="commentBox" class="PBC2" v-model="comment.content">
+                  </div>
+                  <div>
+                    <input type="submit" class="PBC3" value="등록">
+                    <!-- onclick="window.location.reload()" -->
+                  </div>
+              </form>
             </div>
-          </div> -->
-          <div class="commentBox4" v-if="this.myInfo">
-            <label for="commentBox"  class="PBC1" v-if="this.myInfo.profile">{{ this.myInfo.profile.nickname }}</label>
-            <label for="commentBox"  class="PBC1" v-else>{{this.myInfo.id}}</label>
-            <form @submit.prevent="submitPost">
-                <div>
-                  <input type="text" id="commentBox" class="PBC2">
-                </div>
-                <div>
-                  <input type="submit" class="PBC3" value="등록">
-                </div>
-            </form>
           </div>
         </div>
-      </div>
       </div>
     </div>
     <Footer/>
@@ -132,14 +122,13 @@ export default {
   },
   async created (){
    this.$store.dispatch('user/fetchMyInfo')
-   console.log(this.post.updatedAt)
-  //  this.post.updatedAt = dayjs(post.updatedAt).format("YYYY-MM-DD")
     try {
       let res = await detailPost(this.$route.params.id)
       this.post = res.data.data
         }catch (err) {
       console.log(err)
         }
+    this.post.updatedAt = dayjs(this.post.updatedAt).format("YYYY-MM-DD")
   },
   computed:{
     myInfo(){
@@ -147,7 +136,6 @@ export default {
     }
   },
   mounted(){
-
   },
   methods: {
     delet(){
@@ -156,7 +144,16 @@ export default {
       }catch(err){
         console.log(err)
       }
-    }
+    },
+    submitComment() {
+      saveComment(this.post.id, this.comment)
+        .then((res)=>{
+          console.log(this.comment)
+        })
+        .catch((err)=>{
+          console.log(error)
+        })
+    },
   }
 };
 </script>
