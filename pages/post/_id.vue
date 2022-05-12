@@ -1,23 +1,12 @@
 <template>
   <div class="postMainBox">
-<<<<<<< HEAD
     <Header />
-    <div class="mainPost">
+    <div class="mainPost" v-if="this.myInfo">
       <Banner />
-
       <div class="allbox">
         <div class="proFileBox">
           <div class="linebox1">
             <Profile />
-=======
-    <Header/>
-    <div class="mainPost" v-if="this.myInfo">
-      <Banner/>
-      <div class="allbox">
-        <div class="proFileBox">
-          <div class="linebox1">
-            <Profile/>
->>>>>>> comment
           </div>
           <div class="linebox2">
             <ul>
@@ -39,47 +28,65 @@
             </ul>
           </div>
         </div>
-      <div class="postBox">
-        <div class="postBoxContent1">
-          <p>{{ post.categoryName }}</p>
-          <div class="userbtn" v-if="post.profile && this.post.profile.id === this.myInfo.id">
-            <button  @click="$router.push('/repost/' + post.id)">수정</button>
-            <button @click="delet"
-            onclick="document.location.href='/community/allCommunity'">삭제</button>
-          </div>
-          <div class="postBoxContent2">
-            <p>{{ post.title }}</p>
-          </div>
-          <div class="postBoxContent3">
-            <img src="@/assets/pageimg/test.jpg" />
-          </div>
-          <div class="postBoxContent4">
-            <p class="PBC1" v-if="post.profile">{{ post.profile.nickname }}</p>
-            <div>2022.02.23 11:32 조회 199</div>
-            <div>댓글 3&nbsp;&nbsp;좋아요 {{ post.likeCount }}</div>
-          </div>
-          <div class="postBoxContent5">
-            <!-- {{ post.img }} -->
-          </div>
-          <div class="commentBox2" v-for="item in comment" :key="item">
-            <img src="@/assets/pageimg/test.png">
-            <div class="commentBox3">
-              <p class="PBC1">Mirai</p>
-              <p class="PBC2">{{ item }}</p>
-              <p class="PBC3">2022.02.23 11:41</p>
-          </div>
-          </div>
+        <div class="postBox">
+          <div class="postBoxContent1">
+            <p>{{ post.categoryName }}</p>
+            <div
+              class="userbtn"
+              v-if="post.profile && this.post.profile.id === this.myInfo.id"
+            >
+              <button @click="$router.push('/repost/' + post.id)">수정</button>
+              <button
+                @click="delet"
+                onclick="document.location.href='/community/allCommunity'"
+              >
+                삭제
+              </button>
+            </div>
+            <div class="postBoxContent2">
+              <p>{{ post.title }}</p>
+            </div>
+            <div class="postBoxContent3">
+              <img src="@/assets/pageimg/test.jpg" />
+            </div>
+            <div class="postBoxContent4">
+              <p class="PBC1" v-if="post.profile">
+                {{ post.profile.nickname }}
+              </p>
+              <div>2022.02.23 11:32 조회 199</div>
+              <div>댓글 3&nbsp;&nbsp;좋아요 {{ post.likeCount }}</div>
+            </div>
+            <div class="postBoxContent5">
+              <!-- {{ post.img }} -->
+            </div>
+            <div class="commentBox2" v-for="item in comment" :key="item">
+              <img src="@/assets/pageimg/test.png" />
+              <div class="commentBox3">
+                <p class="PBC1">Mirai</p>
+                <p class="PBC2">{{ item }}</p>
+                <p class="PBC3">2022.02.23 11:41</p>
+              </div>
+            </div>
             <div class="commentBox4" v-if="this.myInfo">
-              <label for="commentBox"  class="PBC1" v-if="this.myInfo.profile">{{ this.myInfo.profile.nickname }}</label>
-              <label for="commentBox"  class="PBC1" v-else>{{this.myInfo.id}}</label>
+              <label for="commentBox" class="PBC1" v-if="this.myInfo.profile">{{
+                this.myInfo.profile.nickname
+              }}</label>
+              <label for="commentBox" class="PBC1" v-else>{{
+                this.myInfo.id
+              }}</label>
               <form @submit.prevent="submitComment">
-                  <div>
-                    <input type="text" id="commentBox" class="PBC2" v-model="comment.content">
-                  </div>
-                  <div>
-                    <input type="submit" class="PBC3" value="등록">
-                    <!-- onclick="window.location.reload()" -->
-                  </div>
+                <div>
+                  <input
+                    type="text"
+                    id="commentBox"
+                    class="PBC2"
+                    v-model="comment.content"
+                  />
+                </div>
+                <div>
+                  <input type="submit" class="PBC3" value="등록" />
+                  <!-- onclick="window.location.reload()" -->
+                </div>
               </form>
             </div>
           </div>
@@ -111,23 +118,22 @@ export default {
       },
     };
   },
-  async created (){
-   this.$store.dispatch('user/fetchMyInfo')
+  async created() {
+    this.$store.dispatch("user/fetchMyInfo");
     try {
-      let res = await detailPost(this.$route.params.id)
-      this.post = res.data.data
-        }catch (err) {
-      console.log(err)
-        }
-    this.post.updatedAt = dayjs(this.post.updatedAt).format("YYYY-MM-DD")
-  },
-  computed:{
-    myInfo(){
-      return this.$store.getters['user/getMyInfo']
+      let res = await detailPost(this.$route.params.id);
+      this.post = res.data.data;
+    } catch (err) {
+      console.log(err);
     }
+    this.post.updatedAt = dayjs(this.post.updatedAt).format("YYYY-MM-DD");
   },
-  mounted(){
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
+    },
   },
+  mounted() {},
   mounted() {},
   methods: {
     delet() {
@@ -139,14 +145,14 @@ export default {
     },
     submitComment() {
       saveComment(this.post.id, this.comment)
-        .then((res)=>{
-          console.log(this.comment)
+        .then((res) => {
+          console.log(this.comment);
         })
-        .catch((err)=>{
-          console.log(error)
-        })
+        .catch((err) => {
+          console.log(error);
+        });
     },
-  }
+  },
 };
 </script>
 
