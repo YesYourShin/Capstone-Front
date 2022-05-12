@@ -196,9 +196,9 @@ export const downVotePost = (postId) => {
 };
 
 // Comments
-export const saveComment = (data) => {
+export const saveComment = (postId, data) => {
   // 댓글 등록
-  return instance.post(`/comments`, data);
+  return instance.post(`posts/`+ postId + `/comments`, data);
 };
 
 export const editComment = (commentId, data) => {
