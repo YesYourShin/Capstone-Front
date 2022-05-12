@@ -62,7 +62,7 @@ export const actions = {
     }
     try {
       if (context.state.myInfo) {
-        const response = await getNotifications(context.state.myInfo.id, 1, 10);
+        const response = await getNotifications(context.state.myInfo.id);
         context.commit('setMyNotifications', response.data.data);
       }
     } catch (error) {

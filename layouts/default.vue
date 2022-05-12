@@ -24,6 +24,7 @@ export default {
             this.$root.userSocket.disconnect();
             this.$root.userSocket = null;
           }
+          this.$store.commit("destroyChats");
         }
       },
       deep: true,

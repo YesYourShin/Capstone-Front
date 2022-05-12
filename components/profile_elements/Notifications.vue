@@ -3,7 +3,7 @@
     <div
       v-for="item in notifications"
       :key="item.uuid"
-      class="mx-2 my-2 bg-white h-12 flex items-center border-[3px] border-black justify-between px-2"
+      class="mx-2 my-2 bg-white flex items-center border-[3px] border-black justify-between px-2"
     >
       <p>{{ item.data }}</p>
       <!-- <div class="cancel">
@@ -90,6 +90,11 @@ export default {
           }
         );
         this.$store.commit("user/addFriend", response.data.data);
+        this.$swal({
+          title: "✧*。٩(ˊᗜˋ*)و✧*。",
+          text: `Now you are friend with ${response.data.data.nickname}!`,
+          icon: "success",
+        });
       } catch (error) {
         console.log(error);
       }

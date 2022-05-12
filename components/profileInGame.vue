@@ -101,17 +101,15 @@ export default {
       this.show3 = true;
     },
     logout() {
-      const link = "http://localhost:7000";
-      if ((this.data = Object)) {
-        logout()
-          .then((response) => {
-            console.log("logout");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        location.href = link;
-      }
+      logout().then((res) => {
+        if (res.data.data.logout) {
+          const link =
+            process.env.NODE_ENV === "production"
+              ? "https://gjgjajaj.xyz"
+              : "http://localhost:7000";
+          location.href = link;
+        }
+      });
     },
     handleClick(event, item) {
       this.$emit("handleClick", event, item);
@@ -124,7 +122,7 @@ export default {
         console.log(this.showingUser);
         // this.modal = true
         this.$swal({
-          title: "유저 정보",
+          title: "User Information",
           // imageUrl: showingUser.image ? showingUser.image.location : "test.png",
           // imageHeight: "128",
           // imageWidth: "128",
@@ -134,14 +132,14 @@ export default {
                     <img class="aspect-square w-32 object-cover" src="${
                       showingUser.image
                         ? showingUser.image.location
-                        : "test.png"
+                        : "/defaultProfile.png"
                     }">
                   </div>
-                  <p>닉네임 : ${showingUser.nickname}</p>
-                  <p>상태메시지 : ${showingUser.selfIntroduction}</p>
-                  <p>레벨 : ${showingUser.level}</p>
-                  <p>접속상태 : ${
-                    showingUser.online ? "온라인" : "오프라인"
+                  <p>Nickname : ${showingUser.nickname}</p>
+                  <p>Introduction : ${showingUser.selfIntroduction}</p>
+                  <p>Level : ${showingUser.level}</p>
+                  <p>Online Status : ${
+                    showingUser.online ? "Online" : "Offline"
                   }</p>
                 </div>`,
           showCancelButton: true,
@@ -155,7 +153,7 @@ export default {
               .then((res) => {
                 console.log(res);
                 this.$swal({
-                  title: "Success",
+                  title: "(*˘︶˘*).。.:*",
                   text: "Your friend request has been sent successfully!",
                   icon: "success",
                 });
@@ -168,8 +166,9 @@ export default {
               .then((res) => {
                 console.log(res);
                 this.$store.commit("user/deleteFriend", res.data.data.friendId);
+                this.$store.commit("tabCloseByUserId", res.data.data.friendId);
                 this.$swal({
-                  title: "Success",
+                  title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
                   text: `You are no longer friends with ${showingUser.nickname}!`,
                   icon: "success",
                 });
@@ -192,8 +191,9 @@ export default {
           .then((res) => {
             console.log(res);
             this.$store.commit("user/deleteFriend", res.data.data.friendId);
+            this.$store.commit("tabCloseByUserId", res.data.data.friendId);
             this.$swal({
-              title: "Success",
+              title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
               text: `You are no longer friends with ${showingUser.nickname}!`,
               icon: "success",
             });

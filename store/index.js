@@ -106,7 +106,7 @@ export const mutations = {
     }
   },
   tabCloseByUserId(state, userId) {
-    let chat = find(state.chats, { userId });
+    let chat = state.chats.find(chat => chat.userId === userId);
     if (chat) {
       let index = state.chats.indexOf(chat);
       state.chats.splice(index, 1);
@@ -114,6 +114,10 @@ export const mutations = {
         state.selectedIndex = state.selectedIndex - 1;
       }
     }
+  },
+  destroyChats(state) {
+    state.chats = [];
+    state.selectedIndex = -1;
   }
 };
 

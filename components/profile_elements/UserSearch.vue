@@ -57,7 +57,7 @@ export default {
           showingUser = res.data.data;
           // this.modal = true
           this.$swal({
-            title: "유저 정보",
+            title: "User Information",
             // imageUrl: showingUser.image
             //   ? showingUser.image.location
             //   : "test.png",
@@ -69,13 +69,13 @@ export default {
                     <img class="aspect-square w-32 object-cover" src="${
                       showingUser.image
                         ? showingUser.image.location
-                        : "test.png"
+                        : "/defaultProfile.png"
                     }">
                   </div>
-                  <p>닉네임 : ${showingUser.nickname}</p>
-                  <p>상태 메시지 : ${showingUser.selfIntroduction}</p>
-                  <p>레벨 : ${showingUser.level}</p>
-                  <p>접속 상태 : ${
+                  <p>Nickname : ${showingUser.nickname}</p>
+                  <p>Introduction : ${showingUser.selfIntroduction}</p>
+                  <p>Level : ${showingUser.level}</p>
+                  <p>Online Status : ${
                     showingUser.online ? "Online" : "Offline"
                   }</p>
                 </div>`,
@@ -97,7 +97,7 @@ export default {
                 .then((res) => {
                   console.log(res);
                   this.$swal({
-                    title: "Success",
+                    title: "(*˘ᴗ˘*).。.:*",
                     text: "Your friend request has been sent successfully!",
                     icon: "success",
                   });
@@ -116,8 +116,12 @@ export default {
                     "user/deleteFriend",
                     res.data.data.friendId
                   );
+                  this.$store.commit(
+                    "tabCloseByUserId",
+                    res.data.data.friendId
+                  );
                   this.$swal({
-                    title: "Success",
+                    title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
                     text: `You are no longer friends with ${showingUser.nickname}!`,
                     icon: "success",
                   });

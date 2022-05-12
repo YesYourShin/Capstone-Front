@@ -123,7 +123,7 @@ export default {
               },
             },
             {
-              text: "Cancel",
+              text: "Close",
               onClick: (e, toastObject) => {
                 toastObject.goAway(0);
               },
@@ -135,11 +135,13 @@ export default {
       this.$root.userSocket.on(UserEvent.FRIEND_ACCEPT, (data) => {
         console.log(data);
         this.$store.commit("user/addFriend", data.user);
+        this.$toast.show(data.user.nickname + " accepted your friend request!");
       });
 
       this.$root.userSocket.on(UserEvent.FRIEND_DELETE, (data) => {
         console.log(data);
         this.$store.commit("user/deleteFriend", data.userId);
+        this.$store.commit("tabCloseByUserId", data.userId);
       });
 
       this.$root.userSocket.on(UserEvent.DM, (data) => {
@@ -167,7 +169,7 @@ export default {
                 },
               },
               {
-                text: "Cancel",
+                text: "Close",
                 onClick: (e, toastObject) => {
                   toastObject.goAway(0);
                 },

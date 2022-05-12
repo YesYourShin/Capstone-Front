@@ -139,9 +139,9 @@ export const deleteFriend = (id, friendId) => {
 };
 
 // Notifications
-export const getNotifications = (userId, page, perPage) => {
+export const getNotifications = (userId) => {
   // 내 알림 목록 가져오기
-  return instance.get(`/users/${userId}/notifications?page=${page}&perPage=${perPage}`);
+  return instance.get(`/users/${userId}/notifications`);
 }
 
 export const readNotification = (id, data) => {
