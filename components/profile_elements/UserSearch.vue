@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="w-full p-1 border-r-[3px] border-black">
+  <div class="w-full p-1 border-x-[3px] border-black bg-zinc-800">
     <div class="text-sm text-gray-400">Search User</div>
     <form
       class="h-12 flex items-center justify-center border border-zinc-700 px-1"
@@ -35,7 +35,11 @@
   </div>
 </template>
 <script>
-import { getUserInformationByNickname, requestFriend } from "@/api/mafiaAPI";
+import {
+  getUserInformationByNickname,
+  requestFriend,
+  deleteFriend,
+} from "@/api/mafiaAPI";
 
 export default {
   data() {
@@ -74,7 +78,10 @@ export default {
                   <p>접속 상태 : ${showingUser.online}</p>
                 </div>`,
             showCancelButton: true,
+            showConfirmButton: !this.checkIsFriend(showingUser.userId),
+            showDenyButton: this.checkIsFriend(showingUser.userId),
             confirmButtonText: "Add Friend",
+            denyButtonText: "Delete Friend",
           }).then((result) => {
             if (result.isConfirmed) {
               requestFriend(
@@ -92,6 +99,31 @@ export default {
                 .catch((err) => {
                   console.log(err);
                 });
+            } else if (result.isDenied) {
+              deleteFriend(
+                this.$store.getters["user/getMyInfo"].id,
+                showingUser.userId
+              )
+                .then((res) => {
+                  console.log(res);
+                  this.$store.commit(
+                    "user/deleteFriend",
+                    res.data.data.friendId
+                  );
+                  this.$swal({
+                    title: "Success",
+                    text: `You are no longer friends with ${showingUser.nickname}!`,
+                    icon: "success",
+                  });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  this.$swal({
+                    title: "Error",
+                    text: "Something went wrong!",
+                    icon: "error",
+                  });
+                });
             }
           });
         })
@@ -105,6 +137,11 @@ export default {
             // footer: '<a href="">Why do I have this issue?</a>'
           });
         });
+    },
+    checkIsFriend(userId) {
+      return this.$store.getters["user/getMyInfo"].friends.some(
+        (friend) => friend.userId === userId
+      );
     },
   },
 };

@@ -38,7 +38,7 @@
       </div>
     </div>
     <UserSearch v-if="show1"></UserSearch>
-    <div class="flex flex-col overflow-auto" v-if="show1">
+    <div class="h-full flex flex-col overflow-auto" v-if="show1">
       <div class="profile4 grow">
         <friend-bar @handleClick="handleClick"></friend-bar>
       </div>
@@ -144,6 +144,45 @@ export default {
                     showingUser.online ? "온라인" : "오프라인"
                   }</p>
                 </div>`,
+          showCancelButton: true,
+          showConfirmButton: !this.checkIsFriend(showingUser.userId),
+          showDenyButton: this.checkIsFriend(showingUser.userId),
+          confirmButtonText: "Add Friend",
+          denyButtonText: "Delete Friend",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            requestFriend(showingUser.userId, this.myInfo.id)
+              .then((res) => {
+                console.log(res);
+                this.$swal({
+                  title: "Success",
+                  text: "Your friend request has been sent successfully!",
+                  icon: "success",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else if (result.isDenied) {
+            deleteFriend(this.myInfo.id, showingUser.userId)
+              .then((res) => {
+                console.log(res);
+                this.$store.commit("user/deleteFriend", res.data.data.friendId);
+                this.$swal({
+                  title: "Success",
+                  text: `You are no longer friends with ${showingUser.nickname}!`,
+                  icon: "success",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+                this.$swal({
+                  title: "Error",
+                  text: "Something went wrong!",
+                  icon: "error",
+                });
+              });
+          }
         });
       } else if (event.option.name == "Send Message") {
         console.log(event.item);
@@ -168,6 +207,11 @@ export default {
             });
           });
       }
+    },
+    checkIsFriend(userId) {
+      return this.$store.getters["user/getMyInfo"].friends.some(
+        (friend) => friend.userId === userId
+      );
     },
   },
 };
