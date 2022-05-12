@@ -75,11 +75,17 @@ export default {
                   <p>닉네임 : ${showingUser.nickname}</p>
                   <p>상태 메시지 : ${showingUser.selfIntroduction}</p>
                   <p>레벨 : ${showingUser.level}</p>
-                  <p>접속 상태 : ${showingUser.online}</p>
+                  <p>접속 상태 : ${
+                    showingUser.online ? "Online" : "Offline"
+                  }</p>
                 </div>`,
             showCancelButton: true,
-            showConfirmButton: !this.checkIsFriend(showingUser.userId),
-            showDenyButton: this.checkIsFriend(showingUser.userId),
+            showConfirmButton:
+              !this.checkIsFriend(showingUser.userId) &&
+              showingUser.userId != this.$store.state.user.myInfo.id,
+            showDenyButton:
+              this.checkIsFriend(showingUser.userId) &&
+              showingUser.userId != this.$store.state.user.myInfo.id,
             confirmButtonText: "Add Friend",
             denyButtonText: "Delete Friend",
           }).then((result) => {

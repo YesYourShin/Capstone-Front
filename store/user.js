@@ -3,7 +3,7 @@ import Vue from 'vue'
 
 export const state = () => ({
   myInfo: null,
-  myNotifications: {},
+  myNotifications: [],
 })
 
 export const mutations = {
@@ -39,19 +39,16 @@ export const mutations = {
     state.myNotifications = data;
   },
   addNotification(state, data) {
-    Vue.set(state.myNotifications, 'items', [data, ...state.myNotifications.items]);
+    state.myNotifications = [data, ...state.myNotifications];
   },
   readNotification(state, data) {
     console.log('readNotification 발동', data);
-    let temp = state.myNotifications.items;
-    for (let i = 0; i < temp.length; i++) {
-      if (temp[i].uuid === data.data.data.uuid) {
-        temp.splice(i, 1);
+    for (let i = 0; i < state.myNotifications.length; i++) {
+      if (state.myNotifications[i].uuid === data.data.data.uuid) {
+        state.myNotifications.splice(i, 1);
         break
       }
     }
-    console.log('temp 결과: ', temp);
-    Vue.set(state.myNotifications, "items", temp);
   }
 }
 
