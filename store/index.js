@@ -6,9 +6,9 @@ export const state = () => ({
     .map((arr, i) => {
       return {
         id: i,
-        social_id: `user_id_${i}`,
-        provider: "KAKAO",
-        role: 1,
+        nickname: `user_id_${i}`,
+        selfIntroduction: "KAKAO",
+        online: true,
         createdAt: 0,
         updatedAt: 0,
         deletedAt: 0,
@@ -105,6 +105,16 @@ export const mutations = {
       state.selectedIndex = state.selectedIndex - 1;
     }
   },
+  tabCloseByUserId(state, userId) {
+    let chat = find(state.chats, { userId });
+    if (chat) {
+      let index = state.chats.indexOf(chat);
+      state.chats.splice(index, 1);
+      if (index <= state.selectedIndex) {
+        state.selectedIndex = state.selectedIndex - 1;
+      }
+    }
+  }
 };
 
 function find(arr, user) {
