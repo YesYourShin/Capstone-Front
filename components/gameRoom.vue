@@ -725,11 +725,13 @@ export default {
                   vrc.speechEvents = hark(stream, {});
                   vrc.speechEvents.on("speaking", function () {
                     console.log("speaking");
-                    vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
-                      userId: vrc.myInfo.profile.userId,
-                      nickname: vrc.myInfo.profile.nickname,
-                      speaking: true,
-                    });
+                    if (vrc.$route.name === "room-id") {
+                      vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
+                        userId: vrc.myInfo.profile.userId,
+                        nickname: vrc.myInfo.profile.nickname,
+                        speaking: true,
+                      });
+                    }
                   });
 
                   vrc.speechEvents.on("stopped_speaking", function () {

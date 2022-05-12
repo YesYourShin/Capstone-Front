@@ -186,6 +186,10 @@ export default {
         console.log(data);
         this.$store.commit("user/setOnline", data);
       });
+
+      this.$root.userSocket.on(UserEvent.INVITE, (data) => {
+        console.log(data);
+      });
     }
 
     this.$root.lobbySocket.emit(GameRoomEvent.JOIN, {

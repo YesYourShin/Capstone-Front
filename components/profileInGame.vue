@@ -58,7 +58,7 @@
 import FriendBar from "./profile_elements/friendBar.vue";
 import UserSearch from "./profile_elements/UserSearch.vue";
 import Notifications from "./profile_elements/Notifications.vue";
-import { logout, deleteFriend } from "@/api/mafiaAPI";
+import { logout, deleteFriend, roomInvite } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
 
@@ -185,10 +185,10 @@ export default {
           }
         });
       } else if (event.option.name == "Send Message") {
-        console.log(event.item);
-        this.$store.commit("newChat", event.item);
+        console.log(showingUser);
+        this.$store.commit("newChat", showingUser);
       } else if (event.option.name == "Delete Friend") {
-        deleteFriend(this.myInfo.id, event.item.userId)
+        deleteFriend(this.myInfo.id, showingUser.userId)
           .then((res) => {
             console.log(res);
             this.$store.commit("user/deleteFriend", res.data.data.friendId);
@@ -205,6 +205,22 @@ export default {
               text: "Something went wrong!",
               icon: "error",
             });
+          });
+      } else if (
+        this.$route.name === "room-id" &&
+        event.option.name == "Invite to Room"
+      ) {
+        roomInvite(this.$route.params.id, this.myInfo.id, showingUser.userId)
+          .then((res) => {
+            console.log(res);
+            this.$swal({
+              title: "Success",
+              text: `You invited ${showingUser.nickname} to your room!`,
+              icon: "success",
+            });
+          })
+          .catch((err) => {
+            console.log(err);
           });
       }
     },
