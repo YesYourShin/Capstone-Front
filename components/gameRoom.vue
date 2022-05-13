@@ -79,10 +79,12 @@
                     : 'bg-black text-white'
                 }`"
               >
-                Lv.{{ s.level }}
+                {{ s.ready || index === 0 ? "Ready" : "Wait" }}
               </div>
-              <div class="col-span-3 bg-white px-1">
-                {{ s.nickname }}
+              <div
+                class="col-span-3 bg-white px-1 whitespace-nowrap overflow-ellipsis"
+              >
+                <span>{{ `Lv.${s.level} ${s.nickname}` }}</span>
               </div>
             </div>
           </div>
@@ -109,7 +111,9 @@
                 <div class="buttonLine2"></div>
                 <div class="buttonLine3"></div>
                 <div class="buttonLine4"></div>
-                <button class="buttonCore" @click="getReady()">준비하기</button>
+                <button class="buttonCore" @click="getReady()">
+                  {{ amIReady ? "준비 해제" : "준비 하기" }}
+                </button>
               </div>
             </div>
             <div class="m-4 md:w-40" v-else>
@@ -176,6 +180,15 @@ export default {
     },
     roomMembers() {
       return this.$store.state.stream.roomMembers;
+    },
+    amIReady() {
+      const i = this.$store.state.stream.roomMembers.find((s) => {
+        return s.userId === this.myInfo.profile.userId;
+      });
+      if (i) {
+        return i.ready;
+      }
+      return false;
     },
     // ...mapState([
     //   "subscribedStreams",

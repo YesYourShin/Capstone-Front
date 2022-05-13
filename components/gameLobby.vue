@@ -106,7 +106,6 @@ export default {
     var vrc = this;
     this.evtSource.onmessage = function (e) {
       vrc.rooms = JSON.parse(e.data).data;
-      console.log(vrc.rooms);
     };
 
     if (this.$root.userSocket && !this.$root.userSocket._callbacks) {
@@ -191,6 +190,24 @@ export default {
 
       this.$root.userSocket.on(UserEvent.INVITE, (data) => {
         console.log(data);
+        this.$store.commit("user/addNotification", data);
+        this.$toast.show(data.data.message, {
+          action: [
+            {
+              text: "See",
+              onClick: (e, toastObject) => {
+                this.$emit("notification");
+                toastObject.goAway(0);
+              },
+            },
+            {
+              text: "Close",
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+              },
+            },
+          ],
+        });
       });
     }
 

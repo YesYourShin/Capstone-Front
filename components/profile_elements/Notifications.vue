@@ -5,7 +5,9 @@
       :key="item.uuid"
       class="mx-2 my-2 bg-white flex items-center border-[3px] border-black justify-between px-2"
     >
-      <p>{{ item.data }}</p>
+      <p>
+        {{ item.type === "REQUESTED_FRIEND" ? item.data : item.data.message }}
+      </p>
       <!-- <div class="cancel">
         <div class="cancel1"></div>
         <div class="cancel2"></div>
@@ -62,7 +64,12 @@
   </div>
 </template>
 <script>
-import { confirmFriendRequest, readNotification } from "@/api/mafiaAPI";
+import {
+  confirmFriendRequest,
+  readNotification,
+  roomAccept,
+  getRoom,
+} from "@/api/mafiaAPI";
 
 export default {
   props: {
@@ -81,22 +88,59 @@ export default {
     cancel() {},
     async onClickApproveButton(item) {
       if (!this.myInfo) return;
-      try {
-        const response = await confirmFriendRequest(
-          this.myInfo.id,
-          item.userId,
-          {
-            requestAction: "accept",
+      if (item.type === "REQUESTED_FRIEND") {
+        try {
+          const response = await confirmFriendRequest(
+            this.myInfo.id,
+            item.userId,
+            {
+              requestAction: "accept",
+            }
+          );
+          this.$store.commit("user/addFriend", response.data.data);
+          this.$swal({
+            title: "✧*｡٩(ˊᗜˋ*)و✧*｡",
+            text: `Now you are friend with ${response.data.data.nickname}!`,
+            icon: "success",
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (item.type === "INVITED_GAME") {
+        try {
+          const response = await roomAccept(
+            item.data.roomId,
+            item.userId,
+            item.targetId,
+            item.uuid
+          );
+          if (response.data.data.joinable) {
+            getRoom(response.data.data.roomId)
+              .then((res) => {
+                this.$store.commit(
+                  "stream/setRoomMembers",
+                  res.data.data.members
+                );
+                this.$router.push({
+                  name: "room-id",
+                  params: {
+                    id: res.data.data.id,
+                    room: res.data.data.room,
+                    pin: "",
+                  },
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           }
-        );
-        this.$store.commit("user/addFriend", response.data.data);
-        this.$swal({
-          title: "✧*｡٩(ˊᗜˋ*)و✧*｡",
-          text: `Now you are friend with ${response.data.data.nickname}!`,
-          icon: "success",
-        });
-      } catch (error) {
-        console.log(error);
+        } catch (error) {
+          console.log(error);
+          this.$swal({
+            icon: "error",
+            title: error.response.data.data.message,
+          });
+        }
       }
 
       try {
@@ -110,16 +154,18 @@ export default {
     },
     async onClickRejectButton(item) {
       if (!this.myInfo) return;
-      try {
-        const response = await confirmFriendRequest(
-          this.myInfo.id,
-          item.userId,
-          {
-            requestAction: "reject",
-          }
-        );
-      } catch (error) {
-        console.log(error);
+      if (item.type === "REQUESTED_FRIEND") {
+        try {
+          const response = await confirmFriendRequest(
+            this.myInfo.id,
+            item.userId,
+            {
+              requestAction: "reject",
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
       }
       try {
         const response = await readNotification(this.myInfo.id, {
