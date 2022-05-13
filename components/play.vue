@@ -13,6 +13,8 @@
         >{{ counter }}</Timer
       >
     </div>
+    <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
+    <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함.  -->
     <Billboard ref="billboard" />
     <div class="videomainbox px-2 mt-10">
       <UserVideo ref="userVideo"
@@ -26,12 +28,8 @@
     </div>
     <sideBar
       ref="sideBarSet"
-      v-on:myJobMafia="myJobMafia"
-      v-on:myJobPolice="myJobPolice"
-      v-on:myJobDoctor="myJobDoctor"
-      v-on:myJobCitizen="myJobCitizen"
     ></sideBar>
-    <Audio />
+    <!-- <Audio /> -->
   </div>
 </template>
 
@@ -43,7 +41,7 @@ import UserVideo from "@/components/gameFlow_elements/userVideo.vue"
 import dayjs from "dayjs";
 import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
-import Audio from "@/components/gameFlow_elements/audio.vue";
+// import Audio from "@/components/gameFlow_elements/audio.vue";
 export default {
   name: "App",
   props: {
@@ -55,7 +53,7 @@ export default {
     SideBar,
     DayCount,
     UserVideo,
-    Audio,
+    // Audio,
     dayjs,
   },
   computed: {
@@ -64,11 +62,6 @@ export default {
     },
     roomMembers() {
       return this.$store.state.stream.roomMembers;
-    },
-    roomId() {
-      const value = this.$store.state.roomId;
-      console.log("this is nuxt vue", value);
-      return value;
     },
   },
   data() {
@@ -90,7 +83,9 @@ export default {
       startTime: null,
       endTime: null,
       playersNick: [],
-      playersNum: []
+      playersNum: [],
+      deathState: [],
+      // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
   },
 
@@ -118,19 +113,26 @@ export default {
     // 인게임에서 활용하기 위한 데이터를 가져오고, 직업 배분을 시작함
     this.$root.gameSocket.on(GameEvent.START, (data) => {
       console.log(data)
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].nickname == this.myNick) {
-          this.myNum = i;
-          this.playersNick[i] = data[i].nickname
-          this.playersNum[i] = i
-        } else {
-          this.playersNick[i] = data[i].nickname
-          this.playersNum[i] = i
-        }
+      // for (let i = 0; i < data.length; i++) {
+      //   // data : [n ab , n bb , n cc , , , ,]
+      //   // playerNick : [ab, bb, cc, , , , , ,]
+      //   if (data[i].nickname == this.myNick) {
+      //     this.myNum = i;
+      //     this.playersNick[i] = data[i].nickname
+      //     this.playersNum[i] = i
+      //   } else {
+      //     this.playersNick[i] = data[i].nickname
+      //     this.playersNum[i] = i
+      //   }
+      //   this.deathState[i] = data[i].die
+      // }
+      for (let item of data) {
+        this.$store.commit('stream/setRoomMembersDie', item);
       }
       console.log(this.playersNick)
       console.log(this.playersNum)
       console.log(this.myNum);
+      console.log(this.deathState);
       setTimeout(() => {
         this.grantPlayerJob();
       }, 5000);
@@ -179,7 +181,9 @@ export default {
     // 투표 결과 종합
     this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
       console.log(data);
-
+      for (let i = 0; i < data.length; i++) {
+        console.log(data[i].userNum + ' ' + data[i].voteNum)
+      }
       this.$refs.billboard.finishVoteBoard();
       setTimeout(()=> {
         this.punishmentVote();
@@ -200,8 +204,8 @@ export default {
     });
 
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
-      // 경찰은 그 즉시 결과를 확인한다.
-      console.log(data);
+      console.log(data.userNum, user);
+      this.$refs.billboard.policeResult();
     })
 
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
@@ -224,7 +228,7 @@ export default {
     // 게임에 입장하는 즉시 실행되며, 유저의 소켓 정보 받아옴
     gameSocketSet() {
       this.$root.gameSocket.emit(GameEvent.JOIN, {
-        roomId: this.$store.state.roomId.roomId,
+        roomId: this.$route.params.roomInfo.id
       });
       this.$refs.billboard.gameStartBoard();
     },

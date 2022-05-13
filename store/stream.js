@@ -71,21 +71,6 @@ export const mutations = {
     // });
   },
   removeAllSubscribers(state) {
-    function stopAndRemoveTrack(mediaStream) {
-      return function(track) {
-        track.stop();
-        mediaStream.removeTrack(track);
-      };
-    };
-
-    function stopMediaStream(mediaStream) {
-      if (!mediaStream) {
-        return
-      }
-
-      mediaStream.getTracks().forEach(stopAndRemoveTrack(mediaStream));
-    }
-
     function kill_own_feed() {
       for (let mediaStream of state.roomMembers) {
         stopMediaStream(mediaStream.stream)
@@ -99,6 +84,7 @@ export const mutations = {
     kill_own_feed();
 
     // state.subscribedStreams = [];
+    state.roomMembers = [];
     state.joinedRoom = null;
     state.entered = null;
     state.left = null;
@@ -205,6 +191,23 @@ export const mutations = {
   destroyRoomMembers(state) {
     state.roomMembers = [];
   },
+  setRoomMembersDie(state, data) {
+    for (let member of state.roomMembers) {
+      if (member.nickname === data.nickname) {
+        member.die = data.die;
+        break;
+      }
+    }
+  },
+  killMember(state, data) {
+    for (let member of state.roomMembers) {
+      if (member.nickname === data.nickname) {
+        member.die = true;
+        stopMediaStream(member.stream);
+        break;
+      }
+    }
+  },
   readySubscriber(state, data) {
     for (let i=0; i<state.subscribedStreams.length; i++) {
       let sub = state.subscribedStreams[i];
@@ -236,3 +239,18 @@ export const getters = {
 }
 
 
+
+function stopAndRemoveTrack(mediaStream) {
+  return function(track) {
+    track.stop();
+    mediaStream.removeTrack(track);
+  };
+};
+
+function stopMediaStream(mediaStream) {
+  if (!mediaStream) {
+    return
+  }
+
+  mediaStream.getTracks().forEach(stopAndRemoveTrack(mediaStream));
+}

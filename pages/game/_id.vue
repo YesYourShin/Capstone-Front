@@ -28,7 +28,7 @@ export default {
         message: unpublish,
         success: function () {
           vrc.$store.commit("stream/removeAllSubscribers");
-          vrc.$store.commit("stream/setPublishStream", null);
+          vrc.$store.commit("stream/destroyRoomMembers");
         },
         error: function (error) {
           console.log("unpublish failed:", error);

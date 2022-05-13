@@ -18,6 +18,9 @@ export default {
       dayCount: 0,
     }
   },
+  props: {
+
+  },
   created() {
     this.messageLogs = ['Fafia Start']
   },
@@ -25,7 +28,7 @@ export default {
     gameStartBoard() {
       // 게임 시작 메세지를 저장한다.
       // 지금부터 마피아 게임을 시작합니다.
-      const roomId = this.$store.state.roomId.roomId
+      const roomId = this.$route.params.roomInfo.id
       this.newMessage = `방 정보 : ${roomId} 번`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.newMessage = '지금부터 마피아 게임을 시작하겠습니다.'
@@ -101,7 +104,10 @@ export default {
     },
     finishPunishmentVoteBoard() {
       // 찬반 투표 결과를 알리는 메세지를 남김
-      this.newMessage = '투표 결과 목공풀을(를) 사형하지 않습니다.'
+      this.newMessage = '투표 결과'
+      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+      // 플레이어 수 만큼 for문이 돈다. 그리고 모든 유저의 득표수를 보여준다.
+      this.newMessage = '1플레이어 : 1'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
     },
