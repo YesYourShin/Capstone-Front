@@ -31,10 +31,31 @@
         <p class="usertext" v-else>상태메세지를 입력해주세요.</p>
       </div>
 
-      <div class="profile3">
-        <button class="profileButton" v-on:click="friend">친구</button>
-        <button class="profileButton" v-on:click="notification">알림</button>
-        <button class="profileButton" v-on:click="record">전적</button>
+      <div class="profile3 w-full h-[50px] text-white text-2xl flex">
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center"
+          v-on:click="friend"
+        >
+          친구
+        </button>
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center relative"
+          v-on:click="notification"
+        >
+          알림
+          <div
+            v-if="myNotifications.length"
+            class="rounded-full bg-red-500 inline-block leading-6 text-center text-sm aspect-square w-6 absolute right-5"
+          >
+            {{ myNotifications.length > 99 ? "99+" : myNotifications.length }}
+          </div>
+        </button>
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center"
+          v-on:click="record"
+        >
+          전적
+        </button>
       </div>
     </div>
     <UserSearch v-if="show1"></UserSearch>
@@ -153,7 +174,7 @@ export default {
               .then((res) => {
                 console.log(res);
                 this.$swal({
-                  title: "(*˘︶˘*).。.:*",
+                  title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡‧₊˚",
                   text: "Your friend request has been sent successfully!",
                   icon: "success",
                 });

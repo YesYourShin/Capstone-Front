@@ -97,7 +97,7 @@ export default {
                 .then((res) => {
                   console.log(res);
                   this.$swal({
-                    title: "(*˘ᴗ˘*).。.:*",
+                    title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡‧₊˚",
                     text: "Your friend request has been sent successfully!",
                     icon: "success",
                   });
@@ -141,7 +141,7 @@ export default {
           console.log(err);
 
           this.$swal({
-            icon: "error",
+            icon: "question",
             title: "There is no such user...",
             text: "Please enter a valid nickname!",
             // footer: '<a href="">Why do I have this issue?</a>'

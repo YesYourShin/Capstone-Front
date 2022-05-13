@@ -91,7 +91,7 @@ export default {
         );
         this.$store.commit("user/addFriend", response.data.data);
         this.$swal({
-          title: "✧*。٩(ˊᗜˋ*)و✧*。",
+          title: "✧*｡٩(ˊᗜˋ*)و✧*｡",
           text: `Now you are friend with ${response.data.data.nickname}!`,
           icon: "success",
         });
