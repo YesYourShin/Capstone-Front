@@ -2,20 +2,15 @@
   <div class="communitybox">
     <Header/>
     <div class="communitymain">
-
       <div class="communityProfile">
-
         <div class="community1">
-
           <div v-if="this.myInfo">
             <Profile/>
           </div>
           <div v-else>
             <LoginProfile/>
           </div>
-
         </div>
-
         <div class="community2">
           <ul class="communityUl">
             <li class="communityLi1">
@@ -35,12 +30,8 @@
             </li>
           </ul>
         </div>
-
       </div>
-
-
       <div class="communityPost">
-
         <div class="communityPostSerchBox">
           <div class="psb1">
             <p>전체 게시판</p>
@@ -111,8 +102,6 @@ export default {
     };
   },
   async created (){
-
-
    this.$store.dispatch('user/fetchMyInfo')
     try {
       let res = await getPosts({
@@ -128,6 +117,7 @@ export default {
     } catch (err) {
      console.log(err)
     }
+
   },
   computed:{
     myInfo(){

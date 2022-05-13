@@ -19,20 +19,9 @@
         <leaveButton :pathToGo="'/'"></leaveButton>
         <!-- 나가기 버튼 -->
       </div>
-      <!-- <div class="grid grid-cols-2 gap-2"> -->
-      <!--방 목록-->
-      <!-- <template v-for="room in rooms">
-          <roomButton :room="room"></roomButton>
-        </template> -->
-      <!-- </div> -->
-
-      <!-- <pageNavigator></pageNavigator> -->
-      <!-- 페이지네이션 (임시)-->
     </div>
     <RoomTable :rooms="computedRooms"></RoomTable>
-    <input type="text" v-model="testInput" />
-    <div class="h-12 w-20 bg-green-500" @click="friendReq">친구신청</div>
-    <div class="h-12 w-20 bg-blue-500" @click="directMsg">DM</div>
+    <!--방 목록-->
     <chatBox></chatBox>
   </div>
 </template>
@@ -46,7 +35,7 @@ import leaveButton from "@/components/lobby_elements/leaveButton.vue";
 import pageNavigator from "@/components/lobby_elements/pageNavigator.vue";
 import RoomTable from "@/components/lobby_elements/RoomTable.vue";
 // import videoComponent from '@/components/videoComponent.vue';
-import { getRooms, UserEvent, requestFriend, sendDM } from "@/api/mafiaAPI";
+import { getRooms, UserEvent, GameRoomEvent } from "@/api/mafiaAPI";
 
 export default {
   components: {
@@ -64,7 +53,6 @@ export default {
       rooms: [],
       evtSource: null,
       isMounted: false,
-      testInput: "",
     };
   },
   computed: {
@@ -95,19 +83,6 @@ export default {
         confirmButtonText: "Cool",
       });
     },
-    friendReq() {
-      requestFriend(this.testInput, this.$store.getters["user/getMyInfo"].id)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    directMsg() {
-      // this.$root.userSocket.emit(UserEvent.DM, { message: this.testInput });
-      sendDM({ message: "테스트 중", friendId: this.testInput });
-    },
   },
   mounted() {
     this.isMounted = true;
@@ -133,6 +108,95 @@ export default {
       vrc.rooms = JSON.parse(e.data).data;
       console.log(vrc.rooms);
     };
+
+    if (this.$root.userSocket && !this.$root.userSocket._callbacks) {
+      this.$root.userSocket.on(UserEvent.FRIEND_REQUEST, (data) => {
+        console.log(data);
+        this.$store.commit("user/addNotification", data);
+        this.$toast.show(data.data, {
+          action: [
+            {
+              text: "See",
+              onClick: (e, toastObject) => {
+                this.$emit("notification");
+                toastObject.goAway(0);
+              },
+            },
+            {
+              text: "Close",
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+              },
+            },
+          ],
+        });
+      });
+
+      this.$root.userSocket.on(UserEvent.FRIEND_ACCEPT, (data) => {
+        console.log(data);
+        this.$store.commit("user/addFriend", data.user);
+        this.$toast.show(data.user.nickname + " accepted your friend request!");
+      });
+
+      this.$root.userSocket.on(UserEvent.FRIEND_DELETE, (data) => {
+        console.log(data);
+        this.$store.commit("user/deleteFriend", data.userId);
+        this.$store.commit("tabCloseByUserId", data.userId);
+      });
+
+      this.$root.userSocket.on(UserEvent.DM, (data) => {
+        console.log(data);
+        this.$store.commit("newMessage", data);
+        if (
+          this.$store.state.chats[this.$store.state.selectedIndex].userId !==
+            data.sender.userId &&
+          this.$store.state.chats[this.$store.state.selectedIndex].userId !==
+            data.receiver.userId
+        ) {
+          const senderIndex = this.$store.state.chats.indexOf(
+            this.$store.state.chats.find(
+              (chat) => chat.userId === data.sender.userId
+            )
+          );
+          console.log("senderIndex: " + senderIndex);
+          this.$toast.show(data.sender.nickname + "님이 메시지를 보냈습니다.", {
+            action: [
+              {
+                text: "See",
+                onClick: (e, toastObject) => {
+                  this.$store.commit("tabClicked", senderIndex);
+                  toastObject.goAway(0);
+                },
+              },
+              {
+                text: "Close",
+                onClick: (e, toastObject) => {
+                  toastObject.goAway(0);
+                },
+              },
+            ],
+          });
+        }
+      });
+
+      this.$root.userSocket.on(UserEvent.ONLINE, (data) => {
+        console.log(data);
+        this.$store.commit("user/setOnline", data);
+      });
+
+      this.$root.userSocket.on(UserEvent.OFFLINE, (data) => {
+        console.log(data);
+        this.$store.commit("user/setOnline", data);
+      });
+
+      this.$root.userSocket.on(UserEvent.INVITE, (data) => {
+        console.log(data);
+      });
+    }
+
+    this.$root.lobbySocket.emit(GameRoomEvent.JOIN, {
+      roomId: 0,
+    });
   },
   watch: {
     subscribedStreams(newVal, oldVal) {
@@ -146,6 +210,7 @@ export default {
   },
   beforeDestroy() {
     this.evtSource.close();
+    this.$root.lobbySocket.emit(GameRoomEvent.LEAVE);
   },
 };
 </script>

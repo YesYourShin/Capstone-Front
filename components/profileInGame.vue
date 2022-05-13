@@ -6,9 +6,9 @@
           <img
             v-if="myInfo.profile.image"
             v-bind:src="myInfo.profile.image.location"
-            class="profileimg"
+            class="profileImg"
           />
-          <img v-else src="@/assets/pageimg/test.png" class="profileimg" />
+          <img v-else src="@/assets/pageimg/test.png" class="profileImg" />
         </template>
         <!-- <img src="@/assets/pageimg/test.png" class="profileimg" /> -->
       </div>
@@ -31,60 +31,42 @@
         <p class="usertext" v-else>상태메세지를 입력해주세요.</p>
       </div>
 
-      <div class="profile3">
-        <button class="profileButton" v-on:click="friend">친구</button>
-        <button class="profileButton" v-on:click="ball">알림</button>
-        <button class="profileButton" v-on:click="record">전적</button>
+      <div class="profile3 w-full h-[50px] text-white text-2xl flex">
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center"
+          v-on:click="friend"
+        >
+          친구
+        </button>
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center relative"
+          v-on:click="notification"
+        >
+          알림
+          <div
+            v-if="myNotifications.length"
+            class="rounded-full bg-red-500 inline-block leading-6 text-center text-sm aspect-square w-6 absolute right-5"
+          >
+            {{ myNotifications.length > 99 ? "99+" : myNotifications.length }}
+          </div>
+        </button>
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center"
+          v-on:click="record"
+        >
+          전적
+        </button>
       </div>
     </div>
     <UserSearch v-if="show1"></UserSearch>
-    <div class="flex flex-col overflow-auto" v-if="show1">
+    <div class="h-full flex flex-col overflow-auto" v-if="show1">
       <div class="profile4 grow">
-        <friend-bar></friend-bar>
+        <friend-bar @handleClick="handleClick"></friend-bar>
       </div>
     </div>
 
     <div class="profileAlert grow" v-if="show2">
-      <div class="alertBox">
-        <p>???에게 친구 신청이 왔습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-      <div class="alertBox">
-        <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-      <div class="alertBox">
-        <p>???에게 게임 초대가 왔습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-
-      <div class="alertBox">
-        <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-      <div class="alertBox">
-        <p>???에게 메세지가 도착했습니다.</p>
-        <div class="cancel">
-          <div class="cancel1"></div>
-          <div class="cancel2"></div>
-        </div>
-      </div>
-
-      <div class="cancelButton" :click="cancel">
-        <button>전체 삭제</button>
-      </div>
+      <Notifications :notifications="myNotifications"></Notifications>
     </div>
 
     <div class="profile6 grow" v-if="show3">
@@ -96,13 +78,15 @@
 <script>
 import FriendBar from "./profile_elements/friendBar.vue";
 import UserSearch from "./profile_elements/UserSearch.vue";
-import { logout } from "@/api/mafiaAPI";
+import Notifications from "./profile_elements/Notifications.vue";
+import { logout, deleteFriend, roomInvite } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
 
   components: {
     FriendBar,
     UserSearch,
+    Notifications,
   },
 
   data() {
@@ -113,55 +97,158 @@ export default {
     };
   },
 
-  methods: {
-    cancel() {},
-    friend() {
-      if (this.show1) {
-        return;
-      } else {
-        this.show1 = !this.show1;
-        if (this.show2 == true) {
-          this.show2 = !this.show2;
-        } else if (this.show3 == true) {
-          this.show3 = !this.show3;
-        }
-      }
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
     },
-    ball() {
-      if (this.show2) return;
-      this.show2 = !this.show2;
-      if (this.show1 == true) {
-        this.show1 = !this.show1;
-      } else if (this.show3 == true) {
-        this.show3 = !this.show3;
-      }
+    myNotifications() {
+      return this.$store.getters["user/getMyNotifications"];
+    },
+  },
+  methods: {
+    friend() {
+      this.show1 = true;
+      this.show2 = false;
+      this.show3 = false;
+    },
+    notification() {
+      this.show1 = false;
+      this.show2 = true;
+      this.show3 = false;
     },
     record() {
-      if (this.show3) return;
-      this.show3 = !this.show3;
-      if (this.show2 == true) {
-        this.show2 = !this.show2;
-      } else if (this.show1 == true) {
-        this.show1 = !this.show1;
-      }
+      this.show1 = false;
+      this.show2 = false;
+      this.show3 = true;
     },
     logout() {
-      const link = "http://localhost:7000";
-      if ((this.data = Object)) {
-        logout()
-          .then((response) => {
-            console.log("logout");
+      logout().then((res) => {
+        if (res.data.data.logout) {
+          const link =
+            process.env.NODE_ENV === "production"
+              ? "https://gjgjajaj.xyz"
+              : "http://localhost:7000";
+          location.href = link;
+        }
+      });
+    },
+    handleClick(event, item) {
+      this.$emit("handleClick", event, item);
+    },
+    optionClicked(event) {
+      // window.alert(JSON.stringify(event.option.name));
+      // window.alert(JSON.stringify(event));
+      const showingUser = event.item;
+      if (event.option.name == "See Details") {
+        console.log(this.showingUser);
+        // this.modal = true
+        this.$swal({
+          title: "User Information",
+          // imageUrl: showingUser.image ? showingUser.image.location : "test.png",
+          // imageHeight: "128",
+          // imageWidth: "128",
+          html: `
+                <div>
+                  <div class="flex items-center justify-center m-4">
+                    <img class="aspect-square w-32 object-cover" src="${
+                      showingUser.image
+                        ? showingUser.image.location
+                        : "/defaultProfile.png"
+                    }">
+                  </div>
+                  <p>Nickname : ${showingUser.nickname}</p>
+                  <p>Introduction : ${showingUser.selfIntroduction}</p>
+                  <p>Level : ${showingUser.level}</p>
+                  <p>Online Status : ${
+                    showingUser.online ? "Online" : "Offline"
+                  }</p>
+                </div>`,
+          showCancelButton: true,
+          showConfirmButton: !this.checkIsFriend(showingUser.userId),
+          showDenyButton: this.checkIsFriend(showingUser.userId),
+          confirmButtonText: "Add Friend",
+          denyButtonText: "Delete Friend",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            requestFriend(showingUser.userId, this.myInfo.id)
+              .then((res) => {
+                console.log(res);
+                this.$swal({
+                  title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡‧₊˚",
+                  text: "Your friend request has been sent successfully!",
+                  icon: "success",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else if (result.isDenied) {
+            deleteFriend(this.myInfo.id, showingUser.userId)
+              .then((res) => {
+                console.log(res);
+                this.$store.commit("user/deleteFriend", res.data.data.friendId);
+                this.$store.commit("tabCloseByUserId", res.data.data.friendId);
+                this.$swal({
+                  title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
+                  text: `You are no longer friends with ${showingUser.nickname}!`,
+                  icon: "success",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+                this.$swal({
+                  title: "Error",
+                  text: "Something went wrong!",
+                  icon: "error",
+                });
+              });
+          }
+        });
+      } else if (event.option.name == "Send Message") {
+        console.log(showingUser);
+        this.$store.commit("newChat", showingUser);
+      } else if (event.option.name == "Delete Friend") {
+        deleteFriend(this.myInfo.id, showingUser.userId)
+          .then((res) => {
+            console.log(res);
+            this.$store.commit("user/deleteFriend", res.data.data.friendId);
+            this.$store.commit("tabCloseByUserId", res.data.data.friendId);
+            this.$swal({
+              title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
+              text: `You are no longer friends with ${showingUser.nickname}!`,
+              icon: "success",
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            this.$swal({
+              title: "Error",
+              text: "Something went wrong!",
+              icon: "error",
+            });
+          });
+      } else if (
+        this.$route.name === "room-id" &&
+        event.option.name == "Invite to Room"
+      ) {
+        roomInvite(this.$route.params.id, this.myInfo.id, showingUser.userId)
+          .then((res) => {
+            console.log(res);
+            this.$swal({
+              title: "Success",
+              text: `You invited ${showingUser.nickname} to your room!`,
+              icon: "success",
+            });
           })
           .catch((err) => {
             console.log(err);
           });
-        location.href = link;
       }
     },
-  },
-  computed: {
-    myInfo() {
-      return this.$store.getters["user/getMyInfo"];
+    checkIsFriend(userId) {
+      return this.$store.getters["user/getMyInfo"].friends.some(
+        (friend) => friend.userId === userId
+      );
     },
   },
 };

@@ -99,7 +99,6 @@ export const mutations = {
     kill_own_feed();
 
     // state.subscribedStreams = [];
-    state.roomMembers = null;
     state.joinedRoom = null;
     state.entered = null;
     state.left = null;
@@ -183,6 +182,7 @@ export const mutations = {
     }
   },
   addRoomMember(state, data) {
+    data.speaking = false;
     if (!state.roomMembers.length) {
       // data.stream = null;
       state.roomMembers = [data];
@@ -212,6 +212,18 @@ export const mutations = {
         sub.ready = data.ready;
         break;
       }
+    }
+  },
+  setSpeaker(state, data) {
+    function find(arr, data) {
+      for (const val of arr) {
+        if (val.nickname === data.nickname) return val;
+      }
+      return null;
+    }
+    const target = find(state.roomMembers, data);
+    if (target) {
+      target.speaking = data.speaking;
     }
   }
 }

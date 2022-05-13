@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="w-full p-1 border-r-[3px] border-black">
+  <div class="w-full p-1 border-x-[3px] border-black bg-zinc-800">
     <div class="text-sm text-gray-400">Search User</div>
     <form
       class="h-12 flex items-center justify-center border border-zinc-700 px-1"
@@ -35,7 +35,11 @@
   </div>
 </template>
 <script>
-import { getUserInformationByNickname, requestFriend } from "@/api/mafiaAPI";
+import {
+  getUserInformationByNickname,
+  requestFriend,
+  deleteFriend,
+} from "@/api/mafiaAPI";
 
 export default {
   data() {
@@ -53,37 +57,82 @@ export default {
           showingUser = res.data.data;
           // this.modal = true
           this.$swal({
-            title: "유저 정보",
-            imageUrl: showingUser.image
-              ? showingUser.image.location
-              : "test.png",
-            imageHeight: "128",
-            imageWidth: "128",
+            title: "User Information",
+            // imageUrl: showingUser.image
+            //   ? showingUser.image.location
+            //   : "test.png",
+            // imageHeight: "128",
+            // imageWidth: "128",
             html: `
                 <div>
-                  <p>닉네임 : ${showingUser.nickname}</p>
-                  <p>상태 메시지 : ${showingUser.selfIntroduction}</p>
-                  <p>레벨 : ${showingUser.level}</p>
-                  <p>접속 상태 :</p>
+                  <div class="flex items-center justify-center m-4">
+                    <img class="aspect-square w-32 object-cover" src="${
+                      showingUser.image
+                        ? showingUser.image.location
+                        : "/defaultProfile.png"
+                    }">
+                  </div>
+                  <p>Nickname : ${showingUser.nickname}</p>
+                  <p>Introduction : ${showingUser.selfIntroduction}</p>
+                  <p>Level : ${showingUser.level}</p>
+                  <p>Online Status : ${
+                    showingUser.online ? "Online" : "Offline"
+                  }</p>
                 </div>`,
             showCancelButton: true,
+            showConfirmButton:
+              !this.checkIsFriend(showingUser.userId) &&
+              showingUser.userId != this.$store.state.user.myInfo.id,
+            showDenyButton:
+              this.checkIsFriend(showingUser.userId) &&
+              showingUser.userId != this.$store.state.user.myInfo.id,
             confirmButtonText: "Add Friend",
+            denyButtonText: "Delete Friend",
           }).then((result) => {
             if (result.isConfirmed) {
               requestFriend(
-                showingUser.id,
+                showingUser.userId,
                 this.$store.getters["user/getMyInfo"].id
               )
                 .then((res) => {
                   console.log(res);
                   this.$swal({
-                    title: "Success",
+                    title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡‧₊˚",
                     text: "Your friend request has been sent successfully!",
                     icon: "success",
                   });
                 })
                 .catch((err) => {
                   console.log(err);
+                });
+            } else if (result.isDenied) {
+              deleteFriend(
+                this.$store.getters["user/getMyInfo"].id,
+                showingUser.userId
+              )
+                .then((res) => {
+                  console.log(res);
+                  this.$store.commit(
+                    "user/deleteFriend",
+                    res.data.data.friendId
+                  );
+                  this.$store.commit(
+                    "tabCloseByUserId",
+                    res.data.data.friendId
+                  );
+                  this.$swal({
+                    title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
+                    text: `You are no longer friends with ${showingUser.nickname}!`,
+                    icon: "success",
+                  });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  this.$swal({
+                    title: "Error",
+                    text: "Something went wrong!",
+                    icon: "error",
+                  });
                 });
             }
           });
@@ -92,12 +141,17 @@ export default {
           console.log(err);
 
           this.$swal({
-            icon: "error",
+            icon: "question",
             title: "There is no such user...",
             text: "Please enter a valid nickname!",
             // footer: '<a href="">Why do I have this issue?</a>'
           });
         });
+    },
+    checkIsFriend(userId) {
+      return this.$store.getters["user/getMyInfo"].friends.some(
+        (friend) => friend.userId === userId
+      );
     },
   },
 };

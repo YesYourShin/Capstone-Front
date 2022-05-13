@@ -5,7 +5,7 @@
         type="search"
         name="search"
         placeholder="Search room name"
-        class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-80"
+        class="bg-white h-10 px-5 pr-10 text-sm focus:outline-none w-80 shadow-md"
         v-model="input"
       />
       <div class="absolute right-0 top-0 mt-3 mr-4">

@@ -1,15 +1,21 @@
 <template>
   <div class="h-screen" id="lobbyBox">
     <div class="flex">
-      <profile></profile>
-      <gameLobby />
+      <profile ref="profileComponent" @handleClick="handleClick"></profile>
+      <gameLobby @notification="notification" />
     </div>
+
+    <vue-simple-context-menu
+      :elementId="'myUniqueId'"
+      :options="options"
+      :ref="'vueSimpleContextMenu'"
+      @option-clicked="optionClicked"
+    />
   </div>
 </template>
 <script>
 import profile from "@/components/profileInGame.vue";
 import gameLobby from "@/components/gameLobby.vue";
-import { GameRoomEvent, UserEvent } from "@/api/mafiaAPI";
 
 export default {
   transition: "lobby",
@@ -17,6 +23,41 @@ export default {
   components: {
     profile,
     gameLobby,
+  },
+  data() {
+    return {
+      options: [
+        {
+          name: "Send Message",
+        },
+        {
+          name: "",
+          type: "divider",
+        },
+        {
+          name: "See Details",
+        },
+        {
+          name: "Delete Friend",
+        },
+      ],
+    };
+  },
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
+    },
+  },
+  methods: {
+    handleClick(event, item) {
+      this.$refs.vueSimpleContextMenu.showMenu(event, item);
+    },
+    optionClicked(event) {
+      this.$refs.profileComponent.optionClicked(event);
+    },
+    notification() {
+      this.$refs.profileComponent.notification();
+    },
   },
   created() {
     this.$root.lobbySocket = this.$nuxtSocket({
@@ -26,63 +67,14 @@ export default {
     });
     this.$store.commit("mainChatInit", "#lobby");
 
-    this.$root.userSocket = this.$nuxtSocket({
-      channel: "/user",
-      withCredentials: true,
-      transports: ["websocket"],
-    });
-
-    this.$root.userSocket.on(UserEvent.FRIEND_REQUEST, (data) => {
-      console.log(data);
-    });
-
-    this.$root.userSocket.on(UserEvent.FRIEND_ACCEPT, (data) => {
-      console.log(data);
-    });
-
-    this.$root.userSocket.on(UserEvent.FRIEND_DELETE, (data) => {
-      console.log(data);
-    });
-
-    this.$root.userSocket.on(UserEvent.DM, (data) => {
-      console.log(data);
-      this.$store.commit("newMessage", data);
-      if (
-        this.$store.state.chats[this.$store.state.selectedIndex].userId !==
-          data.sender.userId &&
-        this.$store.state.chats[this.$store.state.selectedIndex].userId !==
-          data.receiver.userId
-      ) {
-        const senderIndex = this.$store.state.chats.indexOf(
-          this.$store.state.chats.find(
-            (chat) => chat.userId === data.sender.userId
-          )
-        );
-        console.log("senderIndex: " + senderIndex);
-        this.$toast.show(data.sender.nickname + "님이 메시지를 보냈습니다.", {
-          action: [
-            {
-              text: "See",
-              onClick: (e, toastObject) => {
-                this.$store.commit("tabClicked", senderIndex);
-                toastObject.goAway(0);
-              },
-            },
-            {
-              text: "Cancel",
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
-              },
-            },
-          ],
-        });
-      }
-    });
-  },
-  mounted() {
-    this.$root.lobbySocket.emit(GameRoomEvent.JOIN, {
-      roomId: 0,
-    });
+    if (!this.$root.userSocket) {
+      this.$root.userSocket = this.$nuxtSocket({
+        channel: "/user",
+        withCredentials: true,
+        transports: ["websocket"],
+        teardown: false,
+      });
+    }
   },
   // asyncData({ store }) {
   //   // const response = getMyInformation();
@@ -92,9 +84,6 @@ export default {
   //   }
   //   store.dispatch("user/fetchMyInfo");
   // },
-  beforeDestroy() {
-    this.$root.lobbySocket.emit(GameRoomEvent.LEAVE);
-  },
 };
 </script>
 <style lang="scss">

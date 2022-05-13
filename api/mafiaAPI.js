@@ -125,18 +125,29 @@ export const requestFriend = (id, requestId) => {
   return instance.post(`/users/${id}/requests/friends/${requestId}`);
 };
 
-export const confirmFriendRequest = (id, requestId) => {
+export const confirmFriendRequest = (id, requestId, data) => {
   // 친구 신청 수락 / 거절
   // requestId: 이벤트를 발생시킬 유저의 id
-  return instance.patch(`/users/${id}/requests/friends/${requestId}`);
+  return instance.patch(`/users/${id}/requests/friends/${requestId}`, data);
 }
 
 export const deleteFriend = (id, friendId) => {
   // 친구 삭제
   // id: 내 id
   // friendId: 삭제할 친구의 id
-  return instance.delete(`/users/${id}/friends/${friendId}`);
+  return instance.delete(`/users/${id}/friend/${friendId}`);
 };
+
+// Notifications
+export const getNotifications = (userId) => {
+  // 내 알림 목록 가져오기
+  return instance.get(`/users/${userId}/notifications`);
+}
+
+export const readNotification = (id, data) => {
+  // 알림 읽음 처리
+  return instance.patch(`/users/${id}/notifications/read`, data);
+}
 
 // Posts
 export const getPosts = ({ category, page, item=10 }) => {
@@ -185,9 +196,9 @@ export const downVotePost = (postId) => {
 };
 
 // Comments
-export const saveComment = (data) => {
+export const saveComment = (postId, data) => {
   // 댓글 등록
-  return instance.post(`/comments`, data);
+  return instance.post(`posts/`+ postId + `/comments`, data);
 };
 
 export const editComment = (commentId, data) => {
@@ -237,6 +248,23 @@ export const checkPassword = (roomId, data) => { // 방 비밀번호 확인
   return instance.post(`/games/rooms/check-password/${roomId}`, data)
 }
 
+export const roomInvite = (roomId, memberId, userId) => {
+  // 방 초대
+  // roomId: 방 id
+  // memberId: 초대 보낸 사람 id
+  // userId: 초대 받은 사람 id
+  return instance.post(`/games/rooms/${roomId}/providers/${memberId}/users/${userId}/invite`)
+}
+
+export const roomAccept = (roomId, memberId, userId) => {
+  // 방 초대 수락
+  // roomId: 방 id
+  // memberId: 초대 보낸 사람 id
+  // userId: 초대 받은 사람 id
+  return instance.post(`/games/rooms/${roomId}/providers/${memberId}/users/${userId}/accept`)
+}
+
+
 // DM
 export const sendDM = ({message, friendId}) => { // DM 보내기
   return instance.post(`/dms/friends/${friendId}`, {message});
@@ -251,6 +279,7 @@ export const GameRoomEvent = {
   START: 'room:start',
   READY: 'room:ready',
   UNREADY: 'room:unready',
+  SPEAK: 'room:speak',
 };
 
 export const GameEvent = {
@@ -276,6 +305,9 @@ export const UserEvent = {
   FRIEND_ACCEPT: 'user:accept-friend',
   FRIEND_DELETE: 'user:delete-friend',
   DM: 'user:dm',
+  ONLINE: 'user:online',
+  OFFLINE: 'user:offline',
+  INVITE: 'user:invite',
 }
 
 // Default
