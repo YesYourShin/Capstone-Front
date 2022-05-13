@@ -42,7 +42,6 @@ export const mutations = {
     state.myNotifications = [data, ...state.myNotifications];
   },
   readNotification(state, data) {
-    console.log('readNotification 발동', data);
     for (let i = 0; i < state.myNotifications.length; i++) {
       if (state.myNotifications[i].uuid === data.data.data.uuid) {
         state.myNotifications.splice(i, 1);

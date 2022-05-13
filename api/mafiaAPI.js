@@ -256,12 +256,13 @@ export const roomInvite = (roomId, memberId, userId) => {
   return instance.post(`/games/rooms/${roomId}/providers/${memberId}/users/${userId}/invite`)
 }
 
-export const roomAccept = (roomId, memberId, userId) => {
+export const roomAccept = (roomId, memberId, userId, uuid) => {
   // 방 초대 수락
   // roomId: 방 id
   // memberId: 초대 보낸 사람 id
   // userId: 초대 받은 사람 id
-  return instance.post(`/games/rooms/${roomId}/providers/${memberId}/users/${userId}/accept`)
+  // uuid: notification 아이디
+  return instance.post(`/games/rooms/${roomId}/providers/${memberId}/users/${userId}/accept/${uuid}`)
 }
 
 
