@@ -60,7 +60,7 @@ export const check = (results, canvasElement, canvasCtx, cStatus) => {
     canvasCtx.font = `${canvasElement.width / 12}px gulim`;
     canvasCtx.fillStyle = "rgba(0,0,0,1)";
     canvasCtx.fillText(
-      "n번에게 투표하시겠습니까?",
+      checkResult +"번에게 투표하시겠습니까?",
       canvasElement.width / 15,
       canvasElement.height / 8
     );

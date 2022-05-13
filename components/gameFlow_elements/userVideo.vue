@@ -166,7 +166,7 @@ export default {
           if (newPunishmentResult != this.punishmentNum) {
             clearInterval(punishLoading);
             this.punishmentCount = 0
-          } else if (this.punishmentCount > 2) {
+          } else if (this.punishmentCount > 4) {
             clearInterval(punishLoading);
             this.mediaStatus = false
             this.pStatus = false
