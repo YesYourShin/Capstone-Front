@@ -199,6 +199,14 @@ export const mutations = {
       }
     }
   },
+  setRoomMembersJob(state, data) {
+    for (let member of state.roomMembers) {
+      if (member.nickname === data.nickname) {
+        member.job = data.job;
+        break;
+      }
+    }
+  },
   killMember(state, data) {
     for (let member of state.roomMembers) {
       if (member.nickname === data.nickname) {

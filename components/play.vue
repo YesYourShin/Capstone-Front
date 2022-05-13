@@ -9,7 +9,6 @@
         v-on:finishPunishmentVote="finishPunishmentVote"
         ref="timer"
         class="timerbox"
-        v-bind:realTime="realtime"
         >{{ counter }}</Timer
       >
     </div>
@@ -72,9 +71,6 @@ export default {
       mafiaSelected: 0, // 마피아일 경우 유저 지목
       doctorSelected: 0, // 의사일 경우 유저 지목
       policeSelected: 0, // 경찰일 경우 유저 지목
-      myNum: 0,
-      myJob: "",
-      myNick: "",
       flag: false,
       day: false,
       counter: 60,
@@ -82,9 +78,6 @@ export default {
       nightAudio: null,
       startTime: null,
       endTime: null,
-      playersNick: [],
-      playersNum: [],
-      deathState: [],
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
   },
@@ -104,7 +97,7 @@ export default {
 
     // 게임 시작과 동시에, 유저 정보를 받아오고, 게임 시작 메서드 실행
     this.$root.gameSocket.on(GameEvent.JOIN, (data) => {
-      this.myNick = data.profile.nickname;
+      console.log(data)
       setTimeout(() => {
         this.gameStart();
       }, 5000);
@@ -112,27 +105,9 @@ export default {
 
     // 인게임에서 활용하기 위한 데이터를 가져오고, 직업 배분을 시작함
     this.$root.gameSocket.on(GameEvent.START, (data) => {
-      console.log(data)
-      // for (let i = 0; i < data.length; i++) {
-      //   // data : [n ab , n bb , n cc , , , ,]
-      //   // playerNick : [ab, bb, cc, , , , , ,]
-      //   if (data[i].nickname == this.myNick) {
-      //     this.myNum = i;
-      //     this.playersNick[i] = data[i].nickname
-      //     this.playersNum[i] = i
-      //   } else {
-      //     this.playersNick[i] = data[i].nickname
-      //     this.playersNum[i] = i
-      //   }
-      //   this.deathState[i] = data[i].die
-      // }
       for (let item of data) {
         this.$store.commit('stream/setRoomMembersDie', item);
       }
-      console.log(this.playersNick)
-      console.log(this.playersNum)
-      console.log(this.myNum);
-      console.log(this.deathState);
       setTimeout(() => {
         this.grantPlayerJob();
       }, 5000);
@@ -141,20 +116,21 @@ export default {
     // 유저의 직업을 배분하고, 배분된 직업에 따라 다른 이벤트 부여
     // 달라지는 것 - 빌보드 메세지, 사이드바 UI 내용
     this.$root.gameSocket.on(GameEvent.JOB, (data) => {
-      this.myJob = data[this.myNum].job;
-      // 여기에서 사이드바에 직업 뜨게 refs 한다.
-      if (this.myJob == "MAFIA") {
-        this.$refs.sideBarSet.myJobMafia();
-        this.$refs.billboard.grantMafia();
-      } else if (this.myJob == "POLICE") {
-        this.$refs.sideBarSet.myJobPolice();
-        this.$refs.billboard.grantPolice();
-      } else if (this.myJob == "DOCTOR") {
-        this.$refs.sideBarSet.myJobDoctor();
-        this.$refs.billboard.grantDoctor();
-      } else {
-        this.$refs.sideBarSet.myJobCitizen();
-        this.$refs.billboard.grantCitizen();
+      for (let item of data) {
+        this.$store.commit('stream/setRoomMembersJob', item);
+        if (item == "MAFIA") {
+          this.$refs.sideBarSet.myJobMafia();
+          this.$refs.billboard.grantMafia();
+        } else if (item == "POLICE") {
+          this.$refs.sideBarSet.myJobPolice();
+          this.$refs.billboard.grantPolice();
+        } else if (item == "DOCTOR") {
+          this.$refs.sideBarSet.myJobDoctor();
+          this.$refs.billboard.grantDoctor();
+        } else {
+          this.$refs.sideBarSet.myJobCitizen();
+          this.$refs.billboard.grantCitizen();
+        }
       }
       setTimeout(() => {
         this.morningEvent();
@@ -163,19 +139,18 @@ export default {
 
     // 낮밤 변경
     this.$root.gameSocket.on(GameEvent.DAY, (data) => {
-      console.log(data)
       this.flag = data.day;
     });
 
     // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
     this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
-      const dayjs = require("dayjs");
-      this.ss = start.get('y')
-      console.log(this.ss)
-      console.log(this.startTime);
-      console.log(this.endTime);
-      console.log(typeof start) //object
-      console.log(typeof end)
+      // const dayjs = require("dayjs");
+      // this.ss = start.get('y')
+      // console.log(this.ss)
+      // console.log(this.startTime);
+      // console.log(this.endTime);
+      // console.log(typeof start) //object
+      // console.log(typeof end)
     });
 
     // 투표 결과 종합

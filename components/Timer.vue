@@ -94,7 +94,7 @@ export default {
           (this.contentProgress = 0),
           this.$emit("startVote")
         }
-      }, 1000);
+      }, 250);
     },
     // 마피아로 의심되는 유저를 지목할 때 쓰이는 타이머
     voteTimer() {
@@ -113,7 +113,7 @@ export default {
           this.$emit("finishVote")
           this.pomodoroInstance = null
         }
-      }, 1000);
+      }, 250);
     },
     // 특정 유저가 지목되고, 사형 찬반투표를 할 때 쓰이는 타이머
     punishmentTimer() {
@@ -132,7 +132,7 @@ export default {
           this.$emit("finishPunishmentVote")
           this.pomodoroInstance = null
         }
-      }, 1000);
+      }, 250);
     },
     // 밤이 되었을 때 쓰이는 타이머
     nightEvent() {
@@ -151,7 +151,7 @@ export default {
           this.$emit("nightFinishEvent")
           this.pomodoroInstance = null
         }
-      }, 1000);
+      }, 250);
     },
   },
 };
