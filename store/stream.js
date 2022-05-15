@@ -88,6 +88,7 @@ export const mutations = {
     state.joinedRoom = null;
     state.entered = null;
     state.left = null;
+    state.surviveMembers = null;
 
     console.log("deleted all subscStreams");
   },
@@ -207,15 +208,26 @@ export const mutations = {
       }
     }
   },
+
   killMember(state, data) {
-    for (let member of state.roomMembers) {
-      if (member.nickname === data.nickname) {
-        member.die = true;
-        stopMediaStream(member.stream);
+    for (let i = 0; i < state.roomMembers.length; i++) {
+      if (i === data) {
+        state.roomMembers[i].die = true;
+        stopMediaStream(state.roomMembers[i].stream);
         break;
       }
     }
   },
+  // 여기서는 유저의 죽음 처리
+  surviveMemberCheck(state) {
+    state.surviveMembers = state.roomMembers.length
+    for (let member of state.roomMembers) {
+      if (member.death === true) {
+        state.surviveMembers--
+      }
+    }
+  },
+
   readySubscriber(state, data) {
     for (let i=0; i<state.subscribedStreams.length; i++) {
       let sub = state.subscribedStreams[i];

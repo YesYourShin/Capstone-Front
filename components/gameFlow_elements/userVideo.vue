@@ -54,7 +54,6 @@ import {
   check,
   punishment,
 } from "@/common/detection/hand";
-
 export default {
   data() {
     return {
@@ -79,18 +78,12 @@ export default {
   components: {
     Memo
   },
-
   computed: {
     myInfo() {
       return this.$store.getters["user/getMyInfo"];
     },
     roomMembers() {
       return this.$store.state.stream.roomMembers;
-    },
-    roomId() {
-      const value = this.$store.state.roomId;
-      console.log("this is nuxt vue", value);
-      return value;
     },
   },
   async mounted() {
@@ -102,7 +95,6 @@ export default {
       this.myCtx = this.myCanvas.getContext("2d");
     }
     await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
-
   },
   watch: {
     // 질문이 변경될 때 마다 이 기능이 실행됩니다.
@@ -110,7 +102,6 @@ export default {
       console.log("Vote Result", newVoteResult);
       this.voteNum = newVoteResult
       this.voteCount = 0
-
       if (this.voteNum != 0) {
         let voteLoading = setInterval(() => {
           this.voteCount += 1
@@ -127,46 +118,62 @@ export default {
         }, 1000)
       }
     },
-
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
       this.checkNum = newCheckResult
       this.checkCount = 0
-
-      if (this.checkNum == true) {
+      if (this.checkNum === true || this.checkNum === false) {
         let checkLoading = setInterval(() => {
           this.checkCount += 1
           if (newCheckResult != this.checkNum) {
             this.checkCount = 0
-          } else if (this.checkCount > 2) {
+          } else if (this.checkCount > 1) {
             clearInterval(checkLoading)
             this.mediaStatus = false
             this.cStatus = false
             this.check = false
-            if (this.skillTrue == false) {
+            // 스킬 사용이 아니고, 체크했을 경우
+            if (this.skillTrue == false && this.checkNum == true) {
               this.$emit('voteNumEmit', this.voteNum)
-            } else {
+            // 스킬 사용이고, 체크했을 경우
+            } else if (this.skillTrue == true && this.checkNum == true) {
               this.$emit('skillNumEmit', this.voteNum)
+            // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
+            } else if (this.skillTrue == false && this.checkNum == false) {
+              this.startVoteMotion()
+            } else if (this.skillTrue == true && this.checkNum == false) {
+              this.skillMotion()
             }
-
           }
+          // 타이머가 완성되야 구현 가능함.
+          // 만약 타이머가 끝났을 경우에는 무효로 넘겨줘야 함
+          // else {
+          //   clearInterval(checkLoading)
+          //   this.mediaStatus = false
+          //   this.cStatus = false
+          //   this.check = false
+          //   // 스킬 사용이 아니고, 체크하지 않은 상태일 경우
+          //   if (this.skillTrue == false && this.checkNum != true) {
+          //     this.$emit('voteNumEmit', 0)
+          //   // 스킬 사용이고, 체크하지 않은 상태일 경우
+          //   } else if (this.skillTrue == true && this.checkNum != true) {
+          //     this.$emit('skillNumEmit', 0)
+          //   }
+          // }
         }, 1000)
       }
     },
-
     punishmentResult: function (newPunishmentResult) {
       console.log("Punishment Result", newPunishmentResult);
-
       this.punishmentNum = newPunishmentResult
       this.punishmentCount = 0
-
       if (this.punishmentNum == true || this.punishmentNum == false) {
         let punishLoading = setInterval(() => {
           this.punishmentCount += 1
           if (newPunishmentResult != this.punishmentNum) {
             clearInterval(punishLoading);
             this.punishmentCount = 0
-          } else if (this.punishmentCount > 4) {
+          } else if (this.punishmentCount > 3) {
             clearInterval(punishLoading);
             this.mediaStatus = false
             this.pStatus = false
@@ -183,23 +190,19 @@ export default {
       this.skillTrue = false
       this.voteResults()
     },
-
     checkVoteMotion() {
       this.mediaStatus = true
       this.checkResults()
     },
-
     punishmentVoteMotion() {
       this.mediaStatus = true
       this.punishmentResults()
     },
-
     skillMotion() {
       this.mediaStatus = true
       this.skillTrue = true
       this.voteResults()
     },
-
     unLoadEvent: function (event) {
       if (this.isLeaveSite) return;
       event.preventDefault();
@@ -217,7 +220,6 @@ export default {
       console.log("투표 인식 시작");
       this.pStatus = this.punishment ? false : true;
     },
-
     async handCognition(videoElement, canvasElement, canvasCtx) {
       // videoElement.style.display = "none";
       let onResults = async (results) => {
@@ -354,4 +356,3 @@ export default {
 <style lang="scss" scoped="scoped">
 @import "~assets/userVideo.scss";
 </style>
-

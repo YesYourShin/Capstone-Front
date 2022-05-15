@@ -179,30 +179,30 @@ export default {
         let landmarks = await model.estimateFaces(videoElement, false);
 
         // 자신의 얼굴 랜드마크 확인
-        // console.log(landmarks);
-        // canvasCtx.save();
-        // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        // canvasCtx.translate(canvasElement.width, 0);
-        // canvasCtx.scale(-1, 1);
+        console.log(landmarks);
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        canvasCtx.translate(canvasElement.width, 0);
+        canvasCtx.scale(-1, 1);
 
-        // canvasCtx.drawImage(
-        //   videoElement,
-        //   0,
-        //   0,
-        //   canvasElement.width,
-        //   canvasElement.height
-        // );
+        canvasCtx.drawImage(
+          videoElement,
+          0,
+          0,
+          canvasElement.width,
+          canvasElement.height
+        );
 
-        // if (landmarks.length) {
-        //   landmarks[0].landmarks.forEach((landmark) => {
-        //     canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
-        //   });
-        // }
+        if (landmarks.length) {
+          landmarks[0].landmarks.forEach((landmark) => {
+            canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
+          });
+        }
 
         await this.postLandmarks(landmarks);
         await this.getLandmarks();
 
-        // canvasCtx.restore();
+        canvasCtx.restore();
       };
 
       videoElement.addEventListener("loadeddata", async () => {

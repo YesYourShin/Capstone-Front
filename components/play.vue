@@ -9,7 +9,7 @@
         v-on:finishPunishmentVote="finishPunishmentVote"
         ref="timer"
         class="timerbox"
-        >{{ counter }}</Timer
+        ></Timer
       >
     </div>
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
@@ -28,11 +28,13 @@
     <sideBar
       ref="sideBarSet"
     ></sideBar>
+    <!-- <Memo /> -->
     <!-- <Audio /> -->
   </div>
 </template>
 
 <script>
+// import Memo from "@/components/memo.vue";
 import Timer from "@/components/Timer.vue";
 import Billboard from "@/components/gameFlow_elements/billboard.vue";
 import SideBar from "@/components/gameFlow_elements/sideBar.vue";
@@ -47,6 +49,7 @@ export default {
     roomInfo: Object,
   },
   components: {
+    // Memo,
     Timer,
     Billboard,
     SideBar,
@@ -62,6 +65,9 @@ export default {
     roomMembers() {
       return this.$store.state.stream.roomMembers;
     },
+    surviveMembers() {
+      return this.$store.state.stream.surviveMembers;
+    },
   },
   data() {
     return {
@@ -73,11 +79,11 @@ export default {
       policeSelected: 0, // 경찰일 경우 유저 지목
       flag: false,
       day: false,
-      counter: 60,
       morningAudio: null,
       nightAudio: null,
       startTime: null,
       endTime: null,
+      voteData: null,
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
   },
@@ -132,6 +138,7 @@ export default {
           this.$refs.billboard.grantCitizen();
         }
       }
+      this.$store.commit('stream/surviveMemberCheck');
       setTimeout(() => {
         this.morningEvent();
       }, 5000);
@@ -165,34 +172,35 @@ export default {
       }, 3000)
     });
 
-    // 심판 결과 종합
+    // 심판 결과
     this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
-      console.log(data);
-      // 경우에 따라서는 유저 정보를 다시 받아서 클라이언트에서 처리
-      // if 받아온 값이 true 일 경우, 클라이언트에서 유저 제거 처리후
-      // nightEvent로 넘어간다.
-      // else 일 경우, nightEvent로 넘어간다.
-      this.$refs.billboard.finishPunishmentVoteBoard();
+      if(data >= this.$store.state.stream.surviveMembers/2) {
+        this.$refs.billboard.finishPunishmentVoteBoard();
+        this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
+          this.$store.commit('stream/killMember', data.death-1);
+          this.$store.commit('stream/surviveMemberCheck');
+        });
+      } else {
+        this.$refs.billboard.finishPunishmentVoteFalseBoard();
+      }
       setTimeout(()=> {
         this.nightEvent();
       }, 3000)
     });
 
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
+      // 경찰은 결과를 즉시 알아야 한다.
       console.log(data.userNum, user);
       this.$refs.billboard.policeResult();
     })
 
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
-      // 의사는 백엔드로 전송 후 다시 받는다.
+      // 여기서는 지목값만 받는다.
       console.log(data);
     })
 
     this.$root.gameSocket.on(GameEvent.MAFIA, (data) => {
-      // 마피아는 백엔드로 전송 후 다시 받는다.
-      // 1. 모든 마피아가 한명의 유저를 지목했을 경우
-      // 2. 마피아와 의사가 능력이 겹치지 않았을 경우
-      // 위 조건에 만족하면 유저를 죽인다.
+      // 여기서는 지목값만 받는다.
       console.log(data);
     })
 
@@ -266,11 +274,6 @@ export default {
       if(this.electedPlayer != 0) {
         console.log(this.electedPlayer)
         this.$root.gameSocket.emit(GameEvent.FINISHV);
-      } else {
-          this.$root.gameSocket.emit(GameEvent.VOTE, {
-          vote: 1,
-          })
-          this.$root.gameSocket.emit(GameEvent.FINISHV);
       }
     },
 
@@ -306,6 +309,9 @@ export default {
     nightEvent() {
       // 밤으로 배경 변경
       // this.nightAudio.play()
+      this.$store.commit('stream/surviveMemberCheck');
+      console.log(this.$store.state.stream.roomMembers)
+      console.log(this.$store.state.stream.surviveMembers)
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
       });
@@ -314,8 +320,7 @@ export default {
       setTimeout(() => {
         this.$refs.timer.nightEvent();
         if (this.myJob == "MAFIA") {
-          // select를 추가해야 할듯
-          this.$refs.userVideo.skillMotion();
+         this.$refs.userVideo.skillMotion();
         } else if (this.myJob == "DOCTOR") {
           // select를 추가해야 할듯
           this.$refs.userVideo.skillMotion();
