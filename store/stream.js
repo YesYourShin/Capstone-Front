@@ -192,6 +192,7 @@ export const mutations = {
   destroyRoomMembers(state) {
     state.roomMembers = [];
   },
+  // 게임 시작시 유저들의 죽음 정보를 갱신
   setRoomMembersDie(state, data) {
     for (let member of state.roomMembers) {
       if (member.nickname === data.nickname) {
@@ -200,15 +201,16 @@ export const mutations = {
       }
     }
   },
+  // 게임 시작시 유저들의 직업 정보를 갱신
   setRoomMembersJob(state, data) {
     for (let member of state.roomMembers) {
-      if (member.nickname === data.nickname) {
+      if (member.job != data.job) {
         member.job = data.job;
         break;
       }
     }
   },
-
+  // 유저의 죽음 처리
   killMember(state, data) {
     for (let i = 0; i < state.roomMembers.length; i++) {
       if (i === data) {
@@ -218,7 +220,7 @@ export const mutations = {
       }
     }
   },
-  // 여기서는 유저의 죽음 처리
+  // 죽은 유저를 카운트하여 승패를 판별
   surviveMemberCheck(state) {
     state.surviveMembers = state.roomMembers.length
     for (let member of state.roomMembers) {

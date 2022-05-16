@@ -14,7 +14,7 @@
     </div>
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
     <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함.  -->
-    <Billboard ref="billboard" />
+    <Billboard ref="billboard" v-on:punishmentVote="punishmentVote" v-on:nightEvent="nightEvent"/>
     <div class="videomainbox px-2 mt-10">
       <UserVideo ref="userVideo"
       v-on:startVoteMotion="startVote"
@@ -80,6 +80,7 @@ export default {
       nightAudio: null,
       startTime: null,
       endTime: null,
+      myJob: null,
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
   },
@@ -118,20 +119,26 @@ export default {
     // 유저의 직업을 배분하고, 배분된 직업에 따라 다른 이벤트 부여
     // 달라지는 것 - 빌보드 메세지, 사이드바 UI 내용
     this.$root.gameSocket.on(GameEvent.JOB, (data) => {
+      console.log(data)
       for (let item of data) {
+        console.log(item.job);
         this.$store.commit('stream/setRoomMembersJob', item);
-        if (item == "MAFIA") {
+        if (item.job == "MAFIA") {
           this.$refs.sideBarSet.myJobMafia();
           this.$refs.billboard.grantMafia();
-        } else if (item == "POLICE") {
+          this.myJob = item.job
+        } else if (item.job == "POLICE") {
           this.$refs.sideBarSet.myJobPolice();
           this.$refs.billboard.grantPolice();
-        } else if (item == "DOCTOR") {
+          this.myJob = item.job
+        } else if (item.job == "DOCTOR") {
           this.$refs.sideBarSet.myJobDoctor();
           this.$refs.billboard.grantDoctor();
-        } else {
+          this.myJob = item.job
+        } else if (item.job == "CITIZEN") {
           this.$refs.sideBarSet.myJobCitizen();
           this.$refs.billboard.grantCitizen();
+          this.myJob = item.job
         }
       }
       this.$store.commit('stream/surviveMemberCheck');
@@ -157,16 +164,16 @@ export default {
     });
 
     // 투표 결과 종합
-    this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
-      console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        console.log(data[i].userNum + ' ' + data[i].voteNum)
-      }
-      this.$refs.billboard.finishVoteBoard();
-      setTimeout(()=> {
-        this.punishmentVote();
-      }, 3000)
-    });
+    // this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
+    //   console.log(data);
+    //   for (let i = 0; i < data.length; i++) {
+    //     console.log(data[i].userNum + ' ' + data[i].voteNum)
+    //   }
+    //   this.$refs.billboard.finishVoteBoard();
+    //   setTimeout(()=> {
+    //     this.punishmentVote();
+    //   }, 3000)
+    // });
 
     // 심판 결과
     this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
@@ -191,22 +198,22 @@ export default {
     })
 
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
-
       console.log(data);
     })
 
     this.$root.gameSocket.on(GameEvent.MAFIA, (data) => {
-
       console.log(data);
     })
 
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       console.log(data)
+      setTimeout(() => {
+        this.victorySearch()
+      }, 3000);
       // 만약 마피아 != 의사일 경우, killMember를 불러온다.
       // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
       // 그리고 surviveMemberCheck을 불러오며 결과를 도출한다.
     })
-
   },
 
   created() {},
@@ -244,7 +251,6 @@ export default {
       });
       console.log(this.flag)
       this.$root.gameSocket.emit(GameEvent.TIMER);
-
       this.$refs.timer.morningTimer();
       // dayCount에서는 빌보드 상단에 표기되는 day의 숫자를 +1
       this.$refs.dayCount.nextDay();
@@ -313,8 +319,7 @@ export default {
       // 밤으로 배경 변경
       // this.nightAudio.play()
       this.$store.commit('stream/surviveMemberCheck');
-      console.log(this.$store.state.stream.roomMembers)
-      console.log(this.$store.state.stream.surviveMembers)
+
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
       });
@@ -353,9 +358,7 @@ export default {
     nightResult() {
       this.$refs.billboard.nightResultBoard();
       this.$root.gameSocket.emit(GameEvent.USEJOBS)
-      setTimeout(() => {
-        this.victorySearch()
-      }, 3000);
+
     },
     // 투표 직후, 밤 능력사용 직후 승패를 찾아보는 메서드이다.
     // 조건이 맞으면

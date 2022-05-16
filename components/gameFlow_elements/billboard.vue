@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { GameEvent } from "@/api/mafiaAPI";
 export default {
   data() {
     return {
@@ -17,13 +18,56 @@ export default {
       newMessage: null,
       resultMessage: null,
       dayCount: 0,
+      highVote: 0,
+      equalVote: 1,
+      highPlayer: null,
     }
+  },
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
+    },
+    roomMembers() {
+      return this.$store.state.stream.roomMembers;
+    },
+    surviveMembers() {
+      return this.$store.state.stream.surviveMembers;
+    },
   },
   created() {
     this.messageLogs = ['Fafia Start']
-
   },
+  mounted() {
+    this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
+      for (let i = 0; i < data.length; i++) {
+        this.newMessage = `${this.$store.state.stream.roomMembers[i].nickname} : ${data[i].voteNum} 표`
+        this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+        this.$forceUpdate()
+        if (data[i].voteNum > this.highVote) {
+          this.highVote = data[i].voteNum
+          this.equalVote = 1
+          this.highPlayer = data[i].userNum
+        } else if (data[i].voteNum == this.highVote) {
+          this.equalVote++
+        }
+
+      }
+      this.finishVoteBoard();
+      if (this.equalVote == 1 && this.highVote != 0) {
+        setTimeout(()=> {
+          this.$emit("punishmentVote")
+        }, 3000)
+      } else if (this.equalVote >= 2 || this.highVote == 0) {
+        setTimeout(() => {
+          this.$emit("nightEvent")
+        })
+      }
+
+    });
+  },
+
   methods: {
+
     gameStartBoard() {
       // 게임 시작 메세지를 저장한다.
       // 지금부터 마피아 게임을 시작합니다.
@@ -33,37 +77,31 @@ export default {
       this.newMessage = '지금부터 마피아 게임을 시작하겠습니다.'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-      console.log(this.messageLogs)
     },
     grantPlayerJobBeforeBoard() {
       this.newMessage = '직업을 부여하고 있습니다...'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-      console.log(this.messageLogs)
     },
     grantMafia() {
       this.newMessage = '당신은 마피아입니다. 오른쪽의 사이드 바에서 자신의 능력과 목표를 확인하세요.'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-      console.log(this.messageLogs)
     },
     grantPolice() {
       this.newMessage = '당신은 경찰입니다. 오른쪽의 사이드 바에서 자신의 능력과 목표를 확인하세요.'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-      console.log(this.messageLogs)
     },
     grantDoctor() {
       this.newMessage = '당신은 의사입니다. 오른쪽의 사이드 바에서 자신의 능력과 목표를 확인하세요.'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-      console.log(this.messageLogs)
     },
     grantCitizen() {
       this.newMessage = '당신은 시민입니다. 오른쪽의 사이드 바에서 자신의 목표를 확인하세요.'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-      console.log(this.messageLogs)
     },
     morningEventBoard() {
       this.newMessage = '==========================='
@@ -85,31 +123,27 @@ export default {
     },
     finishVoteBoard() {
       // 유저 지목 결과를 알리는 메세지를 남김
-      this.newMessage = '의심 투표 결과를 발표합니다.'
+      this.newMessage = '의심 투표 결과를 발표 완료!'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-      // this.newMessage = '목공풀 -> 임채환, 임채환 -> 목공풀, 17시간코딩법 -> 목공풀'
-      // 이거 만드려면, 방 안에 있는 모든 유저의 닉네임 정보가 필요함
-      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
-      this.$forceUpdate();
-      this.newMessage = '목공풀이(가) 마피아 의심 대상으로 지목되었습니다.'
+      this.newMessage = `${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}이(가) 마피아 의심 대상으로 지목되었습니다.`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
     },
     startPunishmentVoteBoard() {
-      this.newMessage = '목공풀의 사형 찬반투표를 실시합니다.'
+      this.newMessage = `${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}의 사형 찬반투표를 실시합니다.`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
     },
     finishPunishmentVoteBoard() {
       // 찬반 투표 결과를 알리는 메세지를 남김
-      this.newMessage = '투표 결과 해당 플레이어를 사형합니다.'
+      this.newMessage = `투표 결과 ${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}를 사형합니다.`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       // 플레이어 수 만큼 for문이 돈다. 그리고 모든 유저의 득표수를 보여준다.
       this.$forceUpdate();
     },
     finishPunishmentVoteFalseBoard() {
-      this.newMessage = '투표 결과 사형하지 않습니다.'
+      this.newMessage = `투표 결과 ${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}를 사형하지 않습니다.`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
     },
