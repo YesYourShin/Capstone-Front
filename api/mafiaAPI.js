@@ -150,9 +150,9 @@ export const readNotification = (id, data) => {
 }
 
 // Posts
-export const getPosts = ({ category, page, item=10 }) => {
+export const getPosts = ({ category, page, perPage=10 }) => {
   // 게시물들 불러오기
-  return instance.get(`/posts?category=${category}&page=${page}&item=${item}`);
+  return instance.get(`/posts?category=${category}&page=${page}&perPage=${perPage}`);
 };
 
 export const detailPost = (postId) => {
