@@ -48,9 +48,11 @@
       <Notifications :notifications="myNotifications"></Notifications>
     </div>
 
-    <div class="profile6 grow" v-if="show3">
+    <!-- <div id="score" class="profile6 grow overflow-auto" v-if="show3">
       <p>전적</p>
-    </div>
+      <Score :record="myRecord"></Score>
+    </div> -->
+    <Score :record="myRecord" v-if="show3"></Score>
   </div>
 </template>
 
@@ -58,6 +60,7 @@
 import FriendBar from "./profile_elements/friendBar.vue";
 import UserSearch from "./profile_elements/UserSearch.vue";
 import Notifications from "./profile_elements/Notifications.vue";
+import Score from "./profile_elements/score.vue";
 import { logout, deleteFriend } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
@@ -66,6 +69,7 @@ export default {
     FriendBar,
     UserSearch,
     Notifications,
+    Score,
   },
 
   data() {
@@ -76,12 +80,25 @@ export default {
     };
   },
 
+  mounted() {
+    // console.log(
+    //   "score clientHeight : " + document.getElementById("score").clientHeight
+    // );
+    // document.getElementById("score")
+    // console.log("score height : " + this.$refs.score.height);
+    // console.log("score scrollTop : " + this.$refs.score.scrollTop);
+    // console.log("score offsetHeight : " + this.$refs.score.offsetHeight);
+  },
+
   computed: {
     myInfo() {
       return this.$store.getters["user/getMyInfo"];
     },
     myNotifications() {
       return this.$store.getters["user/getMyNotifications"];
+    },
+    myRecord() {
+      return this.$store.getters["user/getRecord"];
     },
   },
   methods: {
