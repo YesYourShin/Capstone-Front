@@ -55,6 +55,20 @@ export default {
   },
   methods: {
     handleClick(event, item) {
+      const find = this.options.find(
+        (option) => option.name === "Invite to Room"
+      );
+      if (!item.online) {
+        if (find) {
+          this.options.splice(this.options.indexOf(find), 1);
+        }
+      } else {
+        if (!find) {
+          this.options.splice(1, 0, {
+            name: "Invite to Room",
+          });
+        }
+      }
       this.$refs.vueSimpleContextMenu.showMenu(event, item);
     },
     optionClicked(event) {
