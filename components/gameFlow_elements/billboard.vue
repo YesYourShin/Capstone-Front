@@ -15,17 +15,19 @@ export default {
     return {
       messageLogs : [],
       newMessage: null,
+      resultMessage: null,
       dayCount: 0,
     }
   },
   created() {
     this.messageLogs = ['Fafia Start']
+
   },
   methods: {
     gameStartBoard() {
       // 게임 시작 메세지를 저장한다.
       // 지금부터 마피아 게임을 시작합니다.
-      const roomId = this.$store.state.roomId.roomId
+      const roomId = this.$route.params.roomInfo.id
       this.newMessage = `방 정보 : ${roomId} 번`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.newMessage = '지금부터 마피아 게임을 시작하겠습니다.'
@@ -86,7 +88,7 @@ export default {
       this.newMessage = '의심 투표 결과를 발표합니다.'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-      this.newMessage = '목공풀 -> 임채환, 임채환 -> 목공풀, 17시간코딩법 -> 목공풀'
+      // this.newMessage = '목공풀 -> 임채환, 임채환 -> 목공풀, 17시간코딩법 -> 목공풀'
       // 이거 만드려면, 방 안에 있는 모든 유저의 닉네임 정보가 필요함
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
@@ -101,7 +103,13 @@ export default {
     },
     finishPunishmentVoteBoard() {
       // 찬반 투표 결과를 알리는 메세지를 남김
-      this.newMessage = '투표 결과 목공풀을(를) 사형하지 않습니다.'
+      this.newMessage = '투표 결과 해당 플레이어를 사형합니다.'
+      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+      // 플레이어 수 만큼 for문이 돈다. 그리고 모든 유저의 득표수를 보여준다.
+      this.$forceUpdate();
+    },
+    finishPunishmentVoteFalseBoard() {
+      this.newMessage = '투표 결과 사형하지 않습니다.'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
     },

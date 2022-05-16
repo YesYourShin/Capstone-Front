@@ -106,7 +106,6 @@ export default {
     var vrc = this;
     this.evtSource.onmessage = function (e) {
       vrc.rooms = JSON.parse(e.data).data;
-      console.log(vrc.rooms);
     };
 
     if (this.$root.userSocket && !this.$root.userSocket._callbacks) {
@@ -123,7 +122,7 @@ export default {
               },
             },
             {
-              text: "Cancel",
+              text: "Close",
               onClick: (e, toastObject) => {
                 toastObject.goAway(0);
               },
@@ -135,11 +134,13 @@ export default {
       this.$root.userSocket.on(UserEvent.FRIEND_ACCEPT, (data) => {
         console.log(data);
         this.$store.commit("user/addFriend", data.user);
+        this.$toast.show(data.user.nickname + " accepted your friend request!");
       });
 
       this.$root.userSocket.on(UserEvent.FRIEND_DELETE, (data) => {
         console.log(data);
         this.$store.commit("user/deleteFriend", data.userId);
+        this.$store.commit("tabCloseByUserId", data.userId);
       });
 
       this.$root.userSocket.on(UserEvent.DM, (data) => {
@@ -167,7 +168,7 @@ export default {
                 },
               },
               {
-                text: "Cancel",
+                text: "Close",
                 onClick: (e, toastObject) => {
                   toastObject.goAway(0);
                 },
@@ -185,6 +186,28 @@ export default {
       this.$root.userSocket.on(UserEvent.OFFLINE, (data) => {
         console.log(data);
         this.$store.commit("user/setOnline", data);
+      });
+
+      this.$root.userSocket.on(UserEvent.INVITE, (data) => {
+        console.log(data);
+        this.$store.commit("user/addNotification", data);
+        this.$toast.show(data.data.message, {
+          action: [
+            {
+              text: "See",
+              onClick: (e, toastObject) => {
+                this.$emit("notification");
+                toastObject.goAway(0);
+              },
+            },
+            {
+              text: "Close",
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+              },
+            },
+          ],
+        });
       });
     }
 

@@ -7,7 +7,7 @@
       >
         <div class="friendImg relative">
           <img
-            :src="user.image ? user.image.location : 'test.png'"
+            :src="user.image ? user.image.location : '/defaultProfile.png'"
             alt=""
             class="aspect-square w-24 p-[5px] friendImg rounded-full object-cover bg-zinc-800 group-hover:bg-zinc-700"
           />

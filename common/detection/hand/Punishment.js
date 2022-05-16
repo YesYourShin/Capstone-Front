@@ -17,12 +17,12 @@ export const punishment = (results, canvasElement, canvasCtx, pStatus) => {
         landmarks[4]["y"] < landmarks[17]["y"] &&
         landmarks[4]["y"] < landmarks[3]["y"]
       ) {
-        kill = true;
+        safe = true;
       } else if (
         landmarks[4]["y"] > landmarks[17]["y"] &&
         landmarks[4]["y"] > landmarks[3]["y"]
       ) {
-        safe = true;
+        kill = true;
       }
       // kill이 true일 경우 투표 결과도 true,
       // safe가 true일 경우 투표 결과는 false
@@ -66,5 +66,7 @@ export const punishment = (results, canvasElement, canvasCtx, pStatus) => {
   } else {
     console.log("no vote");
   }
+  console.log(punishmentResult);
+
   return punishmentResult;
 };

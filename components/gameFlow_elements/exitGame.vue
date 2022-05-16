@@ -4,16 +4,22 @@
     <div class="buttonline2"></div>
     <div class="buttonline3"></div>
     <div class="buttonline4"></div>
-    <button class="gogame">이 게임에서 나가기</button>
+    <button class="gogame" v-on:click="escapeGame">이 게임에서 나가기</button>
   </div>
+
 </template>
 <script>
 export default {
   props: {
-
+    escape: {
+      type: String,
+      default: '/lobby',
+    }
   },
   methods: {
-
+    escapeGame() {
+      this.$router.push(this.escape);
+    }
   },
 };
 </script>
@@ -21,7 +27,7 @@ export default {
 .buttonbox {
   width: 270px;
   height: 70px;
-  margin-right: 1rem /* 16px */;
+  // margin-right: 1rem /* 16px */;
   //border: 3px solid rgb(255, 255, 255);
   display: flex;
   justify-content: center;
@@ -64,13 +70,13 @@ export default {
     border: 3px solid rgb(255, 255, 255);
 
     &:active {
-      width: 140px;
-      height: 35px;
+      width: 240px;
+      height: 40px;
       font-size: 20px;
     }
     button {
-      width: 140px;
-      height: 34px;
+      width: 240px;
+      height: 40px;
     }
   }
 

@@ -146,11 +146,9 @@ export const deleteFriend = (id, friendId) => {
 };
 
 // Notifications
-export const getNotifications = (userId, page, perPage) => {
+export const getNotifications = (userId) => {
   // 내 알림 목록 가져오기
-  return instance.get(
-    `/users/${userId}/notifications?page=${page}&perPage=${perPage}`
-  );
+  return instance.get(`/users/${userId}/notifications`);
 };
 
 export const readNotification = (id, data) => {
@@ -266,6 +264,27 @@ export const checkPassword = (roomId, data) => {
   return instance.post(`/games/rooms/check-password/${roomId}`, data);
 };
 
+export const roomInvite = (roomId, memberId, userId) => {
+  // 방 초대
+  // roomId: 방 id
+  // memberId: 초대 보낸 사람 id
+  // userId: 초대 받은 사람 id
+  return instance.post(
+    `/games/rooms/${roomId}/providers/${memberId}/users/${userId}/invite`
+  );
+};
+
+export const roomAccept = (roomId, memberId, userId, uuid) => {
+  // 방 초대 수락
+  // roomId: 방 id
+  // memberId: 초대 보낸 사람 id
+  // userId: 초대 받은 사람 id
+  // uuid: notification 아이디
+  return instance.post(
+    `/games/rooms/${roomId}/providers/${memberId}/users/${userId}/accept/${uuid}`
+  );
+};
+
 // DM
 export const sendDM = ({ message, friendId }) => {
   // DM 보내기
@@ -289,17 +308,21 @@ export const GameRoomEvent = {
 };
 
 export const GameEvent = {
-  Start: "game:start",
-  Job: "game:job",
-  Punish: "game:punish",
-  FinishP: "game:finishPunishment",
-  Vote: "game:vote",
-  FinishV: "game:finishVote",
-  Day: "game:day",
-  Police: "game:police",
-  Doctor: "game:doctor",
-  Mafia: "game:mafia",
-  Timer: "game:timer",
+  JOIN: "game:join",
+  START: "game:start",
+  JOB: "game:job",
+  PUNISH: "game:punish",
+  FINISHP: "game:finishPunishment",
+  VOTE: "game:vote",
+  FINISHV: "game:finishVote",
+  DAY: "game:day",
+  POLICE: "game:police",
+  DOCTOR: "game:doctor",
+  MAFIA: "game:mafia",
+  TIMER: "game:timer",
+  DEATH: "game:death",
+  WINNER: "game:winner",
+  USEJOBS: "game:useJobs",
 };
 
 export const UserEvent = {

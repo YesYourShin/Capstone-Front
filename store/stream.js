@@ -71,21 +71,6 @@ export const mutations = {
     // });
   },
   removeAllSubscribers(state) {
-    function stopAndRemoveTrack(mediaStream) {
-      return function(track) {
-        track.stop();
-        mediaStream.removeTrack(track);
-      };
-    };
-
-    function stopMediaStream(mediaStream) {
-      if (!mediaStream) {
-        return
-      }
-
-      mediaStream.getTracks().forEach(stopAndRemoveTrack(mediaStream));
-    }
-
     function kill_own_feed() {
       for (let mediaStream of state.roomMembers) {
         stopMediaStream(mediaStream.stream)
@@ -99,9 +84,11 @@ export const mutations = {
     kill_own_feed();
 
     // state.subscribedStreams = [];
+    state.roomMembers = [];
     state.joinedRoom = null;
     state.entered = null;
     state.left = null;
+    state.surviveMembers = null;
 
     console.log("deleted all subscStreams");
   },
@@ -205,6 +192,42 @@ export const mutations = {
   destroyRoomMembers(state) {
     state.roomMembers = [];
   },
+  setRoomMembersDie(state, data) {
+    for (let member of state.roomMembers) {
+      if (member.nickname === data.nickname) {
+        member.die = data.die;
+        break;
+      }
+    }
+  },
+  setRoomMembersJob(state, data) {
+    for (let member of state.roomMembers) {
+      if (member.nickname === data.nickname) {
+        member.job = data.job;
+        break;
+      }
+    }
+  },
+
+  killMember(state, data) {
+    for (let i = 0; i < state.roomMembers.length; i++) {
+      if (i === data) {
+        state.roomMembers[i].die = true;
+        stopMediaStream(state.roomMembers[i].stream);
+        break;
+      }
+    }
+  },
+  // 여기서는 유저의 죽음 처리
+  surviveMemberCheck(state) {
+    state.surviveMembers = state.roomMembers.length
+    for (let member of state.roomMembers) {
+      if (member.death === true) {
+        state.surviveMembers--
+      }
+    }
+  },
+
   readySubscriber(state, data) {
     for (let i=0; i<state.subscribedStreams.length; i++) {
       let sub = state.subscribedStreams[i];
@@ -236,3 +259,18 @@ export const getters = {
 }
 
 
+
+function stopAndRemoveTrack(mediaStream) {
+  return function(track) {
+    track.stop();
+    mediaStream.removeTrack(track);
+  };
+};
+
+function stopMediaStream(mediaStream) {
+  if (!mediaStream) {
+    return
+  }
+
+  mediaStream.getTracks().forEach(stopAndRemoveTrack(mediaStream));
+}

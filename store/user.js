@@ -47,7 +47,6 @@ export const mutations = {
     state.myNotifications = [data, ...state.myNotifications];
   },
   readNotification(state, data) {
-    console.log("readNotification 발동", data);
     for (let i = 0; i < state.myNotifications.length; i++) {
       if (state.myNotifications[i].uuid === data.data.data.uuid) {
         state.myNotifications.splice(i, 1);
@@ -74,7 +73,7 @@ export const actions = {
     }
     try {
       if (context.state.myInfo) {
-        const response = await getNotifications(context.state.myInfo.id, 1, 10);
+        const response = await getNotifications(context.state.myInfo.id);
         context.commit("setMyNotifications", response.data.data);
       }
     } catch (error) {

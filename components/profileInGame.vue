@@ -31,10 +31,31 @@
         <p class="usertext" v-else>상태메세지를 입력해주세요.</p>
       </div>
 
-      <div class="profile3">
-        <button class="profileButton" v-on:click="friend">친구</button>
-        <button class="profileButton" v-on:click="notification">알림</button>
-        <button class="profileButton" v-on:click="record">전적</button>
+      <div class="profile3 w-full h-[50px] text-white text-2xl flex">
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center"
+          v-on:click="friend"
+        >
+          친구
+        </button>
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center relative"
+          v-on:click="notification"
+        >
+          알림
+          <div
+            v-if="myNotifications.length"
+            class="rounded-full bg-red-500 inline-block leading-6 text-center text-sm aspect-square w-6 absolute right-5"
+          >
+            {{ myNotifications.length > 99 ? "99+" : myNotifications.length }}
+          </div>
+        </button>
+        <button
+          class="profileButton h-full w-1/3 flex items-center justify-center"
+          v-on:click="record"
+        >
+          전적
+        </button>
       </div>
     </div>
     <UserSearch v-if="show1"></UserSearch>
@@ -61,7 +82,7 @@ import FriendBar from "./profile_elements/friendBar.vue";
 import UserSearch from "./profile_elements/UserSearch.vue";
 import Notifications from "./profile_elements/Notifications.vue";
 import Score from "./profile_elements/score.vue";
-import { logout, deleteFriend } from "@/api/mafiaAPI";
+import { logout, deleteFriend, roomInvite } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
 
@@ -118,17 +139,15 @@ export default {
       this.show3 = true;
     },
     logout() {
-      const link = "http://localhost:7000";
-      if ((this.data = Object)) {
-        logout()
-          .then((response) => {
-            console.log("logout");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        location.href = link;
-      }
+      logout().then((res) => {
+        if (res.data.data.logout) {
+          const link =
+            process.env.NODE_ENV === "production"
+              ? "https://gjgjajaj.xyz"
+              : "http://localhost:7000";
+          location.href = link;
+        }
+      });
     },
     handleClick(event, item) {
       this.$emit("handleClick", event, item);
@@ -141,7 +160,7 @@ export default {
         console.log(this.showingUser);
         // this.modal = true
         this.$swal({
-          title: "유저 정보",
+          title: "User Information",
           // imageUrl: showingUser.image ? showingUser.image.location : "test.png",
           // imageHeight: "128",
           // imageWidth: "128",
@@ -151,14 +170,14 @@ export default {
                     <img class="aspect-square w-32 object-cover" src="${
                       showingUser.image
                         ? showingUser.image.location
-                        : "test.png"
+                        : "/defaultProfile.png"
                     }">
                   </div>
-                  <p>닉네임 : ${showingUser.nickname}</p>
-                  <p>상태메시지 : ${showingUser.selfIntroduction}</p>
-                  <p>레벨 : ${showingUser.level}</p>
-                  <p>접속상태 : ${
-                    showingUser.online ? "온라인" : "오프라인"
+                  <p>Nickname : ${showingUser.nickname}</p>
+                  <p>Introduction : ${showingUser.selfIntroduction}</p>
+                  <p>Level : ${showingUser.level}</p>
+                  <p>Online Status : ${
+                    showingUser.online ? "Online" : "Offline"
                   }</p>
                 </div>`,
           showCancelButton: true,
@@ -172,7 +191,7 @@ export default {
               .then((res) => {
                 console.log(res);
                 this.$swal({
-                  title: "Success",
+                  title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡‧₊˚",
                   text: "Your friend request has been sent successfully!",
                   icon: "success",
                 });
@@ -185,8 +204,9 @@ export default {
               .then((res) => {
                 console.log(res);
                 this.$store.commit("user/deleteFriend", res.data.data.friendId);
+                this.$store.commit("tabCloseByUserId", res.data.data.friendId);
                 this.$swal({
-                  title: "Success",
+                  title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
                   text: `You are no longer friends with ${showingUser.nickname}!`,
                   icon: "success",
                 });
@@ -202,15 +222,16 @@ export default {
           }
         });
       } else if (event.option.name == "Send Message") {
-        console.log(event.item);
-        this.$store.commit("newChat", event.item);
+        console.log(showingUser);
+        this.$store.commit("newChat", showingUser);
       } else if (event.option.name == "Delete Friend") {
-        deleteFriend(this.myInfo.id, event.item.userId)
+        deleteFriend(this.myInfo.id, showingUser.userId)
           .then((res) => {
             console.log(res);
             this.$store.commit("user/deleteFriend", res.data.data.friendId);
+            this.$store.commit("tabCloseByUserId", res.data.data.friendId);
             this.$swal({
-              title: "Success",
+              title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
               text: `You are no longer friends with ${showingUser.nickname}!`,
               icon: "success",
             });
@@ -222,6 +243,22 @@ export default {
               text: "Something went wrong!",
               icon: "error",
             });
+          });
+      } else if (
+        this.$route.name === "room-id" &&
+        event.option.name == "Invite to Room"
+      ) {
+        roomInvite(this.$route.params.id, this.myInfo.id, showingUser.userId)
+          .then((res) => {
+            console.log(res);
+            this.$swal({
+              title: "Success",
+              text: `You invited ${showingUser.nickname} to your room!`,
+              icon: "success",
+            });
+          })
+          .catch((err) => {
+            console.log(err);
           });
       }
     },

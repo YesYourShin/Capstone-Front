@@ -3,6 +3,7 @@ import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 
 import { Hands, HAND_CONNECTIONS } from "@mediapipe/hands";
 export const fingersCount = (results, canvasElement, canvasCtx, vStatus) => {
+
   let rightHandLandmarks = {};
   let leftHandLandmarks = {};
   let rightFingersStatus = {
@@ -20,6 +21,7 @@ export const fingersCount = (results, canvasElement, canvasCtx, vStatus) => {
     LEFT_PINKY: false,
   };
   let n = 0;
+  let conut = 0;
 
   // 손을 인식해서 접혔는지 상태를 확인
   for (const landmarks of results.multiHandLandmarks) {
@@ -62,7 +64,8 @@ export const fingersCount = (results, canvasElement, canvasCtx, vStatus) => {
     canvasCtx.fillStyle = "rgba(255,255,255,1)";
     canvasCtx.fillText(
       "몇 번을 지목하겠습니까?",
-      canvasElement.width / 15,
+      canvasElement.
+      idth / 15,
       canvasElement.height / 8
     );
     canvasCtx.fillText(
@@ -74,6 +77,17 @@ export const fingersCount = (results, canvasElement, canvasCtx, vStatus) => {
   } else {
     console.log("no fingers");
   }
-  console.log(voteResult);
-  return voteResult;
+
+  console.log(voteResult)
+
+    return voteResult;
+
 };
+
+
+
+
+// 같은 숫자를 2초간 들고 있을 때,
+// 그 값을 이용하여야 한다.
+// 2초간 유지되어 출력된 값을 전송
+// 저장한느 법

@@ -4,13 +4,12 @@
     <!-- start of the timer section -->
     <div>
       <div v-show="timerStart" class="timerSet" >
-            <div class="flex flex-wrap p-4 ">
-            <BaseProgress :percentage="contentProgress" class="mx-2 mb-2 h-5">
+            <div class="flex flex-wrap p-3 ">
+            <BaseProgress :percentage="contentProgress" >
              {{ timerMinutes }}:{{ timerSeconds }}
-             <span class="text-xs text-black w-full flex justify-end pr-2">{{totalSeconds}}</span>
+             <!-- <span class="text-xs text-black w-full flex justify-end pr-2">{{totalSeconds}}</span> -->
             </BaseProgress>
             </div>
-
        </div>
       <div class="button-toggle">
       </div>
@@ -22,6 +21,7 @@ import BaseProgress from "@/components/gameFlow_elements/BaseProgress.vue";
 
 export default {
   name: "Timer",
+  props: ["realTime"],
   data() {
     return {
       isActive: true,
@@ -94,7 +94,7 @@ export default {
           (this.contentProgress = 0),
           this.$emit("startVote")
         }
-      }, 1000);
+      }, 250);
     },
     // 마피아로 의심되는 유저를 지목할 때 쓰이는 타이머
     voteTimer() {
@@ -110,10 +110,10 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$emit("voteNumCheck")
+          this.$emit("finishVote")
           this.pomodoroInstance = null
         }
-      }, 1000);
+      }, 250);
     },
     // 특정 유저가 지목되고, 사형 찬반투표를 할 때 쓰이는 타이머
     punishmentTimer() {
@@ -129,10 +129,10 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$emit("punishmentVoteCheck")
+          this.$emit("finishPunishmentVote")
           this.pomodoroInstance = null
         }
-      }, 1000);
+      }, 250);
     },
     // 밤이 되었을 때 쓰이는 타이머
     nightEvent() {
@@ -151,7 +151,7 @@ export default {
           this.$emit("nightFinishEvent")
           this.pomodoroInstance = null
         }
-      }, 1000);
+      }, 250);
     },
   },
 };

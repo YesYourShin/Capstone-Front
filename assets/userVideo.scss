@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+
+.videobox {
+  margin: 10px;
+  position: relative;
+
+    .myVideo {
+      transform: rotate(90deg);
+      -moz-transform: scaleX(-1);
+      -o-transform: scaleX(-1);
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+      filter: FlipH;
+      -ms-filter: "FlipH";
+      position: relative;
+      z-index: 1;
+      // position: absolute;
+    }
+
+    video {
+      width: 360px;
+      background-color: orange;
+      // border: 3px solid white;
+      position: relative;
+      z-index: 1;
+      // position: absolute;
+    }
+    canvas {
+      width: 361px;
+      border: 3px solid white;
+      top: -203px;
+      position: relative;
+      z-index: 2;
+      // position: absolute;
+    }
+    .userInfo {
+      width: 361px;
+      height: 30px;
+      line-height: 30px;
+      // padding-left: 5px;
+      top: -1px;
+      background-color: #ffffff;
+      position: relative;
+      z-index: 3;
+    }
+
+}
+
+.videoCut{
+  height: 206px;
+  width: 361px;
+}
