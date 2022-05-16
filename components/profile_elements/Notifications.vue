@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <div class="cancelButton" :click="cancel">
+    <div class="cancelButton" @click="cancel">
       <button>전체 삭제</button>
     </div>
   </div>
@@ -85,7 +85,13 @@ export default {
     },
   },
   methods: {
-    cancel() {},
+    cancel() {
+      console.log("전체 삭제 발동");
+      const vm = this;
+      this.notifications.forEach((item) => {
+        vm.onClickRejectButton(item);
+      });
+    },
     async onClickApproveButton(item) {
       if (!this.myInfo) return;
       if (item.type === "REQUESTED_FRIEND") {
