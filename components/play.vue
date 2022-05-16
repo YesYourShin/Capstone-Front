@@ -28,13 +28,11 @@
     <sideBar
       ref="sideBarSet"
     ></sideBar>
-    <!-- <Memo /> -->
-    <!-- <Audio /> -->
+
   </div>
 </template>
 
 <script>
-// import Memo from "@/components/memo.vue";
 import Timer from "@/components/Timer.vue";
 import Billboard from "@/components/gameFlow_elements/billboard.vue";
 import SideBar from "@/components/gameFlow_elements/sideBar.vue";
@@ -49,7 +47,6 @@ export default {
     roomInfo: Object,
   },
   components: {
-    // Memo,
     Timer,
     Billboard,
     SideBar,
@@ -83,7 +80,6 @@ export default {
       nightAudio: null,
       startTime: null,
       endTime: null,
-      voteData: null,
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
   },
@@ -177,6 +173,7 @@ export default {
       if(data >= this.$store.state.stream.surviveMembers/2) {
         this.$refs.billboard.finishPunishmentVoteBoard();
         this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
+          console.log(data.death-1)
           this.$store.commit('stream/killMember', data.death-1);
           this.$store.commit('stream/surviveMemberCheck');
         });
@@ -189,19 +186,25 @@ export default {
     });
 
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
-      // 경찰은 결과를 즉시 알아야 한다.
       console.log(data.userNum, user);
       this.$refs.billboard.policeResult();
     })
 
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
-      // 여기서는 지목값만 받는다.
+
       console.log(data);
     })
 
     this.$root.gameSocket.on(GameEvent.MAFIA, (data) => {
-      // 여기서는 지목값만 받는다.
+
       console.log(data);
+    })
+
+    this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
+      console.log(data)
+      // 만약 마피아 != 의사일 경우, killMember를 불러온다.
+      // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
+      // 그리고 surviveMemberCheck을 불러오며 결과를 도출한다.
     })
 
   },
@@ -222,7 +225,7 @@ export default {
       this.$refs.billboard.grantPlayerJobBeforeBoard();
     },
 
-    // 직업 배분 결과 통지, 지금 빌보드에 뜨는건 더미라서 마피아라고 뜬다.
+    // 직업 배분 결과 통지
     grantPlayerJob() {
       this.$root.gameSocket.emit(GameEvent.JOB);
     },
@@ -348,32 +351,34 @@ export default {
     },
 
     nightResult() {
-      console.log("3");
       this.$refs.billboard.nightResultBoard();
-      // 만약 승리조건을 on 할 경우에는
+      this.$root.gameSocket.emit(GameEvent.USEJOBS)
       setTimeout(() => {
-        this.morningEvent();
+        this.victorySearch()
       }, 3000);
     },
-
+    // 투표 직후, 밤 능력사용 직후 승패를 찾아보는 메서드이다.
+    // 조건이 맞으면
     victorySearch() {
-
+      // 유저 카운트를 하고 조건이 맞을 경우 게임을 종료한다.
+      // 이것은 마피아 윈과 시티즌 윈으로 나눠서 실행한다.
+      // 조건이 맞지 않을 경우, morningEvent를 실행한다.
+      // 이 부분은 아직 구현 ㄴㄴ
+      this.morningEvent();
     },
+
     mafiaWin() {
-      this.flowMessage =
-        "마피아가 남아있는 시민의 수와 같거나 많습니다. 마피아가 승리하였습니다.";
+      // 마피아가 이겼다는 빌보드를 출력한다.
+      // 전적 반영 후
+      // 5~10초의 딜레이를 두고 모든 유저를 밖으로 내보낸다. (room page)
     },
 
     citizenWin() {
-      this.flowMessage =
-        "마피아가 모두 사라졌습니다. 시민 팀이 승리하였습니다.";
+      // 시민 이겼다는 빌보드를 출력한다.
+      // 전적 반영 후
+      // 5~10초의 딜레이를 두고 모든 유저를 밖으로 내보낸다. (room page)
     },
   },
-  // async asyncData({ params }) {
-  //   const roomInfo = await getRoom(params.id);
-  //   console.log('roomId : room ',params)
-  //   return { roomInfo: roomInfo.data.data };
-  // },
 };
 </script>
 
