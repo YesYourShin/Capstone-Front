@@ -49,7 +49,7 @@
         <div
           v-for="(message, index) in chats[selectedIndex].messages"
           :key="index"
-          class="text-white font-semibold"
+          class="text-white font-semibold pl-4 mx-2"
         >
           {{ message }}
         </div>

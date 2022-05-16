@@ -15,7 +15,7 @@
       </div>
     </div>
   </div> -->
-  <div class="buttonbox">
+  <div class="buttonbox" >
     <div class="buttonline1"></div>
     <div class="buttonline2"></div>
     <div class="buttonline3"></div>
@@ -35,37 +35,68 @@ export default {
   methods: {
     async openModal() {
       const { value: formValues } = await this.$swal({
-        title: "Create a Room",
-        html: `
-        <div class="w-full">
-          <div class="grid grid-cols-2 gap-6">
-            <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700" for="room-name">방 제목</label>
-              <input class="mt-1 p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md" type="text" name="room-name" id="room-name" placeholder="방 제목을 입력하세요" />
-            </div>
-            <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700" for="password">비밀번호</label>
-              <input class="mt-1 p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md" type="password" name="password" id="password" />
-            </div>
-            <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700" for="mode">모드</label>
-              <select class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="mode" id="mode">
-                <option value="classic">일반 모드</option>
-                <option value="expanded">확장 모드</option>
-              </select>
-            </div>
-            <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700" for="max-player">인원 수</label>
-              <select class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="max-player" id="max-player">
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
-            </div>
-          </div>
-        </div>`,
+        title: "방 만들기",
+        // html: `
+        // <div class="w-full">
+        //   <div class="grid grid-cols-2 gap-6">
+        //     <div class="col-span-1">
+        //       <label class="block text-sm font-medium text-gray-700" for="room-name">방 제목</label>
+        //       <input class="mt-1 p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md" type="text" name="room-name" id="room-name" placeholder="방 제목을 입력하세요" />
+        //     </div>
+        //     <div class="col-span-1">
+        //       <label class="block text-sm font-medium text-gray-700" for="password">비밀번호</label>
+        //       <input class="mt-1 p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md" type="password" name="password" id="password" />
+        //     </div>
+        //     <div class="col-span-1">
+        //       <label class="block text-sm font-medium text-gray-700" for="mode">모드</label>
+        //       <select class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="mode" id="mode">
+        //         <option value="classic">일반 모드</option>
+        //         <option value="expanded">확장 모드</option>
+        //       </select>
+        //     </div>
+        //     <div class="col-span-1">
+        //       <label class="block text-sm font-medium text-gray-700" for="max-player">인원 수</label>
+        //       <select class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="max-player" id="max-player">
+        //         <option value="6">6</option>
+        //         <option value="7">7</option>
+        //         <option value="8">8</option>
+        //         <option value="9">9</option>
+        //         <option value="10">10</option>
+        //       </select>
+        //     </div>
+        //   </div>
+        // </div>`,
+        html:
+            `<div class="test">`+
+                `<div>`+
+                  `<label>방 제목</label>`+
+                  `<input type="text" name="room-name" id="room-name" placeholder="방 제목을 입력하세요" />`+
+                `</div>`+
+                `<div>`+
+                  `<label for="password">비밀번호</label>`+
+                  `<input type="password" name="password" id="password" />`+
+                `</div>`+
+                `<div>`+
+                  `<label for="mode" class="test2">모드</label>`+
+                  `<select name="mode" id="mode">`+
+                    `<option value="classic">일반 모드</option>`+
+                    `<option value="expanded">확장 모드</option>`+
+                  `</select>`+
+                `</div>`+
+                `<div>`+
+                  `<label for="max-player">인원 수</label>`+
+                  `<select name="max-player" id="max-player">`+
+                    `<option value="6">6</option>`+
+                    `<option value="7">7</option>`+
+                    `<option value="8">8</option>`+
+                    `<option value="9">9</option>`+
+                    `<option value="10">10</option>`+
+                  `</select>`+
+                `</div>`+
+            `</div>`,
+        customClass: {
+          container: "createRoom",
+        },
         focusConfirm: false,
         preConfirm: () => {
           const roomName = document.getElementById("room-name").value;
@@ -77,7 +108,7 @@ export default {
 
           if (!roomName) {
             return this.$swal.showValidationMessage(
-              "you need to input room name"
+              "방 제목을 입력해주세요."
             );
           }
 
@@ -92,7 +123,7 @@ export default {
           publishers: formValues.maxPlayer,
           pin: formValues?.password,
         };
-        console.log(req);
+        // console.log(req);
 
         // axios
         //   .post(
@@ -141,7 +172,75 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.createRoom{
+
+  .swal2-popup{
+      // border: 15px solid orange;
+      width: 900px;
+      height: 630px;
+      background-image: url("@/assets/post.png");
+      background-position: bottom;
+      background-size: 900px 630px;
+
+
+      .swal2-title{
+        font-size: 50px;
+        height: 100px;
+        line-height: 100px;
+        padding: 0;
+        margin-top: 20px;
+        background-color: rgba(0, 0, 0, 0.776);
+        color: white;
+      }
+      .test{
+        height: 250px;
+        font-size: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        font-weight: bolder;
+        text-align: left;
+
+        div{
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          padding-right: 100px;
+          margin: 10px 0;
+          background-color: rgba(0, 0, 0, 0.765);
+          height: 50px;
+          line-height: 50px;
+          color: white;
+
+
+          label{
+            margin: 0 20px;
+            margin-right: 50px;
+          }
+          input{
+            text-align: center;
+            border-right: 2px solid white;
+            border-left: 2px solid white;
+          }
+          select{
+            width: 380px;
+            text-align: center;
+            background-color: black;
+          }
+        }
+
+      }
+      .swal2-confirm{
+        background-color: black;
+        color: white;
+        width: 150px;
+      }
+  }
+
+}
+
+
 .buttonbox {
   width: 180px;
   height: 70px;
