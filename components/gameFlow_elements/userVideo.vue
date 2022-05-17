@@ -73,6 +73,8 @@ export default {
       voteCount: 0,
       nextEvent: null,
       skillTrue: null,
+      isPuase : false,
+      timer: null,
     }
   },
   components: {
@@ -98,6 +100,7 @@ export default {
   },
   watch: {
     // 질문이 변경될 때 마다 이 기능이 실행됩니다.
+    // Todo 없는 번호 찍으면 다시 투표하게
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
       this.voteNum = newVoteResult
@@ -109,7 +112,7 @@ export default {
             clearInterval(voteLoading);
             this.voteCount = 0
             console.log('손가락 다시')
-          } else if (this.voteCount = 2) {
+          } else if (this.voteCount = 3) {
             clearInterval(voteLoading)
             console.log('체크 완료')
             this.mediaStatus = false
@@ -128,8 +131,9 @@ export default {
         let checkLoading = setInterval(() => {
           this.checkCount += 1
           if (newCheckResult != this.checkNum) {
+            clearInterval(checkLoading)
             this.checkCount = 0
-          } else if (this.checkCount = 2) {
+          } else if (this.checkCount = 3) {
             clearInterval(checkLoading)
             console.log('체크 인식 완료' + this.checkNum)
             this.mediaStatus = false
@@ -137,7 +141,8 @@ export default {
             this.check = false
             // 스킬 사용이 아니고, 체크했을 경우
             if (this.skillTrue === false && this.checkNum === true) {
-              this.$emit('voteNumEmit', this.voteNum)
+              // this.$emit('voteNumEmit', this.voteNum)
+              this.$emit('voteNumEmit', null)
               console.log('투표 값 넘겨줌' + this.voteNum)
             // 스킬 사용이고, 체크했을 경우
             } else if (this.skillTrue === true && this.checkNum === true) {
@@ -180,7 +185,7 @@ export default {
           if (newPunishmentResult != this.punishmentNum) {
             clearInterval(punishLoading);
             this.punishmentCount = 0
-          } else if (this.punishmentCount = 2) {
+          } else if (this.punishmentCount = 3) {
             clearInterval(punishLoading);
             this.mediaStatus = false
             this.pStatus = false
@@ -192,6 +197,7 @@ export default {
     },
   },
   methods: {
+
     startVoteMotion(){
       this.mediaStatus = true
       this.skillTrue = false

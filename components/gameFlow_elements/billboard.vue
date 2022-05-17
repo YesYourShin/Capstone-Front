@@ -41,8 +41,13 @@ export default {
 
     // 유저의 vote 결과를 빌보드에 알려준다.
     this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
+      console.log(data)
       for (let i = 0; i < data.length; i++) {
-        this.newMessage = `${this.$store.state.stream.roomMembers[i].nickname} : ${data[i].voteNum} 표`
+        if (data[i].userNum === null) {
+          this.newMessage = `무효표 : ${data[i].voteNum} 표`
+        } else {
+          this.newMessage = `${data[i].userNum} : ${data[i].voteNum} 표`
+        }
         this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
         this.$forceUpdate()
         if (data[i].voteNum > this.highVote) {
@@ -167,9 +172,11 @@ export default {
       this.newMessage = '의심 투표 결과를 발표 완료!'
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
+      // * 만약 유저가 특정되었을 경우
       this.newMessage = `${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}이(가) 마피아 의심 대상으로 지목되었습니다.`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
+      // ! 만약 유저가 특정되지 않았을 경우
     },
     startPunishmentVoteBoard() {
       this.newMessage = `${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}의 사형 찬반투표를 실시합니다.`

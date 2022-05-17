@@ -14,7 +14,7 @@
       >
     </div>
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
-    <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함.  -->
+    <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함. -->
     <Billboard ref="billboard" v-on:punishmentVote="punishmentVote" v-on:nightEvent="nightEvent" v-on:victorySearch="victorySearch"/>
     <div class="videomainbox px-2 mt-10">
       <UserVideo ref="userVideo"
@@ -194,6 +194,10 @@ export default {
     //   }, 3000)
     // });
 
+    this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
+      console.log(data)
+    })
+
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
       console.log(data.userNum, user);
       this.$refs.billboard.policeResult();
@@ -207,6 +211,9 @@ export default {
       console.log('마피아의 지목 ' + data);
     })
 
+    this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
+      console.log(data);
+    })
 
   },
 
@@ -266,19 +273,16 @@ export default {
 
     // userVideo.vue에서 얻어낸 유저 지목 값을 백엔드로 전송
     voteNumCheck(voteNum) {
-      this.electedPlayer = voteNum;
-      console.log(this.electedPlayer);
+      // this.electedPlayer = voteNum;
+      console.log(voteNum);
       this.$root.gameSocket.emit(GameEvent.VOTE, {
-        vote: this.electedPlayer,
+        vote: voteNum,
       })
     },
 
     // 타이머 끝나면 이게 실행되고, 집계된 결과값을 가져온다.
     finishVote() {
-      if(this.electedPlayer != 0) {
-        console.log(this.electedPlayer)
-        this.$root.gameSocket.emit(GameEvent.FINISHV);
-      }
+      this.$root.gameSocket.emit(GameEvent.FINISHV);
     },
 
     // 사형시킬 유저가 특정되면 심판 투표를 진행
