@@ -2,29 +2,53 @@
   <div
     ref="score"
     id="score"
-    v-scroll:#score="test"
-    class="profile6 grow overflow-auto"
+    v-scroll:#score="scroll"
+    class="profile6 grow text-white overflow-auto"
   >
-    <p>전적</p>
-
     <div>
       <div v-for="oneRecord in record">
         <div
           v-for="members in oneRecord.members"
           v-if="members.user.userId === myInfo.id"
+          class="p-3 border-2 border-zinc-400 m-3"
         >
-          <table>
-            <tr>
+          <table class="w-full text-center cursor-default">
+            <tr class="p-3 h-12">
               <!-- <th>닉네임</th> -->
-              <th>모드</th>
-              <th>결과</th>
-              <th>날짜</th>
+              <th class="border-2 border-zinc-600 w-24">모드</th>
+              <th class="border-2 border-zinc-600 w-24">결과</th>
+              <th class="border-2 border-zinc-600">날짜</th>
             </tr>
-            <tr>
+            <tr
+              class="h-20 hover:bg-zinc-700"
+              :class="[
+                {
+                  'bg-blue-600 hover:bg-blue-400/80': members.score === 'win',
+                },
+                { 'bg-red-600 hover:bg-red-400/80': members.score === 'lose' },
+                {
+                  'bg-stone-600 hover:bg-neutral-400/50':
+                    members.score === 'escape',
+                },
+              ]"
+            >
               <!-- <td>{{ members.user.nickname }}</td> -->
               <td>{{ oneRecord.mode }}</td>
               <td>{{ members.score }}</td>
-              <td>{{ formatDate(oneRecord.updatedAt) }}</td>
+              <td>
+                {{
+                  formatDate(oneRecord.updatedAt)
+                    .split(" ")
+                    .slice(0, 3)
+                    .join(" ")
+                }}<br />
+                {{
+                  formatDate(oneRecord.updatedAt)
+                    .split(" ")
+                    .slice(3, 5)
+                    .join(" ")
+                }}
+              </td>
             </tr>
           </table>
           <ScoreInfo :members="oneRecord.members"></ScoreInfo>
@@ -47,6 +71,7 @@ export default {
     return {
       page: 2,
       perPage: 10,
+      date: null,
     };
   },
   components: {
@@ -63,7 +88,7 @@ export default {
       const newDate = new Date(sqlDate).toLocaleString("ko-kr");
       return newDate;
     },
-    test() {
+    scroll() {
       let sHeight = this.$refs.score.scrollHeight;
       let cHeight = this.$refs.score.clientHeight;
       let sTop = this.$refs.score.scrollTop;
