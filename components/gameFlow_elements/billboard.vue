@@ -38,6 +38,8 @@ export default {
     this.messageLogs = ['Fafia Start']
   },
   mounted() {
+
+    // 유저의 vote 결과를 빌보드에 알려준다.
     this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
       for (let i = 0; i < data.length; i++) {
         this.newMessage = `${this.$store.state.stream.roomMembers[i].nickname} : ${data[i].voteNum} 표`
@@ -50,24 +52,63 @@ export default {
         } else if (data[i].voteNum == this.highVote) {
           this.equalVote++
         }
-
       }
       this.finishVoteBoard();
       if (this.equalVote == 1 && this.highVote != 0) {
         setTimeout(()=> {
           this.$emit("punishmentVote")
         }, 3000)
-      } else if (this.equalVote >= 2 || this.highVote == 0) {
+      } else {
         setTimeout(() => {
           this.$emit("nightEvent")
-        })
+          // night가 두개 간다. 이거 내일 즉시 수정
+        },3000)
       }
-
     });
+
+    // 유저의 punishment 결과를 빌보드에 알려준다.
+    this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
+      if(data >= this.$store.state.stream.surviveMembers/2) {
+        this.finishPunishmentVoteBoard();
+        this.newMessage = `찬성 : ${data} 표`
+        this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+        this.newMessage = `반대 : ${this.$store.state.stream.roomMembers-data} 표`
+        this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+        this.$forceUpdate()
+        this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
+          console.log(data.death-1)
+          this.$store.commit('stream/killMember', data.death-1);
+          this.$store.commit('stream/surviveMemberCheck');
+        });
+      } else {
+        this.finishPunishmentVoteFalseBoard();
+      }
+      setTimeout(()=> {
+        this.$emit("nightEvent");
+        console.log('빌보드 밤 이벤트 시작')
+      }, 3000)
+    });
+
+    this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
+      console.log(data)
+      console.log('직업사용 결과 받음')
+      if (data.userNum != null && data.die == true) {
+        this.$store.commit('stream/killMember', data.userNum-1);
+        this.$store.commit('stream/surviveMemberCheck');
+        console.log(`${this.$store.state.stream.roomMembers[data.userNum-1].nickname}가 살해당했습니다.`)
+      } else if (data.userNum != null && data.die == false) {
+        console.log(`${this.$store.state.stream.roomMembers[data.userNum-1].nickname}가 습격받았으나 의사의 도움으로 살아남았습니다.`)
+      } else {
+        console.log('평화로운 밤이었습니다.')
+      }
+      this.$emit('victorySearch')
+      // 만약 마피아 != 의사일 경우, killMember를 불러온다.
+      // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
+      // 그리고 surviveMemberCheck을 불러오며 결과를 도출한다.
+    })
+
   },
-
   methods: {
-
     gameStartBoard() {
       // 게임 시작 메세지를 저장한다.
       // 지금부터 마피아 게임을 시작합니다.

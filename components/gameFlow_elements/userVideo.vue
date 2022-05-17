@@ -108,8 +108,10 @@ export default {
           if (newVoteResult != this.voteNum) {
             clearInterval(voteLoading);
             this.voteCount = 0
-          } else if (this.voteCount > 2) {
+            console.log('손가락 다시')
+          } else if (this.voteCount = 2) {
             clearInterval(voteLoading)
+            console.log('체크 완료')
             this.mediaStatus = false
             this.vStatus = false
             this.vote = false
@@ -127,22 +129,27 @@ export default {
           this.checkCount += 1
           if (newCheckResult != this.checkNum) {
             this.checkCount = 0
-          } else if (this.checkCount > 1) {
+          } else if (this.checkCount = 2) {
             clearInterval(checkLoading)
+            console.log('체크 인식 완료' + this.checkNum)
             this.mediaStatus = false
             this.cStatus = false
             this.check = false
             // 스킬 사용이 아니고, 체크했을 경우
-            if (this.skillTrue == false && this.checkNum == true) {
+            if (this.skillTrue === false && this.checkNum === true) {
               this.$emit('voteNumEmit', this.voteNum)
+              console.log('투표 값 넘겨줌' + this.voteNum)
             // 스킬 사용이고, 체크했을 경우
-            } else if (this.skillTrue == true && this.checkNum == true) {
+            } else if (this.skillTrue === true && this.checkNum === true) {
               this.$emit('skillNumEmit', this.voteNum)
+              console.log('스킬 값 넘겨줌' + this.voteNum)
             // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
-            } else if (this.skillTrue == false && this.checkNum == false) {
+            } else if (this.skillTrue === false && this.checkNum === false) {
               this.startVoteMotion()
-            } else if (this.skillTrue == true && this.checkNum == false) {
+              console.log('투표 다시')
+            } else if (this.skillTrue === true && this.checkNum === false) {
               this.skillMotion()
+              console.log('스킬 다시')
             }
           }
           // 타이머가 완성되야 구현 가능함.
@@ -157,7 +164,7 @@ export default {
           //     this.$emit('voteNumEmit', 0)
           //   // 스킬 사용이고, 체크하지 않은 상태일 경우
           //   } else if (this.skillTrue == true && this.checkNum != true) {
-          //     this.$emit('skillNumEmit', 0)
+          //     this.$emit('skillNumEmit', 0) d
           //   }
           // }
         }, 1000)
@@ -173,7 +180,7 @@ export default {
           if (newPunishmentResult != this.punishmentNum) {
             clearInterval(punishLoading);
             this.punishmentCount = 0
-          } else if (this.punishmentCount > 3) {
+          } else if (this.punishmentCount = 2) {
             clearInterval(punishLoading);
             this.mediaStatus = false
             this.pStatus = false

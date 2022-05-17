@@ -1,9 +1,10 @@
 <template>
+  <!--  -->
   <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }">
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
       <Timer
-        v-on:nightFinishEvent="nightResult"
+        v-on:nightResult="nightResult"
         v-on:startVote="startVote"
         v-on:finishVote="finishVote"
         v-on:finishPunishmentVote="finishPunishmentVote"
@@ -14,7 +15,7 @@
     </div>
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
     <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함.  -->
-    <Billboard ref="billboard" v-on:punishmentVote="punishmentVote" v-on:nightEvent="nightEvent"/>
+    <Billboard ref="billboard" v-on:punishmentVote="punishmentVote" v-on:nightEvent="nightEvent" v-on:victorySearch="victorySearch"/>
     <div class="videomainbox px-2 mt-10">
       <UserVideo ref="userVideo"
       v-on:startVoteMotion="startVote"
@@ -150,6 +151,7 @@ export default {
     // 낮밤 변경
     this.$root.gameSocket.on(GameEvent.DAY, (data) => {
       this.flag = data.day;
+      console.log(this.flag)
     });
 
     // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
@@ -176,21 +178,21 @@ export default {
     // });
 
     // 심판 결과
-    this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
-      if(data >= this.$store.state.stream.surviveMembers/2) {
-        this.$refs.billboard.finishPunishmentVoteBoard();
-        this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
-          console.log(data.death-1)
-          this.$store.commit('stream/killMember', data.death-1);
-          this.$store.commit('stream/surviveMemberCheck');
-        });
-      } else {
-        this.$refs.billboard.finishPunishmentVoteFalseBoard();
-      }
-      setTimeout(()=> {
-        this.nightEvent();
-      }, 3000)
-    });
+    // this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
+    //   if(data >= this.$store.state.stream.surviveMembers/2) {
+    //     this.$refs.billboard.finishPunishmentVoteBoard();
+    //     this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
+    //       console.log(data.death-1)
+    //       this.$store.commit('stream/killMember', data.death-1);
+    //       this.$store.commit('stream/surviveMemberCheck');
+    //     });
+    //   } else {
+    //     this.$refs.billboard.finishPunishmentVoteFalseBoard();
+    //   }
+    //   setTimeout(()=> {
+    //     this.nightEvent();
+    //   }, 3000)
+    // });
 
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
       console.log(data.userNum, user);
@@ -202,18 +204,10 @@ export default {
     })
 
     this.$root.gameSocket.on(GameEvent.MAFIA, (data) => {
-      console.log(data);
+      console.log('마피아의 지목 ' + data);
     })
 
-    this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
-      console.log(data)
-      setTimeout(() => {
-        this.victorySearch()
-      }, 3000);
-      // 만약 마피아 != 의사일 경우, killMember를 불러온다.
-      // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
-      // 그리고 surviveMemberCheck을 불러오며 결과를 도출한다.
-    })
+
   },
 
   created() {},
@@ -240,6 +234,7 @@ export default {
     // 아침 이벤트 발생,
     morningEvent() {
       this.$refs.billboard.morningEventBoard();
+      console.log('아침 시작')
       // this.morningAudio.play()
       const dayjs = require("dayjs");
       const morningStart = dayjs();
@@ -249,7 +244,7 @@ export default {
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
       });
-      console.log(this.flag)
+
       this.$root.gameSocket.emit(GameEvent.TIMER);
       this.$refs.timer.morningTimer();
       // dayCount에서는 빌보드 상단에 표기되는 day의 숫자를 +1
@@ -318,11 +313,11 @@ export default {
     nightEvent() {
       // 밤으로 배경 변경
       // this.nightAudio.play()
-      this.$store.commit('stream/surviveMemberCheck');
-
+      console.log('게임 밤 이벤트 시작')
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
       });
+      console.log(this.flag)
       this.$root.gameSocket.emit(GameEvent.TIMER);
       this.$refs.billboard.nightEventBoard();
       setTimeout(() => {
@@ -357,16 +352,19 @@ export default {
 
     nightResult() {
       this.$refs.billboard.nightResultBoard();
-      this.$root.gameSocket.emit(GameEvent.USEJOBS)
-
+      setTimeout(() => {
+        this.$root.gameSocket.emit(GameEvent.USEJOBS)
+        console.log('밤 결과')
+      }, 3000)
     },
-    // 투표 직후, 밤 능력사용 직후 승패를 찾아보는 메서드이다.
-    // 조건이 맞으면
+
     victorySearch() {
+      this.$store.commit('stream/surviveMemberCheck');
       // 유저 카운트를 하고 조건이 맞을 경우 게임을 종료한다.
       // 이것은 마피아 윈과 시티즌 윈으로 나눠서 실행한다.
       // 조건이 맞지 않을 경우, morningEvent를 실행한다.
       // 이 부분은 아직 구현 ㄴㄴ
+      console.log('승리조건 파악')
       this.morningEvent();
     },
 
