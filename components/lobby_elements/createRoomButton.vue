@@ -177,17 +177,17 @@ export default {
 
   .swal2-popup{
       // border: 15px solid orange;
-      width: 900px;
-      height: 630px;
+      width: 730px;
+      height: 600px;
       background-image: url("@/assets/post.png");
       background-position: bottom;
       background-size: 900px 630px;
 
 
       .swal2-title{
-        font-size: 50px;
-        height: 100px;
-        line-height: 100px;
+        font-size: 40px;
+        height: 80px;
+        line-height: 80px;
         padding: 0;
         margin-top: 20px;
         background-color: rgba(0, 0, 0, 0.776);
@@ -195,7 +195,7 @@ export default {
       }
       .test{
         height: 250px;
-        font-size: 30px;
+        font-size: 25px;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
@@ -206,7 +206,6 @@ export default {
           display: flex;
           justify-content: space-between;
           width: 100%;
-          padding-right: 100px;
           margin: 10px 0;
           background-color: rgba(0, 0, 0, 0.765);
           height: 50px;
@@ -222,9 +221,11 @@ export default {
             text-align: center;
             border-right: 2px solid white;
             border-left: 2px solid white;
+            margin-right: 30px;
           }
           select{
-            width: 380px;
+            width: 318px;
+            margin-right: 30px;
             text-align: center;
             background-color: black;
           }
@@ -235,6 +236,11 @@ export default {
         background-color: black;
         color: white;
         width: 150px;
+      }
+
+      .swal2-validation-message{
+        margin: 0;
+
       }
   }
 

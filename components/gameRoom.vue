@@ -1047,9 +1047,9 @@ export default {
     font-size: 20px;
     --tw-bg-opacity: 1;
     background-color: rgb(0 0 0 / 80%);
-    color: rgb(191 219 254 / var(--tw-bg-opacity));
+    color: white;
     font-weight: bold;
-    border: 3px solid rgb(191 219 254);
+    border: 3px solid white;
 
     &:active {
       width: 140px;
@@ -1069,7 +1069,7 @@ export default {
     left: 5px;
     position: absolute;
     --tw-bg-opacity: 1;
-    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+    background-color: white;
   }
 
   .buttonLine2 {
@@ -1079,7 +1079,7 @@ export default {
     left: 5px;
     position: absolute;
     --tw-bg-opacity: 1;
-    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+    background-color: white;
   }
 
   .buttonLine3 {
@@ -1089,7 +1089,7 @@ export default {
     right: 5px;
     position: absolute;
     --tw-bg-opacity: 1;
-    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+    background-color: white;
   }
 
   .buttonLine4 {
@@ -1099,7 +1099,7 @@ export default {
     right: 5px;
     position: absolute;
     --tw-bg-opacity: 1;
-    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+    background-color: white;
   }
 }
 @keyframes buttonLineW {
