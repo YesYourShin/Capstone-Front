@@ -194,9 +194,9 @@ export default {
     //   }, 3000)
     // });
 
-    // this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
-    //   console.log(data)
-    // })
+    this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
+      console.log(data)
+    })
 
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
       console.log(data.userNum, user);
@@ -273,20 +273,16 @@ export default {
 
     // userVideo.vue에서 얻어낸 유저 지목 값을 백엔드로 전송
     voteNumCheck(voteNum) {
-      console.log(typeof voteNum)
-      console.log(voteNum + '전송');
+      // this.electedPlayer = voteNum;
+      console.log(voteNum);
       this.$root.gameSocket.emit(GameEvent.VOTE, {
-        vote: voteNum
+        vote: voteNum,
       })
-      console.log('피니시 보트 실행')
-      this.finishVote()
     },
 
     // 타이머 끝나면 이게 실행되고, 집계된 결과값을 가져온다.
     finishVote() {
-      console.log('피니시 보트 실행 2')
       this.$root.gameSocket.emit(GameEvent.FINISHV);
-      console.log('vote result 요청')
     },
     // 사형시킬 유저가 특정되면 심판 투표를 진행
     punishmentVote() {
@@ -302,12 +298,10 @@ export default {
     // false가 엄지손가락을 올린 형태로 사형 반대이다.
     punishmentVoteCheck(punishmentNum) {
       // punishmentNum 은 boolean
-      this.punishmentPlayer = punishmentNum;
-      console.log(this.punishmentPlayer)
       this.$root.gameSocket.emit(
         GameEvent.PUNISH,
         {
-          punish: this.punishmentPlayer,
+          punish: punishmentNum,
         },
       );
     },
@@ -315,6 +309,7 @@ export default {
     // 심판 투표 결과값을 가져온다.
     finishPunishmentVote() {
       this.$root.gameSocket.emit(GameEvent.FINISHP);
+      console.log('찬반 가져옴')
     },
 
     nightEvent() {

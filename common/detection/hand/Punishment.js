@@ -66,7 +66,7 @@ export const punishment = (results, canvasElement, canvasCtx, pStatus) => {
   } else {
     console.log("no vote");
   }
-  console.log(punishmentResult);
+  // console.log(punishmentResult);
 
   return punishmentResult;
 };

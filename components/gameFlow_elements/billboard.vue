@@ -80,11 +80,11 @@ export default {
           },3000)
         }
       }
-
     });
-
     // 유저의 punishment 결과를 빌보드에 알려준다.
     this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
+      console.log(data)
+      console.log(this.$store.state.stream.surviveMembers)
       if(data >= this.$store.state.stream.surviveMembers/2) {
         this.finishPunishmentVoteBoard();
         this.newMessage = `찬성 : ${data} 표`
@@ -93,7 +93,7 @@ export default {
         this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
         this.$forceUpdate()
         this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
-          console.log(data.death-1)
+          console.log(data)
           this.$store.commit('stream/killMember', data.death-1);
           this.$store.commit('stream/surviveMemberCheck');
         });
@@ -105,7 +105,6 @@ export default {
         console.log('빌보드 밤 이벤트 시작')
       }, 3000)
     });
-
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       console.log(data)
       console.log('직업사용 결과 받음')
@@ -118,12 +117,12 @@ export default {
         this.$store.commit('stream/surviveMemberCheck');
         console.log(`${this.$store.state.stream.roomMembers[data.userNum-1].nickname}가 살해당했습니다.`)
       }
-
       this.$emit('victorySearch')
       // 만약 마피아 != 의사일 경우, killMember를 불러온다.
       // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
       // 그리고 surviveMemberCheck을 불러오며 결과를 도출한다.
     })
+
 
   },
   methods: {

@@ -71,7 +71,7 @@ export const check = (results, canvasElement, canvasCtx, cStatus) => {
     );
     // console.log(text);
   } else {
-    console.log("no check");
+    // console.log("no check");
   }
   return checkResult;
 };

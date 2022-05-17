@@ -75,7 +75,6 @@ export default {
       skillTrue: null,
       isPuase : false,
       timer: null,
-      mediaStatus: false,
     }
   },
   components: {
@@ -156,19 +155,21 @@ export default {
       console.log("Vote Result", newVoteResult);
       this.voteNum = newVoteResult
       this.voteCount = 0
-      if (this.voteNum != null) {
-        this.voteLoading = setInterval(() => {
-          if (this.voteCount < 3) {
-            this.voteCount += 1
-            console.log(this.voteCount)
-          } else if (this.voteCount == 3) {
-            clearInterval(this.voteLoading)
+      if (this.voteNum != 0) {
+        let voteLoading = setInterval(() => {
+          this.voteCount += 1
+          if (newVoteResult != this.voteNum) {
+            clearInterval(voteLoading);
+            this.voteCount = 0
+            console.log('손가락 다시')
+          } else if (this.voteCount = 3) {
+            clearInterval(voteLoading)
             console.log('체크 완료')
             this.mediaStatus = false
             this.vStatus = false
             this.vote = false
             this.checkVoteMotion()
-            this.voteLoading = null
+            voteLoading = null
           }
           if (newVoteResult != this.voteNum) {
             this.voteCount = 0
@@ -183,32 +184,35 @@ export default {
       this.checkNum = newCheckResult
       this.checkCount = 0
       if (this.checkNum === true || this.checkNum === false) {
-        this.checkLoading = setInterval(() => {
-          if (this.checkCount < 3) {
-            this.checkCount += 1
-          } else if (newCheckResult != this.checkNum) {
+        let checkLoading = setInterval(() => {
+          this.checkCount += 1
+          if (newCheckResult != this.checkNum) {
+            clearInterval(checkLoading)
             this.checkCount = 0
-          } else if (this.checkCount === 3 && this.checkNum === true) {
+          } else if (this.checkCount = 3) {
+            clearInterval(checkLoading)
             console.log('체크 인식 완료' + this.checkNum)
             clearInterval(this.checkLoading)
             this.mediaStatus = false
             this.cStatus = false
             this.check = false
-            this.vStatus = false
-            this.vote = false
-            this.checkCount = 0
-            this.checkLoading = null
-          } else if (this.checkCount === 3 && this.checkNum === false) {
-            clearInterval(this.checkLoading)
-            this.mediaStatus = false
-            this.cStatus = false
-            this.check = false
-            this.vStatus = false
-            this.vote = false
-            this.checkCount = 0
-            this.startVoteMotion()
-            console.log('투표 다시')
-            this.checkLoading = null
+            // 스킬 사용이 아니고, 체크했을 경우
+            if (this.skillTrue === false && this.checkNum === true) {
+              this.$emit('voteNumEmit', this.voteNum)
+              // this.$emit('voteNumEmit', null)
+              console.log('투표 값 넘겨줌' + this.voteNum)
+            // 스킬 사용이고, 체크했을 경우
+            } else if (this.skillTrue === true && this.checkNum === true) {
+              this.$emit('skillNumEmit', this.voteNum)
+              console.log('스킬 값 넘겨줌' + this.voteNum)
+            // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
+            } else if (this.skillTrue === false && this.checkNum === false) {
+              this.startVoteMotion()
+              console.log('투표 다시')
+            } else if (this.skillTrue === true && this.checkNum === false) {
+              this.skillMotion()
+              console.log('스킬 다시')
+            }
           }
         }, 1000)
       }
@@ -218,22 +222,25 @@ export default {
       this.punishmentNum = newPunishmentResult
       this.punishmentCount = 0
       if (this.punishmentNum == true || this.punishmentNum == false) {
-        this.punishLoading = setInterval(() => {
+        let punishLoading = setInterval(() => {
           this.punishmentCount += 1
           if (newPunishmentResult != this.punishmentNum) {
+            clearInterval(punishLoading)
             this.punishmentCount = 0
-            clearInterval(this.punishLoading);
-          } else if (this.punishmentCount === 3) {
+          } else if (this.punishmentCount = 3) {
+            clearInterval(punishLoading);
             this.mediaStatus = false
             this.pStatus = false
             this.punishment = false
-            clearInterval(this.punishLoading);
+            this.$emit('punishmentEmit', this.punishmentNum)
+            punishLoading = null;
           }
         }, 1000)
       }
     },
   },
   methods: {
+
     startVoteMotion(){
       this.mediaStatus = true
       this.skillTrue = false
