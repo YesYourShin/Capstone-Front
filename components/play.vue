@@ -194,9 +194,9 @@ export default {
     //   }, 3000)
     // });
 
-    this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
-      console.log(data)
-    })
+    // this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
+    //   console.log(data)
+    // })
 
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
       console.log(data.userNum, user);
@@ -273,18 +273,18 @@ export default {
 
     // userVideo.vue에서 얻어낸 유저 지목 값을 백엔드로 전송
     voteNumCheck(voteNum) {
-      // this.electedPlayer = voteNum;
-      console.log(voteNum);
+      console.log(typeof voteNum)
+      console.log(voteNum + '전송');
       this.$root.gameSocket.emit(GameEvent.VOTE, {
-        vote: voteNum,
+        vote: voteNum
       })
     },
 
     // 타이머 끝나면 이게 실행되고, 집계된 결과값을 가져온다.
     finishVote() {
       this.$root.gameSocket.emit(GameEvent.FINISHV);
+      console.log('vote result 요청')
     },
-
     // 사형시킬 유저가 특정되면 심판 투표를 진행
     punishmentVote() {
       this.$refs.billboard.startPunishmentVoteBoard();

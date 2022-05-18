@@ -38,37 +38,49 @@ export default {
     this.messageLogs = ['Fafia Start']
   },
   mounted() {
-
     // 유저의 vote 결과를 빌보드에 알려준다.
     this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
       console.log(data)
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].userNum === null) {
-          this.newMessage = `무효표 : ${data[i].voteNum} 표`
-        } else {
-          this.newMessage = `${data[i].userNum} : ${data[i].voteNum} 표`
-        }
-        this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
-        this.$forceUpdate()
-        if (data[i].voteNum > this.highVote) {
-          this.highVote = data[i].voteNum
-          this.equalVote = 1
-          this.highPlayer = data[i].userNum
-        } else if (data[i].voteNum == this.highVote) {
-          this.equalVote++
-        }
-      }
-      this.finishVoteBoard();
-      if (this.equalVote == 1 && this.highVote != 0) {
-        setTimeout(()=> {
-          this.$emit("punishmentVote")
-        }, 3000)
+      if (data == null) {
+          this.newMessage = `아무도 투표하지 않았습니다.`
+          this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+          this.$forceUpdate()
+          setTimeout(() => {
+            this.$emit("nightEvent")
+          },3000)
       } else {
-        setTimeout(() => {
-          this.$emit("nightEvent")
-          // night가 두개 간다. 이거 내일 즉시 수정
-        },3000)
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].userNum === null) {
+            this.newMessage = `무효표 : ${data[i].voteNum} 표`
+          } else {
+            this.newMessage = `${data[i].userNum} : ${data[i].voteNum} 표`
+          }
+          this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+          this.$forceUpdate()
+          if (data[i].voteNum > this.highVote) {
+            this.highVote = data[i].voteNum
+            this.equalVote = 1
+            this.highPlayer = data[i].userNum
+          } else if (data[i].voteNum == this.highVote) {
+            this.equalVote++
+          }
+        }
+        this.finishVoteBoard();
+        if (this.equalVote == 1 && this.highVote != 0) {
+          setTimeout(()=> {
+            this.$emit("punishmentVote")
+          }, 3000)
+        } else {
+          this.newMessage = `동률 발생으로 투표 무효`
+          this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+          this.$forceUpdate()
+          setTimeout(() => {
+            this.$emit("nightEvent")
+            // night가 두개 간다. 이거 내일 즉시 수정
+          },3000)
+        }
       }
+
     });
 
     // 유저의 punishment 결과를 빌보드에 알려준다.
@@ -97,15 +109,16 @@ export default {
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       console.log(data)
       console.log('직업사용 결과 받음')
-      if (data.userNum != null && data.die == true) {
+      if (data === null) {
+        console.log('평화로운 밤이었습니다.')
+      } else if (data.userNum != null && data.die == false) {
+        console.log(`${this.$store.state.stream.roomMembers[data.userNum-1].nickname}가 습격받았으나 의사의 도움으로 살아남았습니다.`)
+      } else if (data.userNum != null && data.die == true) {
         this.$store.commit('stream/killMember', data.userNum-1);
         this.$store.commit('stream/surviveMemberCheck');
         console.log(`${this.$store.state.stream.roomMembers[data.userNum-1].nickname}가 살해당했습니다.`)
-      } else if (data.userNum != null && data.die == false) {
-        console.log(`${this.$store.state.stream.roomMembers[data.userNum-1].nickname}가 습격받았으나 의사의 도움으로 살아남았습니다.`)
-      } else {
-        console.log('평화로운 밤이었습니다.')
       }
+
       this.$emit('victorySearch')
       // 만약 마피아 != 의사일 경우, killMember를 불러온다.
       // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
