@@ -350,7 +350,7 @@ export default {
         this.$root.gameSocket.emit(GameEvent.POLICE, {
           userNum : voteNum
         });
-      }
+      } // 이거
     },
 
     nightResult() {
