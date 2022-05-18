@@ -298,6 +298,7 @@ export default {
     // false가 엄지손가락을 올린 형태로 사형 반대이다.
     punishmentVoteCheck(punishmentNum) {
       // punishmentNum 은 boolean
+      console.log(punishmentNum)
       this.$root.gameSocket.emit(
         GameEvent.PUNISH,
         {
