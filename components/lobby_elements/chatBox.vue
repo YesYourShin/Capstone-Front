@@ -103,7 +103,8 @@
         />
       </svg> -->
       <div
-        class="p-1 cursor-pointer rounded-md hover:bg-gray-600/50 transition"
+        class="p-1 cursor-pointer rounded-md hover:bg-zinc-600/50 transition"
+        @click="sendMessage"
       >
         <svg
           class="w-6 h-6 text-amber-400"

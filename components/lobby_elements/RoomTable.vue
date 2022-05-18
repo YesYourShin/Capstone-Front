@@ -26,33 +26,33 @@
             >
               <div class="h-full bg-transparent">&nbsp</div>
               <div
-                class="px-6 py-2 text-base uppercase font-semibold text-left text-black"
+                class="px-6 py-2 text-base uppercase font-semibold text-left text-black flex justify-center"
               >
                 No.
               </div>
             </div>
             <div
-              class="col-span-5 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="col-span-5 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300 flex"
             >
               Room Name
             </div>
             <div
-              class="px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300 flex justify-center"
             >
               Mode
             </div>
             <div
-              class="px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300 flex justify-center"
             >
               Host
             </div>
             <div
-              class="col-span-2 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="col-span-2 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300 flex justify-center"
             >
               Users
             </div>
             <div
-              class="col-span-2 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300"
+              class="col-span-2 px-6 align-middle border border-solid py-2 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-amber-400 text-black border-amber-300 flex justify-center"
             >
               Capacity
             </div>
@@ -75,7 +75,7 @@
                       &nbsp
                     </div>
                     <div
-                      class="px-6 p-4 flex items-center align-middle text-amber-300 text-lg font-semibold"
+                      class="px-6 p-4 flex items-center align-middle text-amber-300 text-lg font-semibold justify-center"
                     >
                       {{ room.id }}
                     </div>
@@ -101,28 +101,52 @@
                     </span>
                   </div>
                   <div
-                    class="border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"
+                    class="border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4 justify-center"
                   >
                     {{ room.mode == "classic" ? "Classic" : "Extended" }}
                   </div>
                   <div
-                    class="border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"
+                    class="border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4 justify-center"
                   >
                     {{ room.members[0] ? room.members[0].nickname : "" }}
                   </div>
                   <div
-                    class="col-span-2 border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"
+                    class="col-span-2 border-t-0 px-6 align-middle flex-col items-center border-l-0 border-r-0 text-s p-4 justify-center"
                   >
-                    <img
-                      v-for="member in room.members"
-                      :key="member.userId"
-                      :src="member.image ? member.image.location : null"
-                      :alt="member.nickname"
-                      class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                    />
+                    <div class="flex justify-center items-center">
+                      <img
+                        v-for="(member, i) in room.members.slice(0, 5)"
+                        :key="member.userId"
+                        :src="
+                          member.image
+                            ? member.image.location
+                            : '/defaultProfile.png'
+                        "
+                        :alt="member.nickname"
+                        class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow bg-zinc-700"
+                        :class="{ '-ml-4': i > 0 }"
+                      />
+                    </div>
+                    <div
+                      v-if="room.members.length > 5"
+                      class="flex justify-center items-center -mt-4"
+                    >
+                      <img
+                        v-for="(member, i) in room.members.slice(5, 10)"
+                        :key="member.userId"
+                        :src="
+                          member.image
+                            ? member.image.location
+                            : '/defaultProfile.png'
+                        "
+                        :alt="member.nickname"
+                        class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow bg-zinc-700"
+                        :class="{ '-ml-4': i > 0 }"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="col-span-2 border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4"
+                    class="col-span-2 border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4 justify-center"
                   >
                     <div class="flex flex-col items-center">
                       <div class="relative w-full">
@@ -204,6 +228,11 @@ export default {
   },
   components: {
     ProgressBar,
+  },
+  data() {
+    return {
+      testArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    };
   },
   methods: {
     async onClickRoomButton(room) {

@@ -65,8 +65,10 @@
       </div>
     </div>
 
-    <div class="profileAlert grow" v-if="show2">
-      <Notifications :notifications="myNotifications"></Notifications>
+    <div class="h-full flex flex-col overflow-auto" v-if="show2">
+      <div class="profileAlert grow">
+        <Notifications :notifications="myNotifications"></Notifications>
+      </div>
     </div>
 
     <!-- <div id="score" class="profile6 grow overflow-auto" v-if="show3">

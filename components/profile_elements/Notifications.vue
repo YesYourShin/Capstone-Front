@@ -58,8 +58,11 @@
       </div>
     </div>
 
-    <div class="cancelButton" @click="cancel">
+    <div v-if="notifications.length" class="cancelButton" @click="cancel">
       <button>전체 삭제</button>
+    </div>
+    <div v-else class="text-zinc-500 text-center mt-4">
+      <p>There are no unread notifications.</p>
     </div>
   </div>
 </template>
@@ -132,7 +135,7 @@ export default {
                   params: {
                     id: res.data.data.id,
                     room: res.data.data.room,
-                    pin: "",
+                    pin: response.data.data.pin,
                   },
                 });
               })
