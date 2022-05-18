@@ -75,7 +75,7 @@ export default {
       skillTrue: null,
       isPuase : false,
       timer: null,
-      mediaStatus: false
+      mediaStatus: false,
     }
   },
   components: {
@@ -117,9 +117,8 @@ export default {
       this.mediaStatus = false
       this.pStatus = false
       this.punishment = false
-      if (this.punishmentNum === null) {
-        this.$emit('punishmentEmit', this.punishmentNum)
-      }
+      this.$emit('punishmentEmit', this.punishmentNum)
+      this.punishmentCount = 0
     }),
 
     this.$nuxt.$on('skillTimeFinish', (data) => {
@@ -158,13 +157,13 @@ export default {
       this.voteNum = newVoteResult
       this.voteCount = 0
       if (this.voteNum != 0) {
-        let voteLoading = setInterval(() => {
+        this.voteLoading = setInterval(() => {
           if (this.voteCount < 3) {
             this.voteCount += 1
           } else if (newVoteResult != this.voteNum) {
             this.voteCount = 0
             console.log('이거 안뜨면 안되냐')
-            clearInterval(voteLoading)
+            clearInterval(this.voteLoading)
           } else if (this.voteCount === 3) {
             this.voteCount = 0
             console.log('체크 완료')
@@ -172,7 +171,7 @@ export default {
             this.vStatus = false
             this.vote = false
             this.checkVoteMotion()
-            clearInterval(voteLoading)
+            clearInterval(this.voteLoading)
           }
         }, 1000)
       }
@@ -183,19 +182,19 @@ export default {
       this.checkNum = newCheckResult
       this.checkCount = 0
       if (this.checkNum === true || this.checkNum === false) {
-        let checkLoading = setInterval(() => {
+        this.checkLoading = setInterval(() => {
           if (this.checkCount < 3) {
             this.checkCount += 1
           } else if (newCheckResult != this.checkNum) {
             this.checkCount = 0
-            clearInterval(checkLoading)
+            clearInterval(this.checkLoading)
           } else if (this.checkCount === 3 && this.checkNum === true) {
             console.log('체크 인식 완료' + this.checkNum)
             this.mediaStatus = false
             this.cStatus = false
             this.check = false
             this.checkCount = 0
-            clearInterval(checkLoading)
+            clearInterval(this.checkLoading)
           } else if (this.checkCount === 3 && this.checkNum === false) {
             this.mediaStatus = false
             this.cStatus = false
@@ -203,7 +202,7 @@ export default {
             this.checkCount = 0
             this.startVoteMotion()
             console.log('투표 다시')
-            clearInterval(checkLoading)
+            clearInterval(this.checkLoading)
           }
         }, 1000)
       }
@@ -223,8 +222,6 @@ export default {
             this.pStatus = false
             this.punishment = false
             clearInterval(this.punishLoading);
-            this.$emit('punishmentEmit', this.punishmentNum)
-            this.punishmentCount = 0
           }
         }, 1000)
       }
