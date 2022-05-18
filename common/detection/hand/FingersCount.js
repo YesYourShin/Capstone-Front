@@ -78,7 +78,7 @@ export const fingersCount = (results, canvasElement, canvasCtx, vStatus) => {
     console.log("no fingers");
   }
 
-  console.log(voteResult)
+  // console.log(voteResult)
 
     return voteResult;
 
