@@ -233,6 +233,7 @@ export default {
             this.pStatus = false
             this.punishment = false
             this.$emit('punishmentEmit', this.punishmentNum)
+            console.log(this.punishmentNum + '죽음 투표')
             punishLoading = null;
           }
         }, 1000)
@@ -240,7 +241,6 @@ export default {
     },
   },
   methods: {
-
     startVoteMotion(){
       this.mediaStatus = true
       this.skillTrue = false

@@ -53,7 +53,7 @@ export default {
           if (data[i].userNum === null) {
             this.newMessage = `무효표 : ${data[i].voteNum} 표`
           } else {
-            this.newMessage = `${data[i].userNum} : ${data[i].voteNum} 표`
+            this.newMessage = `${this.$store.state.stream.roomMembers[i].nickname} : ${data[i].voteNum} 표`
           }
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
           this.$forceUpdate()
@@ -83,14 +83,14 @@ export default {
     });
     // 유저의 punishment 결과를 빌보드에 알려준다.
     this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
-      console.log(data)
+      console.log('합산결과' + data)
       console.log(this.$store.state.stream.surviveMembers)
       if(data >= this.$store.state.stream.surviveMembers/2) {
         this.finishPunishmentVoteBoard();
         this.newMessage = `찬성 : ${data} 표`
         this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
-        this.newMessage = `반대 : ${this.$store.state.stream.roomMembers-data} 표`
-        this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+        // this.newMessage = `반대 : ${this.$store.state.stream.roomMembers-data} 표`
+        // this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
         this.$forceUpdate()
         this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
           console.log(data)
