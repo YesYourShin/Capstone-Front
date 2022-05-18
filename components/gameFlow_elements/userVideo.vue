@@ -94,49 +94,49 @@ export default {
 
   },
   created() {
-    this.$nuxt.$on('voteTimeFinish', (data) => {
-      console.log(data)
-      clearInterval(this.voteLoading)
-      this.mediaStatus = false
-      this.vStatus = false
-      this.vote = false
-      this.cStatus = false
-      this.check = false
-      if(this.skillTrue === false && this.checkNum === true) {
-        console.log('투표 값 넘겨줌' + this.voteNum)
-        this.$emit('voteNumEmit', this.voteNum)
-      } else {
-        console.log('투표 값 널로 넘겨줌')
-        this.$emit('voteNumEmit', null)
-      }
-    }),
+    // this.$nuxt.$on('voteTimeFinish', (data) => {
+    //   console.log(data)
+    //   clearInterval(this.voteLoading)
+    //   this.mediaStatus = false
+    //   this.vStatus = false
+    //   this.vote = false
+    //   this.cStatus = false
+    //   this.check = false
+    //   if(this.skillTrue === false && this.checkNum === true) {
+    //     console.log('투표 값 넘겨줌' + this.voteNum)
+    //     this.$emit('voteNumEmit', this.voteNum)
+    //   } else {
+    //     console.log('투표 값 널로 넘겨줌')
+    //     this.$emit('voteNumEmit', null)
+    //   }
+    // }),
 
-    this.$nuxt.$on('punishmentTimeFinish', (data) => {
-      console.log(data)
-      clearInterval(this.punishLoading)
-      this.mediaStatus = false
-      this.pStatus = false
-      this.punishment = false
-      this.$emit('punishmentEmit', this.punishmentNum)
-      this.punishmentCount = 0
-    }),
+    // this.$nuxt.$on('punishmentTimeFinish', (data) => {
+    //   console.log(data)
+    //   clearInterval(this.punishLoading)
+    //   this.mediaStatus = false
+    //   this.pStatus = false
+    //   this.punishment = false
+    //   this.$emit('punishmentEmit', this.punishmentNum)
+    //   this.punishmentCount = 0
+    // }),
 
-    this.$nuxt.$on('skillTimeFinish', (data) => {
-      console.log(data)
-      clearInterval(this.voteLoading)
-      this.mediaStatus = false
-      this.vStatus = false
-      this.vote = false
-      this.cStatus = false
-      this.check = false
-      if(this.skillTrue === true && this.checkNum === true) {
-        this.$emit('skillNumEmit', this.voteNum)
-        console.log('스킬 값 넘겨줌' + this.voteNum)
-      } else {
-        this.$emit('skillNumEmit', null)
-        console.log('스킬 값 널로 넘겨줌')
-      }
-    })
+    // this.$nuxt.$on('skillTimeFinish', (data) => {
+    //   console.log(data)
+    //   clearInterval(this.voteLoading)
+    //   this.mediaStatus = false
+    //   this.vStatus = false
+    //   this.vote = false
+    //   this.cStatus = false
+    //   this.check = false
+    //   if(this.skillTrue === true && this.checkNum === true) {
+    //     this.$emit('skillNumEmit', this.voteNum)
+    //     console.log('스킬 값 넘겨줌' + this.voteNum)
+    //   } else {
+    //     this.$emit('skillNumEmit', null)
+    //     console.log('스킬 값 널로 넘겨줌')
+    //   }
+    // })
   },
   async mounted() {
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
@@ -156,22 +156,23 @@ export default {
       console.log("Vote Result", newVoteResult);
       this.voteNum = newVoteResult
       this.voteCount = 0
-      if (this.voteNum != 0) {
+      if (this.voteNum != null) {
         this.voteLoading = setInterval(() => {
           if (this.voteCount < 3) {
             this.voteCount += 1
-          } else if (newVoteResult != this.voteNum) {
-            this.voteCount = 0
-            console.log('이거 안뜨면 안되냐')
+            console.log(this.voteCount)
+          } else if (this.voteCount == 3) {
             clearInterval(this.voteLoading)
-          } else if (this.voteCount === 3) {
-            this.voteCount = 0
             console.log('체크 완료')
             this.mediaStatus = false
             this.vStatus = false
             this.vote = false
             this.checkVoteMotion()
-            clearInterval(this.voteLoading)
+            this.voteLoading = null
+          }
+          if (newVoteResult != this.voteNum) {
+            this.voteCount = 0
+            console.log('이거 안뜨면 안되냐')
           }
         }, 1000)
       }
@@ -187,22 +188,27 @@ export default {
             this.checkCount += 1
           } else if (newCheckResult != this.checkNum) {
             this.checkCount = 0
-            clearInterval(this.checkLoading)
           } else if (this.checkCount === 3 && this.checkNum === true) {
             console.log('체크 인식 완료' + this.checkNum)
-            this.mediaStatus = false
-            this.cStatus = false
-            this.check = false
-            this.checkCount = 0
             clearInterval(this.checkLoading)
-          } else if (this.checkCount === 3 && this.checkNum === false) {
             this.mediaStatus = false
             this.cStatus = false
             this.check = false
+            this.vStatus = false
+            this.vote = false
+            this.checkCount = 0
+            this.checkLoading = null
+          } else if (this.checkCount === 3 && this.checkNum === false) {
+            clearInterval(this.checkLoading)
+            this.mediaStatus = false
+            this.cStatus = false
+            this.check = false
+            this.vStatus = false
+            this.vote = false
             this.checkCount = 0
             this.startVoteMotion()
             console.log('투표 다시')
-            clearInterval(this.checkLoading)
+            this.checkLoading = null
           }
         }, 1000)
       }
