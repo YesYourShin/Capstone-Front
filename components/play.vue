@@ -278,6 +278,7 @@ export default {
       this.$root.gameSocket.emit(GameEvent.VOTE, {
         vote: voteNum
       })
+      this.finishVote();
     },
 
     // 타이머 끝나면 이게 실행되고, 집계된 결과값을 가져온다.

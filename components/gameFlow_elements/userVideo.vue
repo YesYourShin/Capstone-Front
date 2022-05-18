@@ -103,11 +103,11 @@ export default {
       this.cStatus = false
       this.check = false
       if(this.skillTrue === false && this.checkNum === true) {
-        this.$emit('voteNumEmit', this.voteNum)
         console.log('투표 값 넘겨줌' + this.voteNum)
+        this.$emit('voteNumEmit', this.voteNum)
       } else {
-        this.$emit('voteNumEmit', null)
         console.log('투표 값 널로 넘겨줌')
+        this.$emit('voteNumEmit', null)
       }
     }),
 
@@ -161,11 +161,11 @@ export default {
         let voteLoading = setInterval(() => {
           if (this.voteCount < 3) {
             this.voteCount += 1
-          } else if (newVoteResult != this.voteNum && this.vote==99999) {
+          } else if (newVoteResult != this.voteNum) {
             this.voteCount = 0
             console.log('이거 안뜨면 안되냐')
             clearInterval(voteLoading)
-          } else if (this.voteCount > 2) {
+          } else if (this.voteCount === 3) {
             this.voteCount = 0
             console.log('체크 완료')
             this.mediaStatus = false
@@ -189,14 +189,14 @@ export default {
           } else if (newCheckResult != this.checkNum) {
             this.checkCount = 0
             clearInterval(checkLoading)
-          } else if (this.checkCount > 2 && this.checkNum == true) {
+          } else if (this.checkCount === 3 && this.checkNum === true) {
             console.log('체크 인식 완료' + this.checkNum)
             this.mediaStatus = false
             this.cStatus = false
             this.check = false
             this.checkCount = 0
             clearInterval(checkLoading)
-          } else if (this.checkCount > 2 && this.checkNum == false) {
+          } else if (this.checkCount === 3 && this.checkNum === false) {
             this.mediaStatus = false
             this.cStatus = false
             this.check = false
@@ -218,7 +218,7 @@ export default {
           if (newPunishmentResult != this.punishmentNum) {
             this.punishmentCount = 0
             clearInterval(this.punishLoading);
-          } else if (this.punishmentCount > 2) {
+          } else if (this.punishmentCount === 3) {
             this.mediaStatus = false
             this.pStatus = false
             this.punishment = false

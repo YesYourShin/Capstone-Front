@@ -110,9 +110,8 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$emit("finishVote")
-          this.pomodoroInstance = null
           this.$nuxt.$emit('voteTimeFinish', '투표 타이머 중단')
+          this.pomodoroInstance = null
         }
       }, 500);
     },
@@ -130,9 +129,9 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$emit("finishPunishmentVote")
-          this.pomodoroInstance = null
           this.$nuxt.$emit('punishmentTimeFinish', '찬반 타이머 중단')
+          this.pomodoroInstance = null
+
         }
       },500);
     },
@@ -150,10 +149,10 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$emit("nightResult")
+          this.$nuxt.$emit('skillTimeFinish', '능력 타이머 중단')
           console.log('타이머 종료, 밤 결과 실행')
           this.pomodoroInstance = null
-          this.$nuxt.$emit('skillTimeFinish', '능력 타이머 중단')
+
         }
       }, 500);
     },
