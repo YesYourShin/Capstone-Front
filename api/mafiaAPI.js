@@ -295,7 +295,7 @@ export const sendDM = ({ message, friendId }) => {
 
 export const getRecord = (nickname, page, item) => {
   return instance.get(
-    `/game/gamelists/by-nickname/${nickname}?page=${page}&item=${item}`
+    `/games/gamelists/by-nickname/${nickname}?page=${page}&item=${item}`
   );
 };
 
