@@ -301,6 +301,7 @@ export default {
 
     this.$root.roomSocket.on(GameRoomEvent.START, (data) => {
       console.log(data);
+      this.$store.commit('stream/saveBackupMembers');
       if (data.start) {
         this.goToGame();
       }

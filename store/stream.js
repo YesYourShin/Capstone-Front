@@ -73,11 +73,17 @@ export const mutations = {
         stopMediaStream(mediaStream.stream)
       }
     }
+    function kill_own_feed() {
+      for (let mediaStream of state.backupMembers) {
+        stopMediaStream(mediaStream.stream)
+      }
+    }
 
     kill_own_feed();
 
     // state.subscribedStreams = [];
     state.roomMembers = [];
+    state.backupMembers = [];
     state.joinedRoom = null;
     state.entered = null;
     state.left = null;
@@ -134,7 +140,6 @@ export const mutations = {
         }
       }
     }
-    state.backupMembers = JSON.parse(JSON.stringify(state.roomMembers));
   },
   addRoomMember(state, data) {
     console.log('addRoomMember activated');
@@ -145,7 +150,6 @@ export const mutations = {
     } else {
       state.roomMembers = [...state.roomMembers, data];
     }
-    state.backupMembers = JSON.parse(JSON.stringify(state.roomMembers));
   },
   removeRoomMember(state, data) {
     console.log('removeRoomMember activated');
@@ -159,7 +163,6 @@ export const mutations = {
         i--;
       }
     }
-    state.backupMembers = JSON.parse(JSON.stringify(state.roomMembers));
   },
   destroyRoomMembers(state) {
     console.log('destroyRoomMembers activated');
@@ -225,8 +228,11 @@ export const mutations = {
       target.speaking = data.speaking;
     }
   },
+  saveBackupMembers(state) {
+    state.backupMembers = [...state.roomMembers]
+  },
   loadBackupMembers(state) {
-    state.roomMembers = JSON.parse(JSON.stringify(state.backupMembers));
+    state.roomMembers = [...state.backupMembers]
   }
 }
 

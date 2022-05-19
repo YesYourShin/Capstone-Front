@@ -25,6 +25,7 @@
       @punishmentEmit="punishmentVoteCheck"
       @skillNumEmit="skillNumCheck"
       v-bind:flag="flag"
+      v-bind:anotherMafia="anotherMafia"
       />
     </div>
     <sideBar
@@ -83,6 +84,7 @@ export default {
       startTime: null,
       endTime: null,
       myJob: null,
+      anotherMafia: null,
       // flag는 하위 컴포넌트에서 상속되게 해야한다.
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
@@ -95,7 +97,7 @@ export default {
 
   mounted() {
     window.addEventListener('beforeunload', this.unLoadEvent);
-
+    this.$store.commit('stream/loadBackupMembers');
     // let newRemoteFeed = null;
     this.gameSocketSet();
 

@@ -2,7 +2,7 @@
     <div class="grid grid-cols-5 gap-4 justify-evenly">
       <div class="videobox justify-self-center mx-2 mb-3 w-full rounded " v-for="(s, n) in roomMembers" :key="s.userId">
           <div class="aspect-video" >
-            <div :class="{ 'w-[360px] bg-black' : flag, 'w-[360px] bg-black opacity-0' : !flag}">
+            <!-- <div :class="{ 'w-[360px] bg-black' : flag, 'w-[360px] bg-black opacity-0' : !flag}"> -->
             <div v-if="s.stream" class="videoCut">
               <video
                     v-if="s.nickname !== myInfo.profile.nickname"
@@ -29,7 +29,7 @@
               ></canvas>
             </div>
           </div>
-          </div>
+          <!-- </div> -->
             <!-- 여기까지 div v-if s.stream -->
             <div class="grid grid-cols-4 font-semibold userInfo">
               <div

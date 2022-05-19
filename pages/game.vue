@@ -59,9 +59,10 @@ export default {
     };
   },
   beforeDestroy() {
-    if (this.isRoomOut) {
-      this.exit();
-    }
+    // if (this.isRoomOut) {
+    //   this.exit();
+    // }
+    this.exit();
   },
 };
 </script>
