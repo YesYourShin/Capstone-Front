@@ -48,6 +48,7 @@
               >
                 Lv.{{ s.level }}
               </div>
+              <!-- 첫날 밤, 마피아 유저는 이름 빨간색 -->
               <div class="col-span-3 bg-white px-1">
                 {{ s.nickname }}
               </div>
@@ -115,6 +116,12 @@ export default {
 
   },
   created() {
+    //! 현 문제점
+    // * data로 선언한 것을 clearInterval하면 먹히지 않음
+    // * 존재하지 않는 유저를 지목할 경우 취소해야 함.
+    // * 자신이 몇번을 지목했는지, 알 수 있도록 표시가 필요함.
+    // * 두번 찍히는거 생긴다면 정확히 원인 파악 필요!
+
     // this.$nuxt.$on('voteTimeFinish', (data) => {
     //   console.log(data)
     //   clearInterval(this.voteLoading)
@@ -168,7 +175,6 @@ export default {
       this.myCtx = this.myCanvas.getContext("2d");
     }
     await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
-
   },
   watch: {
     // 질문이 변경될 때 마다 이 기능이 실행됩니다.
@@ -176,24 +182,24 @@ export default {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
       this.voteNum = newVoteResult
+      this.voteNum = newVoteResult
       this.voteCount = 0
-      if (this.voteNum != 0) {
-        let voteLoading = setInterval(() => {
+      if (this.voteNum !== 0) {
+        this.voteLoading = setInterval(() => {
           this.voteCount += 1
-          if (newVoteResult != this.voteNum) {
-            clearInterval(voteLoading);
+          if (newVoteResult !== this.voteNum) {
+            clearInterval(this.voteLoading);
             this.voteCount = 0
             console.log('손가락 다시')
-          } else if (this.voteCount = 3) {
-            clearInterval(voteLoading)
+          } else if (this.voteCount === 3) {
+            clearInterval(this.voteLoading)
             console.log('체크 완료')
-            this.mediaStatus = false
+            this.mediaStatus = null
             this.vStatus = false
             this.vote = false
             this.checkVoteMotion()
-            voteLoading = null
           }
-          if (newVoteResult != this.voteNum) {
+          if (newVoteResult !== this.voteNum) {
             this.voteCount = 0
             console.log('이거 안뜨면 안되냐')
           }
@@ -203,19 +209,19 @@ export default {
     // ! 오류 뜨는거 잡아야 됨 캠 안꺼지느ㅏㄴ거랑 반복 wathc
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
+      this.voteLoading = null
       this.checkNum = newCheckResult
       this.checkCount = 0
-      if (this.checkNum === true || this.checkNum === false) {
-        let checkLoading = setInterval(() => {
+      if (typeof this.checkNum === 'boolean') {
+        this.checkLoading = setInterval(() => {
           this.checkCount += 1
-          if (newCheckResult != this.checkNum) {
-            clearInterval(checkLoading)
-            this.checkCount = 0
-          } else if (this.checkCount = 3) {
-            clearInterval(checkLoading)
-            console.log('체크 인식 완료' + this.checkNum)
+          if (newCheckResult !== this.checkNum) {
             clearInterval(this.checkLoading)
-            this.mediaStatus = false
+            this.checkCount = 0
+          } else if (this.checkCount === 3) {
+            clearInterval(this.checkLoading)
+            console.log('체크 인식 완료' + this.checkNum)
+            this.mediaStatus = null
             this.cStatus = false
             this.check = false
             // 스킬 사용이 아니고, 체크했을 경우
@@ -235,28 +241,31 @@ export default {
               this.skillMotion()
               console.log('스킬 다시')
             }
+            this.checkLoading = null;
           }
         }, 1000)
+
       }
     },
-    punishmentResult: function (newPunishmentResult) {
+    punishmentResult: function (newPunishmentResult) { // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
-      this.punishmentNum = newPunishmentResult
+      this.punishmentNum = newPunishmentResult // this.punishmentNum == 'a'
       this.punishmentCount = 0
-      if (this.punishmentNum == true || this.punishmentNum == false) {
-        let punishLoading = setInterval(() => {
+      if (typeof this.punishmentNum === 'boolean') { // 0, undefined, null, NaN,  // true, 1, '나다라' {}, []
+        this.punishLoading = setInterval(() => { // this.punishLoading의 주소값이 계속 업데이트
           this.punishmentCount += 1
-          if (newPunishmentResult != this.punishmentNum) {
-            clearInterval(punishLoading)
+          if (newPunishmentResult !== this.punishmentNum) {
+            clearInterval(this.punishLoading) // this.pushiLoading의 업데이트 된 주소값을 계속 참조
+            // 그래서 기존 것을 없앨수가 없음
             this.punishmentCount = 0
-          } else if (this.punishmentCount = 3) {
-            clearInterval(punishLoading);
-            this.mediaStatus = false
+          } else if (this.punishmentCount === 3) {
+            clearInterval(this.punishLoading);
+            this.mediaStatus = null
             this.pStatus = false
             this.punishment = false
             this.$emit('punishmentEmit', this.punishmentNum)
             console.log(this.punishmentNum + '죽음 투표')
-            punishLoading = null;
+            this.punishLoading = null;
           }
         }, 1000)
       }

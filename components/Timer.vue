@@ -94,6 +94,7 @@ export default {
           (this.contentProgress = 0),
           this.$emit("startVote")
           this.pomodoroInstance = null
+          console.log('아침 타이머 중단')
         }
       }, 330);
     },
@@ -114,6 +115,7 @@ export default {
           this.$nuxt.$emit('voteTimeFinish', '투표 타이머 중단')
           this.$emit('finishVote')
           this.pomodoroInstance = null
+          console.log('투표 타이머 중단')
         }
       }, 330);
     },
@@ -134,6 +136,7 @@ export default {
           this.$nuxt.$emit('punishmentTimeFinish', '찬반 타이머 중단')
           this.$emit('finishPunishmentVote')
           this.pomodoroInstance = null
+          console.log('심판 타이머 중단')
         }
       },330);
     },

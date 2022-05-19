@@ -31,7 +31,6 @@
     <sideBar
       ref="sideBarSet"
     ></sideBar>
-
   </div>
 </template>
 
