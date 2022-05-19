@@ -37,6 +37,11 @@
         value="메모삭제"
       />
     </div>
+    <div>
+      <!-- <button v-on:click="cameraSwitch(true)">camera on</button> -->
+      <button v-on:click="mediaStatus = true">camera on</button>
+      <button v-on:click="mediaStatus = false">camera off</button>
+    </div>
   </div>
 </template>
 
@@ -57,15 +62,16 @@ export default {
       landmarks: [],
       topLeftLandmarks: [],
       bottomRightLandmarks: [],
-      myVideo: false,
-      myCanvas: false,
-      myCtx: false,
+      // myVideo: false,
+      // myCanvas: false,
+      // myCtx: false,
       othersLandmarks: [],
       socket: null,
       testLandmark: {},
       testImage: {},
       camera: null,
-      // mediaStatus: true,
+      faceDetection: null,
+      mediaStatus: true,
       btStatus: null,
     };
   },
@@ -126,9 +132,7 @@ export default {
       //   transports: ["websocket"],
       // });
       // 자기 비디오랑 캔버스
-      this.myVideo = document.getElementById(
-        `remote${this.myInfo.profile.id}`
-      );
+      this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
       this.myCanvas = document.getElementsByClassName(
         `output_canvas${this.myInfo.profile.id}`
       )[0];
@@ -181,23 +185,25 @@ export default {
         // 자신의 얼굴 랜드마크 확인
         console.log(landmarks);
         canvasCtx.save();
-        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        canvasCtx.translate(canvasElement.width, 0);
-        canvasCtx.scale(-1, 1);
+        // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        // canvasCtx.translate(canvasElement.width, 0);
+        // canvasCtx.scale(-1, 1);
 
-        canvasCtx.drawImage(
-          videoElement,
-          0,
-          0,
-          canvasElement.width,
-          canvasElement.height
-        );
+        canvasCtx.fillRect(10, 10, 50, 50);
 
-        if (landmarks.length) {
-          landmarks[0].landmarks.forEach((landmark) => {
-            canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
-          });
-        }
+        // canvasCtx.drawImage(
+        //   videoElement,
+        //   0,
+        //   0,
+        //   canvasElement.width,
+        //   canvasElement.height
+        // );
+
+        // if (landmarks.length) {
+        //   landmarks[0].landmarks.forEach((landmark) => {
+        //     canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
+        //   });
+        // }
 
         await this.postLandmarks(landmarks);
         await this.getLandmarks();
@@ -321,6 +327,7 @@ export default {
     },
 
     memoJob(job, id) {
+      console.log(job);
       switch (job) {
         case "citizen":
           this.testImage[id] = {

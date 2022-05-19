@@ -8,7 +8,7 @@
         상제 정보 보기
       </button>
     </div>
-    <div v-if="onOff" class="transition-all">
+    <div v-if="onOff">
       <table
         class="text-center m-4 w-[19rem] table-fixed break-all cursor-default"
       >
