@@ -2,9 +2,8 @@ import Vue from 'vue'
 
 export const state = () => ({
   joinedRoom: null,
-  currentRoomInfo: null,
   roomMembers: [],
-  publishStream: null,
+  backupMembers: [],
   subscribedStreams: [],
   subscribedFeeds: [],
   storePlugin: null,
@@ -51,7 +50,6 @@ export const mutations = {
     }
   },
   removeSubscriber(state, rfid) {
-    console.log(rfid);
 
     for (let i = 0; i<state.subscribedStreams.length; i++) {
       console.log('index: ', i, 'rfid: ', state.subscribedStreams[i].rfid);
@@ -63,7 +61,6 @@ export const mutations = {
       }
     }
     // console.log("filtered", filtered);
-    console.log("subscribedStreams", state.subscribedStreams);
     // state.subscribedFeeds.forEach(e => {
     //   if (e.rfid == rfid) {
     //     e.detach
@@ -75,10 +72,6 @@ export const mutations = {
       for (let mediaStream of state.roomMembers) {
         stopMediaStream(mediaStream.stream)
       }
-
-      // if (state.publishStream) {
-      //   stopMediaStream(state.publishStream.stream)
-      // }
     }
 
     kill_own_feed();
@@ -92,26 +85,6 @@ export const mutations = {
 
     console.log("deleted all subscStreams");
   },
-  // setPublishStream(state, data) {
-
-  //   function findnick(array, goal) {
-  //     if (array === null) return;
-  //     for (const val of array) {
-  //       if (val.nickname === goal.nickname) return val;
-  //     }
-  //   }
-  //   let target = findnick(state.roomMembers, data);
-  //   if (target) {
-  //     if (target.stream) return;
-  //     Object.assign(target, data);
-  //   }
-
-
-  //   // state.publishStream = data;
-  // },
-  subscribeFeed(state, data) {
-    state.subscribedFeeds.push(data);
-  },
   onRoomOut(state) {
     state.isRoomOut = true;
   },
@@ -124,12 +97,6 @@ export const mutations = {
   resetLeft(state) {
     state.left = null;
   },
-  setCurrentRoomInfo(state, data) {
-    state.currentRoomInfo = data;
-  },
-  setCurrentRoomMember(state, data) {
-    state.currentRoomInfo.members = data;
-  },
   setRoomMembers(state, data) {
     function find(array, goal) {
       for (const val of array) {
@@ -137,7 +104,7 @@ export const mutations = {
       }
     }
     console.log("setRoomMembers", data);
-    if (state.roomMembers === null) {
+    if (state.roomMembers === []) {
       state.roomMembers = data;
     } else {
       if (data.length >= state.roomMembers.length) {
@@ -167,6 +134,7 @@ export const mutations = {
         }
       }
     }
+    state.backupMembers = JSON.parse(JSON.stringify(state.roomMembers));
   },
   addRoomMember(state, data) {
     console.log('addRoomMember activated');
@@ -177,6 +145,7 @@ export const mutations = {
     } else {
       state.roomMembers = [...state.roomMembers, data];
     }
+    state.backupMembers = JSON.parse(JSON.stringify(state.roomMembers));
   },
   removeRoomMember(state, data) {
     console.log('removeRoomMember activated');
@@ -190,10 +159,12 @@ export const mutations = {
         i--;
       }
     }
+    state.backupMembers = JSON.parse(JSON.stringify(state.roomMembers));
   },
   destroyRoomMembers(state) {
     console.log('destroyRoomMembers activated');
     state.roomMembers = [];
+    state.backupMembers = [];
   },
   // 게임 시작시 유저들의 죽음 정보를 갱신
   setRoomMembersDie(state, data) {
@@ -253,6 +224,9 @@ export const mutations = {
     if (target) {
       target.speaking = data.speaking;
     }
+  },
+  loadBackupMembers(state) {
+    state.roomMembers = JSON.parse(JSON.stringify(state.backupMembers));
   }
 }
 
@@ -260,7 +234,6 @@ export const getters = {
   getJoinedRoom: state => state.joinedRoom,
   getSubscribedStreams: state => state.subscribedStreams,
   getSubscribedFeeds: state => state.subscribedFeeds,
-  getPublishStream: state => state.publishStream,
 }
 
 
