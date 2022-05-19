@@ -61,12 +61,12 @@ export default {
             this.highVote = data[i].voteNum
             this.equalVote = 1
             this.highPlayer = data[i].userNum
-          } else if (data[i].voteNum == this.highVote) {
+          } else if (data[i].voteNum === this.highVote) {
             this.equalVote++
           }
         }
         this.finishVoteBoard();
-        if (this.equalVote == 1 && this.highVote != 0) {
+        if (this.equalVote === 1 && this.highVote !== 0) {
           setTimeout(()=> {
             this.$emit("punishmentVote")
           }, 3000)
@@ -110,9 +110,9 @@ export default {
       console.log('직업사용 결과 받음')
       if (data === null) {
         console.log('평화로운 밤이었습니다.')
-      } else if (data.userNum != null && data.die == false) {
+      } else if (data.userNum !== null && data.die === false) {
         console.log(`${this.$store.state.stream.roomMembers[data.userNum-1].nickname}가 습격받았으나 의사의 도움으로 살아남았습니다.`)
-      } else if (data.userNum != null && data.die == true) {
+      } else if (data.userNum !== null && data.die === true) {
         this.$store.commit('stream/killMember', data.userNum-1);
         this.$store.commit('stream/surviveMemberCheck');
         console.log(`${this.$store.state.stream.roomMembers[data.userNum-1].nickname}가 살해당했습니다.`)

@@ -127,15 +127,15 @@ export default {
       for (let item of data) {
         console.log(item.job);
         this.$store.commit('stream/setRoomMembersJob', item);
-        if (item.job == "MAFIA") {
+        if (item.job === "MAFIA") {
           this.$refs.sideBarSet.myJobMafia();
           this.$refs.billboard.grantMafia();
           this.myJob = item.job
-        } else if (item.job == "POLICE") {
+        } else if (item.job === "POLICE") {
           this.$refs.sideBarSet.myJobPolice();
           this.$refs.billboard.grantPolice();
           this.myJob = item.job
-        } else if (item.job == "DOCTOR") {
+        } else if (item.job === "DOCTOR") {
           this.$refs.sideBarSet.myJobDoctor();
           this.$refs.billboard.grantDoctor();
           this.myJob = item.job
@@ -243,6 +243,7 @@ export default {
 
     // 아침 이벤트 발생,
     morningEvent() {
+      console.log(this.$store.state.stream.roomMembers)
       this.$refs.billboard.morningEventBoard();
       console.log('아침 시작')
       // this.morningAudio.play()
@@ -328,12 +329,12 @@ export default {
       this.$refs.billboard.nightEventBoard();
       setTimeout(() => {
         this.$refs.timer.nightEvent();
-        if (this.myJob == "MAFIA") {
+        if (this.myJob === "MAFIA") {
          this.$refs.userVideo.skillMotion();
-        } else if (this.myJob == "DOCTOR") {
+        } else if (this.myJob === "DOCTOR") {
           // select를 추가해야 할듯
           this.$refs.userVideo.skillMotion();
-        } else if (this.myJob == "POLICE") {
+        } else if (this.myJob === "POLICE") {
           // select를 추가해야 할듯
           this.$refs.userVideo.skillMotion();
         }
@@ -341,15 +342,15 @@ export default {
     },
 
     skillNumCheck(voteNum) {
-      if (this.myJob == "MAFIA") {
+      if (this.myJob === "MAFIA") {
         this.$root.gameSocket.emit(GameEvent.MAFIA, {
           userNum : voteNum
         });
-      } else if (this.myJob == 'DOCTOR') {
+      } else if (this.myJob === 'DOCTOR') {
         this.$root.gameSocket.emit(GameEvent.DOCTOR, {
           userNum : voteNum
         });
-      } else if (this.myJob == 'POLICE') {
+      } else if (this.myJob === 'POLICE') {
         this.$root.gameSocket.emit(GameEvent.POLICE, {
           userNum : voteNum
         });

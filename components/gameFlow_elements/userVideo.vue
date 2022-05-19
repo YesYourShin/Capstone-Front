@@ -117,10 +117,10 @@ export default {
   },
   created() {
     //! 현 문제점
-    // * data로 선언한 것을 clearInterval하면 먹히지 않음
+    // * data로 선언한 것을 clearInterval하면 먹히지 않음 (해결)
     // * 존재하지 않는 유저를 지목할 경우 취소해야 함.
     // * 자신이 몇번을 지목했는지, 알 수 있도록 표시가 필요함.
-    // * 두번 찍히는거 생긴다면 정확히 원인 파악 필요!
+    // * 두번 찍히는거 생긴다면 정확히 원인 파악 필요! (해결)
 
     // this.$nuxt.$on('voteTimeFinish', (data) => {
     //   console.log(data)
@@ -181,30 +181,32 @@ export default {
     // Todo 없는 번호 찍으면 다시 투표하게
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
-      this.voteNum = newVoteResult
-      this.voteNum = newVoteResult
-      this.voteCount = 0
-      if (this.voteNum !== 0) {
-        this.voteLoading = setInterval(() => {
+      if (newVoteResult > 0  && newVoteResult <= this.$store.state.stream.roomMembers.length && newVoteResult !== null) {
+        this.voteNum = newVoteResult
+        this.voteCount = 0
+        if (this.$store.state.stream.roomMembers[this.voteNum-1].die === false) {
+          this.voteLoading = setInterval(() => {
           this.voteCount += 1
           if (newVoteResult !== this.voteNum) {
             clearInterval(this.voteLoading);
             this.voteCount = 0
             console.log('손가락 다시')
           } else if (this.voteCount === 3) {
-            clearInterval(this.voteLoading)
-            console.log('체크 완료')
-            this.mediaStatus = null
-            this.vStatus = false
-            this.vote = false
-            this.checkVoteMotion()
-          }
+              clearInterval(this.voteLoading)
+              console.log('체크 완료')
+              this.mediaStatus = null
+              this.vStatus = false
+              this.vote = false
+              this.checkVoteMotion()
+            }
           if (newVoteResult !== this.voteNum) {
             this.voteCount = 0
             console.log('이거 안뜨면 안되냐')
           }
         }, 1000)
       }
+      }
+
     },
     // ! 오류 뜨는거 잡아야 됨 캠 안꺼지느ㅏㄴ거랑 반복 wathc
     checkResult: function (newCheckResult) {
