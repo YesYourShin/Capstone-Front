@@ -16,7 +16,6 @@
       z-index: 1;
       // position: absolute;
     }
-
     video {
       width: 360px;
       background-color: orange;
@@ -31,17 +30,16 @@
       top: -203px;
       position: relative;
       z-index: 2;
-      // position: absolute;
+
     }
     .userInfo {
       width: 361px;
       height: 30px;
       line-height: 30px;
-      // padding-left: 5px;
       top: -1px;
       background-color: #ffffff;
       position: relative;
-      z-index: 3;
+      z-index: 4;
     }
 
 }

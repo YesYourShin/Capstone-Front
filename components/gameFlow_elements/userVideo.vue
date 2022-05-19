@@ -1,9 +1,8 @@
 <template>
     <div class="grid grid-cols-5 gap-4 justify-evenly">
       <div class="videobox justify-self-center mx-2 mb-3 w-full rounded " v-for="(s, n) in roomMembers" :key="s.userId">
-          <div class="aspect-video" >
-            <!-- <div :class="{ 'w-[360px] bg-black' : flag, 'w-[360px] bg-black opacity-0' : !flag}"> -->
-            <div v-if="s.stream" class="videoCut">
+          <div class="aspect-video">
+            <div v-if="s.stream" class="videoCut" >
               <video
                     v-if="s.nickname !== myInfo.profile.nickname"
                     :ref="'remote' + s.userId"
@@ -11,7 +10,6 @@
                     :src-object.prop.camel="s.stream"
                     autoplay
               ></video>
-
               <video
                     v-else
                     class="myVideo"
@@ -22,14 +20,25 @@
                     muted
               ></video>
               <canvas
-              :class="['output_canvas' + s.id]"
+              v-if="flag === true"
+              :class="['output_canvas' + s.id ] "
               :id="['output_canvas' + n]"
               width="640"
               height="360"
-              ></canvas>
+              >
+              </canvas>
+              <!-- 추가해야 할 조건 = 자신의 직업이 마피아, 마피아인 사람 -->
+              <canvas
+              v-else
+              :class="['output_canvas' + s.id ] "
+              :id="['output_canvas' + n]"
+              width="640"
+              height="360"
+              class="w-[360px] h-[206px] bg-black"
+              >
+              </canvas>
             </div>
           </div>
-          <!-- </div> -->
             <!-- 여기까지 div v-if s.stream -->
             <div class="grid grid-cols-4 font-semibold userInfo">
               <div
