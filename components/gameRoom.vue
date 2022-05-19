@@ -160,14 +160,8 @@ export default {
     };
   },
   computed: {
-    subscribedStreams() {
-      return this.$store.state.stream.subscribedStreams;
-    },
     mainFeed() {
       return this.$store.state.stream.mainFeed;
-    },
-    publishStream() {
-      return this.$store.state.stream.publishStream;
     },
     joinedRoom() {
       return this.$store.state.stream.joinedRoom;
@@ -189,6 +183,13 @@ export default {
         return i.ready;
       }
       return false;
+    },
+    publishStream() {
+      const i = this.$store.state.stream.roomMembers.find((s) => {
+        return s.userId === this.myInfo.profile.userId;
+      });
+
+      return i;
     },
     // ...mapState([
     //   "subscribedStreams",

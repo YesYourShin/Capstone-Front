@@ -56,9 +56,6 @@ export default {
     };
   },
   computed: {
-    subscribedStreams() {
-      return this.$store.state.stream.subscribedStreams;
-    },
     computedRooms() {
       if (!this.isMounted) return [];
       let rooms = this.rooms;
@@ -215,13 +212,13 @@ export default {
       roomId: 0,
     });
   },
-  watch: {
-    subscribedStreams(newVal, oldVal) {
-      if (this.subscribedStreams.length) {
-        this.$store.commit("stream/removeAllSubscribers");
-      }
-    },
-  },
+  // watch: {
+  //   subscribedStreams(newVal, oldVal) {
+  //     if (this.subscribedStreams.length) {
+  //       this.$store.commit("stream/removeAllSubscribers");
+  //     }
+  //   },
+  // },
   created() {
     this.$store.dispatch("user/fetchMyInfo");
   },
