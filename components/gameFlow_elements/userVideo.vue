@@ -19,22 +19,22 @@
                     autoplay
                     muted
               ></video>
+              <!-- 추가해야 할 조건 = 자신의 직업이 마피아일 때, 마피아인 사람 -->
               <canvas
-              v-if="flag === true"
+              v-if="flag === false && s.nickname !== myInfo.profile.nickname"
               :class="['output_canvas' + s.id ] "
               :id="['output_canvas' + n]"
               width="640"
               height="360"
+              class="w-[360px] h-[206px] bg-black"
               >
               </canvas>
-              <!-- 추가해야 할 조건 = 자신의 직업이 마피아, 마피아인 사람 -->
               <canvas
               v-else
               :class="['output_canvas' + s.id ] "
               :id="['output_canvas' + n]"
               width="640"
               height="360"
-              class="w-[360px] h-[206px] bg-black"
               >
               </canvas>
             </div>
