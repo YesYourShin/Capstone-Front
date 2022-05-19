@@ -169,6 +169,7 @@ export const mutations = {
     }
   },
   addRoomMember(state, data) {
+    console.log('addRoomMember activated');
     data.speaking = false;
     if (!state.roomMembers.length) {
       // data.stream = null;
@@ -178,6 +179,7 @@ export const mutations = {
     }
   },
   removeRoomMember(state, data) {
+    console.log('removeRoomMember activated');
     if (!state.roomMembers.length) {
       return;
     }
@@ -190,6 +192,7 @@ export const mutations = {
     }
   },
   destroyRoomMembers(state) {
+    console.log('destroyRoomMembers activated');
     state.roomMembers = [];
   },
   // 게임 시작시 유저들의 죽음 정보를 갱신

@@ -1,7 +1,8 @@
 <template>
     <div class="grid grid-cols-5 gap-4 justify-evenly">
       <div class="videobox justify-self-center mx-2 mb-3 w-full rounded " v-for="(s, n) in roomMembers" :key="s.userId">
-          <div class="aspect-video">
+          <div class="aspect-video" >
+            <div :class="{ 'w-[360px] bg-black' : flag, 'w-[360px] bg-black opacity-0' : !flag}">
             <div v-if="s.stream" class="videoCut">
               <video
                     v-if="s.nickname !== myInfo.profile.nickname"
@@ -10,6 +11,7 @@
                     :src-object.prop.camel="s.stream"
                     autoplay
               ></video>
+
               <video
                     v-else
                     class="myVideo"
@@ -26,6 +28,7 @@
               height="360"
               ></canvas>
             </div>
+          </div>
           </div>
             <!-- 여기까지 div v-if s.stream -->
             <div class="grid grid-cols-4 font-semibold userInfo">
@@ -76,6 +79,16 @@ export default {
       isPuase : false,
       timer: null,
     }
+  },
+  props: {
+    // flag는 낮밤 캠 끄기, anotherMafia는 자신 이외의 마피아를 알기 위함
+    flag: {
+      type: Boolean,
+      required: false
+    },
+    anotherMafia :{
+      type: String,
+    },
   },
   components: {
     Memo,

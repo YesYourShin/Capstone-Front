@@ -16,7 +16,7 @@
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
     <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함. -->
     <Billboard ref="billboard" v-on:punishmentVote="punishmentVote" v-on:nightEvent="nightEvent" v-on:victorySearch="victorySearch"/>
-    <div class="videomainbox px-2 mt-10">
+    <div class="px-2 mt-10">
       <UserVideo ref="userVideo"
       v-on:startVoteMotion="startVote"
       v-on:punishmentVoteMotion="punishmentVote"
@@ -24,6 +24,7 @@
       @voteNumEmit="voteNumCheck"
       @punishmentEmit="punishmentVoteCheck"
       @skillNumEmit="skillNumCheck"
+      v-bind:flag="flag"
       />
     </div>
     <sideBar
@@ -82,6 +83,7 @@ export default {
       startTime: null,
       endTime: null,
       myJob: null,
+      // flag는 하위 컴포넌트에서 상속되게 해야한다.
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
   },
