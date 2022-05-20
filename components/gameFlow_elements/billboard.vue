@@ -89,12 +89,14 @@ export default {
         this.finishPunishmentVoteBoard();
         this.newMessage = `찬성 : ${data} 표`
         this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
-        // this.newMessage = `반대 : ${this.$store.state.stream.roomMembers-data} 표`
-        // this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
         this.$forceUpdate()
         this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
           console.log(data)
-          this.$store.commit('stream/killMember', data.death-1);
+          this.message = `${data.nickname}은 ${data.job}이었습니다.`
+          this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+          this.$forceUpdate()
+          // ! 죽은 유저의 정보를 출력한다. punishment, usejobs
+          this.$store.commit('stream/killMember', data.nickname);
           this.$store.commit('stream/surviveMemberCheck');
         });
       } else {
@@ -106,6 +108,7 @@ export default {
       }, 3000)
     });
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
+      // ! 죽은 유저의 정보를 출력한다.punishment, usejobs
       console.log(data)
       console.log('직업사용 결과 받음')
       if (data === null) {
@@ -122,8 +125,6 @@ export default {
       // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
       // 그리고 surviveMemberCheck을 불러오며 결과를 도출한다.
     })
-
-
   },
   methods: {
     gameStartBoard() {

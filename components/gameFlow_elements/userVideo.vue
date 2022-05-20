@@ -117,50 +117,58 @@ export default {
   created() {
     //! 현 문제점
     // * data로 선언한 것을 clearInterval하면 먹히지 않음 (해결)
-    // * 존재하지 않는 유저를 지목할 경우 취소해야 함.
+    // * 존재하지 않는 유저를 지목할 경우 취소해야 함. (해결)
     // * 자신이 몇번을 지목했는지, 알 수 있도록 표시가 필요함.
     // * 두번 찍히는거 생긴다면 정확히 원인 파악 필요! (해결)
-    // this.$nuxt.$on('voteTimeFinish', (data) => {
-    //   console.log(data)
-    //   clearInterval(this.voteLoading)
-    //   this.mediaStatus = false
-    //   this.vStatus = false
-    //   this.vote = false
-    //   this.cStatus = false
-    //   this.check = false
-    //   if(this.skillTrue === false && this.checkNum === true) {
-    //     console.log('투표 값 넘겨줌' + this.voteNum)
-    //     this.$emit('voteNumEmit', this.voteNum)
-    //   } else {
-    //     console.log('투표 값 널로 넘겨줌')
-    //     this.$emit('voteNumEmit', null)
-    //   }
-    // }),
-    // this.$nuxt.$on('punishmentTimeFinish', (data) => {
-    //   console.log(data)
-    //   clearInterval(this.punishLoading)
-    //   this.mediaStatus = false
-    //   this.pStatus = false
-    //   this.punishment = false
-    //   this.$emit('punishmentEmit', this.punishmentNum)
-    //   this.punishmentCount = 0
-    // }),
-    // this.$nuxt.$on('skillTimeFinish', (data) => {
-    //   console.log(data)
-    //   clearInterval(this.voteLoading)
-    //   this.mediaStatus = false
-    //   this.vStatus = false
-    //   this.vote = false
-    //   this.cStatus = false
-    //   this.check = false
-    //   if(this.skillTrue === true && this.checkNum === true) {
-    //     this.$emit('skillNumEmit', this.voteNum)
-    //     console.log('스킬 값 넘겨줌' + this.voteNum)
-    //   } else {
-    //     this.$emit('skillNumEmit', null)
-    //     console.log('스킬 값 널로 넘겨줌')
-    //   }
-    // })
+    // * 타이머 멈췄을 때 다시 동작 되도록...
+    // todo 1. 백엔드 요청 -> 하루 지나면 투표값 전부 초기화 필요
+    this.$nuxt.$on('voteTimeFinish', (data) => {
+      console.log(data)
+      clearInterval(this.voteLoading)
+      this.mediaStatus = null
+      this.vStatus = false
+      this.vote = false
+      this.cStatus = false
+      this.check = false
+      if(this.skillTrue === false && this.checkNum === true) {
+        console.log('투표 값 넘겨줌' + this.voteNum)
+        this.$emit('voteNumEmit', this.voteNum)
+      } else {
+        console.log('투표 값 널로 넘겨줌')
+        this.$emit('voteNumEmit', null)
+      }
+      this.voteLoading = null
+      this.checkLoading = null;
+    }),
+
+    this.$nuxt.$on('punishmentTimeFinish', (data) => {
+      console.log(data)
+      clearInterval(this.punishLoading)
+      this.mediaStatus = null
+      this.pStatus = false
+      this.punishment = false
+      this.$emit('punishmentEmit', this.punishmentNum)
+      this.punishLoading = null
+    }),
+
+    this.$nuxt.$on('skillTimeFinish', (data) => {
+      console.log(data)
+      clearInterval(this.voteLoading)
+      this.mediaStatus = null
+      this.vStatus = false
+      this.vote = false
+      this.cStatus = false
+      this.check = false
+      if(this.skillTrue === true && this.checkNum === true) {
+        this.$emit('skillNumEmit', this.voteNum)
+        console.log('스킬 값 넘겨줌' + this.voteNum)
+      } else {
+        this.$emit('skillNumEmit', null)
+        console.log('스킬 값 널로 넘겨줌')
+      }
+      this.voteLoading = null
+      this.checkLoading = null;
+    })
   },
   async mounted() {
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
@@ -173,37 +181,31 @@ export default {
     await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
   },
   watch: {
-    // 질문이 변경될 때 마다 이 기능이 실행됩니다.
-    // Todo 없는 번호 찍으면 다시 투표하게
+
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
       if (newVoteResult > 0  && newVoteResult <= this.$store.state.stream.roomMembers.length && newVoteResult !== null) {
+        this.voteLoading = null
         this.voteNum = newVoteResult
         this.voteCount = 0
+        console.log('초기화')
         if (this.$store.state.stream.roomMembers[this.voteNum-1].die === false) {
           this.voteLoading = setInterval(() => {
           this.voteCount += 1
-          if (newVoteResult !== this.voteNum) {
-            clearInterval(this.voteLoading);
-            this.voteCount = 0
-            console.log('손가락 다시')
-          } else if (this.voteCount === 3) {
+          if (this.voteCount === 3) {
               clearInterval(this.voteLoading)
               console.log('체크 완료')
               this.mediaStatus = null
               this.vStatus = false
               this.vote = false
               this.checkVoteMotion()
+              this.voteLoading = null
             }
-          if (newVoteResult !== this.voteNum) {
-            this.voteCount = 0
-            console.log('이거 안뜨면 안되냐')
-          }
         }, 1000)
       }
       }
     },
-    // ! 오류 뜨는거 잡아야 됨 캠 안꺼지느ㅏㄴ거랑 반복 wathc
+
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
       this.voteLoading = null
@@ -245,8 +247,10 @@ export default {
     },
     punishmentResult: function (newPunishmentResult) { // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
+      this.punishLoading = null;
       this.punishmentNum = newPunishmentResult // this.punishmentNum == 'a'
       this.punishmentCount = 0
+
       if (typeof this.punishmentNum === 'boolean') { // 0, undefined, null, NaN,  // true, 1, '나다라' {}, []
         this.punishLoading = setInterval(() => { // this.punishLoading의 주소값이 계속 업데이트
           this.punishmentCount += 1

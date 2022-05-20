@@ -11,6 +11,8 @@ export const state = () => ({
   isRoomOut: false,
   entered: null,
   left: null,
+  mafiaInfo: null,
+  surviveMembers: null,
 })
 
 export const mutations = {
@@ -88,7 +90,6 @@ export const mutations = {
     state.entered = null;
     state.left = null;
     state.surviveMembers = null;
-
     console.log("deleted all subscStreams");
   },
   onRoomOut(state) {
@@ -190,7 +191,7 @@ export const mutations = {
   // 유저의 죽음 처리
   killMember(state, data) {
     for (let i = 0; i < state.roomMembers.length; i++) {
-      if (i === data) {
+      if (state.roomMembers[i].nickname === data.nickname) {
         state.roomMembers[i].die = true;
         stopMediaStream(state.roomMembers[i].stream);
         break;
@@ -205,6 +206,10 @@ export const mutations = {
         state.surviveMembers--
       }
     }
+  },
+
+  mafiaInfoSave(state, data) {
+    state.mafiaInfo = data.nickname
   },
 
   readySubscriber(state, data) {
