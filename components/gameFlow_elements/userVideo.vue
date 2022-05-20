@@ -1,51 +1,62 @@
 <template>
-  <div class="grid grid-cols-5 gap-4 justify-evenly">
-    <div
-      class="videobox justify-self-center mx-2 mb-3 w-full rounded"
-      v-for="(s, n) in roomMembers"
-      :key="s.userId"
-    >
-      <div class="aspect-video">
-        <div v-if="s.stream" class="videoCut">
-          <video
-            v-if="s.nickname !== myInfo.profile.nickname"
-            :ref="'remote' + s.userId"
-            :id="'remote' + s.userId"
-            :src-object.prop.camel="s.stream"
-            autoplay
-          ></video>
-          <video
-            v-else
-            class="myVideo"
-            :ref="'remote' + s.userId"
-            :id="'remote' + s.userId"
-            :src-object.prop.camel="s.stream"
-            autoplay
-            muted
-          ></video>
-          <canvas
-            :class="['output_canvas' + s.id]"
-            :id="['output_canvas' + n]"
-            width="640"
-            height="360"
-          ></canvas>
-        </div>
-      </div>
-      <!-- 여기까지 div v-if s.stream -->
-      <div class="grid grid-cols-4 font-semibold userInfo">
-        <div
-          :class="`
+    <div class="grid grid-cols-5 gap-4 justify-evenly">
+      <div class="videobox justify-self-center mx-2 mb-3 w-full rounded " v-for="(s, n) in roomMembers" :key="s.userId">
+          <div class="aspect-video">
+            <div v-if="s.stream" class="videoCut" >
+              <video
+                    v-if="s.nickname !== myInfo.profile.nickname"
+                    :ref="'remote' + s.userId"
+                    :id="'remote' + s.userId"
+                    :src-object.prop.camel="s.stream"
+                    autoplay
+              ></video>
+              <video
+                    v-else
+                    class="myVideo"
+                    :ref="'remote' + s.userId"
+                    :id="'remote' + s.userId"
+                    :src-object.prop.camel="s.stream"
+                    autoplay
+                    muted
+              ></video>
+              <!-- 추가해야 할 조건 = 자신의 직업이 마피아일 때, 마피아인 사람 -->
+              <canvas
+              v-if="flag === false && s.nickname !== myInfo.profile.nickname"
+              :class="['output_canvas' + s.id ] "
+              :id="['output_canvas' + n]"
+              width="640"
+              height="360"
+              class="w-[360px] h-[206px] bg-black"
+              >
+              </canvas>
+              <canvas
+              v-else
+              :class="['output_canvas' + s.id ] "
+              :id="['output_canvas' + n]"
+              width="640"
+              height="360"
+              >
+              </canvas>
+            </div>
+          </div>
+            <!-- 여기까지 div v-if s.stream -->
+            <div class="grid grid-cols-4 font-semibold userInfo">
+              <div
+                :class="`
                 col-span-1 text-center
                     bg-black text-white`"
-        >
-          Lv.{{ s.level }}
-        </div>
-        <div class="col-span-3 bg-white px-1">
-          {{ s.nickname }}
-        </div>
-      </div>
-    </div>
-    <Memo></Memo>
+              >
+                Lv.{{ s.level }}
+              </div>
+              <!-- 첫날 밤, 마피아 유저는 이름 빨간색 -->
+              <div class="col-span-3 bg-white px-1">
+                {{ s.nickname }}
+              </div>
+            </div>
+          </div>
+      <!-- <Memo></Memo> -->
+    <!-- </div> -->
+    <!-- <Memo></Memo> -->
   </div>
 </template>
 
@@ -103,6 +114,12 @@ export default {
     },
   },
   created() {
+    //! 현 문제점
+    // * data로 선언한 것을 clearInterval하면 먹히지 않음 (해결)
+    // * 존재하지 않는 유저를 지목할 경우 취소해야 함.
+    // * 자신이 몇번을 지목했는지, 알 수 있도록 표시가 필요함.
+    // * 두번 찍히는거 생긴다면 정확히 원인 파악 필요! (해결)
+
     // this.$nuxt.$on('voteTimeFinish', (data) => {
     //   console.log(data)
     //   clearInterval(this.voteLoading)
@@ -160,39 +177,51 @@ export default {
     // Todo 없는 번호 찍으면 다시 투표하게
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
-      this.voteNum = newVoteResult;
-      this.voteCount = 0;
-      if (this.voteNum != 0) {
-        let voteLoading = setInterval(() => {
-          this.voteCount += 1;
-          if (newVoteResult != this.voteNum) {
-            clearInterval(voteLoading);
-            this.voteCount = 0;
-          } else if (this.voteCount > 2) {
-            clearInterval(voteLoading);
-            this.mediaStatus = false;
-            this.vStatus = false;
-            this.vote = false;
-            this.checkVoteMotion();
+      if (newVoteResult > 0  && newVoteResult <= this.$store.state.stream.roomMembers.length && newVoteResult !== null) {
+        this.voteNum = newVoteResult
+        this.voteCount = 0
+        if (this.$store.state.stream.roomMembers[this.voteNum-1].die === false) {
+          this.voteLoading = setInterval(() => {
+          this.voteCount += 1
+          if (newVoteResult !== this.voteNum) {
+            clearInterval(this.voteLoading);
+            this.voteCount = 0
+            console.log('손가락 다시')
+          } else if (this.voteCount === 3) {
+              clearInterval(this.voteLoading)
+              console.log('체크 완료')
+              this.mediaStatus = null
+              this.vStatus = false
+              this.vote = false
+              this.checkVoteMotion()
+            }
+          if (newVoteResult !== this.voteNum) {
+            this.voteCount = 0
+            console.log('이거 안뜨면 안되냐')
           }
         }, 1000);
       }
+      }
+
     },
     // ! 오류 뜨는거 잡아야 됨 캠 안꺼지느ㅏㄴ거랑 반복 wathc
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
-      this.checkNum = newCheckResult;
-      this.checkCount = 0;
-      if (this.checkNum === true || this.checkNum === false) {
-        let checkLoading = setInterval(() => {
-          this.checkCount += 1;
-          if (newCheckResult != this.checkNum) {
-            this.checkCount = 0;
-          } else if (this.checkCount > 1) {
-            clearInterval(checkLoading);
-            this.mediaStatus = false;
-            this.cStatus = false;
-            this.check = false;
+      this.voteLoading = null
+      this.checkNum = newCheckResult
+      this.checkCount = 0
+      if (typeof this.checkNum === 'boolean') {
+        this.checkLoading = setInterval(() => {
+          this.checkCount += 1
+          if (newCheckResult !== this.checkNum) {
+            clearInterval(this.checkLoading)
+            this.checkCount = 0
+          } else if (this.checkCount === 3) {
+            clearInterval(this.checkLoading)
+            console.log('체크 인식 완료' + this.checkNum)
+            this.mediaStatus = null
+            this.cStatus = false
+            this.check = false
             // 스킬 사용이 아니고, 체크했을 경우
             if (this.skillTrue == false && this.checkNum == true) {
               this.$emit("voteNumEmit", this.voteNum);
@@ -205,41 +234,31 @@ export default {
             } else if (this.skillTrue == true && this.checkNum == false) {
               this.skillMotion();
             }
+            this.checkLoading = null;
           }
-          // 타이머가 완성되야 구현 가능함.
-          // 만약 타이머가 끝났을 경우에는 무효로 넘겨줘야 함
-          // else {
-          //   clearInterval(checkLoading)
-          //   this.mediaStatus = false
-          //   this.cStatus = false
-          //   this.check = false
-          //   // 스킬 사용이 아니고, 체크하지 않은 상태일 경우
-          //   if (this.skillTrue == false && this.checkNum != true) {
-          //     this.$emit('voteNumEmit', 0)
-          //   // 스킬 사용이고, 체크하지 않은 상태일 경우
-          //   } else if (this.skillTrue == true && this.checkNum != true) {
-          //     this.$emit('skillNumEmit', 0)
-          //   }
-          // }
-        }, 1000);
+        }, 1000)
+
       }
     },
-    punishmentResult: function (newPunishmentResult) {
+    punishmentResult: function (newPunishmentResult) { // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
-      this.punishmentNum = newPunishmentResult;
-      this.punishmentCount = 0;
-      if (this.punishmentNum == true || this.punishmentNum == false) {
-        let punishLoading = setInterval(() => {
-          this.punishmentCount += 1;
-          if (newPunishmentResult != this.punishmentNum) {
-            clearInterval(punishLoading);
-            this.punishmentCount = 0;
-          } else if (this.punishmentCount > 3) {
-            clearInterval(punishLoading);
-            this.mediaStatus = false;
-            this.pStatus = false;
-            this.punishment = false;
-            this.$emit("punishmentEmit", this.punishmentNum);
+      this.punishmentNum = newPunishmentResult // this.punishmentNum == 'a'
+      this.punishmentCount = 0
+      if (typeof this.punishmentNum === 'boolean') { // 0, undefined, null, NaN,  // true, 1, '나다라' {}, []
+        this.punishLoading = setInterval(() => { // this.punishLoading의 주소값이 계속 업데이트
+          this.punishmentCount += 1
+          if (newPunishmentResult !== this.punishmentNum) {
+            clearInterval(this.punishLoading) // this.pushiLoading의 업데이트 된 주소값을 계속 참조
+            // 그래서 기존 것을 없앨수가 없음
+            this.punishmentCount = 0
+          } else if (this.punishmentCount === 3) {
+            clearInterval(this.punishLoading);
+            this.mediaStatus = null
+            this.pStatus = false
+            this.punishment = false
+            this.$emit('punishmentEmit', this.punishmentNum)
+            console.log(this.punishmentNum + '죽음 투표')
+            this.punishLoading = null;
           }
         }, 1000);
       }
