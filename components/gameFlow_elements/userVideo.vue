@@ -55,9 +55,8 @@
             </div>
           </div>
       <!-- <Memo></Memo> -->
-    <!-- </div> -->
-    <!-- <Memo></Memo> -->
-  </div>
+    </div>
+
 </template>
 
 <script>
@@ -87,15 +86,17 @@ export default {
       voteCount: null,
       nextEvent: null,
       skillTrue: null,
-    };
+      isPuase : false,
+      timer: null,
+    }
   },
   props: {
     // flag는 낮밤 캠 끄기, anotherMafia는 자신 이외의 마피아를 알기 위함
     flag: {
       type: Boolean,
-      required: false,
+      required: false
     },
-    anotherMafia: {
+    anotherMafia :{
       type: String,
     },
   },
@@ -119,7 +120,6 @@ export default {
     // * 존재하지 않는 유저를 지목할 경우 취소해야 함.
     // * 자신이 몇번을 지목했는지, 알 수 있도록 표시가 필요함.
     // * 두번 찍히는거 생긴다면 정확히 원인 파악 필요! (해결)
-
     // this.$nuxt.$on('voteTimeFinish', (data) => {
     //   console.log(data)
     //   clearInterval(this.voteLoading)
@@ -199,10 +199,9 @@ export default {
             this.voteCount = 0
             console.log('이거 안뜨면 안되냐')
           }
-        }, 1000);
+        }, 1000)
       }
       }
-
     },
     // ! 오류 뜨는거 잡아야 됨 캠 안꺼지느ㅏㄴ거랑 반복 wathc
     checkResult: function (newCheckResult) {
@@ -223,21 +222,25 @@ export default {
             this.cStatus = false
             this.check = false
             // 스킬 사용이 아니고, 체크했을 경우
-            if (this.skillTrue == false && this.checkNum == true) {
-              this.$emit("voteNumEmit", this.voteNum);
-              // 스킬 사용이고, 체크했을 경우
-            } else if (this.skillTrue == true && this.checkNum == true) {
-              this.$emit("skillNumEmit", this.voteNum);
-              // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
-            } else if (this.skillTrue == false && this.checkNum == false) {
-              this.startVoteMotion();
-            } else if (this.skillTrue == true && this.checkNum == false) {
-              this.skillMotion();
+            if (this.skillTrue === false && this.checkNum === true) {
+              this.$emit('voteNumEmit', this.voteNum)
+              // this.$emit('voteNumEmit', null)
+              console.log('투표 값 넘겨줌' + this.voteNum)
+            // 스킬 사용이고, 체크했을 경우
+            } else if (this.skillTrue === true && this.checkNum === true) {
+              this.$emit('skillNumEmit', this.voteNum)
+              console.log('스킬 값 넘겨줌' + this.voteNum)
+            // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
+            } else if (this.skillTrue === false && this.checkNum === false) {
+              this.startVoteMotion()
+              console.log('투표 다시')
+            } else if (this.skillTrue === true && this.checkNum === false) {
+              this.skillMotion()
+              console.log('스킬 다시')
             }
             this.checkLoading = null;
           }
         }, 1000)
-
       }
     },
     punishmentResult: function (newPunishmentResult) { // newPunishmentResult === 'a'
@@ -260,28 +263,28 @@ export default {
             console.log(this.punishmentNum + '죽음 투표')
             this.punishLoading = null;
           }
-        }, 1000);
+        }, 1000)
       }
     },
   },
   methods: {
-    startVoteMotion() {
-      this.mediaStatus = true;
-      this.skillTrue = false;
-      this.voteResults();
+    startVoteMotion(){
+      this.mediaStatus = true
+      this.skillTrue = false
+      this.voteResults()
     },
     checkVoteMotion() {
-      this.mediaStatus = true;
-      this.checkResults();
+      this.mediaStatus = true
+      this.checkResults()
     },
     punishmentVoteMotion() {
-      this.mediaStatus = true;
-      this.punishmentResults();
+      this.mediaStatus = true
+      this.punishmentResults()
     },
     skillMotion() {
-      this.mediaStatus = true;
-      this.skillTrue = true;
-      this.voteResults();
+      this.mediaStatus = true
+      this.skillTrue = true
+      this.voteResults()
     },
     unLoadEvent: function (event) {
       if (this.isLeaveSite) return;
@@ -290,7 +293,7 @@ export default {
     },
     voteResults() {
       console.log("손 인식 시작");
-      this.vStatus = this.vote ? false : true;
+      this.vStatus = this.vote ? false : true
     },
     checkResults() {
       console.log("체크 인식 시작");
@@ -368,16 +371,16 @@ export default {
       const getMedia = async () => {
         try {
           myStream = this.roomMembers.find((e) => {
-            return e.id === this.myInfo.id;
-          }).stream;
-          console.log(myStream);
+            return e.id === this.myInfo.id
+          }).stream
+          console.log(myStream)
           videoElement.srcObject = myStream;
           videoElement.play();
           // this.cameraSwitch(true);
           this.mediaStatus = true;
           await media();
           // this.cameraSwitch(false);
-          // this.mediaStatus = false;
+          this.mediaStatus = false;
         } catch (e) {
           console.log(e);
         }
@@ -419,7 +422,6 @@ export default {
             //   canvasElement.width,
             //   canvasElement.height
             // );
-
             canvasCtx.restore();
             requestAnimationFrame(media);
           } else {
@@ -430,8 +432,8 @@ export default {
       };
       getMedia();
     },
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped="scoped">
