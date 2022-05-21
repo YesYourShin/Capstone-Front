@@ -76,7 +76,7 @@ export default {
     },
   },
   mounted() {
-        // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
+    // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
     // this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
     //   // ! serverStart : 서버 스타트 / serverEnd : 서버 엔드
     //   // ! clientRealTime : 클라이언트 타이머 (스타트랑 엔드 비교 위함)
