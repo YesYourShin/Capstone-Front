@@ -9,7 +9,8 @@
                     :id="'remote' + s.userId"
                     :src-object.prop.camel="s.stream"
                     autoplay
-              ></video>
+              >
+              </video>
               <video
                     v-else
                     class="myVideo"
@@ -18,7 +19,9 @@
                     :src-object.prop.camel="s.stream"
                     autoplay
                     muted
-              ></video>
+              >
+
+              </video>
               <!-- 추가해야 할 조건 = 자신의 직업이 마피아일 때, 마피아인 사람 -->
               <!-- v-if flag===false && s.nickname === job 마피아면 캔버스 클래스 안줌  -->
               <canvas
@@ -55,7 +58,7 @@
               </div>
             </div>
           </div>
-      <!-- <Memo></Memo> -->
+      <Memo></Memo>
     </div>
 
 </template>
@@ -89,6 +92,7 @@ export default {
       skillTrue: null,
       isPuase : false,
       timer: null,
+      mediaStatus: true
     }
   },
   props: {
@@ -126,7 +130,7 @@ export default {
     this.$nuxt.$on('voteTimeFinish', (data) => {
       console.log(data)
       clearInterval(this.voteLoading)
-      this.mediaStatus = null
+      // this.mediaStatus = null
       this.vStatus = false
       this.vote = false
       this.cStatus = false
@@ -145,7 +149,7 @@ export default {
     this.$nuxt.$on('punishmentTimeFinish', (data) => {
       console.log(data)
       clearInterval(this.punishLoading)
-      this.mediaStatus = null
+      // this.mediaStatus = null
       this.pStatus = false
       this.punishment = false
       this.$emit('punishmentEmit', this.punishmentNum)
@@ -155,7 +159,7 @@ export default {
     this.$nuxt.$on('skillTimeFinish', (data) => {
       console.log(data)
       clearInterval(this.voteLoading)
-      this.mediaStatus = null
+      // this.mediaStatus = null
       this.vStatus = false
       this.vote = false
       this.cStatus = false
@@ -196,7 +200,7 @@ export default {
           if (this.voteCount === 3) {
               clearInterval(this.voteLoading)
               console.log('체크 완료')
-              this.mediaStatus = null
+              // this.mediaStatus = null
               this.vStatus = false
               this.vote = false
               this.checkVoteMotion()
@@ -221,7 +225,7 @@ export default {
           } else if (this.checkCount === 3) {
             clearInterval(this.checkLoading)
             console.log('체크 인식 완료' + this.checkNum)
-            this.mediaStatus = null
+            // this.mediaStatus = null
             this.cStatus = false
             this.check = false
             // 스킬 사용이 아니고, 체크했을 경우
@@ -261,7 +265,7 @@ export default {
             this.punishmentCount = 0
           } else if (this.punishmentCount === 3) {
             clearInterval(this.punishLoading);
-            this.mediaStatus = null
+            // this.mediaStatus = null
             this.pStatus = false
             this.punishment = false
             this.$emit('punishmentEmit', this.punishmentNum)
@@ -274,20 +278,20 @@ export default {
   },
   methods: {
     startVoteMotion(){
-      this.mediaStatus = true
+      // this.mediaStatus = true
       this.skillTrue = false
       this.voteResults()
     },
     checkVoteMotion() {
-      this.mediaStatus = true
+      // this.mediaStatus = true
       this.checkResults()
     },
     punishmentVoteMotion() {
-      this.mediaStatus = true
+      // this.mediaStatus = true
       this.punishmentResults()
     },
     skillMotion() {
-      this.mediaStatus = true
+      // this.mediaStatus = true
       this.skillTrue = true
       this.voteResults()
     },

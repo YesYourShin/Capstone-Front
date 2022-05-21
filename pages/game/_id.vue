@@ -19,6 +19,7 @@ export default {
       return this.$store.state.stream.isRoomOut;
     },
   },
+
   methods: {
     exit() {
       var unpublish = { request: "unpublish" };

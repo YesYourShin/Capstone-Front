@@ -376,3 +376,6 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped="scoped">
+@import "~assets/userVideo.scss";
+</style>
