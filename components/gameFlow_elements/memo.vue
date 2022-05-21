@@ -306,6 +306,10 @@ export default {
           let imgMafiaHat = img.src.includes("mafia_hat.png");
 
           console.log("landmark else");
+          console.log(img.src);
+          console.log(imgPoliceHat);
+          console.log(imgDoctorHat);
+          console.log(imgMafiaHat);
 
           if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
             const canvasWidth = bottomRightx - topLeftx;
