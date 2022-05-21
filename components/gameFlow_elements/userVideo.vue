@@ -20,6 +20,7 @@
                     muted
               ></video>
               <!-- 추가해야 할 조건 = 자신의 직업이 마피아일 때, 마피아인 사람 -->
+              <!-- v-if flag===false && s.nickname === job 마피아면 캔버스 클래스 안줌  -->
               <canvas
               v-if="flag === false && s.nickname !== myInfo.profile.nickname"
               :class="['output_canvas' + s.id ] "
@@ -60,7 +61,7 @@
 </template>
 
 <script>
-import Memo from "@/components/memo.vue";
+import Memo from "@/components/gameFlow_elements/memo.vue";
 import { Hands } from "@mediapipe/hands";
 import {
   fingersCount as vote,
@@ -117,7 +118,7 @@ export default {
   created() {
     //! 현 문제점
     // * data로 선언한 것을 clearInterval하면 먹히지 않음 (해결)
-    // * 존재하지 않는 유저를 지목할 경우 취소해야 함. (해결)
+    // * 존재하지 않는 유저를 지목할 경우 취소해야 함. (해결 => 지목불가)
     // * 자신이 몇번을 지목했는지, 알 수 있도록 표시가 필요함.
     // * 두번 찍히는거 생긴다면 정확히 원인 파악 필요! (해결)
     // * 타이머 멈췄을 때 다시 동작 되도록...

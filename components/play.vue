@@ -35,11 +35,12 @@
 </template>
 
 <script>
-import Timer from "@/components/Timer.vue";
+import Timer from "@/components/gameFlow_elements/timer.vue";
 import Billboard from "@/components/gameFlow_elements/billboard.vue";
 import SideBar from "@/components/gameFlow_elements/sideBar.vue";
 import UserVideo from "@/components/gameFlow_elements/userVideo.vue"
 import dayjs from "dayjs";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
 // import Audio from "@/components/gameFlow_elements/audio.vue";
@@ -95,6 +96,8 @@ export default {
   },
 
   mounted() {
+    dayjs.extend(customParseFormat)
+
     window.addEventListener('beforeunload', this.unLoadEvent);
     this.$store.commit('stream/loadBackupMembers');
     // let newRemoteFeed = null;
@@ -157,16 +160,29 @@ export default {
       console.log(this.flag)
     });
 
-    // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
-    this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
-      // const dayjs = require("dayjs");
-      // this.ss = start.get('y')
-      // console.log(this.ss)
-      // console.log(this.startTime);
-      // console.log(this.endTime);
-      // console.log(typeof start) //object
-      // console.log(typeof end)
-    });
+    // // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
+    // this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
+    //   // ! serverStart : 서버 스타트 / serverEnd : 서버 엔드
+    //   // ! clientRealTime : 클라이언트 타이머 (스타트랑 엔드 비교 위함)
+    //   // let serverStart = dayjs(start.start, 'YYYY-MM-DDTHH:mm:ssZ')
+    //   // ! 일단 start, end가 object로 오므로, 아래와 같은 양식을 사용해야 함.
+    //   let serverStart = dayjs(start.start)
+    //   console.log(serverStart)
+    //   let serverEnd = dayjs(end.end)
+    //   console.log(serverEnd)
+    //   let clientRealTime = dayjs();
+    //   console.log(clientRealTime)
+
+    //   // * 서버 시작 시간 기록
+    //   // * 5:05이 시작시간, 5:15분이 끝나는 시간.
+    //   // * 내 PC에서 만약 5:07이다.
+    //   // * 15분 - 7분 = 8분
+    //   // * 서버에서 정해주는 끝나는 시간 - 자기 PC에 연결된 서버시간
+    //   // * 그 시간 / n 으로 타이머 작동
+    //   // * dayjs가 서버시간
+    //   // * 서버에서 받아오는 시간과 dayjs를 이용하면 가능 !
+
+    // });
 
     this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
       console.log(data)
@@ -176,7 +192,8 @@ export default {
       // 모든 마피아 유저의 정보를 받아온다.
       console.log(data)
       // this.$store.commit('stream/mafiaInfoSave', data);
-      // 이것을 stream.js에 담고
+      // 이것을 stream.js에 담고 실행한다.
+
       //
     })
 
@@ -186,7 +203,8 @@ export default {
       // 이걸로 직업 알려주는 이벤트 발생하게 한다..
       this.$refs.billboard.policeResult();
     })
-
+    // 의사와 마피아는 단순히 받아오기만 함
+    // 실제 결과 처리는 프론트로 넘어오는 유저의 정보로 판별하기 때문.
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
       console.log(data);
     })
@@ -197,6 +215,11 @@ export default {
 
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
       console.log(data);
+    })
+
+    this.$root.gameSocket.on(GameEvent.LEAVE, (data) => {
+      console.log(data)
+      // vuex의 유저 정보 갱신,
     })
 
   },
@@ -230,14 +253,15 @@ export default {
       // this.morningAudio.play()
       const dayjs = require("dayjs");
       const morningStart = dayjs();
+      // 이곳에서 받아오는 시간은 서버 시간
+      // 서버시간 - 클라이언트 시간 (dayjs)
+      // 그리고 이것을 120 정도로 나눠서 다음 이벤트 발생
       morningStart.format();
       console.log(morningStart);
       console.log(this.flag)
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
       });
-
-      this.$root.gameSocket.emit(GameEvent.TIMER);
       this.$refs.timer.morningTimer();
       // dayCount에서는 빌보드 상단에 표기되는 day의 숫자를 +1
       this.$refs.dayCount.nextDay();

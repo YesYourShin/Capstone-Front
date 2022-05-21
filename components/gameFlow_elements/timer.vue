@@ -18,12 +18,22 @@
 </template>
 <script>
 import BaseProgress from "@/components/gameFlow_elements/BaseProgress.vue";
+import { GameEvent } from "@/api/mafiaAPI";
+import dayjs from "dayjs";
 
 export default {
   name: "Timer",
   props: ["realTime"],
+  components: {
+    BaseProgress,
+    dayjs,
+  },
   data() {
     return {
+      serverStart: null,
+      serverEnd : null,
+      clientRealTime: null,
+
       isActive: true,
       timerType: 0,
       totalSeconds: 60,
@@ -65,6 +75,32 @@ export default {
       return this.formatTime(sec);
     },
   },
+  mounted() {
+        // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
+    // this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
+    //   // ! serverStart : 서버 스타트 / serverEnd : 서버 엔드
+    //   // ! clientRealTime : 클라이언트 타이머 (스타트랑 엔드 비교 위함)
+    //   // let serverStart = dayjs(start.start, 'YYYY-MM-DDTHH:mm:ssZ')
+    //   // ! 일단 start, end가 object로 오므로, 아래와 같은 양식을 사용해야 함.
+    //   this.serverStart = dayjs(start.start)
+    //   console.log(this.serverStart)
+    //   this.serverEnd = dayjs(end.end)
+    //   console.log(this.serverEnd)
+    //   this.clientRealTime = dayjs();
+    //   console.log(this.clientRealTime)
+    //   console.log(this.serverEnd.diff(this.serverStart));
+    //   console.log(this.serverEnd.diff(this.serverStart, 'm'));
+    //   console.log(this.serverEnd.diff(this.serverStart, 's'));
+    //   this.totalSeconds = this.serverEnd.diff(this.serverStart, 's')
+    // });
+    this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
+      console.log(start)
+      this.serverEnd = dayjs(end.end)
+      this.clientRealTime = dayjs();
+      console.log(this.serverEnd.diff(this.clientRealTime, 's'));
+      this.totalSeconds = this.serverEnd.diff(this.serverStart, 's')
+    });
+  },
   methods: {
     // 스킵은 아직 구현 안됨
     // skipEvent() {
@@ -80,6 +116,7 @@ export default {
     },
     // 아침이 되었을 때 움직이는 타이머
     morningTimer() {
+      this.$root.gameSocket.emit(GameEvent.TIMER);
       this.timerStart = true;
       this.skipThisEvent = true;
       this.pomodoroInstance = setInterval(() => {
@@ -100,6 +137,7 @@ export default {
     },
     // 마피아로 의심되는 유저를 지목할 때 쓰이는 타이머
     voteTimer() {
+      this.$root.gameSocket.emit(GameEvent.TIMER);
       this.timerStart = true;
       this.skipThisEvent = true;
       this.pomodoroInstance = setInterval(() => {
@@ -121,6 +159,7 @@ export default {
     },
     // 특정 유저가 지목되고, 사형 찬반투표를 할 때 쓰이는 타이머
     punishmentTimer() {
+      this.$root.gameSocket.emit(GameEvent.TIMER);
       this.timerStart = true;
       this.skipThisEvent = true;
       this.pomodoroInstance = setInterval(() => {
@@ -142,6 +181,7 @@ export default {
     },
     // 밤이 되었을 때 쓰이는 타이머
     nightEvent() {
+      this.$root.gameSocket.emit(GameEvent.TIMER);
       this.timerStart = true;
       this.skipThisEvent = true;
       this.pomodoroInstance = setInterval(() => {

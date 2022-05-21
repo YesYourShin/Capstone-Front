@@ -36,7 +36,7 @@
           </div>
           <div class="jobName">시민</div>
           <div class="jobSkill">특수능력 : 없음</div>
-          <div class="jobInformation">시민과 힘을 합쳐 마피아를 찾아내어야 합니다.</div>
+          <div class="jobInformation">의사, 경찰과 힘을 합쳐 마피아를 찾아내어야 합니다.</div>
         </div>
       </div>
       <div class="gameSettingBox">

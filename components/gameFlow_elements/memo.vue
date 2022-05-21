@@ -85,6 +85,13 @@ export default {
     },
   },
   mounted() {
+    // ! 원하는 기능
+    // ! 해당 유저의 비디오에서 우클릭 하여
+    // ! 메모를 동작하게 한다.
+    // ! 메모를 동작시킬 때는 미디어스트림을 켜야 한다.
+    // ! 현재 투표에서 미디어스트림이 스위치가 되는데
+    // ! 지금 userVideo.vue의 코드에서 미디어스트림은 항상 on을 해도 괜찮은가?
+    // ! 렉이 우려되기에 테스트가 필요할 듯 ...
     /*
       해야할 것
       1. 손 인식 -> 얼굴 인식 -> 나머지 영상 순으로 하나 끝나면 하나 켜지게 할 것
@@ -338,21 +345,21 @@ export default {
           break;
         case "police":
           this.testImage[id] = {
-            imgSrc: require("../assets/image/police_hat.png"),
+            imgSrc: require("@/assets/memo/police_hat.png"),
             imgWidth: 600,
             imgHeight: 451,
           };
           break;
         case "doctor":
           this.testImage[id] = {
-            imgSrc: require("../assets/image/doctor_hat.png"),
+            imgSrc: require("@/assets/memo/doctor_hat.png"),
             imgWidth: 1000,
             imgHeight: 630,
           };
           break;
         case "mafia":
           this.testImage[id] = {
-            imgSrc: require("../assets/image/mafia_hat.png"),
+            imgSrc: require("@/assets/memo/mafia_hat.png"),
             imgWidth: 1125,
             imgHeight: 701,
           };

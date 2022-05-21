@@ -52,7 +52,6 @@ export const mutations = {
     }
   },
   removeSubscriber(state, rfid) {
-
     for (let i = 0; i<state.subscribedStreams.length; i++) {
       console.log('index: ', i, 'rfid: ', state.subscribedStreams[i].rfid);
       if (state.subscribedStreams[i].rfid == rfid) {
