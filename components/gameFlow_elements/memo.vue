@@ -310,7 +310,9 @@ export default {
             const canvasHeight = bottomRighty - topLefty;
             const canvasx = topLeftx;
             const canvasy = topLefty - canvasHeight;
-
+            console.log(
+              `canvasWidth : ${canvasWidth}, canvasHeight : ${canvasHeight}, canvasx : ${canvasx}, canvasy : ${canvasy}`
+            );
             img.onload = canvasCtx.drawImage(
               img,
               canvasx,
