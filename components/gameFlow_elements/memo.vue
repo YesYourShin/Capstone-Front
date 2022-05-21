@@ -190,7 +190,7 @@ export default {
         let landmarks = await model.estimateFaces(videoElement, false);
 
         // 자신의 얼굴 랜드마크 확인
-        console.log(landmarks);
+        // console.log(landmarks);
         canvasCtx.save();
         // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         // canvasCtx.translate(canvasElement.width, 0);
@@ -266,7 +266,7 @@ export default {
 
         // 여기가 문제야?
         const landmarks = this.testLandmark[id];
-        console.log(landmarks);
+        // console.log(landmarks);
         // 랜드마크로 얼굴 그리기
         if (landmarks)
           this.testLandmark[id].landmarks.forEach((landmark) => {
@@ -301,23 +301,22 @@ export default {
           let topLefty = landmarks.topLeft[1];
 
           let imgCitizenHat = "";
-          let imgPoliceHat = img.src.includes("police_hat.png");
-          let imgDoctorHat = img.src.includes("doctor_hat.png");
-          let imgMilitaryHelmet = img.src.includes("military_helmet.png");
-          let imgMafiaHat = img.src.includes("mafia_hat.png");
+          let imgPoliceHat = img.src.includes("police_hat");
+          let imgDoctorHat = img.src.includes("doctor_hat");
+          let imgMafiaHat = img.src.includes("mafia_hat");
 
-          if (
-            imgCitizenHat ||
-            imgPoliceHat ||
-            imgDoctorHat ||
-            imgMafiaHat ||
-            imgMilitaryHelmet
-          ) {
+          console.log("landmark else");
+          console.log(img.src);
+          console.log(imgPoliceHat);
+          console.log(imgDoctorHat);
+          console.log(imgMafiaHat);
+
+          if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
             const canvasWidth = bottomRightx - topLeftx;
             const canvasHeight = bottomRighty - topLefty;
             const canvasx = topLeftx;
             const canvasy = topLefty - canvasHeight;
-
+            console.log("landmark else > if");
             img.onload = canvasCtx.drawImage(
               img,
               canvasx,
@@ -334,7 +333,7 @@ export default {
     },
 
     memoJob(job, id) {
-      console.log(job);
+      // console.log(job);
       switch (job) {
         case "citizen":
           this.testImage[id] = {
