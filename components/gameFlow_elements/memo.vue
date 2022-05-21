@@ -301,9 +301,9 @@ export default {
           let topLefty = landmarks.topLeft[1];
 
           let imgCitizenHat = "";
-          let imgPoliceHat = img.src.includes("police_hat.png");
-          let imgDoctorHat = img.src.includes("doctor_hat.png");
-          let imgMafiaHat = img.src.includes("mafia_hat.png");
+          let imgPoliceHat = img.src.includes("police_hat");
+          let imgDoctorHat = img.src.includes("doctor_hat");
+          let imgMafiaHat = img.src.includes("mafia_hat");
 
           console.log("landmark else");
           console.log(img.src);
