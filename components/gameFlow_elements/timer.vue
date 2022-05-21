@@ -135,9 +135,9 @@ export default {
         this.totalSeconds -= 1;
         this.contentProgress += 100/60;
         if (
-          // Math.floor(this.totalSeconds / 60) === 0 &&
-          // this.totalSeconds % 60 === 0
-          this.clientRealTime === this.serverEnd
+          Math.floor(this.totalSeconds / 60) === 0 &&
+          this.totalSeconds % 60 === 0
+          // this.clientRealTime === this.serverEnd
         ) {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),

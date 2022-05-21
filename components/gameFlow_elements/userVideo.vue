@@ -284,20 +284,20 @@ export default {
   },
   methods: {
     startVoteMotion() {
-      // this.mediaStatus = true
+      this.mediaStatus = true;
       this.skillTrue = false;
       this.voteResults();
     },
     checkVoteMotion() {
-      // this.mediaStatus = true
+      this.mediaStatus = true;
       this.checkResults();
     },
     punishmentVoteMotion() {
-      // this.mediaStatus = true
+      this.mediaStatus = true;
       this.punishmentResults();
     },
     skillMotion() {
-      // this.mediaStatus = true
+      this.mediaStatus = true;
       this.skillTrue = true;
       this.voteResults();
     },

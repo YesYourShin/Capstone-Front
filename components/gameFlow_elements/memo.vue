@@ -303,16 +303,9 @@ export default {
           let imgCitizenHat = "";
           let imgPoliceHat = img.src.includes("police_hat.png");
           let imgDoctorHat = img.src.includes("doctor_hat.png");
-          let imgMilitaryHelmet = img.src.includes("military_helmet.png");
           let imgMafiaHat = img.src.includes("mafia_hat.png");
 
-          if (
-            imgCitizenHat ||
-            imgPoliceHat ||
-            imgDoctorHat ||
-            imgMafiaHat ||
-            imgMilitaryHelmet
-          ) {
+          if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
             const canvasWidth = bottomRightx - topLeftx;
             const canvasHeight = bottomRighty - topLefty;
             const canvasx = topLeftx;
