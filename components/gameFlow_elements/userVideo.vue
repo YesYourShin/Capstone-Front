@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <Memo></Memo>
+    <!-- <Memo></Memo> -->
   </div>
 </template>
 
@@ -127,33 +127,34 @@ export default {
     // * 두번 찍히는거 생긴다면 정확히 원인 파악 필요! (해결)
     // * 타이머 멈췄을 때 다시 동작 되도록...
     // todo 1. 백엔드 요청 -> 하루 지나면 투표값 전부 초기화 필요
+
+    // ! 만약 타이머가 종료됐을 경우, 투표를 안한 사람만 넘겨줘야 한다.
+    // ! 투표 한 사람이 중복으로 넘겨주면 안됨!!
+
     this.$nuxt.$on("voteTimeFinish", (data) => {
-      console.log(data);
-      clearInterval(this.voteLoading);
-      // this.mediaStatus = null
-      this.vStatus = false;
-      this.vote = false;
-      this.cStatus = false;
-      this.check = false;
-      if (this.skillTrue === false && this.checkNum === true) {
-        console.log("투표 값 넘겨줌" + this.voteNum);
-        this.$emit("voteNumEmit", this.voteNum);
-      } else {
-        console.log("투표 값 널로 넘겨줌");
-        this.$emit("voteNumEmit", null);
+      if (this.skillTrue === false && typeof this.checkNum !== "boolean") {
+          console.log(data);
+          clearInterval(this.voteLoading);
+          this.vStatus = false;
+          this.vote = false;
+          this.cStatus = false;
+          this.check = false;
+          this.$emit("voteNumEmit", null);
+          this.voteLoading = null;
+          this.checkLoading = null;
       }
-      this.voteLoading = null;
-      this.checkLoading = null;
-    }),
-      this.$nuxt.$on("punishmentTimeFinish", (data) => {
+     })
+
+    this.$nuxt.$on("punishmentTimeFinish", (data) => {
+      if (typeof this.punishmentEmit !== "boolean") {
         console.log(data);
         clearInterval(this.punishLoading);
-        // this.mediaStatus = null
         this.pStatus = false;
         this.punishment = false;
-        this.$emit("punishmentEmit", this.punishmentNum);
-        this.punishLoading = null;
-      }),
+        this.$emit("punishmentEmit", false);
+      }
+    }),
+
       this.$nuxt.$on("skillTimeFinish", (data) => {
         console.log(data);
         clearInterval(this.voteLoading);
@@ -163,8 +164,7 @@ export default {
         this.cStatus = false;
         this.check = false;
         if (this.skillTrue === true && this.checkNum === true) {
-          this.$emit("skillNumEmit", this.voteNum);
-          console.log("스킬 값 넘겨줌" + this.voteNum);
+          console.log("스킬 값 이미 넘겨 줌");
         } else {
           this.$emit("skillNumEmit", null);
           console.log("스킬 값 널로 넘겨줌");
@@ -274,8 +274,10 @@ export default {
             // this.mediaStatus = null
             this.pStatus = false;
             this.punishment = false;
-            this.$emit("punishmentEmit", this.punishmentNum);
-            console.log(this.punishmentNum + "죽음 투표");
+            this.punishmentEmit = this.punishmentNum
+            this.$emit("punishmentEmit", this.punishmentEmit);
+            // 죽음 값을 완벽히 인식했을 때만 가능
+            console.log(this.punishmentEmit + "죽음 투표");
             this.punishLoading = null;
           }
         }, 1000);

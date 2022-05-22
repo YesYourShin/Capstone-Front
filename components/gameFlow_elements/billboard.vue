@@ -98,6 +98,7 @@ export default {
           // ! 죽은 유저의 정보를 출력한다. punishment, usejobs
           this.$store.commit('stream/killMember', data.nickname);
           this.$store.commit('stream/surviveMemberCheck');
+          console.log('캠 끄기')
         });
       } else {
         this.finishPunishmentVoteFalseBoard();

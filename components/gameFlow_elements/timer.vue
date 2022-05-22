@@ -1,13 +1,10 @@
 <template>
-  <!--Timer Componenent -->
   <div class="timer h-screen">
-    <!-- start of the timer section -->
     <div>
       <div v-show="timerStart" class="timerSet" >
             <div class="flex flex-wrap p-3 ">
-            <BaseProgress :percentage="contentProgress" >
+            <BaseProgress :percentage="contentProgress">
              {{ timerMinutes }}:{{ timerSeconds }}
-             <!-- <span class="text-xs text-black w-full flex justify-end pr-2">{{totalSeconds}}</span> -->
             </BaseProgress>
             </div>
        </div>
@@ -60,9 +57,6 @@ export default {
       ],
     };
   },
-  components: {
-    BaseProgress
-  },
   computed: {
     // show minutes
     timerMinutes() {
@@ -76,27 +70,10 @@ export default {
     },
   },
   mounted() {
-    // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
-    // this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
-    //   // ! serverStart : 서버 스타트 / serverEnd : 서버 엔드
-    //   // ! clientRealTime : 클라이언트 타이머 (스타트랑 엔드 비교 위함)
-    //   // let serverStart = dayjs(start.start, 'YYYY-MM-DDTHH:mm:ssZ')
-    //   // ! 일단 start, end가 object로 오므로, 아래와 같은 양식을 사용해야 함.
-    //   this.serverStart = dayjs(start.start)
-    //   console.log(this.serverStart)
-    //   this.serverEnd = dayjs(end.end)
-    //   console.log(this.serverEnd)
-    //   this.clientRealTime = dayjs();
-    //   console.log(this.clientRealTime)
-    //   console.log(this.serverEnd.diff(this.serverStart));
-    //   console.log(this.serverEnd.diff(this.serverStart, 'm'));
-    //   console.log(this.serverEnd.diff(this.serverStart, 's'));
-    //   this.totalSeconds = this.serverEnd.diff(this.serverStart, 's')
-    // });
     this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
       console.log(start)
-      this.serverEnd = dayjs(end.end)
-      this.clientRealTime = dayjs();
+      this.serverEnd = dayjs(end.end).format("YYYY.MM.DD HH:mm:ss")
+      this.clientRealTime = dayjs().format("YYYY.MM.DD HH:mm:ss");
       console.log(this.serverEnd.diff(this.clientRealTime, 's'));
       this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
     });
@@ -114,12 +91,6 @@ export default {
     // ! 배열의 모든 원소가 true일 경우, 클라이언트로 스킵 요청 emit을 한다.
     // ! 모든 클라이언트에서는 타이머의 End Time을 갱신한다.
     // ! 그리고 그 End Time에 맞게 totalSeconds를 5~10초 남게 갱신한다.
-
-    // skipEvent() {
-    //   this.totalSeconds = 5;
-    //   this.skipThisEvent = false;
-    // },
-    // formats time function
     formatTime(time) {
       if (time < 10) {
         return "0" + time;
@@ -134,19 +105,28 @@ export default {
       this.pomodoroInstance = setInterval(() => {
         this.totalSeconds -= 1;
         this.contentProgress += 100/60;
+        // day.js의 시/분/초 단위로 같은 시간인지 확인
+        // 같은 시점에서 다음 이벤트로 넘어가기 위해 on 한다.
         if (
           Math.floor(this.totalSeconds / 60) === 0 &&
           this.totalSeconds % 60 === 0
-          // this.clientRealTime === this.serverEnd
         ) {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$emit("startVote")
           this.pomodoroInstance = null
           console.log('아침 타이머 중단')
         }
-      }, 330);
+      }, 500);
+      this.nextEvent = setInterval(() => {
+        this.clientRealTime = dayjs().format("YYYY.MM.DD HH:mm:ss");
+        if (this.clientRealTime === this.serverEnd) {
+            clearInterval(this.nextEvent);
+            this.$emit("startVote")
+            this.nextEvent = null
+            console.log('실제 아침 종료 이벤트는 이것')
+        }
+      }, 500)
     },
     // 마피아로 의심되는 유저를 지목할 때 쓰이는 타이머
     voteTimer() {
@@ -163,12 +143,20 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$nuxt.$emit('voteTimeFinish', '투표 타이머 중단')
-          this.$emit('finishVote')
           this.pomodoroInstance = null
           console.log('투표 타이머 중단')
         }
-      }, 330);
+      }, 500);
+      this.nextEvent = setInterval(() => {
+        this.clientRealTime = dayjs().format("YYYY.MM.DD HH:mm:ss");
+        if (this.clientRealTime === this.serverEnd) {
+          clearInterval(this.nextEvent);
+          this.$nuxt.$emit('voteTimeFinish', '투표 타이머 중단')
+          this.$emit('finishVote')
+          this.nextEvent = null
+          console.log('실제 투표 종료 이벤트는 이것')
+        }
+      }, 500)
     },
     // 특정 유저가 지목되고, 사형 찬반투표를 할 때 쓰이는 타이머
     punishmentTimer() {
@@ -185,12 +173,20 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$nuxt.$emit('punishmentTimeFinish', '찬반 타이머 중단')
-          this.$emit('finishPunishmentVote')
           this.pomodoroInstance = null
           console.log('심판 타이머 중단')
         }
-      },330);
+      },500);
+      this.nextEvent = setInterval(() => {
+        this.clientRealTime = dayjs().format("YYYY.MM.DD HH:mm:ss");
+        if (this.clientRealTime === this.serverEnd) {
+          clearInterval(this.nextEvent);
+          this.$nuxt.$emit('punishmentTimeFinish', '찬반 타이머 중단')
+          this.$emit('finishPunishmentVote')
+            this.nextEvent = null
+            console.log('실제 심판 종료 이벤트는 이것')
+        }
+      }, 500)
     },
     // 밤이 되었을 때 쓰이는 타이머
     nightEvent() {
@@ -207,12 +203,20 @@ export default {
           clearInterval(this.pomodoroInstance);
           (this.totalSeconds = 60),
           (this.contentProgress = 0),
-          this.$nuxt.$emit('skillTimeFinish', '능력 타이머 중단')
-          this.$emit('nightResult')
           console.log('타이머 종료, 밤 결과 실행')
           this.pomodoroInstance = null
         }
-      }, 330);
+      }, 500);
+      this.nextEvent = setInterval(() => {
+        this.clientRealTime = dayjs().format("YYYY.MM.DD HH:mm:ss");
+        if (this.clientRealTime === this.serverEnd) {
+          clearInterval(this.nextEvent);
+          this.$nuxt.$emit('skillTimeFinish', '능력 타이머 중단')
+          this.$emit('nightResult')
+            this.nextEvent = null
+            console.log('실제 스킬 종료 이벤트는 이것')
+        }
+      }, 500)
     },
   },
 };

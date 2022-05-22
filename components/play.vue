@@ -251,13 +251,7 @@ export default {
       this.$refs.billboard.morningEventBoard();
       console.log('아침 시작')
       // this.morningAudio.play()
-      const dayjs = require("dayjs");
-      const morningStart = dayjs();
       // 이곳에서 받아오는 시간은 서버 시간
-      // 서버시간 - 클라이언트 시간 (dayjs)
-      // 그리고 이것을 120 정도로 나눠서 다음 이벤트 발생
-      morningStart.format();
-      console.log(morningStart);
       console.log(this.flag)
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
@@ -332,7 +326,6 @@ export default {
       console.log(this.flag)
       this.$root.gameSocket.emit(GameEvent.TIMER);
       this.$refs.billboard.nightEventBoard();
-      setTimeout(() => {
         this.$refs.timer.nightEvent();
         if (this.myJob === "MAFIA") {
          this.$refs.userVideo.skillMotion();
@@ -343,8 +336,9 @@ export default {
         } else if (this.myJob === "POLICE") {
           // select를 추가해야 할듯
           this.$refs.userVideo.skillMotion();
+        } else {
+          console.log('시민은 없다')
         }
-      }, 3000);
     },
 
     skillNumCheck(voteNum) {
