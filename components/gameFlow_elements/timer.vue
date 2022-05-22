@@ -74,7 +74,7 @@ export default {
       console.log(start)
       this.serverEnd = dayjs(end.end).format("YYYY.MM.DD HH:mm:ss")
       this.clientRealTime = dayjs().format("YYYY.MM.DD HH:mm:ss");
-      this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
+      // this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
     });
     // 그리고 일정 시간에 함께 다음 이벤트로 emit 할 수 있어야 함.
   },

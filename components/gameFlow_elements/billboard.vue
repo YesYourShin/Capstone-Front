@@ -1,12 +1,39 @@
 <template>
   <div class="messagebox overflow-y-auto">
-    <div class="">
+    <div v-show="punishmentCam === false" >
+      <div>
       <ul>
         <li v-for="(logs, key) in messageLogs" :key="key">{{
           logs }}</li>
       </ul>
+      </div>
+    </div>
+    <div v-show="punishmentCam === true" class="aspect-video messagebox">
+    <div v-for="(s, n) in roomMembers"
+      :key="s.userId">
+    <div v-if="s.stream" class="videoCut">
+          <video
+            v-if="s.nickname === myInfo.profile.nickname"
+            class="myVideo"
+            :ref="'remote' + s.userId"
+            :id="'remote' + s.userId"
+            :src-object.prop.camel="s.stream"
+            autoplay
+            muted
+          ></video>
+          <canvas
+            v-if="s.nickname === myInfo.profile.nickname"
+            :class="['output_canvas' + s.id]"
+            :id="['output_canvas' + n]"
+            width="640"
+            height="360"
+          >
+          </canvas>
+    </div>
     </div>
   </div>
+  </div>
+
 </template>
 
 <script>
@@ -22,7 +49,8 @@ export default {
       highVote: 0,
       equalVote: 1,
       highPlayer: null,
-      punishmentBgm
+      punishmentBgm,
+      punishmentCam: false,
     }
   },
   computed: {
@@ -201,10 +229,12 @@ export default {
     startPunishmentVoteBoard() {
       this.newMessage = `${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}의 사형 찬반투표를 실시합니다.`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
+      this.punishmentCam = true
       this.$forceUpdate();
     },
     finishPunishmentVoteBoard() {
       // 찬반 투표 결과를 알리는 메세지를 남김
+      this.punishmentCam = false
       this.newMessage = `투표 결과 ${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}를 사형합니다.`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       // 플레이어 수 만큼 for문이 돈다. 그리고 모든 유저의 득표수를 보여준다.
