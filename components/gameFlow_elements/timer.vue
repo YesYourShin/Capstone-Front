@@ -74,23 +74,13 @@ export default {
       console.log(start)
       this.serverEnd = dayjs(end.end).format("YYYY.MM.DD HH:mm:ss")
       this.clientRealTime = dayjs().format("YYYY.MM.DD HH:mm:ss");
-      console.log(this.serverEnd.diff(this.clientRealTime, 's'));
       this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
     });
     // 그리고 일정 시간에 함께 다음 이벤트로 emit 할 수 있어야 함.
   },
   methods: {
     // 스킵은 아직 구현 안됨
-    // ! 스킵
-    // ! 스킵의 경우, 유저가 스킵 버튼을 누르면 백엔드로 emit을 한다.
-    // ! 백엔드에서는 유저 수 만큼의 길이의 배열이 있으며, 모두 false가 기록되어 있다.
-    // ! 그리고 유저가 emit을 하면, 유저의 번호에 맞는 원소가 true가 된다.
-    // * [false, false, false] 상태에서 2번 유저의 skip 이벤트 발생시
-    // * [false, true, false] 로 변경
-    // ! 백엔드는 유저의 emit을 받을 때 마다 for문으로 배열을 검사한다.
-    // ! 배열의 모든 원소가 true일 경우, 클라이언트로 스킵 요청 emit을 한다.
-    // ! 모든 클라이언트에서는 타이머의 End Time을 갱신한다.
-    // ! 그리고 그 End Time에 맞게 totalSeconds를 5~10초 남게 갱신한다.
+
     formatTime(time) {
       if (time < 10) {
         return "0" + time;

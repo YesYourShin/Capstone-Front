@@ -327,8 +327,9 @@ export const GameEvent = {
   DEATH: "game:death",
   WINNER: "game:winner",
   USEJOBS: "game:useJobs",
-  MAFIASEARCH: "game:mafiaSearch",
-  TIMER: "game:timer"
+  MAFIASEARCH: 'game:mafiaSearch',
+  LEAVE: "game:leave",
+  SPEAK: "game:speak"
 };
 
 export const UserEvent = {

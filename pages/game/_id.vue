@@ -1,11 +1,10 @@
 <template lang="">
   <div class="body">
-    <Play></Play>
+    <Play :roomInfo="roomInfo"></Play>
   </div>
 </template>
 <script>
 import Play from "@/components/play.vue";
-import { getRoom } from "@/api/mafiaAPI";
 
 export default {
   components: {
@@ -14,12 +13,18 @@ export default {
   data() {
     return {};
   },
+  created() {
+    this.$root.gameSocket = this.$nuxtSocket({
+      channel: "/game",
+      withCredentials: true,
+      transports: ["websocket"],
+    });
+  },
   computed: {
     isRoomOut() {
       return this.$store.state.stream.isRoomOut;
     },
   },
-
   methods: {
     exit() {
       var unpublish = { request: "unpublish" };
@@ -46,18 +51,18 @@ export default {
       });
     },
   },
-  async asyncData({ params }) {
-    const roomInfo = await getRoom(params.id);
+  asyncData({ params }) {
     return {
       janus: params.janus,
       storePlugin: params.storePlugin,
-      roomInfo: roomInfo.data.data
+      roomInfo: params.roomInfo,
     };
   },
   beforeDestroy() {
-    if (this.isRoomOut) {
-      this.exit();
-    }
+    // if (this.isRoomOut) {
+    //   this.exit();
+    // }
+    this.exit();
   },
 };
 </script>

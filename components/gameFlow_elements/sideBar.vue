@@ -47,11 +47,23 @@
 </template>
 <script>
 import exitGame from "@/components/gameFlow_elements/exitGame.vue";
+import { GameEvent } from "@/api/mafiaAPI";
 
 export default {
   name: "SideBar",
   components: {
     exitGame
+  },
+  computed: {
+    myInfo() {
+      return this.$store.getters["user/getMyInfo"];
+    },
+    roomMembers() {
+      return this.$store.state.stream.roomMembers;
+    },
+    surviveMembers() {
+      return this.$store.state.stream.surviveMembers;
+    },
   },
   data() {
     return {
@@ -74,7 +86,37 @@ export default {
     },
     myJobCitizen() {
       this.createCitizenDiv = true;
-    }
+    },
+
+    // exit() {
+    //   var unpublish = { request: "unpublish" };
+    //   var leave = { request: "leave" };
+    //   let vrc = this;
+    //   this.$root.roomSocket.emit(GameEvent.LEAVE);
+    //   this.storePlugin.send({
+    //     message: unpublish,
+    //     success: function () {
+    //       vrc.$store.commit("stream/removeAllSubscribers");
+    //       vrc.$store.commit("stream/destroyRoomMembers");
+    //     },
+    //     error: function (error) {
+    //       console.log("unpublish failed:", error);
+    //     },
+    //   });
+    //   this.storePlugin.send({
+    //     message: leave,
+    //     success: function () {
+    //       vrc.janus.destroy();
+    //     },
+    //     error: function (error) {
+    //       console.log("leave failed:", error);
+    //     },
+    //   });
+    //   if (this.speechEvents) {
+    //     this.speechEvents.stop();
+    //     this.speechEvents = null;
+    //   }
+    // },
   }
 
 };

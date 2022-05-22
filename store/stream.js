@@ -124,11 +124,7 @@ export const mutations = {
             // member.stream = null;
             state.roomMembers = [...state.roomMembers, member];
           }
-          // if (!state.roomMembers.filter(e => e.id === member.id).length) {
-          //   state.roomMembers.push(member);
-          // } else {
-          //   Object.assign(state.roomMembers.find(e => e.id === member.id), member);
-          // }
+
         }
       } else {
         for (let i = 0; i < state.roomMembers.length; i++) {

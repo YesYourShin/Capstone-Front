@@ -11,6 +11,7 @@
 
 <script>
 import { GameEvent } from "@/api/mafiaAPI";
+const punishmentBgm = require('@/assets/ingameBgm/punishment.mp3').default
 export default {
   data() {
     return {
@@ -21,6 +22,7 @@ export default {
       highVote: 0,
       equalVote: 1,
       highPlayer: null,
+      punishmentBgm
     }
   },
   computed: {
@@ -92,13 +94,17 @@ export default {
         this.$forceUpdate()
         this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
           console.log(data)
+          this.punishmentEvent()
           this.message = `${data.nickname}은 ${data.job}이었습니다.`
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
           this.$forceUpdate()
           // ! 죽은 유저의 정보를 출력한다. punishment, usejobs
-          this.$store.commit('stream/killMember', data.nickname);
-          this.$store.commit('stream/surviveMemberCheck');
-          console.log('캠 끄기')
+          setTimeout(() => {
+            this.$store.commit('stream/killMember', data.nickname);
+            this.$store.commit('stream/surviveMemberCheck');
+            console.log('캠 끄기')
+          }, 2000)
+
         });
       } else {
         this.finishPunishmentVoteFalseBoard();
@@ -106,7 +112,7 @@ export default {
       setTimeout(()=> {
         this.$emit("nightEvent");
         console.log('빌보드 밤 이벤트 시작')
-      }, 3000)
+      }, 7000)
     });
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       // ! 죽은 유저의 정보를 출력한다.punishment, usejobs
@@ -244,7 +250,13 @@ export default {
       this.newMessage = '==========================='
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.$forceUpdate();
-    }
+    },
+
+    punishmentEvent() {
+      var audio3 = new Audio(this.punishmentBgm);
+      audio3.play();
+      console.log(audio3);
+    },
   },
 };
 </script>

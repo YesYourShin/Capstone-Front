@@ -139,7 +139,7 @@ import chatBox from "@/components/lobby_elements/chatBox.vue";
 import Janus from "@/plugins/janus";
 // import * as hark from "@/plugins/hark";
 import hark from "@/plugins/hark.bundle";
-import { GameRoomEvent } from "@/api/mafiaAPI";
+import { GameRoomEvent, GameEvent } from "@/api/mafiaAPI";
 
 export default {
   components: {
@@ -250,8 +250,9 @@ export default {
     },
     goToGame() {
       this.$router.replace({
-        name: "game",
+        name: "game-id",
         params: {
+          id: this.roomInfo.id,
           janus: this.janus,
           storePlugin: this.storePlugin,
           roomInfo: this.roomInfo,
@@ -740,6 +741,12 @@ export default {
                     console.log("speaking");
                     if (vrc.$route.name === "room-id") {
                       vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
+                        userId: vrc.myInfo.profile.userId,
+                        nickname: vrc.myInfo.profile.nickname,
+                        speaking: true,
+                      });
+                    } else if (vrc.$route.name === "game-id" && vrc.$root.gameSocket) {
+                      vrc.$root.gameSocket.emit(GameEvent.SPEAK, {
                         userId: vrc.myInfo.profile.userId,
                         nickname: vrc.myInfo.profile.nickname,
                         speaking: true,

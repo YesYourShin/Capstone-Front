@@ -1,5 +1,5 @@
 <template>
-  <!--  -->
+
   <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }">
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
@@ -12,7 +12,9 @@
         class="timerbox"
         ></Timer
       >
+
     </div>
+    <Audio ref="audio" />
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
     <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함. -->
     <Billboard ref="billboard" v-on:punishmentVote="punishmentVote" v-on:nightEvent="nightEvent" v-on:victorySearch="victorySearch"/>
@@ -43,7 +45,7 @@ import dayjs from "dayjs";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
-// import Audio from "@/components/gameFlow_elements/audio.vue";
+import Audio from "@/components/gameFlow_elements/audio.vue";
 export default {
   name: "App",
   props: {
@@ -55,7 +57,7 @@ export default {
     SideBar,
     DayCount,
     UserVideo,
-    // Audio,
+    Audio,
     dayjs,
   },
   computed: {
@@ -160,41 +162,15 @@ export default {
       console.log(this.flag)
     });
 
-    // // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
-    // this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
-    //   // ! serverStart : 서버 스타트 / serverEnd : 서버 엔드
-    //   // ! clientRealTime : 클라이언트 타이머 (스타트랑 엔드 비교 위함)
-    //   // let serverStart = dayjs(start.start, 'YYYY-MM-DDTHH:mm:ssZ')
-    //   // ! 일단 start, end가 object로 오므로, 아래와 같은 양식을 사용해야 함.
-    //   let serverStart = dayjs(start.start)
-    //   console.log(serverStart)
-    //   let serverEnd = dayjs(end.end)
-    //   console.log(serverEnd)
-    //   let clientRealTime = dayjs();
-    //   console.log(clientRealTime)
-
-    //   // * 서버 시작 시간 기록
-    //   // * 5:05이 시작시간, 5:15분이 끝나는 시간.
-    //   // * 내 PC에서 만약 5:07이다.
-    //   // * 15분 - 7분 = 8분
-    //   // * 서버에서 정해주는 끝나는 시간 - 자기 PC에 연결된 서버시간
-    //   // * 그 시간 / n 으로 타이머 작동
-    //   // * dayjs가 서버시간
-    //   // * 서버에서 받아오는 시간과 dayjs를 이용하면 가능 !
-
-    // });
-
     this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
       console.log(data)
     })
 
     this.$root.gameSocket.on(GameEvent.MAFIASEARCH, (data) => {
       // 모든 마피아 유저의 정보를 받아온다.
-      console.log(data)
+      console.log('마피아 유저' + data)
       // this.$store.commit('stream/mafiaInfoSave', data);
       // 이것을 stream.js에 담고 실행한다.
-
-      //
     })
 
 
@@ -221,6 +197,11 @@ export default {
       console.log(data)
       // vuex의 유저 정보 갱신,
     })
+
+    this.$root.roomSocket.on(GameEvent.SPEAK, (data) => {
+      console.log(data);
+      this.$store.commit("stream/setSpeaker", data);
+    });
 
   },
 
@@ -250,7 +231,7 @@ export default {
       console.log(this.$store.state.stream.roomMembers)
       this.$refs.billboard.morningEventBoard();
       console.log('아침 시작')
-      // this.morningAudio.play()
+      this.$refs.audio.morningBgmEvent();
       // 이곳에서 받아오는 시간은 서버 시간
       console.log(this.flag)
       this.$root.gameSocket.emit(GameEvent.DAY, {
@@ -320,6 +301,7 @@ export default {
       // 밤으로 배경 변경
       // this.nightAudio.play()
       console.log('게임 밤 이벤트 시작')
+      this.$refs.audio.nightBgmEvent();
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
       });
