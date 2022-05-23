@@ -41,6 +41,7 @@ export default {
     //   console.log(audio3);
     // },
 
+
     // this.nightAudio = document.querySelector('.nightAudio')
     // this.morningAudio = document.querySelector('.morningAudio')
     // this.nightAudio.volumne = 0.1
