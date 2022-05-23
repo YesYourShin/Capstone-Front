@@ -23,19 +23,19 @@
           :class="[
             {
               'bg-red-400 hover:bg-red-400/70':
-                member.score !== 'escape' && member.gameRoleName === 'mafia',
+                member.score !== 'escape' && member.gameRoleName === 'MAFIA',
             },
             {
               'bg-blue-400 hover:bg-blue-400/70':
-                member.score !== 'escape' && member.gameRoleName !== 'mafia',
+                member.score !== 'escape' && member.gameRoleName !== 'MAFIA',
             },
             {
               'bg-red-400/50 hover:bg-red-400/30 text-stone-400 ':
-                member.score === 'escape' && member.gameRoleName === 'mafia',
+                member.score === 'escape' && member.gameRoleName === 'MAFIA',
             },
             {
               'bg-blue-400/50 hover:bg-blue-400/30 text-stone-400 ':
-                member.score === 'escape' && member.gameRoleName !== 'mafia',
+                member.score === 'escape' && member.gameRoleName !== 'MAFIA',
             },
             {
               'border-4 border-green-600':
@@ -77,6 +77,10 @@ export default {
       console.log(this.myInfo);
       this.onOff = !this.onOff;
     },
+  },
+  mounted() {
+    console.log("member");
+    console.log(this.members);
   },
 };
 </script>
