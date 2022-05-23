@@ -108,9 +108,12 @@ export default {
           );
           this.$store.commit("user/addFriend", response.data.data);
           this.$swal({
-            title: "✧*｡٩(ˊᗜˋ*)و✧*｡",
+            title: "✧٩(ˊᗜˋ*)و✧",
             text: `Now you are friend with ${response.data.data.nickname}!`,
             icon: "success",
+            customClass: {
+              container: "friendOk",
+            },
           });
         } catch (error) {
           console.log(error);
@@ -188,10 +191,23 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .cancelButton {
   text-align: center;
   color: white;
   padding-bottom: 10px;
+}
+.friendOk{
+    .swal2-popup {
+      border: 5px solid white;
+      background-color: rgba(0, 0, 0, 0.705);
+      color: white;
+      .swal2-confirm {
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+      }
+
+    }
 }
 </style>

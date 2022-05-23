@@ -63,9 +63,9 @@ export default {
             //   : "test.png",
             // imageHeight: "128",
             // imageWidth: "128",
-            html: `
-                <div>
-                  <div class="flex items-center justify-center m-4">
+            html:
+            `<div>
+                  <div>
                     <img class="aspect-square w-32 object-cover" src="${
                       showingUser.image
                         ? showingUser.image.location
@@ -75,10 +75,11 @@ export default {
                   <p>Nickname : ${showingUser.nickname}</p>
                   <p>Introduction : ${showingUser.selfIntroduction}</p>
                   <p>Level : ${showingUser.level}</p>
-                  <p>Online Status : ${
-                    showingUser.online ? "Online" : "Offline"
-                  }</p>
+                  <p>Online Status : ${showingUser.online ? "Online" : "Offline"}</p>
                 </div>`,
+            customClass: {
+              container: "userBox",
+            },
             showCancelButton: true,
             showConfirmButton:
               !this.checkIsFriend(showingUser.userId) &&
@@ -97,9 +98,12 @@ export default {
                 .then((res) => {
                   console.log(res);
                   this.$swal({
-                    title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡‧₊˚",
+                    title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡",
                     text: "Your friend request has been sent successfully!",
                     icon: "success",
+                    customClass: {
+                      container: "friendRe",
+                    },
                   });
                 })
                 .catch((err) => {
@@ -121,9 +125,12 @@ export default {
                     res.data.data.friendId
                   );
                   this.$swal({
-                    title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
+                    title: "･ﾟﾟ･(>д<;)･ﾟﾟ･",
                     text: `You are no longer friends with ${showingUser.nickname}!`,
                     icon: "success",
+                    customClass: {
+                      container: "friendDe",
+                    },
                   });
                 })
                 .catch((err) => {
@@ -142,9 +149,11 @@ export default {
 
           this.$swal({
             icon: "question",
-            title: "There is no such user...",
+            title: "There is no such user",
             text: "Please enter a valid nickname!",
-            // footer: '<a href="">Why do I have this issue?</a>'
+            customClass: {
+              container: "noUser",
+            },
           });
         });
     },
@@ -156,4 +165,47 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style lang="scss">
+  .noUser{
+    .swal2-popup{
+      background-color: rgba(0, 0, 0, 0.705);
+      color: white;
+      border: 5px solid white;
+
+      .swal2-title{
+        border-top: 2px solid white;
+        border-bottom: 2px solid white;
+        padding: 10px 0;
+        margin-top: 10px;
+      }
+      .swal2-confirm {
+        background-color: white;
+        color: black;
+      }
+    }
+  }
+  .friendRe{
+    .swal2-popup {
+      border: 5px solid white;
+      background-color: rgba(0, 0, 0, 0.705);
+      color: white;
+      .swal2-confirm {
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+      }
+    }
+  }
+  .friendDe{
+    .swal2-popup {
+      border: 5px solid white;
+      background-color: rgba(0, 0, 0, 0.705);
+      color: white;
+      .swal2-confirm {
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+      }
+    }
+  }
+</style>

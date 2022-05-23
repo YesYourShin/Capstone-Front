@@ -110,10 +110,18 @@ export default {
           this.$swal({
             icon: "error",
             title: err.response.data.data.message,
-          });
+          },
+          );
         });
     },
   },
 };
 </script>
-<style lang=""></style>
+<style lang="scss">
+.test{
+  color: pink;
+  .swal2-popup {
+    border: 4px solid black;
+  }
+}
+</style>

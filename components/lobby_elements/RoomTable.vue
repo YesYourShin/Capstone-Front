@@ -312,6 +312,9 @@ export default {
           this.$swal({
             icon: "error",
             title: err.response.data.data.message,
+            customClass: {
+              container: "noRoom",
+            },
           });
         });
     },
@@ -321,4 +324,18 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style lang="scss">
+.noRoom{
+ .swal2-popup{
+   border: 5px solid white;
+   background-color: rgba(0, 0, 0, 0.705);
+   .swal2-title{
+     color: white;
+   }
+   .swal2-confirm{
+     background-color: white;
+     color: black;
+   }
+ }
+}
+</style>

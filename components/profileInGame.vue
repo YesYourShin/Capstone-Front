@@ -45,7 +45,7 @@
           알림
           <div
             v-if="myNotifications.length"
-            class="rounded-full bg-red-500 inline-block leading-6 text-center text-sm aspect-square w-6 absolute right-5"
+            class="rounded-full bg-red-500 inline-block leading-6 text-center text-sm aspect-square w-6 absolute right-5 pr-0.5"
           >
             {{ myNotifications.length > 99 ? "99+" : myNotifications.length }}
           </div>
@@ -166,9 +166,12 @@ export default {
           // imageUrl: showingUser.image ? showingUser.image.location : "test.png",
           // imageHeight: "128",
           // imageWidth: "128",
+          customClass: {
+          container: "",
+          },
           html: `
                 <div>
-                  <div class="flex items-center justify-center m-4">
+                  <div>
                     <img class="aspect-square w-32 object-cover" src="${
                       showingUser.image
                         ? showingUser.image.location
@@ -182,6 +185,9 @@ export default {
                     showingUser.online ? "Online" : "Offline"
                   }</p>
                 </div>`,
+            customClass: {
+              container: "userBox",
+            },
           showCancelButton: true,
           showConfirmButton: !this.checkIsFriend(showingUser.userId),
           showDenyButton: this.checkIsFriend(showingUser.userId),
@@ -193,9 +199,12 @@ export default {
               .then((res) => {
                 console.log(res);
                 this.$swal({
-                  title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡‧₊˚",
+                  title: "ଘ(੭*ˊᵕˋ)੭* ੈ♡",
                   text: "Your friend request has been sent successfully!",
                   icon: "success",
+                  customClass: {
+                    container: "friendRe",
+                  },
                 });
               })
               .catch((err) => {
@@ -208,9 +217,12 @@ export default {
                 this.$store.commit("user/deleteFriend", res.data.data.friendId);
                 this.$store.commit("tabCloseByUserId", res.data.data.friendId);
                 this.$swal({
-                  title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
+                  title: "･ﾟﾟ･(>д<;)･ﾟﾟ･",
                   text: `You are no longer friends with ${showingUser.nickname}!`,
                   icon: "success",
+                    customClass: {
+                      container: "friendDe",
+                    },
                 });
               })
               .catch((err) => {
@@ -233,9 +245,12 @@ export default {
             this.$store.commit("user/deleteFriend", res.data.data.friendId);
             this.$store.commit("tabCloseByUserId", res.data.data.friendId);
             this.$swal({
-              title: "｡･ﾟﾟ･(>д<;)･ﾟﾟ･｡",
-              text: `You are no longer friends with ${showingUser.nickname}!`,
-              icon: "success",
+                title: "･ﾟﾟ･(>д<;)･ﾟﾟ･",
+                text: `You are no longer friends with ${showingUser.nickname}!`,
+                icon: "success",
+                customClass: {
+                  container: "friendDe",
+                },
             });
           })
           .catch((err) => {
@@ -257,6 +272,9 @@ export default {
               title: "Success",
               text: `You invited ${showingUser.nickname} to your room!`,
               icon: "success",
+              customClass: {
+                container: "goRoom",
+              },
             });
           })
           .catch((err) => {
@@ -273,6 +291,95 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "~assets/profileInGame.scss";
+  .userBox{
+     .swal2-popup {
+        width: 700px;
+        height: 530px;
+        border: 3px solid white;
+        background-image: url("@/assets/profileimg/city.png");
+        background-size: 900px;
+        background-position: bottom;
+
+      .aspect-square{
+        margin: auto;
+        width: 128px;
+        height: 128px;
+        border: 3px solid black;
+        background-color: white;
+        border-radius: 100%;
+        margin-bottom: 10px;
+      }
+
+      p{
+        border-left: 5px solid white;
+        border-right: 5px solid white;
+        width: 80%;
+        height: 42px;
+        line-height: 42px;
+        background-color: rgba(0, 0, 0, 0.72);
+        color: white;
+        font-size: 25px;
+        font-weight: bolder;
+        margin: auto;
+        padding-bottom: 5px;
+      }
+    .swal2-cancel{
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+    }
+    .swal2-confirm {
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+    }
+     }
+    .swal2-title{
+      background-color: black;
+      color: white;
+      padding: 0;
+      height: 80px;
+      line-height: 80px;
+      font-size: 40px;
+    }
+
+  }
+.friendRe{
+  .swal2-popup {
+    border: 5px solid white;
+    background-color: rgba(0, 0, 0, 0.705);
+    color: white;
+    .swal2-confirm {
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+    }
+  }
+}
+.friendDe{
+  .swal2-popup {
+    border: 5px solid white;
+    background-color: rgba(0, 0, 0, 0.705);
+    color: white;
+    .swal2-confirm {
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+    }
+  }
+}
+.goRoom{
+    .swal2-popup {
+    border: 5px solid white;
+    background-color: rgba(0, 0, 0, 0.705);
+    color: white;
+    .swal2-confirm {
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+    }
+  }
+}
 </style>
