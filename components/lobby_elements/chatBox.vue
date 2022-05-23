@@ -51,7 +51,7 @@
         <div
           v-for="(message, index) in chats[selectedIndex].messages"
           :key="index"
-          class="text-white font-semibold pl-4 mx-2"
+          class="text-white font-semibold pl-2 mb-1"
         >
           {{ message }}
         </div>
@@ -86,7 +86,7 @@
       <div class="grow mr-3">
         <input
           type="text"
-          class="w-full bg-white rounded-lg px-2 py-1 outline-none"
+          class="w-full bg-white px-2 py-1 outline-none"
           placeholder="Type your message here..."
           v-model="input"
           @keyup.enter="sendMessage"
