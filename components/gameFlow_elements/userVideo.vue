@@ -155,23 +155,19 @@ export default {
       }
     }),
 
-      this.$nuxt.$on("skillTimeFinish", (data) => {
+    this.$nuxt.$on("skillTimeFinish", (data) => {
+      if (this.skillTrue === true && typeof this.checkNum !== 'boolean') {
         console.log(data);
         clearInterval(this.voteLoading);
-        // this.mediaStatus = null
         this.vStatus = false;
         this.vote = false;
         this.cStatus = false;
         this.check = false;
-        if (this.skillTrue === true && this.checkNum === true) {
-          console.log("스킬 값 이미 넘겨 줌");
-        } else {
-          this.$emit("skillNumEmit", null);
-          console.log("스킬 값 널로 넘겨줌");
-        }
+        this.$emit("skillNumEmit", null);
         this.voteLoading = null;
         this.checkLoading = null;
-      });
+      }
+    });
   },
   async mounted() {
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
@@ -186,24 +182,27 @@ export default {
   watch: {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
+      this.voteLoading = null;
+      this.voteNum = newVoteResult;
+      this.voteCount = 0;
       if (
         newVoteResult > 0 &&
         newVoteResult <= this.$store.state.stream.roomMembers.length &&
-        newVoteResult !== null
+        newVoteResult !== null &&
+        this.$store.state.stream.roomMembers[this.voteNum - 1].die === false
       ) {
-        this.voteLoading = null;
-        this.voteNum = newVoteResult;
-        this.voteCount = 0;
-        console.log("초기화");
-        if (
-          this.$store.state.stream.roomMembers[this.voteNum - 1].die === false
-        ) {
+        console.log("초기화"); {
           this.voteLoading = setInterval(() => {
-            this.voteCount += 1;
-            if (this.voteCount === 3) {
+            if (this.voteCount < 3) {
+              this.voteCount += 1;
+              console.log(this.voteCount)
+            }
+            if (newVoteResult !== this.voteNum) {
+              clearInterval(this.voteLoading)
+              this.voteCount = 0;
+            } else if (this.voteCount === 3) {
               clearInterval(this.voteLoading);
               console.log("체크 완료");
-              // this.mediaStatus = null
               this.vStatus = false;
               this.vote = false;
               this.checkVoteMotion();
@@ -221,7 +220,10 @@ export default {
       this.checkCount = 0;
       if (typeof this.checkNum === "boolean") {
         this.checkLoading = setInterval(() => {
-          this.checkCount += 1;
+          if (this.checkCount < 3) {
+            this.checkCount += 1;
+            console.log(this.checkCount)
+          }
           if (newCheckResult !== this.checkNum) {
             clearInterval(this.checkLoading);
             this.checkCount = 0;
@@ -264,7 +266,10 @@ export default {
         // 0, undefined, null, NaN,  // true, 1, '나다라' {}, []
         this.punishLoading = setInterval(() => {
           // this.punishLoading의 주소값이 계속 업데이트
-          this.punishmentCount += 1;
+          if (this.checkCount < 3) {
+            this.punishmentCount += 1;
+            console.log(this.punishmentCount)
+          }
           if (newPunishmentResult !== this.punishmentNum) {
             clearInterval(this.punishLoading); // this.pushiLoading의 업데이트 된 주소값을 계속 참조
             // 그래서 기존 것을 없앨수가 없음

@@ -9,26 +9,25 @@
       </div>
     </div>
     <div v-show="punishmentCam === true" class="aspect-video messagebox">
-    <div v-for="(s, n) in roomMembers"
+    <div v-for="s in roomMembers"
       :key="s.userId">
     <div v-if="s.stream" class="videoCut">
           <video
-            v-if="s.nickname === myInfo.profile.nickname"
-            class="myVideo"
+            v-if="s.nickname === punishmentBillboard"
             :ref="'remote' + s.userId"
             :id="'remote' + s.userId"
             :src-object.prop.camel="s.stream"
             autoplay
             muted
           ></video>
-          <canvas
+          <!-- <canvas
             v-if="s.nickname === myInfo.profile.nickname"
             :class="['output_canvas' + s.id]"
             :id="['output_canvas' + n]"
             width="640"
             height="360"
           >
-          </canvas>
+          </canvas> -->
     </div>
     </div>
   </div>
@@ -51,6 +50,7 @@ export default {
       highPlayer: null,
       punishmentBgm,
       punishmentCam: false,
+      punishmentBillboard: null,
     }
   },
   computed: {
@@ -123,7 +123,7 @@ export default {
         this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
           console.log(data)
           this.punishmentEvent()
-          this.message = `${data.nickname}은 ${data.job}이었습니다.`
+          this.newMessage = `${data.nickname}은 ${data.job}이었습니다.`
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
           this.$forceUpdate()
           // ! 죽은 유저의 정보를 출력한다. punishment, usejobs
@@ -230,6 +230,7 @@ export default {
       this.newMessage = `${this.$store.state.stream.roomMembers[this.highPlayer-1].nickname}의 사형 찬반투표를 실시합니다.`
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.punishmentCam = true
+      this.punishmentBillboard = this.$store.state.stream.roomMembers[this.highPlayer-1].nickname
       this.$forceUpdate();
     },
     finishPunishmentVoteBoard() {
@@ -248,6 +249,7 @@ export default {
     nightEventBoard() {
       // 밤이 되었음을 알리는 메세지와
       // 자신의 직업에 따라 다른 메세지를 남김
+      this.punishmentCam = false
       this.newMessage = '==========================='
       this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
       this.newMessage = '밤이 되었습니다. 자신의 능력을 사용할 수 있습니다.'
