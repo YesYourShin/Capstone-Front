@@ -26,7 +26,7 @@
           <!-- 추가해야 할 조건 = 자신의 직업이 마피아일 때, 마피아인 사람 -->
           <!-- v-if flag===false && s.nickname === job 마피아면 캔버스 클래스 안줌  -->
           <canvas
-            v-if="flag === false && s.nickname !== myInfo.profile.nickname"
+            v-if="flag === false && s.nickname !== myInfo.profile.nickname && s.die === false"
             :class="['output_canvas' + s.id]"
             :id="['output_canvas' + n]"
             width="640"
@@ -64,6 +64,7 @@
 </template>
 
 <script>
+
 import Memo from "@/components/gameFlow_elements/memo.vue";
 import { Hands } from "@mediapipe/hands";
 import {
@@ -132,7 +133,7 @@ export default {
     // ! 투표 한 사람이 중복으로 넘겨주면 안됨!!
 
     this.$nuxt.$on("voteTimeFinish", (data) => {
-      if (this.skillTrue === false && typeof this.checkNum !== "boolean") {
+      if (this.skillTrue === false && this.checkNum !== true) {
           console.log(data);
           clearInterval(this.voteLoading);
           this.vStatus = false;
@@ -155,24 +156,21 @@ export default {
       }
     }),
 
-      this.$nuxt.$on("skillTimeFinish", (data) => {
+    this.$nuxt.$on("skillTimeFinish", (data) => {
+      if (this.skillTrue === true && typeof this.checkNum !== 'boolean') {
         console.log(data);
         clearInterval(this.voteLoading);
-        // this.mediaStatus = null
         this.vStatus = false;
         this.vote = false;
         this.cStatus = false;
         this.check = false;
-        if (this.skillTrue === true && this.checkNum === true) {
-          console.log("스킬 값 이미 넘겨 줌");
-        } else {
-          this.$emit("skillNumEmit", null);
-          console.log("스킬 값 널로 넘겨줌");
-        }
+        this.$emit("skillNumEmit", null);
         this.voteLoading = null;
         this.checkLoading = null;
-      });
+      }
+    });
   },
+
   async mounted() {
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
     this.myCanvas = document.getElementsByClassName(
@@ -189,98 +187,28 @@ export default {
       if (
         newVoteResult > 0 &&
         newVoteResult <= this.$store.state.stream.roomMembers.length &&
-        newVoteResult !== null
+        newVoteResult !== null &&
+        this.$store.state.stream.roomMembers[newVoteResult - 1].die === false &&
+        newVoteResult !== this.voteNum
       ) {
-        this.voteLoading = null;
-        this.voteNum = newVoteResult;
-        this.voteCount = 0;
-        console.log("초기화");
-        if (
-          this.$store.state.stream.roomMembers[this.voteNum - 1].die === false
-        ) {
-          this.voteLoading = setInterval(() => {
-            this.voteCount += 1;
-            if (this.voteCount === 3) {
-              clearInterval(this.voteLoading);
-              console.log("체크 완료");
-              // this.mediaStatus = null
-              this.vStatus = false;
-              this.vote = false;
-              this.checkVoteMotion();
-              this.voteLoading = null;
-            }
-          }, 1000);
-        }
+        this.voteNum = newVoteResult
+        this.changeVoteResult();
       }
     },
 
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
-      this.voteLoading = null;
-      this.checkNum = newCheckResult;
-      this.checkCount = 0;
-      if (typeof this.checkNum === "boolean") {
-        this.checkLoading = setInterval(() => {
-          this.checkCount += 1;
-          if (newCheckResult !== this.checkNum) {
-            clearInterval(this.checkLoading);
-            this.checkCount = 0;
-          } else if (this.checkCount === 3) {
-            clearInterval(this.checkLoading);
-            console.log("체크 인식 완료" + this.checkNum);
-            // this.mediaStatus = null
-            this.cStatus = false;
-            this.check = false;
-            // 스킬 사용이 아니고, 체크했을 경우
-            if (this.skillTrue === false && this.checkNum === true) {
-              this.$emit("voteNumEmit", this.voteNum);
-              // this.$emit('voteNumEmit', null)
-              console.log("투표 값 넘겨줌" + this.voteNum);
-              // 스킬 사용이고, 체크했을 경우
-            } else if (this.skillTrue === true && this.checkNum === true) {
-              this.$emit("skillNumEmit", this.voteNum);
-              console.log("스킬 값 넘겨줌" + this.voteNum);
-              // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
-            } else if (this.skillTrue === false && this.checkNum === false) {
-              this.startVoteMotion();
-              console.log("투표 다시");
-            } else if (this.skillTrue === true && this.checkNum === false) {
-              this.skillMotion();
-              console.log("스킬 다시");
-            }
-            this.checkLoading = null;
-          }
-        }, 1000);
+      if (typeof newCheckResult === "boolean" && newCheckResult !== this.checkNum) {
+        this.checkNum = newCheckResult;
+        this.changeCheckResult();
       }
     },
     punishmentResult: function (newPunishmentResult) {
       // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
-      this.punishLoading = null;
-      this.punishmentNum = newPunishmentResult; // this.punishmentNum == 'a'
-      this.punishmentCount = 0;
-
-      if (typeof this.punishmentNum === "boolean") {
-        // 0, undefined, null, NaN,  // true, 1, '나다라' {}, []
-        this.punishLoading = setInterval(() => {
-          // this.punishLoading의 주소값이 계속 업데이트
-          this.punishmentCount += 1;
-          if (newPunishmentResult !== this.punishmentNum) {
-            clearInterval(this.punishLoading); // this.pushiLoading의 업데이트 된 주소값을 계속 참조
-            // 그래서 기존 것을 없앨수가 없음
-            this.punishmentCount = 0;
-          } else if (this.punishmentCount === 3) {
-            clearInterval(this.punishLoading);
-            // this.mediaStatus = null
-            this.pStatus = false;
-            this.punishment = false;
-            this.punishmentEmit = this.punishmentNum
-            this.$emit("punishmentEmit", this.punishmentEmit);
-            // 죽음 값을 완벽히 인식했을 때만 가능
-            console.log(this.punishmentEmit + "죽음 투표");
-            this.punishLoading = null;
-          }
-        }, 1000);
+      if (typeof newPunishmentResult === "boolean" && newPunishmentResult !== this.punishmentNum) {
+        this.punishmentNum = newPunishmentResult
+        this.punishmentCheckResult();
       }
     },
   },
@@ -320,6 +248,95 @@ export default {
       console.log("투표 인식 시작");
       this.pStatus = this.punishment ? false : true;
     },
+
+    changeVoteResult() {
+      this.voteCount = 0;
+      clearInterval(this.voteLoading);
+      this.voteLoading = setInterval(() => {
+        if (this.voteCount < 3) {
+          this.voteCount += 1;
+          console.log(this.voteCount)
+        } else if (this.voteCount === 3) {
+          clearInterval(this.voteLoading);
+          console.log("체크 완료");
+          this.vStatus = false;
+          this.vote = false;
+          this.checkVoteMotion();
+          this.voteLoading = null;
+          console.log(this.voteNum);
+        }
+      }, 1000);
+    },
+
+    changeCheckResult() {
+      this.checkCount = 0;
+      clearInterval(this.changeCheckResult);
+        this.checkLoading = setInterval(() => {
+          if (this.checkCount < 3) {
+            this.checkCount += 1;
+            console.log(this.checkCount)
+          } else if (this.checkCount === 3) {
+            clearInterval(this.checkLoading);
+            console.log("체크 인식 완료" + this.checkNum);
+            // this.mediaStatus = null
+            this.cStatus = false;
+            this.check = false;
+            // 스킬 사용이 아니고, 체크했을 경우
+            if (this.skillTrue === false && this.checkNum === true) {
+              this.$emit("voteNumEmit", this.voteNum);
+              this.checkLoading = null;
+              this.checkNum = null
+              this.voteNum = null;
+              // this.$emit('voteNumEmit', null)
+              console.log("투표 값 넘겨줌" + this.voteNum);
+              // 스킬 사용이고, 체크했을 경우
+            } else if (this.skillTrue === true && this.checkNum === true) {
+              this.$emit("skillNumEmit", this.voteNum);
+              this.checkNum = null
+              this.checkLoading = null;
+              this.voteNum = null;
+              console.log("스킬 값 넘겨줌" + this.voteNum);
+              // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
+            } else if (this.skillTrue === false && this.checkNum === false) {
+              this.checkNum = null
+              this.checkLoading = null;
+              this.voteNum = null;
+              this.startVoteMotion();
+              console.log("투표 다시");
+            } else if (this.skillTrue === true && this.checkNum === false) {
+              this.checkNum = null
+              this.checkLoading = null;
+              this.voteNum = null;
+              this.skillMotion();
+              console.log("스킬 다시");
+            }
+
+          }
+        }, 1000);
+    },
+
+    punishmentCheckResult() {
+      this.punishmentCount = 0;
+      clearInterval(this.punishLoading)
+      this.punishLoading = setInterval(() => {
+          // this.punishLoading의 주소값이 계속 업데이트
+          if (this.punishmentCount < 3) {
+            this.punishmentCount += 1;
+            console.log(this.punishmentCount)
+          } else if (this.punishmentCount === 3) {
+            clearInterval(this.punishLoading);
+            // this.mediaStatus = null
+            this.pStatus = false;
+            this.punishment = false;
+            this.punishmentEmit = this.punishmentNum
+            this.$emit("punishmentEmit", this.punishmentEmit);
+            // 죽음 값을 완벽히 인식했을 때만 가능
+            console.log(this.punishmentEmit + "죽음 투표");
+            this.punishLoading = null;
+          }
+        }, 1000);
+    },
+
     async handCognition(videoElement, canvasElement, canvasCtx) {
       // videoElement.style.display = "none";
       let onResults = async (results) => {

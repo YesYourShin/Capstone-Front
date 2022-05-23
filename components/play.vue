@@ -1,5 +1,5 @@
 <template>
-  <!--  -->
+
   <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }">
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
@@ -12,7 +12,9 @@
         class="timerbox"
         ></Timer
       >
+
     </div>
+    <Audio ref="audio" />
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
     <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함. -->
     <Billboard ref="billboard" v-on:punishmentVote="punishmentVote" v-on:nightEvent="nightEvent" v-on:victorySearch="victorySearch"/>
@@ -43,7 +45,7 @@ import dayjs from "dayjs";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
-// import Audio from "@/components/gameFlow_elements/audio.vue";
+import Audio from "@/components/gameFlow_elements/audio.vue";
 export default {
   name: "App",
   props: {
@@ -55,7 +57,7 @@ export default {
     SideBar,
     DayCount,
     UserVideo,
-    // Audio,
+    Audio,
     dayjs,
   },
   computed: {
@@ -89,22 +91,17 @@ export default {
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
   },
-
   //새로고침 방지 위해서 추가 뒤로가기 하면 로비에서도 적용됨.
   beforeUnmount() {
     window.removeEventListener("beforeunload", this.unLoadEvent);
   },
-
   mounted() {
     dayjs.extend(customParseFormat)
-
     window.addEventListener('beforeunload', this.unLoadEvent);
     this.$store.commit('stream/loadBackupMembers');
     // let newRemoteFeed = null;
     this.gameSocketSet();
-
     // 여기서부터는 백엔드의 emit을 받아 처리
-
     // 게임 시작과 동시에, 유저 정보를 받아오고, 게임 시작 메서드 실행
     this.$root.gameSocket.on(GameEvent.JOIN, (data) => {
       console.log(data)
@@ -112,7 +109,6 @@ export default {
         this.gameStart();
       }, 5000);
     });
-
     // 인게임에서 활용하기 위한 데이터를 가져오고, 직업 배분을 시작함
     this.$root.gameSocket.on(GameEvent.START, (data) => {
       for (let item of data) {
@@ -122,7 +118,6 @@ export default {
         this.grantPlayerJob();
       }, 5000);
     });
-
     // 유저의 직업을 배분하고, 배분된 직업에 따라 다른 이벤트 부여
     // 달라지는 것 - 빌보드 메세지, 사이드바 UI 내용
     this.$root.gameSocket.on(GameEvent.JOB, (data) => {
@@ -153,51 +148,30 @@ export default {
         this.morningEvent();
       }, 5000);
     });
-
     // 낮밤 변경
     this.$root.gameSocket.on(GameEvent.DAY, (data) => {
+      console.log(data)
       this.flag = data.day;
       console.log(this.flag)
     });
 
-    // // 타이머의 시간을 기준으로 60초 환산 (지금은 클라이언트 기준 60초)
-    // this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
-    //   // ! serverStart : 서버 스타트 / serverEnd : 서버 엔드
-    //   // ! clientRealTime : 클라이언트 타이머 (스타트랑 엔드 비교 위함)
-    //   // let serverStart = dayjs(start.start, 'YYYY-MM-DDTHH:mm:ssZ')
-    //   // ! 일단 start, end가 object로 오므로, 아래와 같은 양식을 사용해야 함.
-    //   let serverStart = dayjs(start.start)
-    //   console.log(serverStart)
-    //   let serverEnd = dayjs(end.end)
-    //   console.log(serverEnd)
-    //   let clientRealTime = dayjs();
-    //   console.log(clientRealTime)
-
-    //   // * 서버 시작 시간 기록
-    //   // * 5:05이 시작시간, 5:15분이 끝나는 시간.
-    //   // * 내 PC에서 만약 5:07이다.
-    //   // * 15분 - 7분 = 8분
-    //   // * 서버에서 정해주는 끝나는 시간 - 자기 PC에 연결된 서버시간
-    //   // * 그 시간 / n 으로 타이머 작동
-    //   // * dayjs가 서버시간
-    //   // * 서버에서 받아오는 시간과 dayjs를 이용하면 가능 !
-
-    // });
+    this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
+      if (data.winner === 'MAFIA') {
+        this.mafiaWin()
+      } else {
+        this.citizenWin()
+      }
+    })
 
     this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
       console.log(data)
     })
-
     this.$root.gameSocket.on(GameEvent.MAFIASEARCH, (data) => {
       // 모든 마피아 유저의 정보를 받아온다.
-      console.log(data)
+      console.log('마피아 유저' + data)
       // this.$store.commit('stream/mafiaInfoSave', data);
       // 이것을 stream.js에 담고 실행한다.
-
-      //
     })
-
-
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
       console.log(data.userNum);
       // 이걸로 직업 알려주는 이벤트 발생하게 한다..
@@ -208,22 +182,21 @@ export default {
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
       console.log(data);
     })
-
     this.$root.gameSocket.on(GameEvent.MAFIA, (data) => {
       console.log('마피아의 지목 ' + data);
     })
-
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
       console.log(data);
     })
-
     this.$root.gameSocket.on(GameEvent.LEAVE, (data) => {
       console.log(data)
       // vuex의 유저 정보 갱신,
     })
-
+    this.$root.roomSocket.on(GameEvent.SPEAK, (data) => {
+      console.log(data);
+      this.$store.commit("stream/setSpeaker", data);
+    });
   },
-
   created() {},
   methods: {
     // 게임에 입장하는 즉시 실행되며, 유저의 소켓 정보 받아옴
@@ -233,35 +206,29 @@ export default {
       });
       this.$refs.billboard.gameStartBoard();
     },
-
     // 게임 스타트, 게임 스타트 관련 데이터
     gameStart() {
       this.$root.gameSocket.emit(GameEvent.START);
       this.$refs.billboard.grantPlayerJobBeforeBoard();
     },
-
     // 직업 배분 결과 통지
     grantPlayerJob() {
       this.$root.gameSocket.emit(GameEvent.JOB);
     },
-
     // 아침 이벤트 발생,
     morningEvent() {
+      this.flag = !this.flag
       console.log(this.$store.state.stream.roomMembers)
       this.$refs.billboard.morningEventBoard();
       console.log('아침 시작')
-      // this.morningAudio.play()
+      this.$refs.audio.morningBgmEvent();
       // 이곳에서 받아오는 시간은 서버 시간
       console.log(this.flag)
-      this.$root.gameSocket.emit(GameEvent.DAY, {
-        day: this.flag,
-      });
       this.$refs.timer.morningTimer();
       // dayCount에서는 빌보드 상단에 표기되는 day의 숫자를 +1
       this.$refs.dayCount.nextDay();
       // 타이머에서 다음 메서드를 실행하게 한다!
     },
-
     // 투표 시작
     startVote() {
       this.$refs.billboard.startVoteBoard();
@@ -273,7 +240,6 @@ export default {
     },
     // 투표값 전송을 위한 메서드로, 집계는 startVote에서 한다.
     // 자신의 투표값을 저장한다.
-
     // userVideo.vue에서 얻어낸 유저 지목 값을 백엔드로 전송
     voteNumCheck(voteNum) {
       // this.electedPlayer = voteNum;
@@ -282,7 +248,6 @@ export default {
         vote: voteNum,
       })
     },
-
     // 타이머 끝나면 이게 실행되고, 집계된 결과값을 가져온다.
     finishVote() {
       this.$root.gameSocket.emit(GameEvent.FINISHV);
@@ -295,7 +260,6 @@ export default {
         this.$refs.userVideo.punishmentVoteMotion();
       }, 3000);
     },
-
     // userVideo.vue에서 얻어낸 심판투표 찬반여부를 백엔드로 전송
     // true가 엄지손가락을 내린 형태로 사형 찬성이고
     // false가 엄지손가락을 올린 형태로 사형 반대이다.
@@ -309,17 +273,17 @@ export default {
         },
       );
     },
-
     // 심판 투표 결과값을 가져온다.
     finishPunishmentVote() {
       this.$root.gameSocket.emit(GameEvent.FINISHP);
       console.log('찬반 가져옴')
     },
-
     nightEvent() {
       // 밤으로 배경 변경
-      // this.nightAudio.play()
+      // this.nightAudio.play()'
+      this.flag = !this.flag
       console.log('게임 밤 이벤트 시작')
+      this.$refs.audio.nightBgmEvent();
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag,
       });
@@ -340,7 +304,6 @@ export default {
           console.log('시민은 없다')
         }
     },
-
     skillNumCheck(voteNum) {
       if (this.myJob === "MAFIA") {
         this.$root.gameSocket.emit(GameEvent.MAFIA, {
@@ -356,7 +319,6 @@ export default {
         });
       } // 이거
     },
-
     nightResult() {
       this.$refs.billboard.nightResultBoard();
       setTimeout(() => {
@@ -365,28 +327,19 @@ export default {
         console.log('밤 결과')
       }, 3000)
     },
-
     victorySearch() {
       this.$store.commit('stream/surviveMemberCheck');
-      // if(this.$store.state.stream.surviveMembers - )
-      // 유저 카운트를 하고 조건이 맞을 경우 게임을 종료한다.
-      // 이것은 마피아 윈과 시티즌 윈으로 나눠서 실행한다.
-      // 조건이 맞지 않을 경우, morningEvent를 실행한다.
-      // 이 부분은 아직 구현 ㄴㄴ
+      this.$root.gameSocket.emit(GameEvent.DAY, {
+        day: this.flag
+      });
       console.log('승리조건 파악')
       this.morningEvent();
     },
-
     mafiaWin() {
-      // 마피아가 이겼다는 빌보드를 출력한다.
-      // 전적 반영 후
-      // 5~10초의 딜레이를 두고 모든 유저를 밖으로 내보낸다. (room page)
+      console.log('마피아 승리')
     },
-
     citizenWin() {
-      // 시민 이겼다는 빌보드를 출력한다.
-      // 전적 반영 후
-      // 5~10초의 딜레이를 두고 모든 유저를 밖으로 내보낸다. (room page)
+      console.log('시민 승리')
     },
   },
 };
@@ -395,4 +348,3 @@ export default {
 <style lang="scss" scoped="scoped">
 @import "~assets/game.scss";
 </style>
-

@@ -90,3 +90,5 @@ sw.*
 *.swp
 
 todo.md
+todo_leave.md
+todo_skip.md

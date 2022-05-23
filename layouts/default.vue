@@ -11,14 +11,14 @@ export default {
   watch: {
     $route: {
       handler: function (to, from) {
-        if (to.name !== "room-id" && to.name !== "game") {
+        if (to.name !== "room-id" && to.name !== "game-id") {
           this.$store.commit("stream/onRoomOut");
         } else {
           this.$store.commit("stream/offRoomOut");
         }
 
         if (
-          !(to.name === "lobby" || to.name === "game" || to.name === "room-id")
+          !(to.name === "lobby" || to.name === "game-id" || to.name === "room-id")
         ) {
           if (this.$root.userSocket) {
             this.$root.userSocket.disconnect();
