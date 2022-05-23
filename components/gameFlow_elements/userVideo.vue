@@ -26,7 +26,7 @@
           <!-- 추가해야 할 조건 = 자신의 직업이 마피아일 때, 마피아인 사람 -->
           <!-- v-if flag===false && s.nickname === job 마피아면 캔버스 클래스 안줌  -->
           <canvas
-            v-if="flag === false && s.nickname !== myInfo.profile.nickname"
+            v-if="flag === false && s.nickname !== myInfo.profile.nickname && s.die === false"
             :class="['output_canvas' + s.id]"
             :id="['output_canvas' + n]"
             width="640"
@@ -184,8 +184,6 @@ export default {
   watch: {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
-      // this.voteNum = newVoteResult;
-      // this.voteCount = 0;
       if (
         newVoteResult > 0 &&
         newVoteResult <= this.$store.state.stream.roomMembers.length &&
@@ -288,6 +286,7 @@ export default {
               this.$emit("voteNumEmit", this.voteNum);
               this.checkLoading = null;
               this.checkNum = null
+              this.voteNum = null;
               // this.$emit('voteNumEmit', null)
               console.log("투표 값 넘겨줌" + this.voteNum);
               // 스킬 사용이고, 체크했을 경우
@@ -295,19 +294,23 @@ export default {
               this.$emit("skillNumEmit", this.voteNum);
               this.checkNum = null
               this.checkLoading = null;
+              this.voteNum = null;
               console.log("스킬 값 넘겨줌" + this.voteNum);
               // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
             } else if (this.skillTrue === false && this.checkNum === false) {
               this.checkNum = null
               this.checkLoading = null;
+              this.voteNum = null;
               this.startVoteMotion();
               console.log("투표 다시");
             } else if (this.skillTrue === true && this.checkNum === false) {
               this.checkNum = null
               this.checkLoading = null;
+              this.voteNum = null;
               this.skillMotion();
               console.log("스킬 다시");
             }
+
           }
         }, 1000);
     },
