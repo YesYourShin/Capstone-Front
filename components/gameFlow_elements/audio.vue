@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- <audio :src="require('@/assets/ingameBgm/night.mp3')" controls></audio> -->
-    <!-- <audio :src="require('@/assets/ingameBgm/night.mp3')" controls></audio> -->
   </div>
 </template>
 
@@ -35,19 +33,7 @@ export default {
 
     // // 유저 심판 투표 찬성 후 사형시 발생
     // ! 퍼니시는 빌보드로 이동시켜놨음
-    // punishmentEvent() {
-    //   var audio3 = new Audio(this.punishmentBgm);
-    //   audio3.play();
-    //   console.log(audio3);
-    // },
-
-
-    // this.nightAudio = document.querySelector('.nightAudio')
-    // this.morningAudio = document.querySelector('.morningAudio')
-    // this.nightAudio.volumne = 0.1
-    // this.morningAudio.volumne = 0.1
   }
-
 }
 </script>
 

@@ -20,14 +20,6 @@
             autoplay
             muted
           ></video>
-          <!-- <canvas
-            v-if="s.nickname === myInfo.profile.nickname"
-            :class="['output_canvas' + s.id]"
-            :id="['output_canvas' + n]"
-            width="640"
-            height="360"
-          >
-          </canvas> -->
     </div>
     </div>
   </div>
