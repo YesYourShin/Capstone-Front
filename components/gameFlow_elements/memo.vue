@@ -300,16 +300,10 @@ export default {
           let topLeftx = landmarks.topLeft[0];
           let topLefty = landmarks.topLeft[1];
 
-          let imgCitizenHat = "";
+          let imgCitizenHat = img.src.includes("citizen_hat");
           let imgPoliceHat = img.src.includes("police_hat");
           let imgDoctorHat = img.src.includes("doctor_hat");
           let imgMafiaHat = img.src.includes("mafia_hat");
-
-          console.log("landmark else");
-          console.log(img.src);
-          console.log(imgPoliceHat);
-          console.log(imgDoctorHat);
-          console.log(imgMafiaHat);
 
           if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
             const canvasWidth = bottomRightx - topLeftx;
@@ -337,9 +331,9 @@ export default {
       switch (job) {
         case "citizen":
           this.testImage[id] = {
-            imgSrc: "",
-            imgWidth: 0,
-            imgHeight: 0,
+            imgSrc: require("@/assets/memo/citizen_hat.png"),
+            imgWidth: 370,
+            imgHeight: 176,
           };
           break;
         case "police":
