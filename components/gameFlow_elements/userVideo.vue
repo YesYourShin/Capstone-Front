@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <!-- <Memo></Memo> -->
+    <Memo></Memo>
   </div>
 </template>
 
