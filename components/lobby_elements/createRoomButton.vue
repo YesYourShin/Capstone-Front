@@ -181,7 +181,7 @@ export default {
       height: 600px;
       background-image: url("@/assets/post.png");
       background-position: bottom;
-      background-size: 900px 630px;
+      background-size: 900px 530px;
 
 
       .swal2-title{
@@ -207,11 +207,12 @@ export default {
           justify-content: space-between;
           width: 100%;
           margin: 10px 0;
-          background-color: rgba(0, 0, 0, 0.765);
+          background-color: rgba(0, 0, 0, 0.88);
           height: 50px;
           line-height: 50px;
           color: white;
-
+          border-top: 2px solid white;
+          border-bottom: 2px solid white;
 
           label{
             margin: 0 20px;

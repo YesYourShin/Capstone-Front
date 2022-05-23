@@ -1,8 +1,9 @@
 <template lang="">
   <div class="flex flex-col min-h-screen w-full">
-    <div class="flex-grow relative">
+    <div class="flex-grow relative mb-3" id="roomMain">
       <div
         class="flex px-6 py-2 items-center justify-between align-middle border border-solid border-l-0 border-r-0 bg-amber-400 border-amber-300"
+        id="titlebox"
       >
         <div>
           <p class="font-bold">
@@ -10,7 +11,7 @@
           </p>
         </div>
         <div>
-          <p class="font-bold">FAFIA - gjgjajaj.xyz</p>
+          <p class="font-bold">2022-FAFIA ONLINE</p>
         </div>
         <div>
           <p class="font-bold">
@@ -21,8 +22,8 @@
           </p>
         </div>
       </div>
-      <div class="px-2 mt-10">
-        <div class="grid grid-cols-5 gap-4 justify-evenly">
+      <div class="px-2" id="tesgs">
+        <div class="grid grid-cols-5 gap-4 justify-evenly py-3 px-3">
           <!-- <div
             v-if="publishStream"
             class="justify-self-center px-2 pb-3 w-full"
@@ -46,6 +47,7 @@
             </p>
           </div> -->
           <div
+            id="awasd"
             class="justify-self-center mx-2 mb-3 w-full rounded border-[3px]"
             v-for="(s, index) in roomMembers"
             :class="`${s.speaking ? 'border-green-500' : 'border-black/0'}`"
@@ -90,13 +92,9 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-row-reverse px-2 absolute inset-x-0 bottom-0">
+      <div class="flex flex-row-reverse absolute inset-x-0 bottom-0" id="btntest">
         <div class="m-4 w-40 justify-center items-center">
           <div class="leaveBox">
-            <div class="buttonLine1"></div>
-            <div class="buttonLine2"></div>
-            <div class="buttonLine3"></div>
-            <div class="buttonLine4"></div>
             <button class="buttonCore" @click="leave()">나가기</button>
           </div>
         </div>
@@ -107,10 +105,6 @@
               v-if="roomMembers[0].userId !== myInfo.profile.userId"
             >
               <div class="readyBox">
-                <div class="buttonLine1"></div>
-                <div class="buttonLine2"></div>
-                <div class="buttonLine3"></div>
-                <div class="buttonLine4"></div>
                 <button class="buttonCore" @click="getReady()">
                   {{ amIReady ? "준비 해제" : "준비 하기" }}
                 </button>
@@ -118,10 +112,6 @@
             </div>
             <div class="m-4 md:w-40" v-else>
               <div class="startBox">
-                <div class="buttonLine1"></div>
-                <div class="buttonLine2"></div>
-                <div class="buttonLine3"></div>
-                <div class="buttonLine4"></div>
                 <button class="buttonCore" @click="getStart()">
                   게임 시작
                 </button>
@@ -820,10 +810,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+#titlebox{
+  font-size: 22px;
+  font-weight: bold;
+}
+#tesgs{
+  margin-top: 20px;
+}
 .leaveBox {
-  width: 180px;
-  height: 70px;
-  margin: auto 75px auto auto;
+  width: 160px;
+  height: 60px;
+  margin: auto;
   //border: 3px solid rgb(255, 255, 255);
   display: flex;
   justify-content: center;
@@ -834,34 +831,19 @@ export default {
       animation: color1 0.3s;
       animation-fill-mode: forwards;
     }
-    .buttonLine1 {
-      animation: buttonLineW 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine3 {
-      animation: buttonLineW 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine2 {
-      animation: buttonLineH 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine4 {
-      animation: buttonLineH 0.3s;
-      animation-fill-mode: forwards;
-    }
   }
 
   .buttonCore {
-    margin: auto 0;
+    margin-top: 20px;
     width: 150px;
     height: 40px;
+    line-height: 27px;
     font-size: 20px;
     --tw-bg-opacity: 1;
     background-color: rgb(0 0 0 / 80%);
-    color: rgb(254 240 138 / var(--tw-bg-opacity));
+    color: white;
     font-weight: bold;
-    border: 3px solid rgb(254 240 138);
+    border: 3px solid white;
 
     &:active {
       width: 140px;
@@ -873,50 +855,10 @@ export default {
       height: 34px;
     }
   }
-
-  .buttonLine1 {
-    width: 30px;
-    height: 3px;
-    top: 5px;
-    left: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
-  }
-
-  .buttonLine2 {
-    width: 4px;
-    height: 25px;
-    top: 5px;
-    left: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
-  }
-
-  .buttonLine3 {
-    width: 30px;
-    height: 3px;
-    bottom: 5px;
-    right: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
-  }
-
-  .buttonLine4 {
-    width: 3px;
-    height: 25px;
-    bottom: 5px;
-    right: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
-  }
 }
 .readyBox {
-  width: 180px;
-  height: 70px;
+  width: 160px;
+  height: 60px;
   margin: auto 75px auto auto;
   //border: 3px solid rgb(255, 255, 255);
   display: flex;
@@ -928,122 +870,13 @@ export default {
       animation: color2 0.3s;
       animation-fill-mode: forwards;
     }
-    .buttonLine1 {
-      animation: buttonLineW 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine3 {
-      animation: buttonLineW 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine2 {
-      animation: buttonLineH 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine4 {
-      animation: buttonLineH 0.3s;
-      animation-fill-mode: forwards;
-    }
   }
 
   .buttonCore {
-    margin: auto 0;
+    margin-top: 20px;
     width: 150px;
     height: 40px;
-    font-size: 20px;
-    --tw-bg-opacity: 1;
-    background-color: rgb(0 0 0 / 80%);
-    color: rgb(187 247 208 / var(--tw-bg-opacity));
-    font-weight: bold;
-    border: 3px solid rgb(187 247 208);
-
-    &:active {
-      width: 140px;
-      height: 35px;
-      font-size: 20px;
-    }
-    button {
-      width: 140px;
-      height: 34px;
-    }
-  }
-
-  .buttonLine1 {
-    width: 30px;
-    height: 3px;
-    top: 5px;
-    left: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-  }
-
-  .buttonLine2 {
-    width: 4px;
-    height: 25px;
-    top: 5px;
-    left: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-  }
-
-  .buttonLine3 {
-    width: 30px;
-    height: 3px;
-    bottom: 5px;
-    right: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-  }
-
-  .buttonLine4 {
-    width: 3px;
-    height: 25px;
-    bottom: 5px;
-    right: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-  }
-}
-.startBox {
-  width: 180px;
-  height: 70px;
-  margin: auto 75px auto auto;
-  //border: 3px solid rgb(255, 255, 255);
-  display: flex;
-  justify-content: center;
-  position: relative;
-
-  &:hover {
-    .buttonCore {
-      animation: color3 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine1 {
-      animation: buttonLineW 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine3 {
-      animation: buttonLineW 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine2 {
-      animation: buttonLineH 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .buttonLine4 {
-      animation: buttonLineH 0.3s;
-      animation-fill-mode: forwards;
-    }
-  }
-
-  .buttonCore {
-    margin: auto 0;
-    width: 150px;
-    height: 40px;
+    line-height: 27px;
     font-size: 20px;
     --tw-bg-opacity: 1;
     background-color: rgb(0 0 0 / 80%);
@@ -1062,45 +895,46 @@ export default {
     }
   }
 
-  .buttonLine1 {
-    width: 30px;
-    height: 3px;
-    top: 5px;
-    left: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: white;
+}
+.startBox {
+  width: 160px;
+  height: 60px;
+  margin: auto;
+  //border: 3px solid rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  &:hover {
+    .buttonCore {
+      animation: color3 0.3s;
+      animation-fill-mode: forwards;
+    }
   }
 
-  .buttonLine2 {
-    width: 4px;
-    height: 25px;
-    top: 5px;
-    left: 5px;
-    position: absolute;
+  .buttonCore {
+    margin-top: 20px;
+    width: 150px;
+    height: 40px;
+    line-height: 27px;
+    font-size: 20px;
     --tw-bg-opacity: 1;
-    background-color: white;
+    background-color: rgb(0 0 0 / 80%);
+    color: white;
+    font-weight: bold;
+    border: 3px solid white;
+
+    &:active {
+      width: 140px;
+      height: 35px;
+      font-size: 20px;
+    }
+    button {
+      width: 140px;
+      height: 34px;
+    }
   }
 
-  .buttonLine3 {
-    width: 30px;
-    height: 3px;
-    bottom: 5px;
-    right: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: white;
-  }
-
-  .buttonLine4 {
-    width: 3px;
-    height: 25px;
-    bottom: 5px;
-    right: 5px;
-    position: absolute;
-    --tw-bg-opacity: 1;
-    background-color: white;
-  }
 }
 @keyframes buttonLineW {
   0% {
@@ -1121,8 +955,8 @@ export default {
   }
   100% {
     --tw-bg-opacity: 1;
-    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
-    border-color: rgb(254 240 138 / var(--tw-bg-opacity));
+    background-color: white;
+    border-color: white;
     /* background-color: white; */
     color: #000;
   }
@@ -1132,8 +966,8 @@ export default {
   }
   100% {
     --tw-bg-opacity: 1;
-    background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-    border-color: rgb(187 247 208 / var(--tw-bg-opacity));
+    background-color: white;
+    border-color: white;
     /* background-color: white; */
     color: #000;
   }
@@ -1143,10 +977,22 @@ export default {
   }
   100% {
     --tw-bg-opacity: 1;
-    background-color: rgb(191 219 254 / var(--tw-bg-opacity));
-    border-color: rgb(191 219 254 / var(--tw-bg-opacity));
+    background-color: white;
+    border-color: white;
     /* background-color: white; */
     color: #000;
+  }
+}
+#roomMain{
+  background-color: rgba(0, 0, 0, 0.665);
+
+  #btntest{
+    height: 90px;
+    padding-right: 30px;
+    // border-bottom: 5px solid #FBBF24;
+  }
+  #awasd{
+    border: 2px solid white;
   }
 }
 </style>
