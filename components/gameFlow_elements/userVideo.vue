@@ -53,7 +53,7 @@
       <div class="grid grid-cols-4 font-semibold userInfo">
         <div
         v-if="flag === false && s.nickname !== myInfo.profile.nickname && s.die === false"
-          :class="`col-span-1 text-center bg-black text-white`"
+          :class="`col-span-1 text-center bg-black-500 text-white`"
         >
           Lv.{{ s.level }}
         </div>
