@@ -177,7 +177,6 @@ export default {
       let model;
 
       const detectFaces = async () => {
-        console.log("detectFaces");
         /*
     `predictions` is an array of objects describing each detected face, for example:
 
@@ -237,6 +236,7 @@ export default {
     },
     postLandmarks(landmarks) {
       const id = this.myInfo.profile.id;
+      console.log("my landmarks", landmarks);
       this.$root.gameSocket.emit("myFaceLandmarks", {
         landmarks: landmarks[0],
         id: id,
@@ -244,6 +244,7 @@ export default {
     },
     getLandmarks() {
       this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
+        console.log("othersFaceLandmarks", data);
         this.testLandmark[data.id] = data.landmarks;
       });
     },
