@@ -93,7 +93,12 @@ export default {
   },
   methods: {
     test(){
-      this.$swal("로그인을 해주십시오");
+      this.$swal({
+                title: "로그인을 해주십시오",
+                customClass: {
+                  container: "loginbox",
+                },
+            });
     },
     openFullScreenMode(){
       document.documentElement.requestFullscreen()
@@ -102,6 +107,21 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "~assets/header.scss";
+
+.loginbox{
+  .swal2-popup {
+    background-color: rgba(0, 0, 0, 0.823);
+    border: 5px solid white;
+    color: white;
+
+    .swal2-confirm {
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+    }
+  }
+}
+
 </style>

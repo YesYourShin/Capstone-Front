@@ -50,7 +50,7 @@
             id="awasd"
             class="justify-self-center mx-2 mb-3 w-full rounded border-[3px]"
             v-for="(s, index) in roomMembers"
-            :class="`${s.speaking ? 'border-green-500' : 'border-black/0'}`"
+            :class="`${s.speaking ? 'border-green-500' : 'border-white'}`"
             :key="s.userId"
           >
             <div class="aspect-video">
@@ -999,9 +999,6 @@ export default {
     height: 90px;
     padding-right: 30px;
     // border-bottom: 5px solid #FBBF24;
-  }
-  #awasd{
-    border: 2px solid white;
   }
 }
 </style>
