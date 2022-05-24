@@ -52,15 +52,16 @@
       <!-- 여기까지 div v-if s.stream -->
       <div class="grid grid-cols-4 font-semibold userInfo">
         <div
-        v-if="flag === false && s.nickname !== myInfo.profile.nickname && s.die === false"
+          v-if="
+            flag === false &&
+            s.nickname !== myInfo.profile.nickname &&
+            s.die === false
+          "
           :class="`col-span-1 text-center bg-black-500 text-white`"
         >
           Lv.{{ s.level }}
         </div>
-        <div
-         v-else
-          :class="`col-span-1 text-center bg-green-500 text-white`"
-        >
+        <div v-else :class="`col-span-1 text-center bg-green-500 text-white`">
           Lv.{{ s.level }}
         </div>
         <!-- 첫날 밤, 마피아 유저는 이름 빨간색 -->
@@ -103,6 +104,7 @@ export default {
       isPuase: false,
       timer: null,
       mediaStatus: true,
+      leave: false,
     };
   },
   props: {
@@ -225,6 +227,9 @@ export default {
         this.punishmentCheckResult();
       }
     },
+  },
+  beforeunload() {
+    this.leave = true;
   },
   methods: {
     startVoteMotion() {
@@ -445,6 +450,8 @@ export default {
       const media = async () => {
         if (!videoElement) {
           requestAnimationFrame(media);
+        } else if (this.leave) {
+          return;
         } else {
           if (!this.mediaStatus) {
             canvasCtx.save();

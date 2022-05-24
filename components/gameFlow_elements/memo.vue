@@ -65,6 +65,7 @@ export default {
       faceDetection: null,
       mediaStatus: true,
       btStatus: null,
+      leave: false,
     };
   },
   create() {},
@@ -149,6 +150,9 @@ export default {
     };
     main();
   },
+  beforeunload() {
+    this.leave = true;
+  },
   // 해야할일, 투표
   methods: {
     myFace() {
@@ -213,7 +217,13 @@ export default {
       videoElement.addEventListener("loadeddata", async () => {
         const blazeface = require("@tensorflow-models/blazeface");
         model = await blazeface.load();
-        setInterval(detectFaces, 30);
+        const interval = setInterval(function () {
+          if (!this.leave) {
+            detectFaces;
+          } else {
+            clearinterval(interval);
+          }
+        }, 30);
       });
     },
     postLandmarks(landmarks) {
@@ -317,7 +327,14 @@ export default {
 
         canvasCtx.restore();
       };
-      setInterval(detectFace, 16);
+
+      const interval = setInterval(function () {
+        if (!this.leave) {
+          detectFace;
+        } else {
+          clearinterval(interval);
+        }
+      }, 16);
     },
 
     memoJob(job, id) {
