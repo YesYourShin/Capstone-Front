@@ -1,8 +1,8 @@
 <template>
 
-  <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }">
-      <MafiaWinModal v-show="showModal === true" @close-modal="showModal = false" />
-      <CitizenWinModal v-show="showModal2 === true " @close-modal="showModal2 = false" />
+  <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }" :escapeGame="'/lobby'">
+      <MafiaWinModal v-show="mafiaWinModal === true" @close-modal="mafiaWinModal = false" />
+      <CitizenWinModal v-show="citizenModal === true " @close-modal="citizenModal = false" />
 
     <!-- <div class="save-btn">
         <button @click="showModal = true">Save</button>
@@ -58,6 +58,10 @@ export default {
   name: "App",
   props: {
     roomInfo: Object,
+    escape: {
+      type: String,
+      default: '/lobby',
+    }
   },
   components: {
     Timer,
@@ -97,8 +101,8 @@ export default {
       endTime: null,
       myJob: null,
       anotherMafia: null,
-      showModal: false,
-      showModal2: false
+      mafiaWinModal: false,
+      citizenModal: false
       // flag는 하위 컴포넌트에서 상속되게 해야한다.
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
@@ -108,11 +112,7 @@ export default {
     window.removeEventListener("beforeunload", this.unLoadEvent);
   },
   mounted() {
-    if (this.showModal === true) {
-      setTimeout(() => {
-        this.showModal = false
-      }, 3000)
-    }
+
     dayjs.extend(customParseFormat)
     window.addEventListener('beforeunload', this.unLoadEvent);
     this.$store.commit('stream/loadBackupMembers');
@@ -163,20 +163,30 @@ export default {
       this.$store.commit('stream/surviveMemberCheck');
       setTimeout(() => {
         this.morningEvent();
+        this.flag = !this.flag
       }, 5000);
     });
     // 낮밤 변경
-    this.$root.gameSocket.on(GameEvent.DAY, (data) => {
-      console.log(data)
-      this.flag = data.day;
-      console.log(this.flag)
-    });
+
 
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
       if (data.winner === 'MAFIA') {
         this.mafiaWin()
-      } else {
+      } else if (data.winner === 'CITIZEN') {
         this.citizenWin()
+      } else {
+        this.$root.gameSocket.on(GameEvent.DAY, (data) => {
+        console.log(data)
+        this.flag = data.day;
+        console.log(this.flag)
+        if (this.flag === true) {
+          this.flag = !this.flag
+          this.nightEvent()
+        } else {
+          this.flag = !this.flag
+          this.morningEvent();
+        }
+          });
       }
     })
 
@@ -234,7 +244,6 @@ export default {
     },
     // 아침 이벤트 발생,
     morningEvent() {
-      this.flag = !this.flag
       console.log(this.$store.state.stream.roomMembers)
       this.$refs.billboard.morningEventBoard();
       console.log('아침 시작')
@@ -248,7 +257,7 @@ export default {
     },
     // 투표 시작
     startVote() {
-      this.showModal2 = true
+      // this.citizenModal = true
       this.$refs.billboard.startVoteBoard();
       setTimeout(() => {
         this.$refs.timer.voteTimer();
@@ -297,9 +306,6 @@ export default {
       console.log('찬반 가져옴')
     },
     nightEvent() {
-      // 밤으로 배경 변경
-      // this.nightAudio.play()'
-      this.flag = !this.flag
       console.log('게임 밤 이벤트 시작')
       this.$refs.audio.nightBgmEvent();
       this.$root.gameSocket.emit(GameEvent.DAY, {
@@ -347,20 +353,32 @@ export default {
     },
     victorySearch() {
       this.$store.commit('stream/surviveMemberCheck');
+      console.log(this.$store.state.stream.roomMembers.die)
       this.$root.gameSocket.emit(GameEvent.DAY, {
         day: this.flag
       });
-      console.log('승리조건 파악')
-      this.morningEvent();
     },
     mafiaWin() {
-      this.showModal = true
+      this.mafiaWinModal = true
       console.log('마피아 승리')
+      setTimeout(() => {
+        console.log('시민 승리로 게임 종료')
+        this.escapeGame()
+        this.mafiaWinModal = false
+      }, 5000)
     },
     citizenWin() {
-      this.showModal2 = true
+      this.citizenModal = true
       console.log('시민 승리')
+      setTimeout(() => {
+        console.log('시민 승리로 게임 종료')
+        this.escapeGame()
+        this.citizenWinModal = false
+      }, 5000)
     },
+    escapeGame() {
+      this.$router.push(this.escape);
+    }
   },
 };
 </script>

@@ -45,6 +45,12 @@ export default {
       punishmentBillboard: null,
     }
   },
+  props: {
+    escape: {
+      type: String,
+      default: '/lobby',
+    }
+  },
   computed: {
     myInfo() {
       return this.$store.getters["user/getMyInfo"];
@@ -68,7 +74,7 @@ export default {
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
           this.$forceUpdate()
           setTimeout(() => {
-            this.$emit("nightEvent")
+            this.$emit("victorySearch")
           },3000)
       } else {
         for (let i = 0; i < data.length; i++) {
@@ -97,7 +103,7 @@ export default {
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage)
           this.$forceUpdate()
           setTimeout(() => {
-            this.$emit("nightEvent")
+            this.$emit("victorySearch")
             // night가 두개 간다. 이거 내일 즉시 수정
           },3000)
         }
@@ -130,7 +136,7 @@ export default {
         this.finishPunishmentVoteFalseBoard();
       }
       setTimeout(()=> {
-        this.$emit("nightEvent");
+        this.$emit("victorySearch");
         console.log('빌보드 밤 이벤트 시작')
       }, 7000)
     });
