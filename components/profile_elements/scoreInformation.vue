@@ -74,13 +74,8 @@ export default {
   },
   methods: {
     moreRecordOnOff() {
-      console.log(this.myInfo);
       this.onOff = !this.onOff;
     },
-  },
-  mounted() {
-    console.log("member");
-    console.log(this.members);
   },
 };
 </script>

@@ -38,7 +38,6 @@
       />
     </div>
     <div>
-      <!-- <button v-on:click="cameraSwitch(true)">camera on</button> -->
       <button v-on:click="mediaStatus = true">camera on</button>
       <button v-on:click="mediaStatus = false">camera off</button>
     </div>
@@ -151,11 +150,11 @@ export default {
       // 타인의 스트림만큼 캔버스에 메모 그리기
       // for (let data of this.roomMembers) {
       //   if (data.id != this.myInfo.profile.id) {
-      //     await this.faceMemo(data);
+      // await this.faceMemo(data);
       //   }
       // }
     };
-    // main();
+    main();
   },
   // 해야할일, 투표
   methods: {
@@ -188,15 +187,14 @@ export default {
     ]
     */
         let landmarks = await model.estimateFaces(videoElement, false);
-
         // 자신의 얼굴 랜드마크 확인
         // console.log(landmarks);
         canvasCtx.save();
-        // canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        // canvasCtx.translate(canvasElement.width, 0);
-        // canvasCtx.scale(-1, 1);
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        canvasCtx.translate(canvasElement.width, 0);
+        canvasCtx.scale(-1, 1);
 
-        canvasCtx.fillRect(10, 10, 50, 50);
+        // canvasCtx.fillRect(10, 10, 50, 50);
 
         // canvasCtx.drawImage(
         //   videoElement,
@@ -306,10 +304,12 @@ export default {
           let imgMafiaHat = img.src.includes("mafia_hat");
 
           if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
-            const canvasWidth = bottomRightx - topLeftx;
-            const canvasHeight = bottomRighty - topLefty;
-            const canvasx = topLeftx;
-            const canvasy = topLefty - canvasHeight;
+            const canvasWidth =
+              bottomRightx - topLeftx + (bottomRightx - topLeftx) / 2;
+            const canvasHeight =
+              bottomRighty - topLefty + (bottomRighty - topLefty) / 2;
+            const canvasx = topLeftx - 60;
+            const canvasy = topLefty - canvasHeight + 15;
             console.log("landmark else > if");
             img.onload = canvasCtx.drawImage(
               img,
