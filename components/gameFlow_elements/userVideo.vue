@@ -47,17 +47,6 @@
       <!-- 여기까지 div v-if s.stream -->
       <div class="grid grid-cols-4 font-semibold userInfo">
         <div
-<<<<<<< HEAD
-        v-if="flag === false && s.nickname !== myInfo.profile.nickname && s.die === false"
-          :class="`col-span-1 text-center bg-black text-white`"
-        >
-          Lv.{{ s.level }}
-        </div>
-        <div
-         v-else
-          :class="`col-span-1 text-center bg-green text-white`"
-        >
-=======
           v-if="
             flag === false &&
             s.nickname !== myInfo.profile.nickname &&
@@ -68,7 +57,6 @@
           Lv.{{ s.level }}
         </div>
         <div v-else :class="`col-span-1 text-center bg-green-500 text-white`">
->>>>>>> 02f60d67b560c3b2ce324a8962973bd875b69bf7
           Lv.{{ s.level }}
         </div>
         <!-- 첫날 밤, 마피아 유저는 이름 빨간색 -->
