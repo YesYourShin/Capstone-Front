@@ -67,6 +67,8 @@ export default {
       mediaStatus: true,
       btStatus: null,
       leave: false,
+      myFaceInterval: null,
+      userFaceInterval: [],
     };
   },
   create() {},
@@ -151,8 +153,18 @@ export default {
     };
     main();
   },
-  beforeunload() {
+  async beforeDestroy() {
+    console.log("beforeunload");
     this.leave = true;
+    console.log(this.myFaceInterval);
+    clearInterval(this.myFaceInterval);
+
+    console.log(this.myFaceInterval);
+    for (const data of this.roomMembers) {
+      if (data.id != this.myInfo.profile.id) {
+        clearInterval(this.userFaceInterval[data.id]);
+      }
+    }
   },
   // 해야할일, 투표
   methods: {
@@ -219,14 +231,8 @@ export default {
       videoElement.addEventListener("loadeddata", async () => {
         const blazeface = require("@tensorflow-models/blazeface");
         model = await blazeface.load();
-        const interval = setInterval(function () {
-          if (!this.leave) {
-            detectFaces;
-          } else {
-            clearinterval(interval);
-          }
-        }, 30);
-        interval();
+
+        this.myFaceInterval = setInterval(detectFaces, 16);
       });
     },
     postLandmarks(landmarks) {
@@ -330,15 +336,7 @@ export default {
 
         canvasCtx.restore();
       };
-
-      const interval = setInterval(function () {
-        if (!this.leave) {
-          detectFace;
-        } else {
-          clearinterval(interval);
-        }
-      }, 16);
-      interval();
+      this.userFaceInterval[id] = setInterval(detectFace, 16);
     },
 
     memoJob(job, id) {
