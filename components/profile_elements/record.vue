@@ -92,7 +92,7 @@ export default {
       let sHeight = this.$refs.score.scrollHeight;
       let cHeight = this.$refs.score.clientHeight;
       let sTop = this.$refs.score.scrollTop;
-      if (sHeight - cHeight - sTop === 0) {
+      if (sHeight - cHeight - sTop <= 0) {
         console.log("more page");
         this.$store.dispatch("user/getMoreRecords", {
           page: this.page,

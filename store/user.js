@@ -95,7 +95,9 @@ export const actions = {
         1,
         10
       );
-      console.log(context);
+      console.log("getRecord 1");
+      console.log(response);
+
       context.commit("setRecord", response.data.data);
     } catch (error) {
       console.log(error);
@@ -114,7 +116,8 @@ export const actions = {
         page,
         perPage
       );
-
+      console.log("getRecord" + page);
+      console.log(response);
       context.commit("addRecord", response.data.data);
     } catch (err) {
       console.log(err);

@@ -294,9 +294,9 @@ export const sendDM = ({ message, friendId }) => {
 };
 
 // 전적
-export const getRecord = (nickname, page, item) => {
+export const getRecord = (nickname, page, perPage) => {
   return instance.get(
-    `/games/gamelists/by-nickname/${nickname}?page=${page}&item=${item}`
+    `/games/gamelists/by-nickname/${nickname}?page=${page}&item=${perPage}`
   );
 };
 
