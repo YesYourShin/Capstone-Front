@@ -226,7 +226,7 @@ export default {
             clearinterval(interval);
           }
         }, 30);
-        interval;
+        interval();
       });
     },
     postLandmarks(landmarks) {
@@ -338,7 +338,7 @@ export default {
           clearinterval(interval);
         }
       }, 16);
-      interval;
+      interval();
     },
 
     memoJob(job, id) {
