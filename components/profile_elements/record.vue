@@ -51,14 +51,14 @@
               </td>
             </tr>
           </table>
-          <ScoreInfo :members="oneRecord.members"></ScoreInfo>
+          <RecordInfo :members="oneRecord.members"></RecordInfo>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import ScoreInfo from "./scoreInformation.vue";
+import RecordInfo from "./recordInformation.vue";
 export default {
   props: {
     record: {
@@ -75,7 +75,7 @@ export default {
     };
   },
   components: {
-    ScoreInfo,
+    RecordInfo,
   },
   computed: {
     myInfo() {

@@ -1,10 +1,16 @@
-import { getMyInformation, getNotifications, getRecord } from "../api/mafiaAPI";
+import {
+  getMyInformation,
+  getNotifications,
+  getRecord,
+  getScore,
+} from "../api/mafiaAPI";
 import Vue from "vue";
 
 export const state = () => ({
   myInfo: null,
   myNotifications: [],
-  myScore: [],
+  myRecord: [],
+  myScore: null,
 });
 
 export const mutations = {
@@ -56,10 +62,14 @@ export const mutations = {
   },
   setRecord(state, data) {
     console.log("setRecord", data);
-    state.myScore = data;
+    state.myRecord = data;
   },
   addRecord(state, data) {
-    for (let record of data) state.myScore.push(record);
+    for (let record of data) state.myRecord.push(record);
+  },
+  setScore(state, data) {
+    console.log("setScore", data);
+    state.myScore = data;
   },
 };
 
@@ -80,13 +90,19 @@ export const actions = {
       console.log(error);
     }
     try {
-      console.log(context);
       const response = await getRecord(
         context.state.myInfo.profile.nickname,
         1,
         10
       );
+      console.log(context);
       context.commit("setRecord", response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      const response = await getScore(context.state.myInfo.profile.id);
+      context.commit("setScore", response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -114,6 +130,9 @@ export const getters = {
     return state.myNotifications;
   },
   getRecord(state) {
+    return state.myRecord;
+  },
+  getScore(state) {
     return state.myScore;
   },
 };

@@ -293,10 +293,15 @@ export const sendDM = ({ message, friendId }) => {
   return instance.post(`/dms/friends/${friendId}`, { message });
 };
 
+// 전적
 export const getRecord = (nickname, page, item) => {
   return instance.get(
     `/games/gamelists/by-nickname/${nickname}?page=${page}&item=${item}`
   );
+};
+
+export const getScore = (userId) => {
+  return instance.get(`games/${userId}`);
 };
 
 export const GameRoomEvent = {
@@ -327,9 +332,9 @@ export const GameEvent = {
   DEATH: "game:death",
   WINNER: "game:winner",
   USEJOBS: "game:useJobs",
-  MAFIASEARCH: 'game:mafiaSearch',
+  MAFIASEARCH: "game:mafiaSearch",
   LEAVE: "game:leave",
-  SPEAK: "game:speak"
+  SPEAK: "game:speak",
 };
 
 export const UserEvent = {
