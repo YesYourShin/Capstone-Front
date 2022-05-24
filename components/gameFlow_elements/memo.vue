@@ -52,18 +52,11 @@ export default {
   components: {},
   data() {
     return {
-      playUsersNum: 10, // 게임 인원 수
-      userNum: 1, // 자신의 번호
       imgSrc: [],
       img: [],
-      imgWidth: [],
-      imgHeight: [],
       landmarks: [],
       topLeftLandmarks: [],
       bottomRightLandmarks: [],
-      // myVideo: false,
-      // myCanvas: false,
-      // myCtx: false,
       othersLandmarks: [],
       socket: null,
       testLandmark: {},
@@ -148,7 +141,7 @@ export default {
       await this.myFace();
 
       // 타인의 스트림만큼 캔버스에 메모 그리기
-      for (let data of this.roomMembers) {
+      for (const data of this.roomMembers) {
         if (data.id != this.myInfo.profile.id) {
           await this.faceMemo(data);
         }
@@ -186,7 +179,8 @@ export default {
       }
     ]
     */
-        let landmarks = await model.estimateFaces(videoElement, false);
+
+        const landmarks = await model.estimateFaces(videoElement, false);
         // 자신의 얼굴 랜드마크 확인
         // console.log(landmarks);
         canvasCtx.save();
@@ -276,9 +270,9 @@ export default {
         if (this.testImage[id].imgSrc != null)
           this.testImage[id].img.src = this.testImage[id].imgSrc;
 
-        let img = this.testImage[id].img;
-        let imgWidth = this.testImage[id].imgWidth;
-        let imgHeight = this.testImage[id].imgHeight;
+        const img = this.testImage[id].img;
+        const imgWidth = img.width;
+        const imgHeight = img.height;
 
         if (!landmarks) {
           const canvasWidth = canvasElement.width / 2;
@@ -293,15 +287,15 @@ export default {
             canvasHeight
           );
         } else {
-          let bottomRightx = landmarks.bottomRight[0];
-          let bottomRighty = landmarks.bottomRight[1];
-          let topLeftx = landmarks.topLeft[0];
-          let topLefty = landmarks.topLeft[1];
+          const bottomRightx = landmarks.bottomRight[0];
+          const bottomRighty = landmarks.bottomRight[1];
+          const topLeftx = landmarks.topLeft[0];
+          const topLefty = landmarks.topLeft[1];
 
-          let imgCitizenHat = img.src.includes("citizen_hat");
-          let imgPoliceHat = img.src.includes("police_hat");
-          let imgDoctorHat = img.src.includes("doctor_hat");
-          let imgMafiaHat = img.src.includes("mafia_hat");
+          const imgCitizenHat = img.src.includes("citizen_hat");
+          const imgPoliceHat = img.src.includes("police_hat");
+          const imgDoctorHat = img.src.includes("doctor_hat");
+          const imgMafiaHat = img.src.includes("mafia_hat");
 
           if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
             const canvasWidth =
@@ -332,36 +326,26 @@ export default {
         case "citizen":
           this.testImage[id] = {
             imgSrc: require("@/assets/memo/citizen_hat.png"),
-            imgWidth: 370,
-            imgHeight: 176,
           };
           break;
         case "police":
           this.testImage[id] = {
             imgSrc: require("@/assets/memo/police_hat.png"),
-            imgWidth: 600,
-            imgHeight: 451,
           };
           break;
         case "doctor":
           this.testImage[id] = {
             imgSrc: require("@/assets/memo/doctor_hat.png"),
-            imgWidth: 1000,
-            imgHeight: 630,
           };
           break;
         case "mafia":
           this.testImage[id] = {
             imgSrc: require("@/assets/memo/mafia_hat.png"),
-            imgWidth: 1125,
-            imgHeight: 701,
           };
           break;
         case "none":
           this.testImage[id] = {
             imgSrc: "",
-            imgWidth: 0,
-            imgHeight: 0,
           };
           break;
       }
