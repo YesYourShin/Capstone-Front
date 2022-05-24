@@ -148,11 +148,11 @@ export default {
       await this.myFace();
 
       // 타인의 스트림만큼 캔버스에 메모 그리기
-      // for (let data of this.roomMembers) {
-      //   if (data.id != this.myInfo.profile.id) {
-      // await this.faceMemo(data);
-      //   }
-      // }
+      for (let data of this.roomMembers) {
+        if (data.id != this.myInfo.profile.id) {
+          await this.faceMemo(data);
+        }
+      }
     };
     main();
   },
