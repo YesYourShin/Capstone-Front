@@ -47,9 +47,14 @@
       <!-- 여기까지 div v-if s.stream -->
       <div class="grid grid-cols-4 font-semibold userInfo">
         <div
-          :class="`
-                col-span-1 text-center
-                    bg-black text-white`"
+        v-if="flag === false && s.nickname !== myInfo.profile.nickname && s.die === false"
+          :class="`col-span-1 text-centerbg-black text-white`"
+        >
+          Lv.{{ s.level }}
+        </div>
+        <div
+         v-else
+          :class="`col-span-1 text-centerbg-green text-white`"
         >
           Lv.{{ s.level }}
         </div>

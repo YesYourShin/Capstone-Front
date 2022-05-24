@@ -1,6 +1,13 @@
 <template>
 
   <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }">
+      <MafiaWinModal v-show="showModal === true" @close-modal="showModal = false" />
+      <CitizenWinModal v-show="showModal2 === true " @close-modal="showModal2 = false" />
+
+    <!-- <div class="save-btn">
+        <button @click="showModal = true">Save</button>
+        <button @click="showModal2 = true">22ve</button>
+    </div> -->
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
       <Timer
@@ -12,7 +19,6 @@
         class="timerbox"
         ></Timer
       >
-
     </div>
     <Audio ref="audio" />
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
@@ -46,6 +52,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
 import Audio from "@/components/gameFlow_elements/audio.vue";
+import MafiaWinModal from '@/components/gameFlow_elements/mafiaWinModal.vue'
+import CitizenWinModal from '@/components/gameFlow_elements/citizenWinModal.vue'
 export default {
   name: "App",
   props: {
@@ -59,6 +67,8 @@ export default {
     UserVideo,
     Audio,
     dayjs,
+    MafiaWinModal,
+    CitizenWinModal
   },
   computed: {
     myInfo() {
@@ -87,6 +97,8 @@ export default {
       endTime: null,
       myJob: null,
       anotherMafia: null,
+      showModal: false,
+      showModal2: false
       // flag는 하위 컴포넌트에서 상속되게 해야한다.
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
@@ -96,6 +108,11 @@ export default {
     window.removeEventListener("beforeunload", this.unLoadEvent);
   },
   mounted() {
+    if (this.showModal === true) {
+      setTimeout(() => {
+        this.showModal = false
+      }, 3000)
+    }
     dayjs.extend(customParseFormat)
     window.addEventListener('beforeunload', this.unLoadEvent);
     this.$store.commit('stream/loadBackupMembers');
@@ -231,6 +248,7 @@ export default {
     },
     // 투표 시작
     startVote() {
+      this.showModal2 = true
       this.$refs.billboard.startVoteBoard();
       setTimeout(() => {
         this.$refs.timer.voteTimer();
@@ -336,9 +354,11 @@ export default {
       this.morningEvent();
     },
     mafiaWin() {
+      this.showModal = true
       console.log('마피아 승리')
     },
     citizenWin() {
+      this.showModal2 = true
       console.log('시민 승리')
     },
   },

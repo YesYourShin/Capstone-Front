@@ -1,5 +1,6 @@
 <template lang="">
   <div class="body">
+
     <Play :roomInfo="roomInfo"></Play>
   </div>
 </template>
@@ -9,9 +10,12 @@ import Play from "@/components/play.vue";
 export default {
   components: {
     Play,
+
   },
   data() {
-    return {};
+    return {
+
+    };
   },
   created() {
     this.$root.gameSocket = this.$nuxtSocket({
