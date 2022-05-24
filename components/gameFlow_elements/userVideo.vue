@@ -4,6 +4,7 @@
       class="videobox justify-self-center mx-2 mb-3 w-full rounded"
       v-for="(s, n) in roomMembers"
       :key="s.userId"
+      :class="`${s.speaking ? 'border-green-500' : 'border-white'}`"
     >
       <div class="aspect-video">
         <div v-if="s.stream" class="videoCut">
@@ -58,7 +59,7 @@
         </div>
         <div
          v-else
-          :class="`col-span-1 text-center bg-green text-white`"
+          :class="`col-span-1 text-center bg-green-500 text-white`"
         >
           Lv.{{ s.level }}
         </div>
