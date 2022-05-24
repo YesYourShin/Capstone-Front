@@ -1,6 +1,7 @@
 <template>
   <div class="canvasmemo">
     <div
+      class="userInfo"
       :class="['canvasmemo' + index.id]"
       v-for="index of this.roomMembers"
       :key="index.id"
@@ -37,10 +38,10 @@
         value="메모삭제"
       />
     </div>
-    <div>
+    <!-- <div>
       <button v-on:click="mediaStatus = true">camera on</button>
       <button v-on:click="mediaStatus = false">camera off</button>
-    </div>
+    </div> -->
   </div>
 </template>
 
