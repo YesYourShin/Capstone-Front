@@ -277,7 +277,7 @@ export default {
 
         // 여기가 문제야?
         const landmarks = this.testLandmark[id];
-        // console.log(landmarks);
+        console.log(landmarks);
         // 랜드마크로 얼굴 그리기
         if (landmarks)
           this.testLandmark[id].landmarks.forEach((landmark) => {
