@@ -29,6 +29,13 @@
           {{ myInfo.profile.selfIntroduction }}
         </p>
         <p class="usertext" v-else>상태메세지를 입력해주세요.</p>
+
+        <table class="userScore flex table-fixed" v-if="myScore">
+          <tr>
+            <td class="text-blue-400 w-16 text-left">승 : {{ myScore.win }}</td>
+            <td class="text-red-500 w-16 text-left">패 : {{ myScore.lose }}</td>
+          </tr>
+        </table>
       </div>
 
       <div class="profile3 w-full h-[50px] text-white text-2xl flex">
@@ -75,7 +82,7 @@
       <p>전적</p>
       <Score :record="myRecord"></Score>
     </div> -->
-    <Score :record="myRecord" v-if="show3"></Score>
+    <Record :record="myRecord" v-if="show3"></Record>
   </div>
 </template>
 
@@ -83,7 +90,7 @@
 import FriendBar from "./profile_elements/friendBar.vue";
 import UserSearch from "./profile_elements/UserSearch.vue";
 import Notifications from "./profile_elements/Notifications.vue";
-import Score from "./profile_elements/score.vue";
+import Record from "./profile_elements/record.vue";
 import { logout, deleteFriend, roomInvite } from "@/api/mafiaAPI";
 export default {
   name: "CapstoneProfile",
@@ -92,7 +99,7 @@ export default {
     FriendBar,
     UserSearch,
     Notifications,
-    Score,
+    Record,
   },
 
   data() {
@@ -122,6 +129,9 @@ export default {
     },
     myRecord() {
       return this.$store.getters["user/getRecord"];
+    },
+    myScore() {
+      return this.$store.getters["user/getScore"];
     },
   },
   methods: {
@@ -167,7 +177,7 @@ export default {
           // imageHeight: "128",
           // imageWidth: "128",
           customClass: {
-          container: "",
+            container: "",
           },
           html: `
                 <div>
@@ -185,9 +195,9 @@ export default {
                     showingUser.online ? "Online" : "Offline"
                   }</p>
                 </div>`,
-            customClass: {
-              container: "userBox",
-            },
+          customClass: {
+            container: "userBox",
+          },
           showCancelButton: true,
           showConfirmButton: !this.checkIsFriend(showingUser.userId),
           showDenyButton: this.checkIsFriend(showingUser.userId),
@@ -220,9 +230,9 @@ export default {
                   title: "･ﾟﾟ･(>д<;)･ﾟﾟ･",
                   text: `You are no longer friends with ${showingUser.nickname}!`,
                   icon: "success",
-                    customClass: {
-                      container: "friendDe",
-                    },
+                  customClass: {
+                    container: "friendDe",
+                  },
                 });
               })
               .catch((err) => {
@@ -245,12 +255,12 @@ export default {
             this.$store.commit("user/deleteFriend", res.data.data.friendId);
             this.$store.commit("tabCloseByUserId", res.data.data.friendId);
             this.$swal({
-                title: "･ﾟﾟ･(>д<;)･ﾟﾟ･",
-                text: `You are no longer friends with ${showingUser.nickname}!`,
-                icon: "success",
-                customClass: {
-                  container: "friendDe",
-                },
+              title: "･ﾟﾟ･(>д<;)･ﾟﾟ･",
+              text: `You are no longer friends with ${showingUser.nickname}!`,
+              icon: "success",
+              customClass: {
+                container: "friendDe",
+              },
             });
           })
           .catch((err) => {
@@ -293,39 +303,39 @@ export default {
 
 <style lang="scss">
 @import "~assets/profileInGame.scss";
-  .userBox{
-     .swal2-popup {
-        width: 700px;
-        height: 530px;
-        border: 3px solid white;
-        background-image: url("@/assets/profileimg/city.png");
-        background-size: 900px;
-        background-position: bottom;
+.userBox {
+  .swal2-popup {
+    width: 700px;
+    height: 530px;
+    border: 3px solid white;
+    background-image: url("@/assets/profileimg/city.png");
+    background-size: 900px;
+    background-position: bottom;
 
-      .aspect-square{
-        margin: auto;
-        width: 128px;
-        height: 128px;
-        border: 3px solid black;
-        background-color: white;
-        border-radius: 100%;
-        margin-bottom: 10px;
-      }
+    .aspect-square {
+      margin: auto;
+      width: 128px;
+      height: 128px;
+      border: 3px solid black;
+      background-color: white;
+      border-radius: 100%;
+      margin-bottom: 10px;
+    }
 
-      p{
-        border-left: 5px solid white;
-        border-right: 5px solid white;
-        width: 80%;
-        height: 42px;
-        line-height: 42px;
-        background-color: rgba(0, 0, 0, 0.72);
-        color: white;
-        font-size: 25px;
-        font-weight: bolder;
-        margin: auto;
-        padding-bottom: 5px;
-      }
-    .swal2-cancel{
+    p {
+      border-left: 5px solid white;
+      border-right: 5px solid white;
+      width: 80%;
+      height: 42px;
+      line-height: 42px;
+      background-color: rgba(0, 0, 0, 0.72);
+      color: white;
+      font-size: 25px;
+      font-weight: bolder;
+      margin: auto;
+      padding-bottom: 5px;
+    }
+    .swal2-cancel {
       background-color: black;
       color: white;
       border: 2px solid white;
@@ -335,18 +345,17 @@ export default {
       color: white;
       border: 2px solid white;
     }
-     }
-    .swal2-title{
-      background-color: black;
-      color: white;
-      padding: 0;
-      height: 80px;
-      line-height: 80px;
-      font-size: 40px;
-    }
-
   }
-.friendRe{
+  .swal2-title {
+    background-color: black;
+    color: white;
+    padding: 0;
+    height: 80px;
+    line-height: 80px;
+    font-size: 40px;
+  }
+}
+.friendRe {
   .swal2-popup {
     border: 5px solid white;
     background-color: rgba(0, 0, 0, 0.705);
@@ -358,7 +367,7 @@ export default {
     }
   }
 }
-.friendDe{
+.friendDe {
   .swal2-popup {
     border: 5px solid white;
     background-color: rgba(0, 0, 0, 0.705);
@@ -370,8 +379,8 @@ export default {
     }
   }
 }
-.goRoom{
-    .swal2-popup {
+.goRoom {
+  .swal2-popup {
     border: 5px solid white;
     background-color: rgba(0, 0, 0, 0.705);
     color: white;

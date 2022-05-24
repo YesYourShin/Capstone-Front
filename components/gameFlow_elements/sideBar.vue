@@ -140,7 +140,7 @@ input[id="menuIcon"] + label span {
   width: 100%;
   height: 5px;
   border-radius: 30px;
-  background: #fff;
+  background: black;
   transition: all 0.35s;
 }
 input[id="menuIcon"] + label span:nth-child(1) {
