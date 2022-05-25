@@ -46,17 +46,18 @@
   }
 
   .messagebox {
-    // display: flex;
-    // flex-wrap: wrap;
-    // align-items: center;
-    // justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
     width: 800px;
     height: 400px;
     // margin: auto;
     background-color: rgba(255, 255, 255, 0.927);
     border: 5px solid #fbbf24;
     font-size: 25px;
-    // text-align: center;
+    padding-top: 20px;
+    text-align: center;
   }
 }
 
@@ -110,10 +111,10 @@
   }
 
   .messagebox {
-    // display: flex;
-    // flex-wrap: wrap;
-    // align-items: center;
-    // justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
     width: 800px;
     height: 400px;
     // margin: auto;
@@ -121,7 +122,7 @@
     color: white;
     border: 5px solid orange;
     font-size: 25px;
-    // padding-top: 20px;
-    // text-align: center;
+    padding-top: 20px;
+    text-align: center;
   }
 }

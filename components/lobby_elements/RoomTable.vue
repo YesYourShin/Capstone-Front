@@ -148,7 +148,7 @@
                   <div
                     class="col-span-2 border-t-0 px-6 align-middle flex items-center border-l-0 border-r-0 text-s whitespace-nowrap p-4 justify-center"
                   >
-                    <div class="flex flex-col items-center w-full">
+                    <div class="flex flex-col items-center">
                       <div class="relative w-full">
                         <div
                           :class="`overflow-hidden h-2 text-s flex rounded ${
@@ -325,17 +325,17 @@ export default {
 };
 </script>
 <style lang="scss">
-.noRoom {
-  .swal2-popup {
-    border: 5px solid white;
-    background-color: rgba(0, 0, 0, 0.705);
-    .swal2-title {
-      color: white;
-    }
-    .swal2-confirm {
-      background-color: white;
-      color: black;
-    }
-  }
+.noRoom{
+ .swal2-popup{
+   border: 5px solid white;
+   background-color: rgba(0, 0, 0, 0.705);
+   .swal2-title{
+     color: white;
+   }
+   .swal2-confirm{
+     background-color: white;
+     color: black;
+   }
+ }
 }
 </style>
