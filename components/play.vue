@@ -13,6 +13,9 @@
         class="timerbox"
         ></Timer
       >
+      <div class="exitBtn">
+        <exitGame :escapeGame="'/lobby'"></exitGame>
+      </div>
     </div>
     <Audio ref="audio" />
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
@@ -39,6 +42,7 @@
 </template>
 
 <script>
+import exitGame from "@/components/gameFlow_elements/exitGame.vue";
 import Timer from "@/components/gameFlow_elements/timer.vue";
 import Billboard from "@/components/gameFlow_elements/billboard.vue";
 import SideBar from "@/components/gameFlow_elements/sideBar.vue";
@@ -66,7 +70,8 @@ export default {
     UserVideo,
     Audio,
     dayjs,
-    WinModal
+    WinModal,
+    exitGame
   },
   computed: {
     myInfo() {
@@ -368,5 +373,12 @@ export default {
 .atssds{
   display: flex;
   justify-content: space-between;
+}
+
+.exitBtn{
+  margin-left: 75px;
+  margin-right: 75px;
+  width: 150px;
+  height: 50px;
 }
 </style>
