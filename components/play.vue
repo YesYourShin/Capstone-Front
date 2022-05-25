@@ -121,9 +121,7 @@ export default {
       for (let item of data) {
         this.$store.commit('stream/setRoomMembersDie', item);
       }
-      setTimeout(() => {
         this.grantPlayerJob();
-      }, 5000);
     });
     // 유저의 직업을 배분하고, 배분된 직업에 따라 다른 이벤트 부여
     // 달라지는 것 - 빌보드 메세지, 사이드바 UI 내용

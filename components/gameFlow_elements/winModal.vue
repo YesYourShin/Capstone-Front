@@ -18,6 +18,10 @@ export default {
         html: '잠시 후 게임을 종료하고 로비로 돌아갑니다.',
         timer: 5000,
         timerProgressBar: true,
+        showConfirmButton: false,
+        backdrop: `
+          rgba(130,202,250,0.4)
+        `
       }).then((result) => {
         if (result.dismiss === this.$swal.DismissReason.timer) {
           this.$emit('escapeGame')
@@ -31,6 +35,10 @@ export default {
         html: '잠시 후 게임을 종료하고 로비로 돌아갑니다.',
         timer: 5000,
         timerProgressBar: true,
+        showConfirmButton: false,
+        backdrop: `
+          rgba(219,0,0,0.4)
+        `
       }).then((result) => {
         /* Read more about handling dismissals below */
         if (result.dismiss === this.$swal.DismissReason.timer) {
