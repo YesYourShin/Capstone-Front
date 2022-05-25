@@ -66,7 +66,7 @@
             No. {{ n+1 }}
         </div>
         <!-- 첫날 밤, 마피아 유저는 이름 빨간색 -->
-        <div class="col-span-3 bg-white px-2">
+        <div class="col-span-3 bg-white px-1">
          Lv.{{ s.level }} {{   s.nickname  }}
         </div>
       </div>
