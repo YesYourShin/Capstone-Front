@@ -1,53 +1,9 @@
-<template>
-  <div class="canvasmemo">
-    <div
-      class="userInfo"
-      :class="['canvasmemo' + index.id]"
-      v-for="index of this.roomMembers"
-      :key="index.id"
-    >
-      {{ index.id }}
-      <input
-        type="button"
-        id="button1"
-        v-on:click="memoJob('citizen', index.id)"
-        value="시민"
-      />
-      <input
-        type="button"
-        id="button2"
-        v-on:click="memoJob('police', index.id)"
-        value="경찰"
-      />
-      <input
-        type="button"
-        id="button3"
-        v-on:click="memoJob('doctor', index.id)"
-        value="의사"
-      />
-      <input
-        type="button"
-        id="button5"
-        v-on:click="memoJob('mafia', index.id)"
-        value="마피아"
-      />
-      <input
-        type="button"
-        id="button6"
-        v-on:click="memoJob('none', index.id)"
-        value="메모삭제"
-      />
-    </div>
-    <!-- <div>
-      <button v-on:click="mediaStatus = true">camera on</button>
-      <button v-on:click="mediaStatus = false">camera off</button>
-    </div> -->
-  </div>
-</template>
+<template></template>
 
 <script>
 // import io from "socket.io-client";
 import * as tf from "@tensorflow/tfjs";
+
 export default {
   name: "App",
   components: {},
@@ -128,7 +84,6 @@ export default {
         -> Remote track flowing again: 이라 뜸 Janus 문제?
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
-
     const main = async () => {
       // 소켓 연결
       // this.socket = io("http://localhost:3065/game", {
@@ -142,6 +97,7 @@ export default {
       this.myCtx = this.myCanvas.getContext("2d");
 
       // await this.handCognition();
+      console.log("myVideo", this.myVideo);
       await this.myFace();
 
       // 타인의 스트림만큼 캔버스에 메모 그리기
@@ -173,6 +129,7 @@ export default {
   // 해야할일, 투표
   methods: {
     myFace() {
+      console.log("myFace");
       const videoElement = this.myVideo;
       const canvasElement = this.myCanvas;
       const canvasCtx = this.myCtx;
@@ -229,7 +186,8 @@ export default {
 
         canvasCtx.restore();
       };
-
+      console.log("videoElement", videoElement);
+      console.log("myInfo id : ", this.myInfo.profile.id);
       videoElement.addEventListener("loadeddata", async () => {
         const blazeface = require("@tensorflow-models/blazeface");
         model = await blazeface.load();
@@ -275,7 +233,6 @@ export default {
 
         // 여기가 문제야?
         const landmarks = this.testLandmark[id];
-        console.log(landmarks);
         // 랜드마크로 얼굴 그리기
         if (landmarks)
           this.testLandmark[id].landmarks.forEach((landmark) => {
@@ -321,7 +278,6 @@ export default {
               bottomRighty - topLefty + (bottomRighty - topLefty) / 2;
             const canvasx = topLeftx - 60;
             const canvasy = topLefty - canvasHeight + 15;
-            console.log("landmark else > if");
             img.onload = canvasCtx.drawImage(
               img,
               canvasx,
@@ -361,6 +317,37 @@ export default {
           };
           break;
         case "none":
+          this.testImage[id] = {
+            imgSrc: "",
+          };
+          break;
+      }
+    },
+    optionClicked(event) {
+      console.log("이벤트 객체입니다!!@@", event);
+      const id = event.item.id;
+      switch (event.option.name) {
+        case "시민":
+          this.testImage[id] = {
+            imgSrc: require("@/assets/memo/citizen_hat.png"),
+          };
+          break;
+        case "경찰":
+          this.testImage[id] = {
+            imgSrc: require("@/assets/memo/police_hat.png"),
+          };
+          break;
+        case "의사":
+          this.testImage[id] = {
+            imgSrc: require("@/assets/memo/doctor_hat.png"),
+          };
+          break;
+        case "마피아":
+          this.testImage[id] = {
+            imgSrc: require("@/assets/memo/mafia_hat.png"),
+          };
+          break;
+        case "메모 삭제":
           this.testImage[id] = {
             imgSrc: "",
           };
