@@ -301,7 +301,7 @@ export default {
           this.$swal({
             icon: "success",
             title: this.voteNum + "번에게 투표",
-            html: "OX 표시로 투표 값을 서버로 전송합니다.",
+            html: "OX 표시를 하여 투표를 확정하거나 취소할 수 있습니다.",
             timer: 2000,
             showConfirmButton: false,
           }).then((result) => {
@@ -376,7 +376,6 @@ export default {
 
             this.checkNum = null;
             this.checkLoading = null;
-            this.voteNum = null;
             console.log("스킬 값 넘겨줌" + this.voteNum);
             // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
           } else if (this.skillTrue === false && this.checkNum === false) {
@@ -435,6 +434,33 @@ export default {
           this.pStatus = false;
           this.punishment = false;
           this.punishmentEmit = this.punishmentNum;
+          if (this.punishmentEmit === true) {
+            this.$swal({
+              icon: "success",
+              title: "찬성",
+              html: "사형에 동의합니다",
+              timer: 2000,
+              showConfirmButton: false,
+            }).then((result) => {
+              /* Read more about handling dismissals below */
+              if (result.dismiss === this.$swal.DismissReason.timer) {
+                console.log("vote 결과 출력");
+              }
+            });
+          } else {
+              this.$swal({
+              icon: "success",
+              title: "반대",
+              html: "사형에 반대합니다",
+              timer: 2000,
+              showConfirmButton: false,
+            }).then((result) => {
+              /* Read more about handling dismissals below */
+              if (result.dismiss === this.$swal.DismissReason.timer) {
+                console.log("vote 결과 출력");
+              }
+            });
+          }
           this.$emit("punishmentEmit", this.punishmentEmit);
           // 죽음 값을 완벽히 인식했을 때만 가능
           console.log(this.punishmentEmit + "죽음 투표");
