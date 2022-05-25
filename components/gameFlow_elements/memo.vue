@@ -150,6 +150,10 @@ export default {
           await this.faceMemo(data);
         }
       }
+      this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
+        console.log("othersFaceLandmarks", data);
+        this.testLandmark[data.id] = data.landmarks;
+      });
     };
     main();
   },
@@ -222,7 +226,6 @@ export default {
         // }
 
         await this.postLandmarks(landmarks);
-        await this.getLandmarks();
 
         canvasCtx.restore();
       };
@@ -242,11 +245,6 @@ export default {
         id: id,
       });
     },
-    getLandmarks() {
-      this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
-        console.log("othersFaceLandmarks", data);
-        this.testLandmark[data.id] = data.landmarks;
-      });
     },
     faceMemo(data) {
       const id = data.id;
