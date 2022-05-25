@@ -1,13 +1,15 @@
 <template>
-  <div class="messagebox flex flex-col-reverse overflow-y-auto">
-    <div v-show="punishmentCam === false">
-      <div>
-        <ul>
-          <li v-for="(logs, key) in messageLogs" :key="key">{{ logs }}</li>
-        </ul>
-      </div>
+  <div class="messagebox overflow-y-auto">
+    <div
+      v-show="punishmentCam === false"
+      class="flex flex-col-reverse h-full justify-center items-center p-5"
+    >
+      <p v-for="(logs, key) in reversedMessageLogs" :key="key">{{ logs }}</p>
     </div>
-    <div v-show="punishmentCam === true" class="aspect-video messagebox">
+    <div
+      v-show="punishmentCam === true"
+      class="flex h-full justify-center items-center"
+    >
       <div v-for="s in roomMembers" :key="s.userId">
         <div v-if="s.stream" class="videoCut">
           <video
@@ -57,6 +59,9 @@ export default {
     },
     surviveMembers() {
       return this.$store.state.stream.surviveMembers;
+    },
+    reversedMessageLogs() {
+      return this.messageLogs.slice().reverse();
     },
   },
   created() {
