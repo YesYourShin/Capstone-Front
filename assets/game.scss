@@ -6,13 +6,11 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
-  max-width: 2048px;
   height: 100vh;
-  min-height: 1020px;
   margin: auto;
   font-family: "Jua", sans-serif;
   background-image: url("@/assets/game/back2.png");
-  background-size: 100%;
+  background-size: 120%;
   background-position: center;
 
   .dayTimeBox {
@@ -53,11 +51,11 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    width: 620px;
-    height: 360px;
+    width: 800px;
+    height: 400px;
     // margin: auto;
     background-color: #fff;
-    border: 3px solid #fbbf24;
+    border: 5px solid #fbbf24;
   }
 }
 
@@ -67,13 +65,11 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
-  max-width: 2048px;
   height: 100vh;
-  min-height: 1020px;
   margin: auto;
   font-family: "Jua", sans-serif;
   background-image: url("@/assets/game/night.png");
-  background-size: 100%;
+  background-size: 120%;
   background-position: center;
 
   .dayTimeBox {
