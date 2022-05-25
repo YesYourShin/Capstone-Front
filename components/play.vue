@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }" :escapeGame="'/lobby'">
       <WinModal ref="win" @escapeGame="escapeGame"/>
-
+    <button class="exitbtn"></button>
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
       <Timer
@@ -17,7 +17,12 @@
     <Audio ref="audio" />
     <!-- 능력 결과 데이터는 전부 billboard로 보내야 한다! -->
     <!-- userVideo에도 유저 데이터를 보내고, 화면이 꺼지게 해야 함. -->
+    <div class="atssds">
     <Billboard ref="billboard" v-on:punishmentVote="punishmentVote" v-on:nightEvent="nightEvent" v-on:victorySearch="victorySearch"/>
+        <sideBar
+      ref="sideBarSet"
+    ></sideBar>
+    </div>
     <div class="px-2 mt-10">
       <UserVideo ref="userVideo"
       v-on:startVoteMotion="startVote"
@@ -30,9 +35,6 @@
       v-bind:anotherMafia="anotherMafia"
       />
     </div>
-    <sideBar
-      ref="sideBarSet"
-    ></sideBar>
   </div>
 </template>
 
@@ -362,4 +364,9 @@ export default {
 
 <style lang="scss" scoped="scoped">
 @import "~assets/game.scss";
+
+.atssds{
+  display: flex;
+  justify-content: space-between;
+}
 </style>

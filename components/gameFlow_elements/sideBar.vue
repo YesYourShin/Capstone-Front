@@ -1,10 +1,6 @@
 <template lang="">
   <div>
-    <input type="checkbox" id="menuIcon" />
-    <label for="menuIcon"> <span></span><span></span><span></span> </label>
-    <div class="sideBar">
-      <div class="nullBox">
-      </div>
+
       <div class="gameJobViewer">
         <div v-show="createMafiaDiv" class="gameJobBox" >
           <div class="jobImage">
@@ -39,10 +35,9 @@
           <div class="jobInformation">의사, 경찰과 힘을 합쳐 마피아를 찾아내어야 합니다.</div>
         </div>
       </div>
-      <div class="gameSettingBox">
+      <!-- <div class="gameSettingBox">
         <exitGame :escapeGame="'/lobby'"></exitGame>
-      </div>
-    </div>
+      </div> -->
   </div>
 </template>
 <script>
@@ -121,118 +116,38 @@ export default {
 
 };
 </script>
-<style lang="css" scoped>
-input[id="menuIcon"] {
-  display: none;
-}
-input[id="menuIcon"] + label {
-  display: block;
-  width: 60px;
-  height: 50px;
-  position: fixed;
-  right: 20px;
-  top: 20px;
-  cursor: pointer;
-}
-input[id="menuIcon"] + label span {
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: 5px;
-  border-radius: 30px;
-  background: black;
-  transition: all 0.35s;
-}
-input[id="menuIcon"] + label span:nth-child(1) {
-  top: 0;
-}
-input[id="menuIcon"] + label span:nth-child(2) {
-  top: 50%;
-  transform: translateY(-50%);
-}
-input[id="menuIcon"] + label span:nth-child(3) {
-  bottom: 0;
-}
-input[id="menuIcon"]:checked + label {
-  z-index: 9999;
-}
-input[id="menuIcon"]:checked + label span {
-  background: #fff;
-}
-input[id="menuIcon"]:checked + label span:nth-child(1) {
-  top: 50%;
-  transform: translateY(-50%) rotate(45deg);
-}
-input[id="menuIcon"]:checked + label span:nth-child(2) {
-  opacity: 0;
-}
-input[id="menuIcon"]:checked + label span:nth-child(3) {
-  bottom: 50%;
-  transform: translateY(50%) rotate(-45deg);
-}
-
-div[class="sideBar"] {
+<style lang="scss" scoped>
+.gameJobBox{
   width: 300px;
-  height: 100%;
-  background:#171717;
-  position: fixed;
-  top: 0;
-  right: -300px;
-  z-index: 9998;
-  transition: all 0.35s;
-}
-input[id="menuIcon"]:checked + label + div {
-  right: 0;
-}
-div[class="nullBox"] {
-  display:flex;
-  align-items:center;
-  height:100px;
-  background:#171717;
-}
-div[class="gameJobViewer"] {
-  display:flex;
-  height:600px;
-  width:90%;
-  margin: 0 auto;
-  background:#171717;
-  justify-content: center;
-  align-items: center;
-}
-div[class="gameJobBox"] {
-  display:inline-block;
-  border: 2px solid #fbbf24;
-  background:#171717;
-  color:#fff;
-}
+  height: 400px;
+  border-top: 5px solid #fbbf24;
+  border-bottom: 5px solid #fbbf24;
+  border-right: 5px solid #fbbf24;
+  background-color: rgba(255, 255, 255, 0.893);
 
-div[class="jobName"] {
-  background: #fbbf24;
-  text-align: center;
-  font-size: 24pt;
-  color: #000;
-}
+  .jobImage{
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    margin-top: 10px;
+  }
 
-div[class="jobInformation"] {
-  font-size: 16pt;
-  text-align: center;
-  margin: 10px 0 10px 0;
-    background:#171717;
-}
-
-div[class="jobSkill"] {
-  font-size: 16pt;
-  text-align: center;
-  margin: 10px 0 10px 0;
-  background:#171717;
-}
-
-div[class="gameSettingBox"] {
-  display:flex;
-  align-items:center;
-  background:#171717;
-  flex-direction: column;
-  height:300px;
-  margin: 0 auto;
+  .jobName{
+    width: 100%;
+    background-color: #fbbf24;
+    height: 50px;
+    line-height: 55px;
+    text-align: center;
+    font-size: 25px;
+    margin-top: 10px;
+  }
+  .jobSkill{
+    margin-top: 10px;
+    padding: 0 10px;
+  }
+  .jobInformation{
+    margin-top: 10px;
+    padding: 0 10px;
+  }
 }
 </style>
