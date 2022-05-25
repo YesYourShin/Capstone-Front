@@ -49,20 +49,18 @@
       <div class="grid grid-cols-4 font-semibold userInfo">
         <div
           v-if="
-            flag === false &&
-            s.nickname !== myInfo.profile.nickname &&
-            s.die === false
+            s.die === true
           "
-          :class="`col-span-1 text-center bg-black-500 text-white`"
+          :class="`col-span-1 text-center bg-red-500 text-white`"
         >
-          Lv.{{ s.level }}
+          No. {{ n+1 }}
         </div>
         <div v-else :class="`col-span-1 text-center bg-green-500 text-white`">
-          Lv.{{ s.level }}
+            No. {{ n+1 }}
         </div>
         <!-- 첫날 밤, 마피아 유저는 이름 빨간색 -->
         <div class="col-span-3 bg-white px-1">
-          {{ s.nickname }}
+         Lv.{{ s.level }} {{   s.nickname  }}
         </div>
       </div>
     </div>

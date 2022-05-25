@@ -1,5 +1,5 @@
 <template>
-  <div class="messagebox overflow-y-auto">
+  <div class="messagebox overflow-y-auto flex-direction:column_reverse">
     <div v-show="punishmentCam === false" >
       <div>
       <ul>
@@ -8,7 +8,7 @@
       </ul>
       </div>
     </div>
-    <div v-show="punishmentCam === true" class="aspect-video messagebox">
+    <div v-show="punishmentCam === true" class="aspect-video messagebox ">
     <div v-for="s in roomMembers"
       :key="s.userId">
     <div v-if="s.stream" class="videoCut">
