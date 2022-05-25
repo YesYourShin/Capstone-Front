@@ -150,6 +150,10 @@ export default {
           await this.faceMemo(data);
         }
       }
+      this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
+        console.log("othersFaceLandmarks", data);
+        this.testLandmark[data.id] = data.landmarks;
+      });
     };
     main();
   },
@@ -222,7 +226,6 @@ export default {
         // }
 
         await this.postLandmarks(landmarks);
-        await this.getLandmarks();
 
         canvasCtx.restore();
       };
@@ -231,7 +234,7 @@ export default {
         const blazeface = require("@tensorflow-models/blazeface");
         model = await blazeface.load();
 
-        this.myFaceInterval = setInterval(detectFaces, 16);
+        this.myFaceInterval = setInterval(detectFaces, 30);
       });
     },
     postLandmarks(landmarks) {
@@ -240,12 +243,6 @@ export default {
       this.$root.gameSocket.emit("myFaceLandmarks", {
         landmarks: landmarks[0],
         id: id,
-      });
-    },
-    getLandmarks() {
-      this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
-        console.log("othersFaceLandmarks", data);
-        this.testLandmark[data.id] = data.landmarks;
       });
     },
     faceMemo(data) {
@@ -337,7 +334,7 @@ export default {
 
         canvasCtx.restore();
       };
-      this.userFaceInterval[id] = setInterval(detectFace, 16);
+      this.userFaceInterval[id] = setInterval(detectFace, 30);
     },
 
     memoJob(job, id) {
