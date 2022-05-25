@@ -408,7 +408,6 @@ export default {
             canvasCtx.restore();
         }
       };
-      // setInterval(test, 16);
       let myStream;
       const getMedia = async () => {
         try {
@@ -418,10 +417,8 @@ export default {
           console.log(myStream);
           videoElement.srcObject = myStream;
           videoElement.play();
-          // this.cameraSwitch(true);
           this.mediaStatus = true;
           await media();
-          // this.cameraSwitch(false);
           this.mediaStatus = false;
         } catch (e) {
           console.log(e);
