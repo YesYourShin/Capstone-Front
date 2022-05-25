@@ -2,7 +2,6 @@
 
 .gamebox-first {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   flex-direction: column;
   width: 100%;
@@ -28,7 +27,7 @@
     }
     .chatbox {
       height: 50px;
-      width: 100px;
+      width: 150px;
       background: #fbbf24;
       border: 4px solid #fbbf24;
       text-align: center;
@@ -54,14 +53,20 @@
     width: 800px;
     height: 400px;
     // margin: auto;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.927);
     border: 5px solid #fbbf24;
+    font-size: 25px;
+    padding-top: 20px;
+    text-align: center;
   }
 }
 
+
+/////////////////////////// 밤 ////////////////////
+
+
 .gamebox-second {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   flex-direction: column;
   width: 100%;
@@ -87,13 +92,14 @@
     }
     .chatbox {
       height: 50px;
-      width: 100px;
+      width: 150px;
       background: #fbbf24;
       border: 4px solid #fbbf24;
       text-align: center;
       padding: 10px 0;
     }
   }
+
   .videomainbox {
     display: flex;
     flex-wrap: wrap;
@@ -109,10 +115,14 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    width: 620px;
-    height: 360px;
+    width: 800px;
+    height: 400px;
     // margin: auto;
-    background-color:#fff;
-    border: 3px solid whitesmoke;
+    background-color:rgba(0, 0, 0, 0.879);
+    color: white;
+    border: 5px solid orange;
+    font-size: 25px;
+    padding-top: 20px;
+    text-align: center;
   }
 }

@@ -2,7 +2,7 @@
   <div class="timer h-screen">
     <div>
       <div v-show="timerStart" class="timerSet" >
-            <div class="flex flex-wrap p-3 ">
+            <div class="flex flex-wrap p-3 pt-2.5">
             <BaseProgress :percentage="contentProgress">
              {{ timerMinutes }}:{{ timerSeconds }}
             </BaseProgress>

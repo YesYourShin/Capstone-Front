@@ -114,7 +114,12 @@ export default {
     await this.$store.dispatch('user/fetchMyInfo')
 
     if(!this.myInfo.profile){
-     await this.$swal("프로필을 설정해주십시요.");
+     await this.$swal({
+                title: "프로필을 설정해주십시요.",
+                customClass: {
+                  container: "profilebox",
+                },
+            });
     }
 
     if(this.myInfo.profile){
@@ -132,6 +137,21 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "~assets/mypage.scss";
+
+.profilebox{
+  .swal2-popup {
+    background-color: rgba(0, 0, 0, 0.823);
+    border: 5px solid white;
+    color: white;
+
+    .swal2-confirm {
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+    }
+  }
+}
+
 </style>
