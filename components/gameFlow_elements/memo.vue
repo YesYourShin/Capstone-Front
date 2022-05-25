@@ -245,7 +245,6 @@ export default {
         id: id,
       });
     },
-    },
     faceMemo(data) {
       const id = data.id;
       const videoElement = document.getElementById(`remote${id}`);
