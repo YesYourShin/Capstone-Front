@@ -73,8 +73,6 @@ export const mutations = {
       for (let mediaStream of state.roomMembers) {
         stopMediaStream(mediaStream.stream)
       }
-    }
-    function kill_own_feed() {
       for (let mediaStream of state.backupMembers) {
         stopMediaStream(mediaStream.stream)
       }
