@@ -130,7 +130,6 @@ export default {
             this.$store.commit('stream/surviveMemberCheck');
             console.log('캠 끄기')
           }, 2000)
-
         });
       } else {
         this.finishPunishmentVoteFalseBoard();
@@ -138,7 +137,7 @@ export default {
       setTimeout(()=> {
         this.$emit("victorySearch");
         console.log('빌보드 밤 이벤트 시작')
-      }, 7000)
+      }, 2000)
     });
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       // ! 죽은 유저의 정보를 출력한다.punishment, usejobs
