@@ -128,6 +128,9 @@ export default {
         {
           name: "시민",
         },
+        {
+          name: "메모 삭제",
+        },
       ],
     };
   },

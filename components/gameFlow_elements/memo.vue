@@ -1,49 +1,4 @@
-<template>
-  <div class="canvasmemo">
-    <div
-      class="userInfo"
-      :class="['canvasmemo' + index.id]"
-      v-for="index of this.roomMembers"
-      :key="index.id"
-    >
-      {{ index.id }}
-      <input
-        type="button"
-        id="button1"
-        v-on:click="memoJob('citizen', index.id)"
-        value="시민"
-      />
-      <input
-        type="button"
-        id="button2"
-        v-on:click="memoJob('police', index.id)"
-        value="경찰"
-      />
-      <input
-        type="button"
-        id="button3"
-        v-on:click="memoJob('doctor', index.id)"
-        value="의사"
-      />
-      <input
-        type="button"
-        id="button5"
-        v-on:click="memoJob('mafia', index.id)"
-        value="마피아"
-      />
-      <input
-        type="button"
-        id="button6"
-        v-on:click="memoJob('none', index.id)"
-        value="메모삭제"
-      />
-    </div>
-    <!-- <div>
-      <button v-on:click="mediaStatus = true">camera on</button>
-      <button v-on:click="mediaStatus = false">camera off</button>
-    </div> -->
-  </div>
-</template>
+<template></template>
 
 <script>
 // import io from "socket.io-client";
@@ -278,7 +233,6 @@ export default {
 
         // 여기가 문제야?
         const landmarks = this.testLandmark[id];
-        console.log(landmarks);
         // 랜드마크로 얼굴 그리기
         if (landmarks)
           this.testLandmark[id].landmarks.forEach((landmark) => {
@@ -324,7 +278,6 @@ export default {
               bottomRighty - topLefty + (bottomRighty - topLefty) / 2;
             const canvasx = topLeftx - 60;
             const canvasy = topLefty - canvasHeight + 15;
-            console.log("landmark else > if");
             img.onload = canvasCtx.drawImage(
               img,
               canvasx,
@@ -394,7 +347,7 @@ export default {
             imgSrc: require("@/assets/memo/mafia_hat.png"),
           };
           break;
-        case "none":
+        case "메모 삭제":
           this.testImage[id] = {
             imgSrc: "",
           };
