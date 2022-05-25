@@ -17,6 +17,8 @@
 import BaseProgress from "@/components/gameFlow_elements/BaseProgress.vue";
 import { GameEvent } from "@/api/mafiaAPI";
 import dayjs from "dayjs";
+import 'dayjs/locale/ko';
+dayjs.locale('ko');
 
 export default {
   name: "Timer",

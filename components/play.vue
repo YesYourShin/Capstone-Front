@@ -160,25 +160,23 @@ export default {
 
 
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
+      console.log(data)
       if (data.winner === 'MAFIA') {
         this.mafiaWin()
       } else if (data.winner === 'CITIZEN') {
         this.citizenWin()
-      } else {
-        this.$root.gameSocket.on(GameEvent.DAY, (data) => {
-        console.log(data)
-        this.flag = data.day;
-        console.log(this.flag)
-        if (this.flag === true) {
-          this.flag = !this.flag
-          this.nightEvent()
-        } else {
-          this.flag = !this.flag
-          this.morningEvent();
-        }
-          });
       }
-    })
+    });
+
+      this.$root.gameSocket.on(GameEvent.DAY, (data) => {
+      console.log(data.day)
+      this.flag = data.day
+        if (data.day === true) {
+          this.morningEvent()
+        } else {
+          this.nightEvent();
+        }
+      })
 
     this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
       console.log(data)
@@ -298,9 +296,6 @@ export default {
     nightEvent() {
       console.log('게임 밤 이벤트 시작')
       this.$refs.audio.nightBgmEvent();
-      this.$root.gameSocket.emit(GameEvent.DAY, {
-        day: this.flag,
-      });
       console.log(this.flag)
       this.$root.gameSocket.emit(GameEvent.TIMER);
       this.$refs.billboard.nightEventBoard();
@@ -341,12 +336,15 @@ export default {
         console.log('밤 결과')
       }, 3000)
     },
+
     victorySearch() {
       this.$store.commit('stream/surviveMemberCheck');
       console.log(this.$store.state.stream.roomMembers.die)
-      this.$root.gameSocket.emit(GameEvent.DAY, {
-        day: this.flag
-      });
+      console.log(this.flag)
+       this.$root.gameSocket.emit(GameEvent.DAY, {
+         day: this.flag
+       })
+       console.log(this.flag)
     },
     mafiaWin() {
       this.$refs.win.mafiaWin();
