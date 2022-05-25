@@ -48,6 +48,7 @@
 <script>
 // import io from "socket.io-client";
 import * as tf from "@tensorflow/tfjs";
+
 export default {
   name: "App",
   components: {},
@@ -128,7 +129,6 @@ export default {
         -> Remote track flowing again: 이라 뜸 Janus 문제?
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
-
     const main = async () => {
       // 소켓 연결
       // this.socket = io("http://localhost:3065/game", {
@@ -142,6 +142,7 @@ export default {
       this.myCtx = this.myCanvas.getContext("2d");
 
       // await this.handCognition();
+      console.log("myVideo", this.myVideo);
       await this.myFace();
 
       // 타인의 스트림만큼 캔버스에 메모 그리기
@@ -151,7 +152,7 @@ export default {
         }
       }
       this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
-        console.log("othersFaceLandmarks", data);
+        // console.log("othersFaceLandmarks", data);
         this.testLandmark[data.id] = data.landmarks;
       });
     };
@@ -173,6 +174,7 @@ export default {
   // 해야할일, 투표
   methods: {
     myFace() {
+      console.log("myFace");
       const videoElement = this.myVideo;
       const canvasElement = this.myCanvas;
       const canvasCtx = this.myCtx;
@@ -229,7 +231,8 @@ export default {
 
         canvasCtx.restore();
       };
-
+      console.log("videoElement", videoElement);
+      console.log("myInfo id : ", this.myInfo.profile.id);
       videoElement.addEventListener("loadeddata", async () => {
         const blazeface = require("@tensorflow-models/blazeface");
         model = await blazeface.load();
@@ -239,7 +242,7 @@ export default {
     },
     postLandmarks(landmarks) {
       const id = this.myInfo.profile.id;
-      console.log("my landmarks", landmarks);
+      // console.log("my landmarks", landmarks);
       this.$root.gameSocket.emit("myFaceLandmarks", {
         landmarks: landmarks[0],
         id: id,
@@ -356,6 +359,37 @@ export default {
           };
           break;
         case "mafia":
+          this.testImage[id] = {
+            imgSrc: require("@/assets/memo/mafia_hat.png"),
+          };
+          break;
+        case "none":
+          this.testImage[id] = {
+            imgSrc: "",
+          };
+          break;
+      }
+    },
+    optionClicked(event) {
+      console.log("이벤트 객체입니다!!@@", event);
+      const id = event.item.id;
+      switch (event.option.name) {
+        case "시민":
+          this.testImage[id] = {
+            imgSrc: require("@/assets/memo/citizen_hat.png"),
+          };
+          break;
+        case "경찰":
+          this.testImage[id] = {
+            imgSrc: require("@/assets/memo/police_hat.png"),
+          };
+          break;
+        case "의사":
+          this.testImage[id] = {
+            imgSrc: require("@/assets/memo/doctor_hat.png"),
+          };
+          break;
+        case "마피아":
           this.testImage[id] = {
             imgSrc: require("@/assets/memo/mafia_hat.png"),
           };
