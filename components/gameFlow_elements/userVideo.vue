@@ -26,24 +26,21 @@
           <!-- 추가해야 할 조건 = 자신의 직업이 마피아일 때, 마피아인 사람 -->
           <!-- v-if flag===false && s.nickname === job 마피아면 캔버스 클래스 안줌  -->
           <canvas
-            v-if="
-              flag === false &&
-              s.nickname !== myInfo.profile.nickname &&
-              s.die === false
-            "
-            :class="['output_canvas' + s.id]"
+            v-if="flag === false && s.nickname !== myInfo.profile.nickname && s.die === false"
+            :class="`${'output_canvas' + s.id}`"
             :id="['output_canvas' + n]"
             width="640"
             height="360"
-            class="w-[360px] h-[206px] bg-black"
+            class="w-[360px] h-[206px] bg-black rounded border-[3px] border-white"
           >
           </canvas>
           <canvas
             v-else
-            :class="['output_canvas' + s.id]"
+            :class="`${'output_canvas' + s.id} ${s.speaking ? 'border-green-500' : 'border-white'}`"
             :id="['output_canvas' + n]"
             width="640"
             height="360"
+            class="rounded border-[3px]"
           >
           </canvas>
         </div>
@@ -271,6 +268,18 @@ export default {
         } else if (this.voteCount === 3) {
           clearInterval(this.voteLoading);
           console.log("체크 완료");
+          this.$swal({
+            icon: 'success',
+            title: this.voteNum + '번에게 투표',
+            html: 'OX 표시로 투표 값을 서버로 전송합니다.',
+            timer: 2000,
+            showConfirmButton: false,
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === this.$swal.DismissReason.timer) {
+              console.log('vote 결과 출력')
+            }
+          })
           this.vStatus = false;
           this.vote = false;
           this.checkVoteMotion();
@@ -282,46 +291,103 @@ export default {
     changeCheckResult() {
       this.checkCount = 0;
       clearInterval(this.changeCheckResult);
-      this.checkLoading = setInterval(() => {
-        if (this.checkCount < 3) {
-          this.checkCount += 1;
-          console.log(this.checkCount);
-        } else if (this.checkCount === 3) {
-          clearInterval(this.checkLoading);
-          console.log("체크 인식 완료" + this.checkNum);
-          // this.mediaStatus = null
-          this.cStatus = false;
-          this.check = false;
-          // 스킬 사용이 아니고, 체크했을 경우
-          if (this.skillTrue === false && this.checkNum === true) {
-            this.$emit("voteNumEmit", this.voteNum);
-            this.checkLoading = null;
-            this.checkNum = null;
-            this.voteNum = null;
-            // this.$emit('voteNumEmit', null)
-            console.log("투표 값 넘겨줌" + this.voteNum);
-            // 스킬 사용이고, 체크했을 경우
-          } else if (this.skillTrue === true && this.checkNum === true) {
-            this.$emit("skillNumEmit", this.voteNum);
-            this.checkNum = null;
-            this.checkLoading = null;
-            this.voteNum = null;
-            console.log("스킬 값 넘겨줌" + this.voteNum);
-            // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
-          } else if (this.skillTrue === false && this.checkNum === false) {
-            this.checkNum = null;
-            this.checkLoading = null;
-            this.voteNum = null;
-            this.startVoteMotion();
-            console.log("투표 다시");
-          } else if (this.skillTrue === true && this.checkNum === false) {
-            this.checkNum = null;
-            this.checkLoading = null;
-            this.voteNum = null;
-            this.skillMotion();
-            console.log("스킬 다시");
+        this.checkLoading = setInterval(() => {
+          if (this.checkCount < 3) {
+            this.checkCount += 1;
+            console.log(this.checkCount)
+          } else if (this.checkCount === 3) {
+            clearInterval(this.checkLoading);
+            console.log("체크 인식 완료" + this.checkNum);
+            // this.mediaStatus = null
+            this.cStatus = false;
+            this.check = false;
+            // 스킬 사용이 아니고, 체크했을 경우
+            if (this.skillTrue === false && this.checkNum === true) {
+              this.$emit("voteNumEmit", this.voteNum);
+
+              this.$swal({
+                icon: 'success',
+                title: '유저 지목 완료',
+                html: this.$store.state.stream.roomMembers[this.voteNum-1].nickname + '을(를) 마피아로 의심합니다.',
+                timer: 2000,
+                showConfirmButton: false,
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === this.$swal.DismissReason.timer) {
+                  console.log('check 결과 출력')
+                }
+              })
+
+              this.checkLoading = null;
+              this.checkNum = null
+              this.voteNum = null;
+              // this.$emit('voteNumEmit', null)
+              console.log("투표 값 넘겨줌" + this.voteNum);
+              // 스킬 사용이고, 체크했을 경우
+            } else if (this.skillTrue === true && this.checkNum === true) {
+              this.$emit("skillNumEmit", this.voteNum);
+
+              this.$swal({
+                icon: 'success',
+                title: '유저 지목 완료',
+                html: this.$store.state.stream.roomMembers[this.voteNum-1].nickname + '에게 능력을 사용합니다.',
+                timer: 2000,
+                showConfirmButton: false,
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === this.$swal.DismissReason.timer) {
+                  console.log('skill 결과 출력')
+                }
+              })
+
+              this.checkNum = null
+              this.checkLoading = null;
+              this.voteNum = null;
+              console.log("스킬 값 넘겨줌" + this.voteNum);
+              // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
+            } else if (this.skillTrue === false && this.checkNum === false) {
+
+              this.$swal({
+                icon: 'error',
+                title: '유저 지목 취소',
+                html: '투표를 다시 진행합니다.',
+                timer: 2000,
+                showConfirmButton: false,
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === this.$swal.DismissReason.timer) {
+                  console.log('skill 결과 출력')
+                }
+              })
+
+              this.checkNum = null
+              this.checkLoading = null;
+              this.voteNum = null;
+              this.startVoteMotion();
+              console.log("투표 다시");
+            } else if (this.skillTrue === true && this.checkNum === false) {
+
+              this.$swal({
+                icon: 'error',
+                title: '유저 지목 취소',
+                html: '능력을 다시 사용합니다.',
+                timer: 2000,
+                showConfirmButton: false,
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === this.$swal.DismissReason.timer) {
+                  console.log('skill 결과 출력')
+                }
+              })
+
+              this.checkNum = null
+              this.checkLoading = null;
+              this.voteNum = null;
+              this.skillMotion();
+              console.log("스킬 다시");
+            }
           }
-        }
+
       }, 1000);
     },
     punishmentCheckResult() {

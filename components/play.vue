@@ -1,13 +1,7 @@
 <template>
-
   <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }" :escapeGame="'/lobby'">
-      <MafiaWinModal v-show="mafiaWinModal === true" @close-modal="mafiaWinModal = false" />
-      <CitizenWinModal v-show="citizenModal === true " @close-modal="citizenModal = false" />
+      <WinModal ref="win" @escapeGame="escapeGame"/>
 
-    <!-- <div class="save-btn">
-        <button @click="showModal = true">Save</button>
-        <button @click="showModal2 = true">22ve</button>
-    </div> -->
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
       <Timer
@@ -52,8 +46,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
 import Audio from "@/components/gameFlow_elements/audio.vue";
-import MafiaWinModal from '@/components/gameFlow_elements/mafiaWinModal.vue'
-import CitizenWinModal from '@/components/gameFlow_elements/citizenWinModal.vue'
+import WinModal from '@/components/gameFlow_elements/winModal.vue'
 export default {
   name: "App",
   props: {
@@ -71,8 +64,7 @@ export default {
     UserVideo,
     Audio,
     dayjs,
-    MafiaWinModal,
-    CitizenWinModal
+    WinModal
   },
   computed: {
     myInfo() {
@@ -101,8 +93,6 @@ export default {
       endTime: null,
       myJob: null,
       anotherMafia: null,
-      mafiaWinModal: false,
-      citizenModal: false
       // flag는 하위 컴포넌트에서 상속되게 해야한다.
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
@@ -219,7 +209,7 @@ export default {
       console.log(data)
       // vuex의 유저 정보 갱신,
     })
-    this.$root.roomSocket.on(GameEvent.SPEAK, (data) => {
+    this.$root.gameSocket.on(GameEvent.SPEAK, (data) => {
       console.log(data);
       this.$store.commit("stream/setSpeaker", data);
     });
@@ -359,24 +349,13 @@ export default {
       });
     },
     mafiaWin() {
-      this.mafiaWinModal = true
-      console.log('마피아 승리')
-      setTimeout(() => {
-        console.log('시민 승리로 게임 종료')
-        this.escapeGame()
-        this.mafiaWinModal = false
-      }, 5000)
+      this.$refs.win.mafiaWin();
     },
     citizenWin() {
-      this.citizenModal = true
-      console.log('시민 승리')
-      setTimeout(() => {
-        console.log('시민 승리로 게임 종료')
-        this.escapeGame()
-        this.citizenWinModal = false
-      }, 5000)
+      this.$refs.win.citizenWin();
     },
     escapeGame() {
+      console.log('히히')
       this.$router.push(this.escape);
     }
   },

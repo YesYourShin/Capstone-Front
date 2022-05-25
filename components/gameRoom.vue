@@ -746,11 +746,19 @@ export default {
 
                   vrc.speechEvents.on("stopped_speaking", function () {
                     console.log("stopped_speaking");
-                    vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
-                      userId: vrc.myInfo.profile.userId,
-                      nickname: vrc.myInfo.profile.nickname,
-                      speaking: false,
-                    });
+                    if (vrc.$route.name === "room-id") {
+                      vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
+                        userId: vrc.myInfo.profile.userId,
+                        nickname: vrc.myInfo.profile.nickname,
+                        speaking: false,
+                      });
+                    } else if (vrc.$route.name === "game-id" && vrc.$root.gameSocket) {
+                      vrc.$root.gameSocket.emit(GameEvent.SPEAK, {
+                        userId: vrc.myInfo.profile.userId,
+                        nickname: vrc.myInfo.profile.nickname,
+                        speaking: false,
+                      });
+                    }
                   });
                   // var elId = "remote" + vrc.myInfo.profile.userId;
                   // document.getElementById(elId).pause();
