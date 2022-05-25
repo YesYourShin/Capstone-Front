@@ -81,6 +81,7 @@ import {
   check,
   punishment,
 } from "@/common/detection/hand";
+
 export default {
   data() {
     return {
