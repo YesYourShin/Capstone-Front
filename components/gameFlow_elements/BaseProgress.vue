@@ -14,7 +14,7 @@
       aria-valuemin="0"
       aria-valuemax="100"
     >
-      <span class="flex items-center h-full">
+      <span class="flex items-center h-full pl-5 pt-1">
         <slot></slot>
       </span>
     </div>
