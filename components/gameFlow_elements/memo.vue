@@ -7,6 +7,7 @@ import * as tf from "@tensorflow/tfjs";
 export default {
   name: "App",
   components: {},
+  props: ["blind"],
   data() {
     return {
       imgSrc: [],
@@ -181,8 +182,9 @@ export default {
         //     canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
         //   });
         // }
-
-        await this.postLandmarks(landmarks);
+        if (!this.blind) {
+          await this.postLandmarks(landmarks);
+        }
 
         canvasCtx.restore();
       };
@@ -248,7 +250,7 @@ export default {
         const imgWidth = img.width;
         const imgHeight = img.height;
 
-        if (!landmarks) {
+        if (!landmarks || this.blind) {
           const canvasWidth = canvasElement.width / 2;
           const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
           const canvasx = canvasElement.width / 2 - canvasWidth / 2;

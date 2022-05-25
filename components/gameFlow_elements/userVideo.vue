@@ -73,7 +73,7 @@
         </div>
       </div>
     </div>
-    <Memo ref="memo"></Memo>
+    <Memo ref="memo" :blind="blind"></Memo>
     <vue-simple-context-menu
       :elementId="'myUniqueId'"
       :options="options"
@@ -132,6 +132,7 @@ export default {
           name: "메모 삭제",
         },
       ],
+      blind: false,
     };
   },
   props: {
