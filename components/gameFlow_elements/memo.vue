@@ -37,7 +37,7 @@ export default {
       return this.$store.state.stream.roomMembers;
     },
   },
-  mounted() {
+  async mounted() {
     // ! 원하는 기능
     // ! 해당 유저의 비디오에서 우클릭 하여
     // ! 메모를 동작하게 한다.
@@ -86,37 +86,38 @@ export default {
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
-    this.myCanvas = document.getElementsByClassName(
-      `output_canvas${this.myInfo.profile.id}`
-    )[0];
+    const loadMyCanvas = () => {
+      this.myCanvas = document.getElementsByClassName(
+        `output_canvas${this.myInfo.profile.id}`
+      )[0];
+    };
+    await loadMyCanvas();
+    console.log("myCanvas!!!!!!!!!", this.myCanvas);
+    this.myCtx = this.myCanvas.getContext("2d");
+    console.log("myCtx!!!!!!!!!!!!", this.myCtx);
+    const main = async () => {
+      // 소켓 연결
+      // this.socket = io("http://localhost:3065/game", {
+      //   transports: ["websocket"],
+      // });
+      // 자기 비디오랑 캔버스
 
-    this.$nextTick(function () {
-      const main = async () => {
-        // 소켓 연결
-        // this.socket = io("http://localhost:3065/game", {
-        //   transports: ["websocket"],
-        // });
-        // 자기 비디오랑 캔버스
+      // await this.handCognition();
+      console.log("myVideo", this.myVideo);
+      await this.myFace();
 
-        this.myCtx = this.myCanvas.getContext("2d");
-
-        // await this.handCognition();
-        console.log("myVideo", this.myVideo);
-        await this.myFace();
-
-        // 타인의 스트림만큼 캔버스에 메모 그리기
-        for (const data of this.roomMembers) {
-          if (data.id != this.myInfo.profile.id) {
-            await this.faceMemo(data);
-          }
+      // 타인의 스트림만큼 캔버스에 메모 그리기
+      for (const data of this.roomMembers) {
+        if (data.id != this.myInfo.profile.id) {
+          await this.faceMemo(data);
         }
-        this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
-          // console.log("othersFaceLandmarks", data);
-          this.testLandmark[data.id] = data.landmarks;
-        });
-      };
-      main();
-    });
+      }
+      this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
+        // console.log("othersFaceLandmarks", data);
+        this.testLandmark[data.id] = data.landmarks;
+      });
+    };
+    main();
   },
   async beforeDestroy() {
     console.log("beforeunload");
@@ -133,7 +134,7 @@ export default {
   },
   // 해야할일, 투표
   methods: {
-    myFace() {
+    async myFace() {
       console.log("myFace");
       const videoElement = this.myVideo;
       const canvasElement = this.myCanvas;
@@ -194,12 +195,12 @@ export default {
       };
       console.log("videoElement", videoElement);
       console.log("myInfo id : ", this.myInfo.profile.id);
-      videoElement.addEventListener("loadeddata", async () => {
-        const blazeface = require("@tensorflow-models/blazeface");
-        model = await blazeface.load();
+      // videoElement.addEventListener("loadeddata", async () => {
+      const blazeface = require("@tensorflow-models/blazeface");
+      model = await blazeface.load();
 
-        this.myFaceInterval = setInterval(detectFaces, 30);
-      });
+      this.myFaceInterval = setInterval(detectFaces, 30);
+      // });
     },
     postLandmarks(landmarks) {
       const id = this.myInfo.profile.id;
@@ -209,12 +210,18 @@ export default {
         id: id,
       });
     },
-    faceMemo(data) {
+    async faceMemo(data) {
       const id = data.id;
       const videoElement = document.getElementById(`remote${id}`);
-      const canvasElement = document.getElementsByClassName(
-        `output_canvas${id}`
-      )[0];
+      let canvasElement;
+
+      const loadCanvas = () => {
+        canvasElement = document.getElementsByClassName(
+          `output_canvas${id}`
+        )[0];
+      };
+
+      await loadCanvas();
       const canvasCtx = canvasElement.getContext("2d");
 
       // videoElement.style.display = "none";

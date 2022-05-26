@@ -208,13 +208,15 @@ export default {
   },
   async mounted() {
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
-    this.myCanvas = document.getElementsByClassName(
-      `output_canvas${this.myInfo.profile.id}`
-    )[0];
-    this.$nextTick(async function () {
-      this.myCtx = this.myCanvas.getContext("2d");
-      await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
-    });
+
+    const loadMyCanvas = () => {
+      this.myCanvas = document.getElementsByClassName(
+        `output_canvas${this.myInfo.profile.id}`
+      )[0];
+    };
+    await loadMyCanvas();
+    this.myCtx = this.myCanvas.getContext("2d");
+    await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
   },
   watch: {
     voteResult: function (newVoteResult) {
