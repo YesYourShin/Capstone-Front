@@ -208,16 +208,17 @@ export default {
   },
   async mounted() {
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
-
-    const loadMyCanvas = () => {
+    if (this.myVideo) {
       this.myCanvas = document.getElementsByClassName(
         `output_canvas${this.myInfo.profile.id}`
       )[0];
-    };
-    await loadMyCanvas();
-    this.myCtx = this.myCanvas.getContext("2d");
-    await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
+      if (this.myCanvas) {
+        this.myCtx = this.myCanvas.getContext("2d");
+      }
+      await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
+    }
   },
+
   watch: {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
@@ -543,7 +544,7 @@ export default {
       const getMedia = async () => {
         try {
           myStream = this.roomMembers.find((e) => {
-            return e.id === this.myInfo.id;
+            return e.id === this.myInfo.profile.id;
           }).stream;
           console.log(myStream);
           videoElement.srcObject = myStream;

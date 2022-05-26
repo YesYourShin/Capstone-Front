@@ -85,39 +85,38 @@ export default {
         -> Remote track flowing again: 이라 뜸 Janus 문제?
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
+
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
-    const loadMyCanvas = () => {
-      this.myCanvas = document.getElementsByClassName(
-        `output_canvas${this.myInfo.profile.id}`
-      )[0];
-    };
-    await loadMyCanvas();
-    console.log("myCanvas!!!!!!!!!", this.myCanvas);
-    this.myCtx = this.myCanvas.getContext("2d");
-    console.log("myCtx!!!!!!!!!!!!", this.myCtx);
-    const main = async () => {
-      // 소켓 연결
-      // this.socket = io("http://localhost:3065/game", {
-      //   transports: ["websocket"],
-      // });
-      // 자기 비디오랑 캔버스
+    if (this.myVideo) {
+      const main = async () => {
+        // 소켓 연결
+        // this.socket = io("http://localhost:3065/game", {
+        //   transports: ["websocket"],
+        // });
+        // 자기 비디오랑 캔버스
 
-      // await this.handCognition();
-      console.log("myVideo", this.myVideo);
-      await this.myFace();
+        this.myCanvas = document.getElementsByClassName(
+          `output_canvas${this.myInfo.profile.id}`
+        )[0];
+        this.myCtx = this.myCanvas.getContext("2d");
 
-      // 타인의 스트림만큼 캔버스에 메모 그리기
-      for (const data of this.roomMembers) {
-        if (data.id != this.myInfo.profile.id) {
-          await this.faceMemo(data);
+        // await this.handCognition();
+        console.log("myVideo", this.myVideo);
+        await this.myFace();
+
+        // 타인의 스트림만큼 캔버스에 메모 그리기
+        for (const data of this.roomMembers) {
+          if (data.id != this.myInfo.profile.id) {
+            await this.faceMemo(data);
+          }
         }
-      }
-      this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
-        // console.log("othersFaceLandmarks", data);
-        this.testLandmark[data.id] = data.landmarks;
-      });
-    };
-    main();
+        this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
+          // console.log("othersFaceLandmarks", data);
+          this.testLandmark[data.id] = data.landmarks;
+        });
+      };
+      main();
+    }
   },
   async beforeDestroy() {
     console.log("beforeunload");
@@ -195,12 +194,12 @@ export default {
       };
       console.log("videoElement", videoElement);
       console.log("myInfo id : ", this.myInfo.profile.id);
-      // videoElement.addEventListener("loadeddata", async () => {
-      const blazeface = require("@tensorflow-models/blazeface");
-      model = await blazeface.load();
+      videoElement.addEventListener("loadeddata", async () => {
+        const blazeface = require("@tensorflow-models/blazeface");
+        model = await blazeface.load();
 
-      this.myFaceInterval = setInterval(detectFaces, 30);
-      // });
+        this.myFaceInterval = setInterval(detectFaces, 30);
+      });
     },
     postLandmarks(landmarks) {
       const id = this.myInfo.profile.id;
@@ -213,84 +212,55 @@ export default {
     async faceMemo(data) {
       const id = data.id;
       const videoElement = document.getElementById(`remote${id}`);
-      let canvasElement;
-
-      const loadCanvas = () => {
-        canvasElement = document.getElementsByClassName(
+      if (videoElement) {
+        const canvasElement = document.getElementsByClassName(
           `output_canvas${id}`
         )[0];
-      };
 
-      await loadCanvas();
-      const canvasCtx = canvasElement.getContext("2d");
+        const canvasCtx = canvasElement.getContext("2d");
 
-      // videoElement.style.display = "none";
+        // videoElement.style.display = "none";
 
-      this.testImage[id] = {
-        img: null,
-        imgSrc: null,
-        imgWidth: null,
-        imgHeight: null,
-      };
+        this.testImage[id] = {
+          img: null,
+          imgSrc: null,
+          imgWidth: null,
+          imgHeight: null,
+        };
 
-      const detectFace = async () => {
-        canvasCtx.save();
-        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        // canvasCtx.drawImage(
-        //   videoElement,
-        //   0,
-        //   0,
-        //   canvasElement.width,
-        //   canvasElement.height
-        // );
+        const detectFace = async () => {
+          canvasCtx.save();
+          canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+          // canvasCtx.drawImage(
+          //   videoElement,
+          //   0,
+          //   0,
+          //   canvasElement.width,
+          //   canvasElement.height
+          // );
 
-        // 여기가 문제야?
-        const landmarks = this.testLandmark[id];
-        // 랜드마크로 얼굴 그리기
-        if (landmarks)
-          this.testLandmark[id].landmarks.forEach((landmark) => {
-            canvasCtx.fillRect(landmark[0], landmark[1], 10, 10);
-          });
+          // 여기가 문제야?
+          const landmarks = this.testLandmark[id];
+          // 랜드마크로 얼굴 그리기
+          if (landmarks)
+            this.testLandmark[id].landmarks.forEach((landmark) => {
+              canvasCtx.fillRect(landmark[0], landmark[1], 10, 10);
+            });
 
-        // 이미지;
-        this.testImage[id].img = new Image();
-        if (this.testImage[id].imgSrc != null)
-          this.testImage[id].img.src = this.testImage[id].imgSrc;
+          // 이미지;
+          this.testImage[id].img = new Image();
+          if (this.testImage[id].imgSrc != null)
+            this.testImage[id].img.src = this.testImage[id].imgSrc;
 
-        const img = this.testImage[id].img;
-        const imgWidth = img.width;
-        const imgHeight = img.height;
+          const img = this.testImage[id].img;
+          const imgWidth = img.width;
+          const imgHeight = img.height;
 
-        if (!landmarks || this.blind) {
-          const canvasWidth = canvasElement.width / 2;
-          const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-          const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-          const canvasy = 0;
-          img.onload = canvasCtx.drawImage(
-            img,
-            canvasx,
-            canvasy,
-            canvasWidth,
-            canvasHeight
-          );
-        } else {
-          const bottomRightx = landmarks.bottomRight[0];
-          const bottomRighty = landmarks.bottomRight[1];
-          const topLeftx = landmarks.topLeft[0];
-          const topLefty = landmarks.topLeft[1];
-
-          const imgCitizenHat = img.src.includes("citizen_hat");
-          const imgPoliceHat = img.src.includes("police_hat");
-          const imgDoctorHat = img.src.includes("doctor_hat");
-          const imgMafiaHat = img.src.includes("mafia_hat");
-
-          if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
-            const canvasWidth =
-              bottomRightx - topLeftx + (bottomRightx - topLeftx) / 2;
-            const canvasHeight =
-              bottomRighty - topLefty + (bottomRighty - topLefty) / 2;
-            const canvasx = topLeftx - 60;
-            const canvasy = topLefty - canvasHeight + 15;
+          if (!landmarks || this.blind) {
+            const canvasWidth = canvasElement.width / 2;
+            const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
+            const canvasx = canvasElement.width / 2 - canvasWidth / 2;
+            const canvasy = 0;
             img.onload = canvasCtx.drawImage(
               img,
               canvasx,
@@ -298,12 +268,38 @@ export default {
               canvasWidth,
               canvasHeight
             );
-          }
-        }
+          } else {
+            const bottomRightx = landmarks.bottomRight[0];
+            const bottomRighty = landmarks.bottomRight[1];
+            const topLeftx = landmarks.topLeft[0];
+            const topLefty = landmarks.topLeft[1];
 
-        canvasCtx.restore();
-      };
-      this.userFaceInterval[id] = setInterval(detectFace, 30);
+            const imgCitizenHat = img.src.includes("citizen_hat");
+            const imgPoliceHat = img.src.includes("police_hat");
+            const imgDoctorHat = img.src.includes("doctor_hat");
+            const imgMafiaHat = img.src.includes("mafia_hat");
+
+            if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
+              const canvasWidth =
+                bottomRightx - topLeftx + (bottomRightx - topLeftx) / 2;
+              const canvasHeight =
+                bottomRighty - topLefty + (bottomRighty - topLefty) / 2;
+              const canvasx = topLeftx - 60;
+              const canvasy = topLefty - canvasHeight + 15;
+              img.onload = canvasCtx.drawImage(
+                img,
+                canvasx,
+                canvasy,
+                canvasWidth,
+                canvasHeight
+              );
+            }
+          }
+
+          canvasCtx.restore();
+        };
+        this.userFaceInterval[id] = setInterval(detectFace, 30);
+      }
     },
 
     memoJob(job, id) {
