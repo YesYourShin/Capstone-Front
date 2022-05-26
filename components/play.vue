@@ -208,14 +208,13 @@ export default {
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
       console.log(data);
     })
-    this.$root.gameSocket.on(GameEvent.LEAVE, (data) => {
-      console.log(data)
-      // vuex의 유저 정보 갱신,
-    })
+
     this.$root.gameSocket.on(GameEvent.SPEAK, (data) => {
       console.log(data);
       this.$store.commit("stream/setSpeaker", data);
     });
+
+    this.$root.gameSocket.on(GameEvent.GAMEEND)
   },
   created() {},
   methods: {
@@ -353,12 +352,15 @@ export default {
     },
     mafiaWin() {
       this.$refs.win.mafiaWin();
+      this.$emit("gameFinish")
+      this.$root.gameSocket.emit(GameEvent.GAMEEND)
     },
     citizenWin() {
       this.$refs.win.citizenWin();
+      this.$emit("gameFinish")
+      this.$root.gameSocket.emit(GameEvent.GAMEEND)
     },
     escapeGame() {
-      console.log('히히')
       this.$router.push(this.escape);
     }
   },

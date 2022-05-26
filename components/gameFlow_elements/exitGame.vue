@@ -11,7 +11,22 @@ export default {
   },
   methods: {
     escapeGame() {
-      this.$router.push(this.escape);
+      this.$swal({
+        icon: 'warning',
+        title: '게임에서 나가시겠습니까?',
+        html: '지금 나가면 패배 처리 되며 이 게임에 다시 들어올 수 없습니다.',
+        showDenyButton: true,
+        showCancelButton: true,
+        denyButtonText: '나가기',
+        cancelButtonText: '취소',
+        showConfirmButton: false,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isDenied) {
+          // this.$Swal('Changes are not saved', '', 'info')
+          this.$router.push(this.escape);
+        }
+      })
     }
   },
 };

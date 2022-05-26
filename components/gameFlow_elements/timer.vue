@@ -76,6 +76,9 @@ export default {
       console.log(start)
       this.serverEnd = dayjs(end.end)
       this.clientStartTime = dayjs()
+      this.testTime = dayjs.locale('ko');
+      console.log(this.clientStartTime);
+      console.log(this.testTime)
       this.serverEnd.format("YYYY-MM-DD HH:mm:ss")
       console.log(typeof this.serverEnd)
       console.log(typeof this.clientStartTime)

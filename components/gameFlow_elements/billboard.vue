@@ -155,12 +155,14 @@ export default {
         );
       } else if (data.userNum !== null && data.die === true) {
         this.$store.commit("stream/killMember", data.userNum - 1);
+
         this.$store.commit("stream/surviveMemberCheck");
         console.log(
           `${
             this.$store.state.stream.roomMembers[data.userNum - 1].nickname
           }가 살해당했습니다.`
         );
+        // this.newMessage = `${data.nickname}은 ${data.job}이었습니다.`;
       }
       this.$emit("victorySearch");
       // 만약 마피아 != 의사일 경우, killMember를 불러온다.
