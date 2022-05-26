@@ -154,14 +154,14 @@ export default {
           }가 습격받았으나 의사의 도움으로 살아남았습니다.`
         );
       } else if (data.userNum !== null && data.die === true) {
-        this.$store.commit("stream/killMember", data.userNum - 1);
-        this.$store.commit("stream/surviveMemberCheck");
         console.log(
           `${
             this.$store.state.stream.roomMembers[data.userNum - 1].nickname
           }가 살해당했습니다.`
         );
         console.log(`${this.$store.state.stream.roomMembers[data.userNum - 1].nickname}의 직업은 ㅇㅇ입니다.`)
+        this.$store.commit("stream/killMember", data.userNum - 1);
+        this.$store.commit("stream/surviveMemberCheck");
       }
       this.$emit("victorySearch");
       // 만약 마피아 != 의사일 경우, killMember를 불러온다.
