@@ -144,7 +144,7 @@ export default {
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       // data은 유저 정보, data2는 텍스트
       // ! 죽은 유저의 정보를 출력한다.punishment, usejobs
-      console.log('USEJOBS ' + data.userNum);
+      console.log('USEJOBS ' + data);
       console.log("직업사용 결과 받음");
       console.log(data.message);
       if (data.userNum !== null && data.userNum.die === true) {

@@ -15,6 +15,14 @@
             :src-object.prop.camel="s.stream"
             autoplay
           ></video>
+            <video
+            v-else-if="s.nickname !== myInfo.profile.nicknam && flag === false"
+            :ref="'remote' + s.userId"
+            :id="'remote' + s.userId"
+            :src-object.prop.camel="s.stream"
+            autoplay
+            muted
+          ></video>
           <video
             v-else
             class="myVideo"
@@ -176,6 +184,9 @@ export default {
         this.$emit("voteNumEmit", null);
         this.voteLoading = null;
         this.checkLoading = null;
+        this.voteNum = 0;
+        this.checkNum = null;
+        this.punishment = null;
       }
     });
     this.$nuxt.$on("punishmentTimeFinish", (data) => {
@@ -185,6 +196,9 @@ export default {
         this.pStatus = false;
         this.punishment = false;
         this.$emit("punishmentEmit", false);
+        this.voteNum = 0;
+        this.checkNum = null;
+        this.punishment = null;
       }
     }),
       this.$nuxt.$on("skillTimeFinish", (data) => {
@@ -203,6 +217,9 @@ export default {
           );
           this.voteLoading = null;
           this.checkLoading = null;
+          this.voteNum = 0;
+          this.checkNum = null;
+          this.punishment = null;
         }
       });
   },
@@ -428,6 +445,9 @@ export default {
           }
         }
       }, 1000);
+      this.voteNum = 0;
+      this.checkNum = null;
+      this.punishment = null;
     },
     punishmentCheckResult() {
       this.punishmentCount = 0;
@@ -476,6 +496,9 @@ export default {
           this.punishLoading = null;
         }
       }, 1000);
+              this.voteNum = 0;
+        this.checkNum = null;
+        this.punishment = null;
     },
     async handCognition(videoElement, canvasElement, canvasCtx) {
       // videoElement.style.display = "none";
