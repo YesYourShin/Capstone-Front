@@ -13,7 +13,7 @@
         class="timerbox"
       ></Timer>
       <div class="exitBtn">
-        <exitGame></exitGame>
+        <exitGame @escapeGame="escapeGame"></exitGame>
       </div>
     </div>
     <Audio ref="audio" />

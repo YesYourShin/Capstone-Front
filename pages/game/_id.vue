@@ -1,6 +1,6 @@
 <template lang="">
   <div class="body">
-    <Play :roomInfo="roomInfo" v-on:gameFinish="gameFinish"></Play>
+    <Play :roomInfo="roomInfo"></Play>
   </div>
 </template>
 <script>
@@ -14,7 +14,6 @@ export default {
   },
   data() {
     return {
-      gameFinishData: false
     };
   },
   created() {
@@ -50,11 +49,6 @@ export default {
 
   },
   methods: {
-    gameFinish() {
-      console.log('gameFinish activated');
-      this.gameFinishData = true
-    },
-
     exit() {
       console.log('나가')
       var unpublish = { request: "unpublish" };
