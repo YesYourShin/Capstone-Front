@@ -188,14 +188,14 @@ export default {
       }
     }),
       this.$nuxt.$on("skillTimeFinish", (data) => {
-        if (this.skillTrue === true && typeof this.checkNum !== "boolean") {
+        if (this.skillTrue === true && this.checkNum === null) {
           console.log(data);
           clearInterval(this.voteLoading);
           this.vStatus = false;
           this.vote = false;
           this.cStatus = false;
           this.check = false;
-          this.$emit("skillNumEmit", null);
+          this.$emit("skillNumEmit skillTrue" + this.skillTrue + " skillTrue " + this.checkNum );
           this.voteLoading = null;
           this.checkLoading = null;
         }
@@ -217,11 +217,12 @@ export default {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
       if (
-        newVoteResult > 0 &&
+        newVoteResult === null ||
+        (newVoteResult > 0 &&
         newVoteResult <= this.$store.state.stream.roomMembers.length &&
         newVoteResult !== null &&
         this.$store.state.stream.roomMembers[newVoteResult - 1].die === false &&
-        newVoteResult !== this.voteNum
+        newVoteResult !== this.voteNum)
       ) {
         this.voteNum = newVoteResult;
         this.changeVoteResult();
@@ -230,8 +231,9 @@ export default {
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
       if (
-        typeof newCheckResult === "boolean" &&
-        newCheckResult !== this.checkNum
+        newCheckResult === null ||
+        (typeof newCheckResult === "boolean" &&
+        newCheckResult !== this.checkNum)
       ) {
         this.checkNum = newCheckResult;
         this.changeCheckResult();
@@ -241,8 +243,9 @@ export default {
       // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
       if (
-        typeof newPunishmentResult === "boolean" &&
-        newPunishmentResult !== this.punishmentNum
+        newCheckResult === null ||
+        (typeof newPunishmentResult === "boolean" &&
+        newPunishmentResult !== this.punishmentNum)
       ) {
         this.punishmentNum = newPunishmentResult;
         this.punishmentCheckResult();
