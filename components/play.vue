@@ -1,5 +1,5 @@
 <template>
-  <div :class="`${flag ? 'gamebox-first' : 'gamebox-second'}`" :escapeGame="'/lobby'">
+  <div :class="`${flag ? 'gamebox-first' : 'gamebox-second'}`">
       <WinModal ref="win" @escapeGame="escapeGame" @gameFinish="gameFinish" />
     <button class="exitbtn"></button>
     <div class="dayTimeBox">
@@ -57,13 +57,6 @@ import Audio from "@/components/gameFlow_elements/audio.vue";
 import WinModal from "@/components/gameFlow_elements/winModal.vue";
 export default {
   name: "App",
-  props: {
-    roomInfo: Object,
-    escape: {
-      type: String,
-      default: "/lobby",
-    },
-  },
   components: {
     Timer,
     Billboard,
@@ -102,6 +95,7 @@ export default {
       endTime: null,
       myJob: null,
       anotherMafia: null,
+      gameFinishData: false,
       // flag는 하위 컴포넌트에서 상속되게 해야한다.
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
     };
@@ -335,17 +329,25 @@ export default {
     },
     mafiaWin() {
       this.$refs.win.mafiaWin();
-      // this.$root.gameSocket.emit(GameEvent.GAMEEND,);
+      this.$root.gameSocket.emit(GameEvent.GAMEEND);
     },
     citizenWin() {
       this.$refs.win.citizenWin();
       this.$root.gameSocket.emit(GameEvent.GAMEEND);
     },
     escapeGame() {
-      this.$router.push(this.escape);
+      if (!this.gameFinishData) {
+        console.log(this.gameFinishData)
+        this.$root.gameSocket.emit(GameEvent.LEAVE);
+        console.log('나 가요')
+      }
+      this.$router.push('/lobby');
     },
     gameFinish() {
-      this.$emit("gameFinish");
+      // this.$emit("gameFinish");
+      this.gameFinishData = true;
+      this.escapeGame();
+
     }
   },
 };

@@ -57,11 +57,6 @@ export default {
 
     exit() {
       console.log('나가')
-      if (!this.gameFinishData) {
-        console.log(this.gameFinishData)
-        this.$root.gameSocket.emit(GameEvent.LEAVE);
-        console.log('나 가요')
-      }
       var unpublish = { request: "unpublish" };
       var leave = { request: "leave" };
       var vrc = this;

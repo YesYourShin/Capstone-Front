@@ -18,7 +18,8 @@ export default {
         /* Read more about isConfirmed, isDenied below */
         if (result.isDenied) {
           // this.$Swal('Changes are not saved', '', 'info')
-          this.$router.push('/lobby');
+          // this.$router.push('/lobby');
+          this.$emit('escapeGame');
         }
       })
     }
