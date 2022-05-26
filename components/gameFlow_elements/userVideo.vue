@@ -329,7 +329,7 @@ export default {
     },
     changeCheckResult() {
       this.checkCount = 0;
-      clearInterval(this.changeCheckResult);
+      clearInterval(this.checkLoading);
       this.checkLoading = setInterval(() => {
         if (this.checkCount < 3) {
           this.checkCount += 1;
