@@ -57,6 +57,7 @@ export default {
         "purple",
         "pink"
       ],
+      nowEvent: 'morning'
     };
   },
   computed: {
@@ -72,18 +73,26 @@ export default {
     },
   },
   mounted() {
-    this.$root.gameSocket.on(GameEvent.TIMER, (start, end) => {
-      console.log(start)
-      this.serverEnd = dayjs(end.end)
-      this.clientStartTime = dayjs()
-      this.testTime = dayjs.locale('ko');
-      console.log(this.clientStartTime);
-      console.log(this.testTime)
-      this.serverEnd.format("YYYY-MM-DD HH:mm:ss")
-      console.log(typeof this.serverEnd)
-      console.log(typeof this.clientStartTime)
-      // this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
+    this.$root.gameSocket.on(GameEvent.TIMER, (data) => {
+      console.log(data);
+      this.totalSeconds = data.time
+      this.contentProgress = 100 - (this.totalSeconds * 10);
+      if (data.time === 0) {
+        if (this.nowEvent === 'morning') {
+          this.$emit("startVote")
+        } else if (this.nowEvent === 'vote') {
+          this.$nuxt.$emit('voteTimeFinish', '유저 지목 이벤트 중단')
+          this.$emit("finishVote")
+        } else if (this.nowEvent === 'punishment') {
+          this.$nuxt.$emit('punishmentTimeFinish', '찬반 이벤트 중단')
+          this.$emit('finishPunishmentVote')
+        } else if (this.nowEvent === 'night') {
+          this.$nuxt.$emit('skillTimeFinish', '밤, 능력 이벤트 중단')
+          this.$emit('nightResult')
+        }
+      }
     });
+
     // 그리고 일정 시간에 함께 다음 이벤트로 emit 할 수 있어야 함.
   },
   methods: {
@@ -99,8 +108,8 @@ export default {
     // totalseconds = serverEnd - clientRealTime
     // setInterval 내에서 clientRealtime 갱신
     morningTimer() {
+      this.nowEvent = "morning"
       this.$root.gameSocket.emit(GameEvent.TIMER);
-
         this.$swal({
           imageUrl: require('~/assets/ingame/sun.svg'),
           imageWidth: 100,
@@ -119,33 +128,10 @@ export default {
             console.log('아침 모달 시작')
           }
         })
-
-      setTimeout(() => {
-        this.timerStart = true;
-        this.clientRealTime = dayjs()
-        this.clientRealTime.format("YYYY-MM-DD HH:mm:ss")
-        this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
-        this.contentProgressPer = this.totalSeconds
-        this.pomodoroInstance = setInterval(() => {
-          this.clientRealTime = dayjs()
-          this.clientRealTime.format("YYYY-MM-DD HH:mm:ss")
-          this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
-          this.contentProgress += 100/this.contentProgressPer;
-          if (
-            this.clientRealTime.format("YYYY-MM-DD HH:mm:ss") === this.serverEnd.format("YYYY-MM-DD HH:mm:ss")
-          ) {
-            clearInterval(this.pomodoroInstance);
-            (this.totalSeconds = 60),
-            (this.contentProgress = 0),
-            this.$emit("startVote")
-            this.pomodoroInstance = null
-            console.log('아침 타이머 중단')
-          }
-        }, 1000);
-      }, 1000)
     },
     // 마피아로 의심되는 유저를 지목할 때 쓰이는 타이머
     voteTimer() {
+      this.nowEvent = "vote"
       this.$root.gameSocket.emit(GameEvent.TIMER);
 
         this.$swal({
@@ -163,34 +149,10 @@ export default {
             console.log('투표 모달 시작')
           }
         })
-
-      setTimeout(() => {
-        this.timerStart = true;
-        this.clientRealTime = dayjs()
-        this.clientRealTime.format("YYYY-MM-DD HH:mm:ss")
-        this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
-        this.contentProgressPer = this.totalSeconds
-        this.pomodoroInstance = setInterval(() => {
-          this.clientRealTime = dayjs()
-          this.clientRealTime.format("YYYY-MM-DD HH:mm:ss")
-          this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
-          this.contentProgress += 100/this.contentProgressPer;
-          if (
-            this.clientRealTime.format("YYYY-MM-DD HH:mm:ss") === this.serverEnd.format("YYYY-MM-DD HH:mm:ss")
-          ) {
-            clearInterval(this.pomodoroInstance);
-            (this.totalSeconds = 60),
-            (this.contentProgress = 0),
-            this.$nuxt.$emit('voteTimeFinish', '유저 지목 이벤트 중단')
-            this.$emit('finishVote')
-            this.pomodoroInstance = null
-            console.log('유저 지목 타이머 중단')
-          }
-        }, 1000);
-      }, 1000)
     },
     // 특정 유저가 지목되고, 사형 찬반투표를 할 때 쓰이는 타이머
     punishmentTimer() {
+      this.nowEvent = "punishment"
       this.$root.gameSocket.emit(GameEvent.TIMER);
 
         this.$swal({
@@ -208,34 +170,10 @@ export default {
             console.log('찬반 모달 시작')
           }
         })
-
-      setTimeout(() => {
-        this.timerStart = true;
-        this.clientRealTime = dayjs()
-        this.clientRealTime.format("YYYY-MM-DD HH:mm:ss")
-        this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
-        this.contentProgressPer = this.totalSeconds
-        this.pomodoroInstance = setInterval(() => {
-          this.clientRealTime = dayjs()
-          this.clientRealTime.format("YYYY-MM-DD HH:mm:ss")
-          this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
-          this.contentProgress += 100/this.contentProgressPer;
-          if (
-            this.clientRealTime.format("YYYY-MM-DD HH:mm:ss") === this.serverEnd.format("YYYY-MM-DD HH:mm:ss")
-          ) {
-            clearInterval(this.pomodoroInstance);
-            (this.totalSeconds = 60),
-            (this.contentProgress = 0),
-            this.$nuxt.$emit('punishmentTimeFinish', '찬반 이벤트 중단')
-            this.$emit('finishPunishmentVote')
-            this.pomodoroInstance = null
-            console.log('찬반 타이머 중단')
-          }
-        }, 1000);
-      }, 1000)
     },
     // 밤이 되었을 때 쓰이는 타이머
     nightEvent() {
+      this.nowEvent = "night"
       this.$root.gameSocket.emit(GameEvent.TIMER);
 
         this.$swal({
@@ -244,7 +182,7 @@ export default {
           imageHeight: 100,
           imageAlt: 'Custom image',
           title: '밤이 되었습니다',
-          html: '마피아를 지목합니다.',
+          html: '마피아, 의사, 경찰은 자신의 능력을 사용합니다.',
           timer: 2000,
           showConfirmButton: false,
           background: 'rgba(0,0,0,0.6)',
@@ -255,31 +193,6 @@ export default {
             console.log('밤 모달 시작')
           }
         })
-
-      setTimeout(() => {
-        this.timerStart = true;
-        this.clientRealTime = dayjs()
-        this.clientRealTime.format("YYYY-MM-DD HH:mm:ss")
-        this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
-        this.contentProgressPer = this.totalSeconds
-        this.pomodoroInstance = setInterval(() => {
-          this.clientRealTime = dayjs()
-          this.clientRealTime.format("YYYY-MM-DD HH:mm:ss")
-          this.totalSeconds = this.serverEnd.diff(this.clientRealTime, 's')
-          this.contentProgress += 100/this.contentProgressPer;
-          if (
-            this.clientRealTime.format("YYYY-MM-DD HH:mm:ss") === this.serverEnd.format("YYYY-MM-DD HH:mm:ss")
-          ) {
-            clearInterval(this.pomodoroInstance);
-            (this.totalSeconds = 60),
-            (this.contentProgress = 0),
-            this.$nuxt.$emit('skillTimeFinish', '밤, 능력 이벤트 중단')
-            this.$emit('nightResult')
-            this.pomodoroInstance = null
-            console.log('능력 타이머 중단')
-          }
-        }, 1000);
-      }, 1000)
     },
   },
 };
