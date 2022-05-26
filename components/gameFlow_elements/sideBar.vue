@@ -8,7 +8,7 @@
           </div>
           <div class="jobName">마피아</div>
           <div class="jobSkill">특수능력 : 매일 밤마다 특정 유저 1명을 지목하여 죽일 수 있습니다. 마피아가 2명일 경우, 2명 모두 같은 유저를 지목하여야 됩니다.</div>
-          <div class="jobInformation">시민과 힘을 합쳐 마피아를 찾아내어야 합니다.</div>
+          <div class="jobInformation">시민에게 들키지 않고 시민을 죽여야 합니다.</div>
         </div>
         <div v-show="createPoliceDiv" class="gameJobBox">
           <div class="jobImage">

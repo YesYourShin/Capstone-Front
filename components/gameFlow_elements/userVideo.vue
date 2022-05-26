@@ -89,7 +89,6 @@ import {
   check,
   punishment,
 } from "@/common/detection/hand";
-import { GameEvent } from "@/api/mafiaAPI";
 
 export default {
   data() {
@@ -132,7 +131,6 @@ export default {
         },
       ],
       blind: false,
-      another: null
     };
   },
   props: {
@@ -169,19 +167,6 @@ export default {
     // todo 1. 백엔드 요청 -> 하루 지나면 투표값 전부 초기화 필요
     // ! 만약 타이머가 종료됐을 경우, 투표를 안한 사람만 넘겨줘야 한다.
     // ! 투표 한 사람이 중복으로 넘겨주면 안됨!!
-    this.$root.gameSocket.on(GameEvent.MAFIASEARCH, (data) => {
-      // 모든 마피아 유저의 정보를 받아온다.
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].nickname !== myInfo.profile.nickname) {
-          this.another = i
-        }
-
-      }
-      // this.$store.commit('stream/mafiaInfoSave', data);
-      // 이것을 stream.js에 담고 실행한다.
-    })
-
-
     this.$nuxt.$on("voteTimeFinish", (data) => {
       if (this.skillTrue === false && this.checkNum !== true) {
         console.log(data);
@@ -205,14 +190,14 @@ export default {
       }
     }),
       this.$nuxt.$on("skillTimeFinish", (data) => {
-        if (this.skillTrue === true && typeof this.checkNum !== "boolean") {
+        if (this.skillTrue === true && this.checkNum === null) {
           console.log(data);
           clearInterval(this.voteLoading);
           this.vStatus = false;
           this.vote = false;
           this.cStatus = false;
           this.check = false;
-          this.$emit("skillNumEmit", null);
+          this.$emit("skillNumEmit skillTrue" + this.skillTrue + " skillTrue " + this.checkNum );
           this.voteLoading = null;
           this.checkLoading = null;
         }
@@ -227,17 +212,16 @@ export default {
       this.myCtx = this.myCanvas.getContext("2d");
     }
     await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
-
   },
-
   watch: {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
-      if (newVoteResult === null ||
-        (newVoteResult > 0 &&
+      if (
+        newVoteResult > 0 &&
         newVoteResult <= this.$store.state.stream.roomMembers.length &&
+        newVoteResult !== null &&
         this.$store.state.stream.roomMembers[newVoteResult - 1].die === false &&
-        newVoteResult !== this.voteNum)
+        newVoteResult !== this.voteNum
       ) {
         this.voteNum = newVoteResult;
         this.changeVoteResult();
@@ -246,7 +230,7 @@ export default {
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
       if (
-        // typeof newCheckResult === "boolean" &&
+        typeof newCheckResult === "boolean" &&
         newCheckResult !== this.checkNum
       ) {
         this.checkNum = newCheckResult;
@@ -257,7 +241,7 @@ export default {
       // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
       if (
-        // typeof newPunishmentResult === "boolean" &&
+        typeof newPunishmentResult === "boolean" &&
         newPunishmentResult !== this.punishmentNum
       ) {
         this.punishmentNum = newPunishmentResult;
@@ -467,7 +451,7 @@ export default {
               this.$swal({
               icon: "success",
               title: "반대",
-              html: "사형 투표 반대합니다",
+              html: "사형에 반대합니다",
               timer: 2000,
               showConfirmButton: false,
             }).then((result) => {

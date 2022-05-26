@@ -48,7 +48,6 @@ import Billboard from "@/components/gameFlow_elements/billboard.vue";
 import SideBar from "@/components/gameFlow_elements/sideBar.vue";
 import UserVideo from "@/components/gameFlow_elements/userVideo.vue"
 import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { GameEvent } from "@/api/mafiaAPI";
 import DayCount from "@/components/gameFlow_elements/dayCountView.vue";
 import Audio from "@/components/gameFlow_elements/audio.vue";
@@ -105,13 +104,7 @@ export default {
     };
   },
   //새로고침 방지 위해서 추가 뒤로가기 하면 로비에서도 적용됨.
-  beforeUnmount() {
-    window.removeEventListener("beforeunload", this.unLoadEvent);
-  },
   mounted() {
-
-    dayjs.extend(customParseFormat)
-    window.addEventListener('beforeunload', this.unLoadEvent);
     this.$store.commit('stream/loadBackupMembers');
     // let newRemoteFeed = null;
     this.gameSocketSet();
@@ -119,9 +112,9 @@ export default {
     // 게임 시작과 동시에, 유저 정보를 받아오고, 게임 시작 메서드 실행
     this.$root.gameSocket.on(GameEvent.JOIN, (data) => {
       console.log(data)
-      setTimeout(() => {
+      // setTimeout(() => {
         this.gameStart();
-      }, 5000);
+      // }, 5000);
     });
     // 인게임에서 활용하기 위한 데이터를 가져오고, 직업 배분을 시작함
     this.$root.gameSocket.on(GameEvent.START, (data) => {
@@ -157,9 +150,9 @@ export default {
         }
       }
       this.$store.commit('stream/surviveMemberCheck');
-      setTimeout(() => {
+      // setTimeout(() => {
         this.victorySearch()
-      }, 5000);
+      // }, 5000);
     });
     // 낮밤 변경
 
@@ -251,10 +244,8 @@ export default {
     startVote() {
       // this.citizenModal = true
       this.$refs.billboard.startVoteBoard();
-      setTimeout(() => {
         this.$refs.timer.voteTimer();
         this.$refs.userVideo.startVoteMotion();
-      }, 3000);
       //여기서 유저 지목 값 받아올 수 있어야 함.
     },
     // 투표값 전송을 위한 메서드로, 집계는 startVote에서 한다.
@@ -274,10 +265,8 @@ export default {
     // 사형시킬 유저가 특정되면 심판 투표를 진행
     punishmentVote() {
       this.$refs.billboard.startPunishmentVoteBoard();
-      setTimeout(() => {
         this.$refs.timer.punishmentTimer();
         this.$refs.userVideo.punishmentVoteMotion();
-      }, 3000);
     },
     // userVideo.vue에서 얻어낸 심판투표 찬반여부를 백엔드로 전송
     // true가 엄지손가락을 내린 형태로 사형 찬성이고
@@ -301,7 +290,6 @@ export default {
       console.log('게임 밤 이벤트 시작')
       this.$refs.audio.nightBgmEvent();
       console.log(this.flag)
-      this.$root.gameSocket.emit(GameEvent.TIMER);
       this.$refs.billboard.nightEventBoard();
         this.$refs.timer.nightEvent();
         if (this.myJob === "MAFIA") {
@@ -334,11 +322,9 @@ export default {
     },
     nightResult() {
       this.$refs.billboard.nightResultBoard();
-      setTimeout(() => {
         this.$root.gameSocket.emit(GameEvent.USEJOBS)
         // ! 죽은 유저의 정보를 출력한다.
         console.log('밤 결과')
-      }, 3000)
     },
 
     victorySearch() {

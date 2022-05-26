@@ -75,9 +75,9 @@ export default {
         this.newMessage = `아무도 투표하지 않았습니다.`;
         this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
         this.$forceUpdate();
-        setTimeout(() => {
+        // setTimeout(() => {
           this.$emit("victorySearch");
-        }, 3000);
+        // }, 3000);
       } else {
         for (let i = 0; i < data.length; i++) {
           if (data[i].userNum === null) {
@@ -97,17 +97,17 @@ export default {
         }
         this.finishVoteBoard();
         if (this.equalVote === 1 && this.highVote !== 0) {
-          setTimeout(() => {
+          // setTimeout(() => {
             this.$emit("punishmentVote");
-          }, 3000);
+          // }, 3000);
         } else {
           this.newMessage = `동률 발생으로 투표 무효`;
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
           this.$forceUpdate();
-          setTimeout(() => {
+          // setTimeout(() => {
             this.$emit("victorySearch");
             // night가 두개 간다. 이거 내일 즉시 수정
-          }, 3000);
+          // }, 3000);
         }
       }
     });
@@ -127,23 +127,23 @@ export default {
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
           this.$forceUpdate();
           // ! 죽은 유저의 정보를 출력한다. punishment, usejobs
-          setTimeout(() => {
+          // setTimeout(() => {
             this.$store.commit('stream/killMember', data.nickname);
             this.$store.commit('stream/surviveMemberCheck');
             console.log('캠 끄기')
-          }, 2000)
+          // }, 2000)
         });
       } else {
         this.finishPunishmentVoteFalseBoard();
       }
-      setTimeout(() => {
+      // setTimeout(() => {
         this.$emit("victorySearch");
         console.log('빌보드 밤 이벤트 시작')
-      }, 2000)
+      // }, 2000)
     });
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       // ! 죽은 유저의 정보를 출력한다.punishment, usejobs
-      console.log(data);
+      console.log('USEJOBS ' + data);
       console.log("직업사용 결과 받음");
       if (data === null) {
         console.log("평화로운 밤이었습니다.");
@@ -154,8 +154,6 @@ export default {
           }가 습격받았으나 의사의 도움으로 살아남았습니다.`
         );
       } else if (data.userNum !== null && data.die === true) {
-        // this.$nuxt.$on('')
-
         this.$store.commit("stream/killMember", data.userNum - 1);
         this.$store.commit("stream/surviveMemberCheck");
         console.log(
@@ -163,7 +161,7 @@ export default {
             this.$store.state.stream.roomMembers[data.userNum - 1].nickname
           }가 살해당했습니다.`
         );
-        this.newMessage = `${data.nickname}은 ${data.job}이었습니다.`;
+        console.log(`${this.$store.state.stream.roomMembers[data.userNum - 1].nickname}의 직업은 ㅇㅇ입니다.`)
       }
       this.$emit("victorySearch");
       // 만약 마피아 != 의사일 경우, killMember를 불러온다.
