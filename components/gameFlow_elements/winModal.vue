@@ -24,7 +24,7 @@ export default {
         `
       }).then((result) => {
         if (result.dismiss === this.$swal.DismissReason.timer) {
-          this.$emit('escapeGame')
+          this.$emit('gameFinish')
           console.log('I was closed by the timer')
         }
       })
@@ -42,7 +42,7 @@ export default {
       }).then((result) => {
         /* Read more about handling dismissals below */
         if (result.dismiss === this.$swal.DismissReason.timer) {
-          this.$emit('escapeGame')
+          this.$emit('gameFinish')
           console.log('I was closed by the timer')
         }
       })

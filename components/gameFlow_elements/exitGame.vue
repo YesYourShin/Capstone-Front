@@ -3,12 +3,6 @@
 </template>
 <script>
 export default {
-  props: {
-    escape: {
-      type: String,
-      default: '/lobby',
-    }
-  },
   methods: {
     escapeGame() {
       this.$swal({
@@ -24,7 +18,7 @@ export default {
         /* Read more about isConfirmed, isDenied below */
         if (result.isDenied) {
           // this.$Swal('Changes are not saved', '', 'info')
-          this.$router.push(this.escape);
+          this.$router.push('/lobby');
         }
       })
     }
