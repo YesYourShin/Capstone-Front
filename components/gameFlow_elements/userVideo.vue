@@ -55,19 +55,17 @@
       <!-- 여기까지 div v-if s.stream -->
       <div class="grid grid-cols-4 font-semibold userInfo">
         <div
-          v-if="
-            s.die === true
-          "
+          v-if="s.die === true"
           :class="`col-span-1 text-center bg-red-500 text-white`"
         >
-          No. {{ n+1 }}
+          No. {{ n + 1 }}
         </div>
         <div v-else :class="`col-span-1 text-center bg-green-500 text-white`">
-            No. {{ n+1 }}
+          No. {{ n + 1 }}
         </div>
         <!-- 첫날 밤, 마피아 유저는 이름 빨간색 -->
         <div class="col-span-3 bg-white px-1">
-         Lv.{{ s.level }} {{   s.nickname  }}
+          Lv.{{ s.level }} {{ s.nickname }}
         </div>
       </div>
     </div>
@@ -448,7 +446,7 @@ export default {
               }
             });
           } else {
-              this.$swal({
+            this.$swal({
               icon: "success",
               title: "반대",
               html: "사형에 반대합니다",
