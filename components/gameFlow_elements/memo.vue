@@ -85,6 +85,11 @@ export default {
         -> Remote track flowing again: 이라 뜸 Janus 문제?
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
+    this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
+    this.myCanvas = document.getElementsByClassName(
+      `output_canvas${this.myInfo.profile.id}`
+    )[0];
+
     this.$nextTick(function () {
       const main = async () => {
         // 소켓 연결
@@ -92,12 +97,7 @@ export default {
         //   transports: ["websocket"],
         // });
         // 자기 비디오랑 캔버스
-        this.myVideo = document.getElementById(
-          `remote${this.myInfo.profile.id}`
-        );
-        this.myCanvas = document.getElementsByClassName(
-          `output_canvas${this.myInfo.profile.id}`
-        )[0];
+
         this.myCtx = this.myCanvas.getContext("2d");
 
         // await this.handCognition();

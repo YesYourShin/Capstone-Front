@@ -207,14 +207,12 @@ export default {
       });
   },
   async mounted() {
+    this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
+    this.myCanvas = document.getElementsByClassName(
+      `output_canvas${this.myInfo.profile.id}`
+    )[0];
     this.$nextTick(async function () {
-      this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
-      this.myCanvas = document.getElementsByClassName(
-        `output_canvas${this.myInfo.profile.id}`
-      )[0];
-      if (this.myCanvas) {
-        this.myCtx = this.myCanvas.getContext("2d");
-      }
+      this.myCtx = this.myCanvas.getContext("2d");
       await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
     });
   },
