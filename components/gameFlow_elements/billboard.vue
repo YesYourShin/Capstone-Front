@@ -141,7 +141,7 @@ export default {
         console.log('빌보드 밤 이벤트 시작')
       // }, 2000)
     });
-    this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
+    this.$root.gameSocket.on(GameEvent.USEJOBS, (data, data2) => {
       // ! 죽은 유저의 정보를 출력한다.punishment, usejobs
       console.log('USEJOBS ' + data);
       console.log("직업사용 결과 받음");
@@ -154,12 +154,9 @@ export default {
           }가 습격받았으나 의사의 도움으로 살아남았습니다.`
         );
       } else if (data.userNum !== null && data.die === true) {
-        console.log(
-          `${
-            this.$store.state.stream.roomMembers[data.userNum - 1].nickname
-          }가 살해당했습니다.`
+        console.log(data2
         );
-        console.log(`${this.$store.state.stream.roomMembers[data.userNum - 1].nickname}의 직업은 ㅇㅇ입니다.`)
+        console.log(`${this.$store.state.stream.roomMembers[data.userNum - 1].nickname}의 직업은 ${this.$store.state.stream.roomMembers[data.userNum - 1].job}입니다.`)
         this.$store.commit("stream/killMember", data.userNum - 1);
         this.$store.commit("stream/surviveMemberCheck");
       }
