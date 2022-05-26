@@ -157,8 +157,7 @@ export default {
       }
       this.$store.commit('stream/surviveMemberCheck');
       setTimeout(() => {
-        this.morningEvent();
-        this.flag = !this.flag
+        this.victorySearch()
       }, 5000);
     });
     // 낮밤 변경
@@ -173,7 +172,7 @@ export default {
       }
     });
 
-      this.$root.gameSocket.on(GameEvent.DAY, (data) => {
+    this.$root.gameSocket.on(GameEvent.DAY, (data) => {
       console.log(data.day)
       this.flag = data.day
         if (data.day === true) {

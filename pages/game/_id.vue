@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-      gameFinish: false
+      gameFinishData: false
     };
   },
   created() {
@@ -51,12 +51,12 @@ export default {
   },
   methods: {
     gameFinish() {
-      this.gameWin = true
+      this.gameFinishData = true
     },
 
     exit() {
       console.log('나가')
-      if (!this.gameWin) {
+      if (!this.gameFinishData) {
         console.log('나 가요')
         this.$root.gameSocket.emit(GameEvent.LEAVE)
       }
