@@ -453,7 +453,7 @@ export default {
               this.$swal({
               icon: "success",
               title: "반대",
-              html: "사형에 반대합니다",
+              html: "사형 투표 반대합니다",
               timer: 2000,
               showConfirmButton: false,
             }).then((result) => {
@@ -464,7 +464,6 @@ export default {
             });
           }
           this.$emit("punishmentEmit", this.punishmentEmit);
-
           // 죽음 값을 완벽히 인식했을 때만 가능
           console.log(this.punishmentEmit + "죽음 투표");
           this.punishLoading = null;
