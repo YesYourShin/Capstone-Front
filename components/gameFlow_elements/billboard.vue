@@ -99,7 +99,7 @@ export default {
         if (this.equalVote === 1 && this.highVote !== 0) {
           // setTimeout(() => {
             this.$emit("punishmentVote");
-          // }, 3000);
+          // }, 300);
         } else {
           this.newMessage = `동률 발생으로 투표 무효`;
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
