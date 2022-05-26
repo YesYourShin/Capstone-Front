@@ -55,19 +55,17 @@
       <!-- 여기까지 div v-if s.stream -->
       <div class="grid grid-cols-4 font-semibold userInfo">
         <div
-          v-if="
-            s.die === true
-          "
+          v-if="s.die === true"
           :class="`col-span-1 text-center bg-red-500 text-white`"
         >
-          No. {{ n+1 }}
+          No. {{ n + 1 }}
         </div>
         <div v-else :class="`col-span-1 text-center bg-green-500 text-white`">
-            No. {{ n+1 }}
+          No. {{ n + 1 }}
         </div>
         <!-- 첫날 밤, 마피아 유저는 이름 빨간색 -->
         <div class="col-span-3 bg-white px-1">
-         Lv.{{ s.level }} {{   s.nickname  }}
+          Lv.{{ s.level }} {{ s.nickname }}
         </div>
       </div>
     </div>
@@ -197,21 +195,28 @@ export default {
           this.vote = false;
           this.cStatus = false;
           this.check = false;
-          this.$emit("skillNumEmit skillTrue" + this.skillTrue + " skillTrue " + this.checkNum );
+          this.$emit(
+            "skillNumEmit skillTrue" +
+              this.skillTrue +
+              " skillTrue " +
+              this.checkNum
+          );
           this.voteLoading = null;
           this.checkLoading = null;
         }
       });
   },
   async mounted() {
-    this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
-    this.myCanvas = document.getElementsByClassName(
-      `output_canvas${this.myInfo.profile.id}`
-    )[0];
-    if (this.myCanvas) {
-      this.myCtx = this.myCanvas.getContext("2d");
-    }
-    await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
+    this.$nextTick(async function () {
+      this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
+      this.myCanvas = document.getElementsByClassName(
+        `output_canvas${this.myInfo.profile.id}`
+      )[0];
+      if (this.myCanvas) {
+        this.myCtx = this.myCanvas.getContext("2d");
+      }
+      await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
+    });
   },
   watch: {
     voteResult: function (newVoteResult) {
@@ -219,10 +224,11 @@ export default {
       if (
         newVoteResult === null ||
         (newVoteResult > 0 &&
-        newVoteResult <= this.$store.state.stream.roomMembers.length &&
-        newVoteResult !== null &&
-        this.$store.state.stream.roomMembers[newVoteResult - 1].die === false &&
-        newVoteResult !== this.voteNum)
+          newVoteResult <= this.$store.state.stream.roomMembers.length &&
+          newVoteResult !== null &&
+          this.$store.state.stream.roomMembers[newVoteResult - 1].die ===
+            false &&
+          newVoteResult !== this.voteNum)
       ) {
         this.voteNum = newVoteResult;
         this.changeVoteResult();
@@ -233,7 +239,7 @@ export default {
       if (
         newCheckResult === null ||
         (typeof newCheckResult === "boolean" &&
-        newCheckResult !== this.checkNum)
+          newCheckResult !== this.checkNum)
       ) {
         this.checkNum = newCheckResult;
         this.changeCheckResult();
@@ -244,7 +250,7 @@ export default {
       if (
         newPunishmentResult === null ||
         (typeof newPunishmentResult === "boolean" &&
-        newPunishmentResult !== this.punishmentNum)
+          newPunishmentResult !== this.punishmentNum)
       ) {
         this.punishmentNum = newPunishmentResult;
         this.punishmentCheckResult();
@@ -450,7 +456,7 @@ export default {
               }
             });
           } else {
-              this.$swal({
+            this.$swal({
               icon: "success",
               title: "반대",
               html: "사형에 반대합니다",

@@ -85,34 +85,38 @@ export default {
         -> Remote track flowing again: 이라 뜸 Janus 문제?
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
-    const main = async () => {
-      // 소켓 연결
-      // this.socket = io("http://localhost:3065/game", {
-      //   transports: ["websocket"],
-      // });
-      // 자기 비디오랑 캔버스
-      this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
-      this.myCanvas = document.getElementsByClassName(
-        `output_canvas${this.myInfo.profile.id}`
-      )[0];
-      this.myCtx = this.myCanvas.getContext("2d");
+    this.$nextTick(function () {
+      const main = async () => {
+        // 소켓 연결
+        // this.socket = io("http://localhost:3065/game", {
+        //   transports: ["websocket"],
+        // });
+        // 자기 비디오랑 캔버스
+        this.myVideo = document.getElementById(
+          `remote${this.myInfo.profile.id}`
+        );
+        this.myCanvas = document.getElementsByClassName(
+          `output_canvas${this.myInfo.profile.id}`
+        )[0];
+        this.myCtx = this.myCanvas.getContext("2d");
 
-      // await this.handCognition();
-      console.log("myVideo", this.myVideo);
-      await this.myFace();
+        // await this.handCognition();
+        console.log("myVideo", this.myVideo);
+        await this.myFace();
 
-      // 타인의 스트림만큼 캔버스에 메모 그리기
-      for (const data of this.roomMembers) {
-        if (data.id != this.myInfo.profile.id) {
-          await this.faceMemo(data);
+        // 타인의 스트림만큼 캔버스에 메모 그리기
+        for (const data of this.roomMembers) {
+          if (data.id != this.myInfo.profile.id) {
+            await this.faceMemo(data);
+          }
         }
-      }
-      this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
-        // console.log("othersFaceLandmarks", data);
-        this.testLandmark[data.id] = data.landmarks;
-      });
-    };
-    main();
+        this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
+          // console.log("othersFaceLandmarks", data);
+          this.testLandmark[data.id] = data.landmarks;
+        });
+      };
+      main();
+    });
   },
   async beforeDestroy() {
     console.log("beforeunload");
