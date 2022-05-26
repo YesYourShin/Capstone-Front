@@ -15,7 +15,7 @@
             :src-object.prop.camel="s.stream"
             autoplay
           ></video>
-            <video
+          <video
             v-else-if="s.nickname !== myInfo.profile.nicknam && flag === false"
             :ref="'remote' + s.userId"
             :id="'remote' + s.userId"
@@ -607,8 +607,18 @@ export default {
             canvasCtx.restore();
             requestAnimationFrame(media);
           } else {
-            await hands.send({ image: videoElement });
-            requestAnimationFrame(media);
+            for (const member of this.$store.state.stream.roomMembers) {
+              if (member.id === this.myInfo.profile.id) {
+                if (member.die) {
+                  console.log("hands close");
+                  hands.close();
+                  return;
+                } else {
+                  await hands.send({ image: videoElement });
+                  requestAnimationFrame(media);
+                }
+              }
+            }
           }
         }
       };

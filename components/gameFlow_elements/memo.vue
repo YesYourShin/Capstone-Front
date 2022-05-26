@@ -160,35 +160,50 @@ export default {
       }
     ]
     */
+        for (const member of this.$store.state.stream.roomMembers) {
+          if (member.id === this.myInfo.profile.id) {
+            if (member.die) {
+              console.log("face off");
 
-        const landmarks = await model.estimateFaces(videoElement, false);
-        // 자신의 얼굴 랜드마크 확인
-        // console.log(landmarks);
-        canvasCtx.save();
-        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        canvasCtx.translate(canvasElement.width, 0);
-        canvasCtx.scale(-1, 1);
+              return;
+            }
 
-        // canvasCtx.fillRect(10, 10, 50, 50);
+            const landmarks = await model.estimateFaces(videoElement, false);
 
-        // canvasCtx.drawImage(
-        //   videoElement,
-        //   0,
-        //   0,
-        //   canvasElement.width,
-        //   canvasElement.height
-        // );
+            // 자신의 얼굴 랜드마크 확인
+            // console.log(landmarks);
+            canvasCtx.save();
+            canvasCtx.clearRect(
+              0,
+              0,
+              canvasElement.width,
+              canvasElement.height
+            );
+            canvasCtx.translate(canvasElement.width, 0);
+            canvasCtx.scale(-1, 1);
 
-        // if (landmarks.length) {
-        //   landmarks[0].landmarks.forEach((landmark) => {
-        //     canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
-        //   });
-        // }
-        if (!this.blind) {
-          await this.postLandmarks(landmarks);
+            // canvasCtx.fillRect(10, 10, 50, 50);
+
+            // canvasCtx.drawImage(
+            //   videoElement,
+            //   0,
+            //   0,
+            //   canvasElement.width,
+            //   canvasElement.height
+            // );
+
+            // if (landmarks.length) {
+            //   landmarks[0].landmarks.forEach((landmark) => {
+            //     canvasCtx.fillRect(landmark[0], landmark[1], 50, 50);
+            //   });
+            // }
+            if (!this.blind) {
+              await this.postLandmarks(landmarks);
+            }
+
+            canvasCtx.restore();
+          }
         }
-
-        canvasCtx.restore();
       };
       console.log("videoElement", videoElement);
       console.log("myInfo id : ", this.myInfo.profile.id);
