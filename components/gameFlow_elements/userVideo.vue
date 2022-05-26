@@ -195,7 +195,12 @@ export default {
           this.vote = false;
           this.cStatus = false;
           this.check = false;
-          this.$emit("skillNumEmit skillTrue" + this.skillTrue + " skillTrue " + this.checkNum );
+          this.$emit(
+            "skillNumEmit skillTrue" +
+              this.skillTrue +
+              " skillTrue " +
+              this.checkNum
+          );
           this.voteLoading = null;
           this.checkLoading = null;
         }
@@ -219,10 +224,11 @@ export default {
       if (
         newVoteResult === null ||
         (newVoteResult > 0 &&
-        newVoteResult <= this.$store.state.stream.roomMembers.length &&
-        newVoteResult !== null &&
-        this.$store.state.stream.roomMembers[newVoteResult - 1].die === false &&
-        newVoteResult !== this.voteNum)
+          newVoteResult <= this.$store.state.stream.roomMembers.length &&
+          newVoteResult !== null &&
+          this.$store.state.stream.roomMembers[newVoteResult - 1].die ===
+            false &&
+          newVoteResult !== this.voteNum)
       ) {
         this.voteNum = newVoteResult;
         this.changeVoteResult();
@@ -233,19 +239,18 @@ export default {
       if (
         newCheckResult === null ||
         (typeof newCheckResult === "boolean" &&
-        newCheckResult !== this.checkNum)
+          newCheckResult !== this.checkNum)
       ) {
         this.checkNum = newCheckResult;
         this.changeCheckResult();
       }
     },
     punishmentResult: function (newPunishmentResult) {
-      // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
       if (
-        newCheckResult === null ||
+        newPunishmentResult === null ||
         (typeof newPunishmentResult === "boolean" &&
-        newPunishmentResult !== this.punishmentNum)
+          newPunishmentResult !== this.punishmentNum)
       ) {
         this.punishmentNum = newPunishmentResult;
         this.punishmentCheckResult();

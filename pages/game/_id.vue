@@ -24,10 +24,7 @@ export default {
       transports: ["websocket"],
     });
 
-    this.$root.gameSocket.on(GameEvent.LEAVE, (data) => {
-      console.log(data)
-      this.$store.commit("stream/setRoomMembers", data)
-    })
+
 
     this.$root.gameSocket.on(GameEvent.GAMEEND, (data) => {
       console.log(data)
@@ -58,7 +55,6 @@ export default {
       console.log('나가')
       if (!this.gameFinishData) {
         console.log('나 가요')
-        this.$root.gameSocket.emit(GameEvent.LEAVE)
       }
       var unpublish = { request: "unpublish" };
       var leave = { request: "leave" };
