@@ -188,6 +188,23 @@ export default {
       console.log("POLICE" + data.userNum);
       // 이걸로 직업 알려주는 이벤트 발생하게 한다..
       this.$refs.billboard.policeResult();
+
+        this.$swal({
+          icon : 'success',
+          title: data.userNum,
+          html: '경찰 능력 사용',
+          timer: 2000,
+          showConfirmButton: false,
+          showClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          },
+        }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === this.$swal.DismissReason.timer) {
+            console.log('경찰 능력 공개')
+          }
+        })
+
     });
     // 의사와 마피아는 단순히 받아오기만 함
     // 실제 결과 처리는 프론트로 넘어오는 유저의 정보로 판별하기 때문.
