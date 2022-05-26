@@ -141,25 +141,27 @@ export default {
         console.log('빌보드 밤 이벤트 시작')
       // }, 2000)
     });
-    this.$root.gameSocket.on(GameEvent.USEJOBS, (data, data2) => {
+    this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
+      // data은 유저 정보, data2는 텍스트
       // ! 죽은 유저의 정보를 출력한다.punishment, usejobs
-      console.log('USEJOBS ' + data);
+      console.log('USEJOBS ' + data.userNum);
       console.log("직업사용 결과 받음");
-      if (data === null) {
-        console.log("평화로운 밤이었습니다.");
-      } else if (data.userNum !== null && data.die === false) {
-        console.log(
-          `${
-            this.$store.state.stream.roomMembers[data.userNum - 1].nickname
-          }가 습격받았으나 의사의 도움으로 살아남았습니다.`
-        );
-      } else if (data.userNum !== null && data.die === true) {
-        console.log(data2
-        );
-        console.log(`${this.$store.state.stream.roomMembers[data.userNum - 1].nickname}의 직업은 ${this.$store.state.stream.roomMembers[data.userNum - 1].job}입니다.`)
+      console.log(data.message);
+      if (data.userNum !== null && data.userNum.die === true) {
         this.$store.commit("stream/killMember", data.userNum - 1);
         this.$store.commit("stream/surviveMemberCheck");
       }
+
+      // if (data.userNum === null) {
+      //   console.log(data.message);
+      // } else if (data.userNum !== null && data.userNum.die === false) {
+      //   console.log(data.message);
+      // } else if (data.userNum !== null && data.userNum.die === true) {
+      //   console.log(data);
+      //   console.log(`${this.$store.state.stream.roomMembers[data.userNum - 1].nickname}의 직업은 ${this.$store.state.stream.roomMembers[data.userNum - 1].job}입니다.`)
+      //   this.$store.commit("stream/killMember", data.userNum - 1);
+      //   this.$store.commit("stream/surviveMemberCheck");
+      // }
       this.$emit("victorySearch");
       // 만약 마피아 != 의사일 경우, killMember를 불러온다.
       // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
