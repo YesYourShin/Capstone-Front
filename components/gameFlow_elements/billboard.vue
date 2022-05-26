@@ -147,7 +147,7 @@ export default {
       console.log('USEJOBS ' + data);
       console.log("직업사용 결과 받음");
       console.log(data.message);
-      if (data.userNum !== null && data.userNum.die === true) {
+      if (data.userNum !== null) {
         this.$store.commit("stream/killMember", data.userNum - 1);
         this.$store.commit("stream/surviveMemberCheck");
       }
