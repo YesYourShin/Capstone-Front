@@ -140,6 +140,7 @@ export default {
         if (item.job === "MAFIA") {
           this.$refs.sideBarSet.myJobMafia();
           this.$refs.billboard.grantMafia();
+          this.$root.gameSocket.emit(GameEvent.MAFIASEARCH)
           this.myJob = item.job
         } else if (item.job === "POLICE") {
           this.$refs.sideBarSet.myJobPolice();
@@ -186,12 +187,12 @@ export default {
     this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
       console.log(data)
     })
-    this.$root.gameSocket.on(GameEvent.MAFIASEARCH, (data) => {
-      // 모든 마피아 유저의 정보를 받아온다.
-      console.log('마피아 유저' + data)
-      // this.$store.commit('stream/mafiaInfoSave', data);
-      // 이것을 stream.js에 담고 실행한다.
-    })
+    // this.$root.gameSocket.on(GameEvent.MAFIASEARCH, (data) => {
+    //   // 모든 마피아 유저의 정보를 받아온다.
+    //   console.log(data)
+    //   // this.$store.commit('stream/mafiaInfoSave', data);
+    //   // 이것을 stream.js에 담고 실행한다.
+    // })
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
       console.log(data.userNum);
       // 이걸로 직업 알려주는 이벤트 발생하게 한다..
@@ -306,7 +307,7 @@ export default {
         this.$refs.timer.nightEvent();
         if (this.myJob === "MAFIA") {
          this.$refs.userVideo.skillMotion();
-         this.$root.gameSocket.emit(GameEvent.MAFIASEARCH)
+        //  this.$root.gameSocket.emit(GameEvent.MAFIASEARCH)
         } else if (this.myJob === "DOCTOR") {
           // select를 추가해야 할듯
           this.$refs.userVideo.skillMotion();

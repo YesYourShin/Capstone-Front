@@ -131,6 +131,7 @@ export default {
         },
       ],
       blind: false,
+      another: null
     };
   },
   props: {
@@ -167,6 +168,19 @@ export default {
     // todo 1. 백엔드 요청 -> 하루 지나면 투표값 전부 초기화 필요
     // ! 만약 타이머가 종료됐을 경우, 투표를 안한 사람만 넘겨줘야 한다.
     // ! 투표 한 사람이 중복으로 넘겨주면 안됨!!
+    this.$root.gameSocket.on(GameEvent.MAFIASEARCH, (data) => {
+      // 모든 마피아 유저의 정보를 받아온다.
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].nickname !== myInfo.profile.nickname) {
+          this.another = i
+        }
+
+      }
+      // this.$store.commit('stream/mafiaInfoSave', data);
+      // 이것을 stream.js에 담고 실행한다.
+    })
+
+
     this.$nuxt.$on("voteTimeFinish", (data) => {
       if (this.skillTrue === false && this.checkNum !== true) {
         console.log(data);
@@ -216,12 +230,11 @@ export default {
   watch: {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
-      if (
-        newVoteResult > 0 &&
+      if (newVoteResult === null ||
+        (newVoteResult > 0 &&
         newVoteResult <= this.$store.state.stream.roomMembers.length &&
-        newVoteResult !== null &&
         this.$store.state.stream.roomMembers[newVoteResult - 1].die === false &&
-        newVoteResult !== this.voteNum
+        newVoteResult !== this.voteNum)
       ) {
         this.voteNum = newVoteResult;
         this.changeVoteResult();
@@ -230,7 +243,7 @@ export default {
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
       if (
-        typeof newCheckResult === "boolean" &&
+        // typeof newCheckResult === "boolean" &&
         newCheckResult !== this.checkNum
       ) {
         this.checkNum = newCheckResult;
@@ -241,7 +254,7 @@ export default {
       // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
       if (
-        typeof newPunishmentResult === "boolean" &&
+        // typeof newPunishmentResult === "boolean" &&
         newPunishmentResult !== this.punishmentNum
       ) {
         this.punishmentNum = newPunishmentResult;
