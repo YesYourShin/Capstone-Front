@@ -240,10 +240,9 @@ export default {
       }
     },
     punishmentResult: function (newPunishmentResult) {
-      // newPunishmentResult === 'a'
       console.log("Punishment Result", newPunishmentResult);
       if (
-        newCheckResult === null ||
+        newPunishmentResult === null ||
         (typeof newPunishmentResult === "boolean" &&
         newPunishmentResult !== this.punishmentNum)
       ) {

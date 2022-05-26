@@ -111,7 +111,7 @@ export default {
     // 여기서부터는 백엔드의 emit을 받아 처리
     // 게임 시작과 동시에, 유저 정보를 받아오고, 게임 시작 메서드 실행
     this.$root.gameSocket.on(GameEvent.JOIN, (data) => {
-      console.log(data)
+      console.log('JOIN' + data)
       // setTimeout(() => {
         this.gameStart();
       // }, 5000);
@@ -126,9 +126,9 @@ export default {
     // 유저의 직업을 배분하고, 배분된 직업에 따라 다른 이벤트 부여
     // 달라지는 것 - 빌보드 메세지, 사이드바 UI 내용
     this.$root.gameSocket.on(GameEvent.JOB, (data) => {
-      console.log(data)
+      console.log('JOB' + data)
       for (let item of data) {
-        console.log(item.job);
+        console.log(`${item}job`+item.job);
         this.$store.commit('stream/setRoomMembersJob', item);
         if (item.job === "MAFIA") {
           this.$refs.sideBarSet.myJobMafia();
@@ -158,7 +158,7 @@ export default {
 
 
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
-      console.log(data)
+      console.log('WINNER' + data)
       if (data.winner === 'MAFIA') {
         this.mafiaWin()
       } else if (data.winner === 'CITIZEN') {
@@ -167,7 +167,7 @@ export default {
     });
 
     this.$root.gameSocket.on(GameEvent.DAY, (data) => {
-      console.log(data.day)
+      console.log('170Code DAY' +data.day)
       this.flag = data.day
         if (data.day === true) {
           this.morningEvent()
@@ -177,7 +177,7 @@ export default {
       })
 
     this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
-      console.log(data)
+      console.log('VOTE' +data)
     })
     // this.$root.gameSocket.on(GameEvent.MAFIASEARCH, (data) => {
     //   // 모든 마피아 유저의 정보를 받아온다.
@@ -186,28 +186,28 @@ export default {
     //   // 이것을 stream.js에 담고 실행한다.
     // })
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
-      console.log(data.userNum);
+      console.log('POLICE' + data.userNum);
       // 이걸로 직업 알려주는 이벤트 발생하게 한다..
       this.$refs.billboard.policeResult();
     })
     // 의사와 마피아는 단순히 받아오기만 함
     // 실제 결과 처리는 프론트로 넘어오는 유저의 정보로 판별하기 때문.
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
-      console.log(data);
+      console.log('DOCTOR' +ata);
     })
     this.$root.gameSocket.on(GameEvent.MAFIA, (data) => {
-      console.log('마피아의 지목 ' + data);
-    })
-    this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
-      console.log(data);
+      console.log('MAFIA' + + data);
     })
 
     this.$root.gameSocket.on(GameEvent.SPEAK, (data) => {
-      console.log(data);
+      console.log('SPEAK' + data);
       this.$store.commit("stream/setSpeaker", data);
     });
 
-    this.$root.gameSocket.on(GameEvent.GAMEEND)
+    this.$root.gameSocket.on(GameEvent.LEAVE, (data) => {
+      console.log('LEAVE' + data)
+      this.$store.commit("stream/setRoomMembers", data)
+    })
   },
   created() {},
   methods: {
@@ -253,7 +253,7 @@ export default {
     // userVideo.vue에서 얻어낸 유저 지목 값을 백엔드로 전송
     voteNumCheck(voteNum) {
       // this.electedPlayer = voteNum;
-      console.log(voteNum);
+      console.log('voteNum ' + voteNum);
       this.$root.gameSocket.emit(GameEvent.VOTE, {
         vote: voteNum,
       })
@@ -289,7 +289,6 @@ export default {
     nightEvent() {
       console.log('게임 밤 이벤트 시작')
       this.$refs.audio.nightBgmEvent();
-      console.log(this.flag)
       this.$refs.billboard.nightEventBoard();
         this.$refs.timer.nightEvent();
         if (this.myJob === "MAFIA") {
@@ -347,6 +346,7 @@ export default {
       this.$root.gameSocket.emit(GameEvent.GAMEEND)
     },
     escapeGame() {
+      this.$root.gameSocket.emit(GameEvent.LEAVE)
       this.$router.push(this.escape);
     }
   },
