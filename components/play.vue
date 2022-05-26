@@ -1,6 +1,6 @@
 <template>
   <div :class="`${flag ? 'gamebox-first' : 'gamebox-second'}`" :escapeGame="'/lobby'">
-      <WinModal ref="win" @escapeGame="escapeGame"/>
+      <WinModal ref="win" @escapeGame="escapeGame" @gameFinish="gameFinish" />
     <button class="exitbtn"></button>
     <div class="dayTimeBox">
       <DayCount ref="dayCount" class="chatbox"></DayCount>
@@ -13,7 +13,7 @@
         class="timerbox"
       ></Timer>
       <div class="exitBtn">
-        <exitGame :escapeGame="'/lobby'"></exitGame>
+        <exitGame></exitGame>
       </div>
     </div>
     <Audio ref="audio" />
@@ -161,6 +161,9 @@ export default {
 
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
       console.log("WINNER" + data);
+      this.$root.gameSocket.emit(GameEvent.GAMEEND, {
+        winner: data.winner
+      });
       if (data.winner === "MAFIA") {
         this.mafiaWin();
       } else if (data.winner === "CITIZEN") {
@@ -332,18 +335,18 @@ export default {
     },
     mafiaWin() {
       this.$refs.win.mafiaWin();
-      this.$emit("gameFinish");
-      this.$root.gameSocket.emit(GameEvent.GAMEEND);
+      // this.$root.gameSocket.emit(GameEvent.GAMEEND,);
     },
     citizenWin() {
       this.$refs.win.citizenWin();
-      this.$emit("gameFinish");
       this.$root.gameSocket.emit(GameEvent.GAMEEND);
     },
     escapeGame() {
-      this.$root.gameSocket.emit(GameEvent.LEAVE);
       this.$router.push(this.escape);
     },
+    gameFinish() {
+      this.$emit("gameFinish");
+    }
   },
 };
 </script>
