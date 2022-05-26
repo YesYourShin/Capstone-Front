@@ -85,16 +85,19 @@ export default {
         -> Remote track flowing again: 이라 뜸 Janus 문제?
       7. {video 태그 순서}랑 {얼굴 랜드마크 소켓서버로 보낼 때 같이 보낼 유저 정보의 종류}
     */
-
+    this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
+      // console.log("othersFaceLandmarks", data);
+      this.testLandmark[data.id] = data.landmarks;
+    });
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
-    if (this.myVideo) {
-      const main = async () => {
-        // 소켓 연결
-        // this.socket = io("http://localhost:3065/game", {
-        //   transports: ["websocket"],
-        // });
-        // 자기 비디오랑 캔버스
 
+    const main = async () => {
+      // 소켓 연결
+      // this.socket = io("http://localhost:3065/game", {
+      //   transports: ["websocket"],
+      // });
+      // 자기 비디오랑 캔버스
+      if (this.myVideo) {
         this.myCanvas = document.getElementsByClassName(
           `output_canvas${this.myInfo.profile.id}`
         )[0];
@@ -103,20 +106,15 @@ export default {
         // await this.handCognition();
         console.log("myVideo", this.myVideo);
         await this.myFace();
-
-        // 타인의 스트림만큼 캔버스에 메모 그리기
-        for (const data of this.roomMembers) {
-          if (data.id != this.myInfo.profile.id) {
-            await this.faceMemo(data);
-          }
+      }
+      // 타인의 스트림만큼 캔버스에 메모 그리기
+      for (const data of this.roomMembers) {
+        if (data.id != this.myInfo.profile.id) {
+          await this.faceMemo(data);
         }
-        this.$root.gameSocket.on("othersFaceLandmarks", (data) => {
-          // console.log("othersFaceLandmarks", data);
-          this.testLandmark[data.id] = data.landmarks;
-        });
-      };
-      main();
-    }
+      }
+    };
+    main();
   },
   async beforeDestroy() {
     console.log("beforeunload");
@@ -213,6 +211,7 @@ export default {
       const id = data.id;
       const videoElement = document.getElementById(`remote${id}`);
       if (videoElement) {
+        console.log("in facememo");
         const canvasElement = document.getElementsByClassName(
           `output_canvas${id}`
         )[0];
@@ -282,10 +281,15 @@ export default {
             if (imgCitizenHat || imgPoliceHat || imgDoctorHat || imgMafiaHat) {
               const canvasWidth =
                 bottomRightx - topLeftx + (bottomRightx - topLeftx) / 2;
+
               const canvasHeight =
                 bottomRighty - topLefty + (bottomRighty - topLefty) / 2;
-              const canvasx = topLeftx - 60;
-              const canvasy = topLefty - canvasHeight + 15;
+              // console.log(bottomRightx);
+              // const canvasx = bottomRightx - (bottomRightx - topLeftx) / 2;
+              const canvasx =
+                topLeftx - canvasWidth / 2 + (bottomRightx - topLeftx) / 2;
+              // const canvasx = bottomRightx - (topLeftx - bottomRightx) / 2;
+              const canvasy = topLefty - canvasHeight;
               img.onload = canvasCtx.drawImage(
                 img,
                 canvasx,
