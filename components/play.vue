@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'gamebox-first': this.flag, 'gamebox-second': !this.flag }" :escapeGame="'/lobby'">
+  <div :class="`${flag ? 'gamebox-first' : 'gamebox-second'}`" :escapeGame="'/lobby'">
       <WinModal ref="win" @escapeGame="escapeGame"/>
     <button class="exitbtn"></button>
     <div class="dayTimeBox">
@@ -193,10 +193,10 @@ export default {
     // 의사와 마피아는 단순히 받아오기만 함
     // 실제 결과 처리는 프론트로 넘어오는 유저의 정보로 판별하기 때문.
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
-      console.log('DOCTOR' +ata);
+      console.log('DOCTOR' + data);
     })
     this.$root.gameSocket.on(GameEvent.MAFIA, (data) => {
-      console.log('MAFIA' + + data);
+      console.log('MAFIA' + data);
     })
 
     this.$root.gameSocket.on(GameEvent.SPEAK, (data) => {
@@ -204,10 +204,7 @@ export default {
       this.$store.commit("stream/setSpeaker", data);
     });
 
-    this.$root.gameSocket.on(GameEvent.LEAVE, (data) => {
-      console.log('LEAVE' + data)
-      this.$store.commit("stream/setRoomMembers", data)
-    })
+
   },
   created() {},
   methods: {
