@@ -212,7 +212,9 @@ export default {
       this.myCtx = this.myCanvas.getContext("2d");
     }
     await this.handCognition(this.myVideo, this.myCanvas, this.myCtx);
+
   },
+
   watch: {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
@@ -462,6 +464,7 @@ export default {
             });
           }
           this.$emit("punishmentEmit", this.punishmentEmit);
+
           // 죽음 값을 완벽히 인식했을 때만 가능
           console.log(this.punishmentEmit + "죽음 투표");
           this.punishLoading = null;
