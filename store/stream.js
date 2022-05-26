@@ -186,8 +186,8 @@ export const mutations = {
     for (let i = 0; i < state.roomMembers.length; i++) {
       console.log(state.roomMembers[i].nickname)
       console.log(data)
-      if (state.roomMembers[i].nickname === data) {
-        state.roomMembers[i].die = true;
+      if (state.roomMembers[i].nickname === data.nickname) {
+        state.roomMembers[i].die = data.die
         stopMediaStream(state.roomMembers[i].stream);
         break;
       }
