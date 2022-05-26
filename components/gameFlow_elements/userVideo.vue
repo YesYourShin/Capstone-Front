@@ -89,6 +89,7 @@ import {
   check,
   punishment,
 } from "@/common/detection/hand";
+import { GameEvent } from "@/api/mafiaAPI";
 
 export default {
   data() {
