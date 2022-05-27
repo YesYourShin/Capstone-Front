@@ -10,16 +10,16 @@
         <div v-if="s.stream" class="videoCut">
           <video
             v-if="s.nickname !== myInfo.profile.nickname"
-            :ref="'remote' + s.userId"
-            :id="'remote' + s.userId"
+            :ref="'remote' + s.id"
+            :id="'remote' + s.id"
             :src-object.prop.camel="s.stream"
             autoplay
           ></video>
           <video
             v-else
             class="myVideo"
-            :ref="'remote' + s.userId"
-            :id="'remote' + s.userId"
+            :ref="'remote' + s.id"
+            :id="'remote' + s.id"
             :src-object.prop.camel="s.stream"
             autoplay
             muted
