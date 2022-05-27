@@ -361,8 +361,6 @@ export default {
             });
 
             this.checkLoading = null;
-            this.checkNum = null;
-            this.voteNum = null;
             // 스킬 사용이고, 체크했을 경우
           } else if (this.skillTrue === true && this.checkNum === true) {
             this.$emit("skillNumEmit", this.voteNum);
@@ -381,8 +379,6 @@ export default {
                 console.log("skill 결과 출력");
               }
             });
-
-            this.checkNum = null;
             this.checkLoading = null;
             console.log("스킬 값 넘겨줌" + this.voteNum);
             // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
@@ -400,9 +396,7 @@ export default {
               }
             });
 
-            this.checkNum = null;
             this.checkLoading = null;
-            this.voteNum = null;
             this.startVoteMotion();
             console.log("투표 다시");
           } else if (this.skillTrue === true && this.checkNum === false) {
@@ -418,10 +412,7 @@ export default {
                 console.log("skill 결과 출력");
               }
             });
-
-            this.checkNum = null;
             this.checkLoading = null;
-            this.voteNum = null;
             this.skillMotion();
             console.log("스킬 다시");
           }
