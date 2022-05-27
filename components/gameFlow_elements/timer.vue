@@ -76,7 +76,7 @@ export default {
     this.$root.gameSocket.on(GameEvent.TIMER, (data) => {
       console.log(data);
       this.totalSeconds = data.time
-      this.contentProgress = 100 - (this.totalSeconds * 30);
+      this.contentProgress += 100/30;
       if (data.time === 0) {
         if (this.nowEvent === 'morning') {
           this.$emit("startVote")
@@ -109,6 +109,7 @@ export default {
     // setInterval 내에서 clientRealtime 갱신
     morningTimer() {
       this.nowEvent = "morning"
+      this.contentProgress = 0,
       this.$root.gameSocket.emit(GameEvent.TIMER);
         this.$swal({
           imageUrl: require('~/assets/ingame/sun.svg'),
@@ -132,6 +133,7 @@ export default {
     // 마피아로 의심되는 유저를 지목할 때 쓰이는 타이머
     voteTimer() {
       this.nowEvent = "vote"
+      this.contentProgress = 0,
       this.$root.gameSocket.emit(GameEvent.TIMER);
 
         this.$swal({
@@ -153,6 +155,7 @@ export default {
     // 특정 유저가 지목되고, 사형 찬반투표를 할 때 쓰이는 타이머
     punishmentTimer() {
       this.nowEvent = "punishment"
+      this.contentProgress = 0,
       this.$root.gameSocket.emit(GameEvent.TIMER);
 
         this.$swal({
@@ -174,6 +177,7 @@ export default {
     // 밤이 되었을 때 쓰이는 타이머
     nightEvent() {
       this.nowEvent = "night"
+      this.contentProgress = 0,
       this.$root.gameSocket.emit(GameEvent.TIMER);
 
         this.$swal({

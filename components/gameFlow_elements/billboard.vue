@@ -71,7 +71,7 @@ export default {
     // 유저의 vote 결과를 빌보드에 알려준다.
     this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
       console.log(data);
-      if (data == null) {
+      if (data === null) {
         this.newMessage = `아무도 투표하지 않았습니다.`;
         this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
         this.$forceUpdate();
@@ -112,34 +112,28 @@ export default {
       }
     });
     // 유저의 punishment 결과를 빌보드에 알려준다.
+
     this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
-      console.log("합산결과" + data);
-      console.log(this.$store.state.stream.surviveMembers);
-      if (data >= this.$store.state.stream.surviveMembers / 2) {
+    // result, user, punish,
+    console.log("합산결과" + data);
         this.finishPunishmentVoteBoard();
-        this.newMessage = `찬성 : ${data} 표`;
+        this.newMessage = `찬성 : ${data.punish} 표`;
         this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
         this.$forceUpdate();
-        this.$root.gameSocket.on(GameEvent.DEATH, (data) => {
-          console.log(data);
-          this.punishmentEvent();
-          this.newMessage = `${data.nickname}은 ${data.job}이었습니다.`;
+        this.punishmentEvent();
+        if (data.result) {
+          this.newMessage = `${data.user.nickname}은 ${data.job}이었습니다.`;
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
           this.$forceUpdate();
-          // ! 죽은 유저의 정보를 출력한다. punishment, usejobs
-          // setTimeout(() => {
-            this.$store.commit('stream/killMember', data.nickname);
-            this.$store.commit('stream/surviveMemberCheck');
-            console.log('캠 끄기')
-          // }, 2000)
-        });
-      } else {
-        this.finishPunishmentVoteFalseBoard();
-      }
-      // setTimeout(() => {
+          this.$store.commit('stream/killMember', data.user.nickname);
+          this.$store.commit('stream/surviveMemberCheck');
+        } else {
+          this.newMessage = '사형 취소'
+          this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
+          this.$forceUpdate();
+        }
         this.$emit("victorySearch");
         console.log('빌보드 밤 이벤트 시작')
-      // }, 2000)
     });
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       // data은 유저 정보, data2는 텍스트
@@ -149,12 +143,13 @@ export default {
       console.log(data.message);
 
       if (data.user !== null) {
+        // data.user는 유ㅈ의 정보
         this.$store.commit("stream/killMember", data.user);
         this.$store.commit("stream/surviveMemberCheck");
         this.$swal({
           icon : 'success',
           title: '사망자 발생',
-          html: data.message + '이(가) 사망하였습니다.',
+          html: data.message,
           timer: 2000,
           showConfirmButton: false,
           showClass: {
@@ -164,6 +159,7 @@ export default {
           /* Read more about handling dismissals below */
           if (result.dismiss === this.$swal.DismissReason.timer) {
             console.log('유저 사망')
+            this.$emit("victorySearch");
           }
         })
       } else {
@@ -180,9 +176,11 @@ export default {
           /* Read more about handling dismissals below */
           if (result.dismiss === this.$swal.DismissReason.timer) {
             console.log('유저 사망 안함')
+            this.$emit("victorySearch");
           }
         })
       }
+
     // 유저 정보랑 메세지
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
       console.log("POLICE" + data);

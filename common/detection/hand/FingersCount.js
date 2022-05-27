@@ -60,7 +60,7 @@ export const fingersCount = (results, canvasElement, canvasCtx, vStatus) => {
   //   this.voteResult = voteResult;
 
   if (vStatus) {
-    canvasCtx.font = "36px gulim";
+    canvasCtx.font = `${canvasElement.width / 6}px gulim`;
     canvasCtx.fillStyle = "rgba(255,255,255)";
     canvasCtx.strokeText = "rgba(0,0,0)"
     canvasCtx.fillText(
