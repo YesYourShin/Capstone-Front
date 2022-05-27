@@ -60,8 +60,9 @@ export const fingersCount = (results, canvasElement, canvasCtx, vStatus) => {
   //   this.voteResult = voteResult;
 
   if (vStatus) {
-    canvasCtx.font = `${canvasElement.width / 12}px gulim`;
-    canvasCtx.fillStyle = "rgba(255,255,255,1)";
+    canvasCtx.font = "36px gulim";
+    canvasCtx.fillStyle = "rgba(255,255,255)";
+    canvasCtx.strokeText = "rgba(0,0,0)"
     canvasCtx.fillText(
       "몇 번을 지목하겠습니까?",
       canvasElement.

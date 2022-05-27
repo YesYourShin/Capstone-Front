@@ -244,7 +244,7 @@ export default {
         };
 
         const detectFace =  () => {
-          console.log('detectFace called!!!!!!!!!!!!!!!!!!!!!!!!!')
+          // console.log('detectFace called!!!!!!!!!!!!!!!!!!!!!!!!!')
           canvasCtx.save();
           canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
           // canvasCtx.drawImage(

@@ -155,9 +155,9 @@ export default {
 
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
       console.log("WINNER" + data);
-      this.$root.gameSocket.emit(GameEvent.GAMEEND, {
-        winner: data.winner
-      });
+      // this.$root.gameSocket.emit(GameEvent.GAMEEND, {
+      //   winner: data.winner
+      // });
       if (data.winner === "MAFIA") {
         this.mafiaWin();
       } else if (data.winner === "CITIZEN") {
@@ -184,28 +184,7 @@ export default {
     //   // this.$store.commit('stream/mafiaInfoSave', data);
     //   // 이것을 stream.js에 담고 실행한다.
     // })
-    this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
-      console.log("POLICE" + data.userNum);
-      // 이걸로 직업 알려주는 이벤트 발생하게 한다..
-      this.$refs.billboard.policeResult();
 
-        this.$swal({
-          icon : 'success',
-          title: data.userNum,
-          html: '경찰 능력 사용',
-          timer: 2000,
-          showConfirmButton: false,
-          showClass: {
-            popup: 'animate__animated animate__fadeOutUp'
-          },
-        }).then((result) => {
-          /* Read more about handling dismissals below */
-          if (result.dismiss === this.$swal.DismissReason.timer) {
-            console.log('경찰 능력 공개')
-          }
-        })
-
-    });
     // 의사와 마피아는 단순히 받아오기만 함
     // 실제 결과 처리는 프론트로 넘어오는 유저의 정보로 판별하기 때문.
     this.$root.gameSocket.on(GameEvent.DOCTOR, (data) => {
@@ -216,7 +195,7 @@ export default {
     })
 
     this.$root.gameSocket.on(GameEvent.SPEAK, (data) => {
-      console.log("SPEAK" + data);
+      // console.log("SPEAK" + data);
       this.$store.commit("stream/setSpeaker", data);
     });
 
@@ -346,11 +325,11 @@ export default {
     },
     mafiaWin() {
       this.$refs.win.mafiaWin();
-      this.$root.gameSocket.emit(GameEvent.GAMEEND);
+      // this.$root.gameSocket.emit(GameEvent.GAMEEND);
     },
     citizenWin() {
       this.$refs.win.citizenWin();
-      this.$root.gameSocket.emit(GameEvent.GAMEEND);
+      // this.$root.gameSocket.emit(GameEvent.GAMEEND);
     },
     escapeGame() {
       if (!this.gameFinishData) {

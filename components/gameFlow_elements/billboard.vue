@@ -183,6 +183,30 @@ export default {
           }
         })
       }
+    // 유저 정보랑 메세지
+    this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
+      console.log("POLICE" + data);
+      // 빌보드 갱신될 내용도 data와 동일
+      this.messageLogs.splice(data, 0, this.newMessage);
+      this.$forceUpdate();
+      // 이걸로 직업 알려주는 모달 이벤트 발생
+      this.policeResult();
+        this.$swal({
+          icon : 'question',
+          title: '경찰 능력 사용',
+          html: 'data',
+          timer: 2000,
+          showConfirmButton: false,
+          showClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          },
+        }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === this.$swal.DismissReason.timer) {
+            console.log('경찰 능력 공개')
+          }
+        })
+    });
 
       // if (data.userNum === null) {
       //   console.log(data.message);
@@ -194,7 +218,7 @@ export default {
       //   this.$store.commit("stream/killMember", data.userNum - 1);
       //   this.$store.commit("stream/surviveMemberCheck");
       // }
-      this.$emit("victorySearch");
+      // this.$emit("victorySearch");
       // 만약 마피아 != 의사일 경우, killMember를 불러온다.
       // 만약 마피아 == 의사일 경우, 빌보드만 출력한다.
       // 그리고 surviveMemberCheck을 불러오며 결과를 도출한다.

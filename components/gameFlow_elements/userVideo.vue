@@ -16,14 +16,6 @@
             autoplay
           ></video>
           <video
-            v-else-if="s.nickname !== myInfo.profile.nicknam && flag === false"
-            :ref="'remote' + s.userId"
-            :id="'remote' + s.userId"
-            :src-object.prop.camel="s.stream"
-            autoplay
-            muted
-          ></video>
-          <video
             v-else
             class="myVideo"
             :ref="'remote' + s.userId"
@@ -111,7 +103,7 @@ export default {
       myVideo: null,
       myCanvas: null,
       myCtx: null,
-      voteNum: null,
+      voteNum: 0,
       voteCount: null,
       nextEvent: null,
       skillTrue: null,
@@ -235,7 +227,6 @@ export default {
         newVoteResult === null ||
         (newVoteResult > 0 &&
           newVoteResult <= this.$store.state.stream.roomMembers.length &&
-          newVoteResult !== null &&
           this.$store.state.stream.roomMembers[newVoteResult - 1].die ===
             false &&
           newVoteResult !== this.voteNum)
@@ -310,7 +301,7 @@ export default {
       this.voteCount = 0;
       clearInterval(this.voteLoading);
       this.voteLoading = setInterval(() => {
-        if (this.voteCount < 3) {
+        if (this.voteCount < 3 && this.voteNum > 0) {
           this.voteCount += 1;
           console.log(this.voteCount);
         } else if (this.voteCount === 3) {
@@ -340,7 +331,7 @@ export default {
       this.checkCount = 0;
       clearInterval(this.checkLoading);
       this.checkLoading = setInterval(() => {
-        if (this.checkCount < 3) {
+        if (this.checkCount < 3 && this.checkNum !== null) {
           this.checkCount += 1;
           console.log(this.checkCount);
         } else if (this.checkCount === 3) {

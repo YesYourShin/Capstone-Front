@@ -76,7 +76,7 @@ export default {
     this.$root.gameSocket.on(GameEvent.TIMER, (data) => {
       console.log(data);
       this.totalSeconds = data.time
-      this.contentProgress = 100 - (this.totalSeconds * 10);
+      this.contentProgress = 100 - (this.totalSeconds * 30);
       if (data.time === 0) {
         if (this.nowEvent === 'morning') {
           this.$emit("startVote")
@@ -187,12 +187,12 @@ export default {
           showConfirmButton: false,
           background: 'rgba(0,0,0,0.6)',
           color: '#ffffff'
-        }).then((result) => {
-          /* Read more about handling dismissals below */
-          if (result.dismiss === this.$swal.DismissReason.timer) {
-            console.log('밤 모달 시작')
-          }
-        })
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === this.$swal.DismissReason.timer) {
+              console.log('밤 모달 시작')
+            }
+          })
     },
   },
 };

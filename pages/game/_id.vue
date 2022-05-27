@@ -29,7 +29,7 @@ export default {
     })
 
     this.$root.gameSocket.on(GameEvent.GAMEEND, (data) => {
-      console.log(data)
+      console.log('게임 엔드 발생')
     })
 
   },
