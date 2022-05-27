@@ -216,10 +216,10 @@ export default {
       });
   },
   async mounted() {
-    this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
+    this.myVideo = document.getElementById(`remote${this.myInfo.id}`);
     if (this.myVideo) {
       this.myCanvas = document.getElementsByClassName(
-        `output_canvas${this.myInfo.profile.id}`
+        `output_canvas${this.myInfo.id}`
       )[0];
       if (this.myCanvas) {
         this.myCtx = this.myCanvas.getContext("2d");
@@ -553,7 +553,7 @@ export default {
       const getMedia = async () => {
         try {
           myStream = this.roomMembers.find((e) => {
-            return e.id === this.myInfo.profile.id;
+            return e.id === this.myInfo.id;
           }).stream;
           console.log(myStream);
           videoElement.srcObject = myStream;
@@ -608,7 +608,7 @@ export default {
             requestAnimationFrame(media);
           } else {
             for (const member of this.$store.state.stream.roomMembers) {
-              if (member.id === this.myInfo.profile.id) {
+              if (member.id === this.myInfo.id) {
                 if (member.die) {
                   console.log("hands close");
                   hands.close();
