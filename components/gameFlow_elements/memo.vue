@@ -89,7 +89,7 @@ export default {
       // console.log("othersFaceLandmarks", data);
       this.testLandmark[data.id] = data.landmarks;
     });
-    this.myVideo = document.getElementById(`remote${this.myInfo.id}`);
+    this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
 
     const main = async () => {
       // 소켓 연결
@@ -99,7 +99,7 @@ export default {
       // 자기 비디오랑 캔버스
       if (this.myVideo) {
         this.myCanvas = document.getElementsByClassName(
-          `output_canvas${this.myInfo.id}`
+          `output_canvas${this.myInfo.profile.id}`
         )[0];
         this.myCtx = this.myCanvas.getContext("2d");
 
@@ -109,7 +109,7 @@ export default {
       }
       // 타인의 스트림만큼 캔버스에 메모 그리기
       for (const data of this.roomMembers) {
-        if (data.id != this.myInfo.id) {
+        if (data.id != this.myInfo.profile.id) {
           await this.faceMemo(data);
         }
       }
@@ -124,7 +124,7 @@ export default {
 
     console.log(this.myFaceInterval);
     for (const data of this.roomMembers) {
-      if (data.id != this.myInfo.id) {
+      if (data.id != this.myInfo.profile.id) {
         clearInterval(this.userFaceInterval[data.id]);
       }
     }
@@ -161,7 +161,7 @@ export default {
     ]
     */
         for (const member of this.$store.state.stream.roomMembers) {
-          if (member.id === this.myInfo.id) {
+          if (member.id === this.myInfo.profile.id) {
             if (member.die) {
               console.log("face off");
 
@@ -206,7 +206,7 @@ export default {
         }
       };
       console.log("videoElement", videoElement);
-      console.log("myInfo id : ", this.myInfo.id);
+      console.log("myInfo id : ", this.myInfo.profile.id);
       videoElement.addEventListener("loadeddata", async () => {
         const blazeface = require("@tensorflow-models/blazeface");
         model = await blazeface.load();
@@ -215,7 +215,7 @@ export default {
       });
     },
     postLandmarks(landmarks) {
-      const id = this.myInfo.id;
+      const id = this.myInfo.profile.id;
       // console.log("my landmarks", landmarks);
       this.$root.gameSocket.emit("myFaceLandmarks", {
         landmarks: landmarks[0],

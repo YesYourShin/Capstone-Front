@@ -15,14 +15,14 @@
             :src-object.prop.camel="s.stream"
             autoplay
           ></video>
-          <!-- <video
+          <video
             v-else-if="s.nickname !== myInfo.profile.nicknam && flag === false"
             :ref="'remote' + s.userId"
             :id="'remote' + s.userId"
             :src-object.prop.camel="s.stream"
             autoplay
             muted
-          ></video> -->
+          ></video>
           <video
             v-else
             class="myVideo"
@@ -216,10 +216,10 @@ export default {
       });
   },
   async mounted() {
-    this.myVideo = document.getElementById(`remote${this.myInfo.id}`);
+    this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
     if (this.myVideo) {
       this.myCanvas = document.getElementsByClassName(
-        `output_canvas${this.myInfo.id}`
+        `output_canvas${this.myInfo.profile.id}`
       )[0];
       if (this.myCanvas) {
         this.myCtx = this.myCanvas.getContext("2d");
@@ -553,7 +553,7 @@ export default {
       const getMedia = async () => {
         try {
           myStream = this.roomMembers.find((e) => {
-            return e.id === this.myInfo.id;
+            return e.id === this.myInfo.profile.id;
           }).stream;
           console.log(myStream);
           videoElement.srcObject = myStream;
@@ -608,7 +608,7 @@ export default {
             requestAnimationFrame(media);
           } else {
             for (const member of this.$store.state.stream.roomMembers) {
-              if (member.id === this.myInfo.id) {
+              if (member.id === this.myInfo.profile.id) {
                 if (member.die) {
                   console.log("hands close");
                   hands.close();
