@@ -99,7 +99,7 @@ export default {
         if (this.equalVote === 1 && this.highVote !== 0) {
           // setTimeout(() => {
             this.$emit("punishmentVote");
-          // }, 3000);
+          // }, 300);
         } else {
           this.newMessage = `동률 발생으로 투표 무효`;
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
@@ -147,9 +147,41 @@ export default {
       console.log('USEJOBS ' + data);
       console.log("직업사용 결과 받음");
       console.log(data.message);
-      if (data.userNum !== null) {
-        this.$store.commit("stream/killMember", data.userNum - 1);
+
+      if (data.user !== null) {
+        this.$store.commit("stream/killMember", data.user);
         this.$store.commit("stream/surviveMemberCheck");
+        this.$swal({
+          icon : 'success',
+          title: '사망자 발생',
+          html: data.message + '이(가) 사망하였습니다.',
+          timer: 2000,
+          showConfirmButton: false,
+          showClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          },
+        }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === this.$swal.DismissReason.timer) {
+            console.log('유저 사망')
+          }
+        })
+      } else {
+        this.$swal({
+          icon : 'success',
+          title: '사망자 없음',
+          html: data.message,
+          timer: 2000,
+          showConfirmButton: false,
+          showClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          },
+        }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === this.$swal.DismissReason.timer) {
+            console.log('유저 사망 안함')
+          }
+        })
       }
 
       // if (data.userNum === null) {
