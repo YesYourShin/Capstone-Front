@@ -133,7 +133,6 @@ export default {
   // 해야할일, 투표
   methods: {
     async myFace() {
-      console.log("myFace");
       const videoElement = this.myVideo;
       const canvasElement = this.myCanvas;
       const canvasCtx = this.myCtx;
@@ -142,6 +141,7 @@ export default {
       let model;
 
       const detectFaces = async () => {
+      // console.log("detectFaces");
         /*
     `predictions` is an array of objects describing each detected face, for example:
 
@@ -172,7 +172,7 @@ export default {
             const landmarks = await model.estimateFaces(videoElement, false);
 
             // 자신의 얼굴 랜드마크 확인
-            // console.log(landmarks);
+            console.log(landmarks);
             canvasCtx.save();
             canvasCtx.clearRect(
               0,
