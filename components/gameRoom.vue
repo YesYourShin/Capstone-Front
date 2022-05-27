@@ -306,7 +306,7 @@ export default {
     });
 
     this.$root.roomSocket.on(GameRoomEvent.SPEAK, (data) => {
-      console.log(data);
+      // console.log(data)
       this.$store.commit("stream/setSpeaker", data);
     });
 
@@ -728,7 +728,7 @@ export default {
                   });
                   vrc.speechEvents = hark(stream, {});
                   vrc.speechEvents.on("speaking", function () {
-                    console.log("speaking");
+                    // console.log("speaking");
                     if (vrc.$route.name === "room-id") {
                       vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
                         userId: vrc.myInfo.profile.userId,
@@ -745,7 +745,7 @@ export default {
                   });
 
                   vrc.speechEvents.on("stopped_speaking", function () {
-                    console.log("stopped_speaking");
+                    // console.log("stopped_speaking");
                     if (vrc.$route.name === "room-id") {
                       vrc.$root.roomSocket.emit(GameRoomEvent.SPEAK, {
                         userId: vrc.myInfo.profile.userId,
