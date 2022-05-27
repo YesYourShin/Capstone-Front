@@ -15,14 +15,14 @@
             :src-object.prop.camel="s.stream"
             autoplay
           ></video>
-          <video
+          <!-- <video
             v-else-if="s.nickname !== myInfo.profile.nicknam && flag === false"
             :ref="'remote' + s.userId"
             :id="'remote' + s.userId"
             :src-object.prop.camel="s.stream"
             autoplay
             muted
-          ></video>
+          ></video> -->
           <video
             v-else
             class="myVideo"
