@@ -130,7 +130,7 @@ export default {
         if (item.job === "MAFIA") {
           this.$refs.sideBarSet.myJobMafia();
           this.$refs.billboard.grantMafia();
-          this.$root.gameSocket.emit(GameEvent.MAFIASEARCH);
+          // this.$root.gameSocket.emit(GameEvent.MAFIASEARCH);
           this.myJob = item.job;
         } else if (item.job === "POLICE") {
           this.$refs.sideBarSet.myJobPolice();

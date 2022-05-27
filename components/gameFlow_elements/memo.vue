@@ -108,8 +108,9 @@ export default {
         await this.myFace();
       }
       // 타인의 스트림만큼 캔버스에 메모 그리기
+      console.log('roomMembers:' +  JSON.stringify(this.roomMembers))
       for (const data of this.roomMembers) {
-        if (data.id != this.myInfo.profile.id) {
+        if (data.id !== this.myInfo.profile.id) {
           await this.faceMemo(data);
         }
       }
@@ -317,7 +318,7 @@ export default {
 
           canvasCtx.restore();
         };
-        this.userFaceInterval[id] = setInterval(detectFace, 30);
+        this.userFaceInterval[id] = setInterval(async () => await detectFace(), 30);
       }
     },
 
