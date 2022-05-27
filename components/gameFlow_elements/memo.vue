@@ -218,59 +218,6 @@ export default {
     async faceMemo(data) {
       const id = data.id;
       const videoElement = document.getElementById(`remote${id}`);
-<<<<<<< HEAD
-      if (videoElement) {
-        console.log("in facememo");
-        const canvasElement = document.getElementsByClassName(
-          `output_canvas${id}`
-        )[0];
-
-        const canvasCtx = canvasElement.getContext("2d");
-
-        // videoElement.style.display = "none";
-
-        this.testImage[id] = {
-          img: null,
-          imgSrc: null,
-          imgWidth: null,
-          imgHeight: null,
-        };
-
-        const detectFace =  () => {
-          // console.log('detectFace called!!!!!!!!!!!!!!!!!!!!!!!!!')
-          canvasCtx.save();
-          canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-          // canvasCtx.drawImage(
-          //   videoElement,
-          //   0,
-          //   0,
-          //   canvasElement.width,
-          //   canvasElement.height
-          // );
-
-          // 여기가 문제야?
-          const landmarks = this.testLandmark[id];
-          // 랜드마크로 얼굴 그리기
-          if (landmarks)
-            this.testLandmark[id].landmarks.forEach((landmark) => {
-              canvasCtx.fillRect(landmark[0], landmark[1], 10, 10);
-            });
-
-          // 이미지;
-          this.testImage[id].img = new Image();
-          if (this.testImage[id].imgSrc != null)
-            this.testImage[id].img.src = this.testImage[id].imgSrc;
-
-          const img = this.testImage[id].img;
-          const imgWidth = img.width;
-          const imgHeight = img.height;
-
-          if (!landmarks || this.blind) {
-            const canvasWidth = canvasElement.width / 2;
-            const canvasHeight = (imgHeight / imgWidth) * canvasWidth;
-            const canvasx = canvasElement.width / 2 - canvasWidth / 2;
-            const canvasy = 0;
-=======
       const canvasElement = document.getElementsByClassName(
         `output_canvas${id}`
       )[0];
@@ -349,7 +296,6 @@ export default {
               topLeftx - canvasWidth / 2 + (bottomRightx - topLeftx) / 2;
             // const canvasx = bottomRightx - (topLeftx - bottomRightx) / 2;
             const canvasy = topLefty - canvasHeight;
->>>>>>> 58fb101f67f3ca31d8b62614d8b25bbf6bb74989
             img.onload = canvasCtx.drawImage(
               img,
               canvasx,
