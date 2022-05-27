@@ -363,8 +363,6 @@ export default {
             this.checkLoading = null;
             this.checkNum = null;
             this.voteNum = null;
-            // this.$emit('voteNumEmit', null)
-            console.log("투표 값 넘겨줌" + this.voteNum);
             // 스킬 사용이고, 체크했을 경우
           } else if (this.skillTrue === true && this.checkNum === true) {
             this.$emit("skillNumEmit", this.voteNum);
