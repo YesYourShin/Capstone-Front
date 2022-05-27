@@ -243,7 +243,8 @@ export default {
           imgHeight: null,
         };
 
-        const detectFace = async () => {
+        const detectFace =  () => {
+          console.log('detectFace called!!!!!!!!!!!!!!!!!!!!!!!!!')
           canvasCtx.save();
           canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
           // canvasCtx.drawImage(
@@ -318,7 +319,7 @@ export default {
 
           canvasCtx.restore();
         };
-        this.userFaceInterval[id] = setInterval(async () => await detectFace(), 30);
+        this.userFaceInterval[id] = setInterval(() => detectFace(), 30);
       }
     },
 
