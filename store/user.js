@@ -103,7 +103,7 @@ export const actions = {
       console.log(error);
     }
     try {
-      const response = await getScore(context.state.myInfo.profile.id);
+      const response = await getScore(context.state.myInfo.id);
       context.commit("setScore", response.data.data);
     } catch (error) {
       console.log(error);

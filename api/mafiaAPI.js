@@ -301,7 +301,7 @@ export const getRecord = (nickname, page, perPage) => {
 };
 
 export const getScore = (userId) => {
-  return instance.get(`games/${userId}`);
+  return instance.get(`/games/${userId}`);
 };
 
 export const GameRoomEvent = {
@@ -317,26 +317,26 @@ export const GameRoomEvent = {
 };
 
 export const GameEvent = {
-  JOIN: 'game:join',
-  LEAVE: 'game:leave',
-  START: 'game:start',
-  JOB: 'game:job',
-  PUNISH: 'game:punish',
-  FINISHP: 'game:finishPunishment',
-  VOTE: 'game:vote',
-  FINISHV: 'game:finishVote',
-  DAY: 'game:day',
-  POLICE: 'game:police',
-  DOCTOR: 'game:doctor',
-  MAFIA: 'game:mafia',
-  MAFIASEARCH: 'game:mafiaSearch',
-  TIMER: 'game:timer',
-  DEATH: 'game:death',
-  WINNER: 'game:winner',
-  USEJOBS: 'game:useJobs',
-  SPEAK: 'game:speak',
-  CURRENT_VOTE: 'game:currentVote',
-  GAMEEND: 'game:end',
+  JOIN: "game:join",
+  LEAVE: "game:leave",
+  START: "game:start",
+  JOB: "game:job",
+  PUNISH: "game:punish",
+  FINISHP: "game:finishPunishment",
+  VOTE: "game:vote",
+  FINISHV: "game:finishVote",
+  DAY: "game:day",
+  POLICE: "game:police",
+  DOCTOR: "game:doctor",
+  MAFIA: "game:mafia",
+  MAFIASEARCH: "game:mafiaSearch",
+  TIMER: "game:timer",
+  DEATH: "game:death",
+  WINNER: "game:winner",
+  USEJOBS: "game:useJobs",
+  SPEAK: "game:speak",
+  CURRENT_VOTE: "game:currentVote",
+  GAMEEND: "game:end",
 };
 
 export const UserEvent = {
