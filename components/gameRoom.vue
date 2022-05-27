@@ -271,7 +271,7 @@ export default {
 
     this.$root.roomSocket.on(GameRoomEvent.JOIN, (data) => {
       console.log(data.member);
-      this.$store.commit("stream/addRoomMember", data.member);
+      this.$store.commit("stream/setRoomMembers", data.members);
       if (data.member.userId !== this.myInfo.id) {
         this.$toast.show(data.member.nickname + " 님이 입장하셨습니다.");
       }
