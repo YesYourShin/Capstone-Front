@@ -98,6 +98,7 @@ export default {
       gameFinishData: false,
       // flag는 하위 컴포넌트에서 상속되게 해야한다.
       // 플레이엉 넘을 이용 n 번째 플레이어를 날린다.
+      currentVote: null,
     };
   },
   //새로고침 방지 위해서 추가 뒤로가기 하면 로비에서도 적용됨.
@@ -178,6 +179,12 @@ export default {
     this.$root.gameSocket.on(GameEvent.VOTE, (data) => {
       console.log("VOTE" + data);
     });
+
+    this.$root.gameSocket.on(GameEvent.CURRENT_VOTE, (data) => {
+      this.currentVote = data;
+      console.log("CURRENT_VOTE" + this.currentVote);
+      console.log('data', data['1']);
+    })
     // this.$root.gameSocket.on(GameEvent.MAFIASEARCH, (data) => {
     //   // 모든 마피아 유저의 정보를 받아온다.
     //   console.log(data)
