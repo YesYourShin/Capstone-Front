@@ -16,7 +16,7 @@
             autoplay
           ></video>
           <video
-            v-else-if="s.nickname !== myInfo.profile.nicknam && flag === false"
+            v-else-if="s.nickname !== myInfo.profile.nickname && flag === false"
             :ref="'remote' + s.id"
             :id="'remote' + s.id"
             :src-object.prop.camel="s.stream"
