@@ -151,7 +151,6 @@ export default {
       this.victorySearch();
       // }, 5000);
     });
-    // 낮밤 변경
 
     this.$root.gameSocket.on(GameEvent.WINNER, (data) => {
       console.log("WINNER" + data);
@@ -165,6 +164,7 @@ export default {
       }
     });
 
+      // 낮밤 변경
     this.$root.gameSocket.on(GameEvent.DAY, (data) => {
       console.log("170Code DAY" + data.day);
       this.flag = data.day;

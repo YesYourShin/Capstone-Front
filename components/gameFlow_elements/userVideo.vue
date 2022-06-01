@@ -98,8 +98,11 @@ export default {
       check: false,
       punishment: false,
       voteResult: null,
+      voteLoading: null,
       checkResult: null,
+      checkLoading: null,
       punishmentResult: null,
+      punishmentLoading: null,
       myVideo: null,
       myCanvas: null,
       myCtx: null,
@@ -129,6 +132,7 @@ export default {
         },
       ],
       blind: false,
+      checkNum: null,
     };
   },
   props: {
@@ -167,7 +171,7 @@ export default {
     // ! 투표 한 사람이 중복으로 넘겨주면 안됨!!
     this.$nuxt.$on("voteTimeFinish", (data) => {
       if (this.skillTrue === false && this.checkNum !== true) {
-        console.log(data);
+        console.log('vote time finish', data);
         clearInterval(this.voteLoading);
         this.vStatus = false;
         this.vote = false;
@@ -224,45 +228,40 @@ export default {
   watch: {
     voteResult: function (newVoteResult) {
       console.log("Vote Result", newVoteResult);
-      if (
-        newVoteResult === null ||
-        (newVoteResult > 0 &&
-        newVoteResult <= this.$store.state.stream.roomMembers.length &&
-        newVoteResult !== null &&
-        this.$store.state.stream.roomMembers[newVoteResult - 1].die === false &&
-        newVoteResult !== this.voteNum)
-      ) {
-        this.voteNum = newVoteResult;
-        this.changeVoteResult();
+
+      if(newVoteResult <= 0) return;
+      if(newVoteResult) {
+        if(newVoteResult > this.$store.state.stream.roomMembers.length) return;
+        if(this.$store.state.stream.roomMembers[newVoteResult - 1].die) return;
+        if(newVoteResult === this.voteNum) return;
       }
+
+      this.voteNum = newVoteResult;
+      this.changeVoteResult();
     },
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
-      if (
-        newCheckResult === null ||
-        (typeof newCheckResult === "boolean" &&
-        newCheckResult !== this.checkNum)
-      ) {
-        this.checkNum = newCheckResult;
-        this.changeCheckResult();
-      }
+      if(newCheckResult && newCheckResult === this.checkNum) return;
+      this.checkNum = newCheckResult;
+      this.changeCheckResult();
     },
     punishmentResult: function (newPunishmentResult) {
       console.log("Punishment Result", newPunishmentResult);
-      if (
-        newPunishmentResult === null ||
-        (typeof newPunishmentResult === "boolean" &&
-        newPunishmentResult !== this.punishmentNum)
-      ) {
-        this.punishmentNum = newPunishmentResult;
-        this.punishmentCheckResult();
-      }
+      if(newPunishmentResult && newPunishmentResult === this.punishmentNum) return;
+      this.punishmentNum = newPunishmentResult;
+      this.punishmentCheckResult();
     },
   },
   beforeDestroy() {
     this.leave = true;
   },
   methods: {
+    isSkill() {
+      return this.skillTrue === true && this.checkNum === true;
+    },
+    isNotSkill() {
+      return this.skillTrue === false && this.checkNum === true;
+    },
     startVoteMotion() {
       this.mediaStatus = true;
       this.skillTrue = false;
@@ -300,12 +299,14 @@ export default {
     },
     changeVoteResult() {
       this.voteCount = 0;
-      clearInterval(this.voteLoading);
+      if(this.voteLoading) clearInterval(this.voteLoading);
       this.voteLoading = setInterval(() => {
-        if (this.voteCount < 3 && this.voteNum > 0) {
+        if (this.voteCount < 3) {
           this.voteCount += 1;
           console.log(this.voteCount);
-        } else if (this.voteCount === 3) {
+        }
+        if (this.voteCount === 3) {
+          this.voteCount = 0;
           clearInterval(this.voteLoading);
           console.log("체크 완료");
           this.$swal({
@@ -332,17 +333,18 @@ export default {
       this.checkCount = 0;
       clearInterval(this.checkLoading);
       this.checkLoading = setInterval(() => {
-        if (this.checkCount < 3 && this.checkNum !== null) {
+        if (this.checkCount < 3 && this.checkNum) {
           this.checkCount += 1;
           console.log(this.checkCount);
-        } else if (this.checkCount === 3) {
+        }
+        if (this.checkCount === 3) {
           clearInterval(this.checkLoading);
           console.log("체크 인식 완료" + this.checkNum);
           // this.mediaStatus = null
           this.cStatus = false;
           this.check = false;
           // 스킬 사용이 아니고, 체크했을 경우
-          if (this.skillTrue === false && this.checkNum === true) {
+          if (this.isNotSkill()) {
             this.$emit("voteNumEmit", this.voteNum);
 
             this.$swal({
@@ -363,10 +365,9 @@ export default {
             this.checkLoading = null;
             this.checkNum = null;
             this.voteNum = null;
-            // this.$emit('voteNumEmit', null)
             console.log("투표 값 넘겨줌" + this.voteNum);
             // 스킬 사용이고, 체크했을 경우
-          } else if (this.skillTrue === true && this.checkNum === true) {
+          } else if (this.isSkill()) {
             this.$emit("skillNumEmit", this.voteNum);
 
             this.$swal({
