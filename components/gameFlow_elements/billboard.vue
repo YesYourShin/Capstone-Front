@@ -125,7 +125,7 @@ export default {
           this.newMessage = `${data.user.nickname}은 ${data.job}이었습니다.`;
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
           this.$forceUpdate();
-          this.$store.commit('stream/killMember', data.user.nickname);
+          this.$store.commit('stream/killMember', data.user);
           this.$store.commit('stream/surviveMemberCheck');
         } else {
           this.newMessage = '사형 취소'
@@ -142,7 +142,7 @@ export default {
       console.log("직업사용 결과 받음");
       console.log(data.message);
 
-      if (data.result && data.user.die) {
+      if (data?.user && data.user.die) {
         // data.user는 유저의 정보
         this.$store.commit("stream/killMember", data.user);
         this.$store.commit("stream/surviveMemberCheck");
@@ -165,7 +165,7 @@ export default {
             this.$emit("victorySearch");
           }
         })
-      } else if (data.result && !data.user.die) {
+      } else if (data?.user && !data.user.die) {
         this.$swal({
           icon : 'success',
           title: `의사가 ${data.user.nickname} 유저를 마피아로부터 살렸습니다`,

@@ -92,3 +92,6 @@ sw.*
 todo.md
 todo_leave.md
 todo_skip.md
+
+docker-compose.yml
+Dockerfile.dev
