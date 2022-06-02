@@ -71,45 +71,21 @@ export default {
     // 유저의 vote 결과를 빌보드에 알려준다.
     this.$root.gameSocket.on(GameEvent.FINISHV, (data) => {
       console.log(data);
-      if (data === null) {
-        this.newMessage = `아무도 투표하지 않았습니다.`;
-        this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
-        this.$forceUpdate();
-        // setTimeout(() => {
-          this.$emit("victorySearch");
-        // }, 3000);
-      } else {
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].userNum === null) {
-            this.newMessage = `무효표 : ${data[i].voteNum} 표`;
-          } else {
-            this.newMessage = `${this.$store.state.stream.roomMembers[i].nickname} : ${data[i].voteNum} 표`;
-          }
+      const { result, message, voteResult } = data;
+
+      if (voteResult) {
+        for(const info of voteResult) {
+          const { userNum, voteNum } = info;
+          this.newMessage = `${this.roomMembers[userNum - 1].nickname} : ${voteNum} 표`;
           this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
           this.$forceUpdate();
-          if (data[i].voteNum > this.highVote) {
-            this.highVote = data[i].voteNum;
-            this.equalVote = 1;
-            this.highPlayer = data[i].userNum;
-          } else if (data[i].voteNum === this.highVote) {
-            this.equalVote++;
-          }
-        }
-        this.finishVoteBoard();
-        if (this.equalVote === 1 && this.highVote !== 0) {
-          // setTimeout(() => {
-            this.$emit("punishmentVote");
-          // }, 300);
-        } else {
-          this.newMessage = `동률 발생으로 투표 무효`;
-          this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
-          this.$forceUpdate();
-          // setTimeout(() => {
-            this.$emit("victorySearch");
-            // night가 두개 간다. 이거 내일 즉시 수정
-          // }, 3000);
         }
       }
+
+      this.messageLogs.splice(this.messageLogs.length, 0, message);
+      this.$forceUpdate();
+
+      result ? this.$emit("punishmentVote") : this.$emit("victorySearch");
     });
     // 유저의 punishment 결과를 빌보드에 알려준다.
 
