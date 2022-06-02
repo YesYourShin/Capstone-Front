@@ -178,39 +178,20 @@ export default {
       if(!this.voteEmit) this.$emit("voteNumEmit", null);
       if(this.voteLoading) clearInterval(this.voteLoading);
       if(this.checkLoading) clearInterval(this.checkLoading);
-      this.vStatus = false;
-      this.vote = false;
-      this.cStatus = false;
-      this.check = false;
-      this.voteEmit = false;
-      this.voteLoading = null;
-      this.checkLoading = null;
-      this.voteNum = null;
+      this.setInitialVoteData();
     });
     this.$nuxt.$on("punishmentTimeFinish", (data) => {
       console.log('punishmentTimeFinish', data);
       if(!this.punishmentEmit) this.$emit("punishmentEmit", null);
       if(this.punishLoading) clearInterval(this.punishLoading);
-      this.pStatus = false;
-      this.punishment = false;
-      this.punishLoading = null;
-      this.punishmentNum = null;
-      this.punishmentCount = null;
-      this.punishmentEmit = false;
+      this.setInitialPunishmentData();
     }),
     this.$nuxt.$on("skillTimeFinish", (data) => {
       console.log('vote time finish', data);
       if(!this.voteEmit) this.$emit("skillNumEmit", null);
       if(this.voteLoading) clearInterval(this.voteLoading);
       if(this.checkLoading) clearInterval(this.checkLoading);
-      this.vStatus = false;
-      this.vote = false;
-      this.cStatus = false;
-      this.check = false;
-      this.voteEmit = false;
-      this.voteLoading = null;
-      this.checkLoading = null;
-      this.voteNum = null;
+      this.setInitialVoteData();
     });
   },
   async mounted() {
@@ -257,6 +238,24 @@ export default {
     this.leave = true;
   },
   methods: {
+    setInitialVoteData() {
+      this.vStatus = false;
+      this.vote = false;
+      this.cStatus = false;
+      this.check = false;
+      this.voteEmit = false;
+      this.voteLoading = null;
+      this.checkLoading = null;
+      this.voteNum = null;
+    },
+    setInitialPunishmentData() {
+      this.pStatus = false;
+      this.punishment = false;
+      this.punishLoading = null;
+      this.punishmentNum = null;
+      this.punishmentCount = null;
+      this.punishmentEmit = false;
+    },
     isSkill() {
       return this.skillTrue === true && this.checkNum === true;
     },
