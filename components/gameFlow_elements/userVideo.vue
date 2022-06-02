@@ -390,7 +390,6 @@ export default {
                 console.log("skill 결과 출력");
               }
             });
-
             console.log("스킬 값 넘겨줌" + this.voteNum);
             // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
           } else if (this.cancelVoteDecision()) {

@@ -158,6 +158,9 @@ export default {
         }).then((result) => {
           /* Read more about handling dismissals below */
           if (result.dismiss === this.$swal.DismissReason.timer) {
+            this.newMessage = "사망하였습니다.";
+            this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
+            this.$forceUpdate();
             console.log('유저 사망')
             this.$emit("victorySearch");
           }
@@ -201,15 +204,14 @@ export default {
     // 유저 정보랑 메세지
     this.$root.gameSocket.on(GameEvent.POLICE, (data) => {
       console.log("POLICE" + data);
-      // 빌보드 갱신될 내용도 data와 동일
+      this.newMessage = data.message;
       this.messageLogs.splice(data, 0, this.newMessage);
       this.$forceUpdate();
       // 이걸로 직업 알려주는 모달 이벤트 발생
-      this.policeResult();
         this.$swal({
           icon : 'question',
-          title: '경찰 능력 사용',
-          html: 'data',
+          title: data.user,
+          html: data.message,
           timer: 2000,
           showConfirmButton: false,
           showClass: {
