@@ -97,26 +97,26 @@ export default {
     // 유저의 punishment 결과를 빌보드에 알려준다.
 
     this.$root.gameSocket.on(GameEvent.FINISHP, (data) => {
-    // result, user, punish,
-    console.log("합산결과" + data);
-        this.finishPunishmentVoteBoard();
-        this.newMessage = `찬성 : ${data.punish} 표`;
+      // result, user, punish,
+      console.log("합산결과" + data);
+      this.finishPunishmentVoteBoard();
+      this.newMessage = `찬성 : ${data.punish} 표`;
+      this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
+      this.$forceUpdate();
+      this.punishmentEvent();
+      if (data.result) {
+        this.newMessage = `${data.user.nickname}은 ${data.user.job}이었습니다.`;
         this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
         this.$forceUpdate();
-        this.punishmentEvent();
-        if (data.result) {
-          this.newMessage = `${data.user.nickname}은 ${data.job}이었습니다.`;
-          this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
-          this.$forceUpdate();
-          this.$store.commit('stream/killMember', data.user);
-          this.$store.commit('stream/surviveMemberCheck');
-        } else {
-          this.newMessage = '사형 취소'
-          this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
-          this.$forceUpdate();
-        }
-        this.$emit("victorySearch");
-        console.log('빌보드 밤 이벤트 시작')
+        this.$store.commit('stream/killMember', data.user);
+        this.$store.commit('stream/surviveMemberCheck');
+      } else {
+        this.newMessage = '사형 취소'
+        this.messageLogs.splice(this.messageLogs.length, 0, this.newMessage);
+        this.$forceUpdate();
+      }
+      this.$emit("victorySearch");
+      console.log('빌보드 밤 이벤트 시작')
     });
     this.$root.gameSocket.on(GameEvent.USEJOBS, (data) => {
       // data은 유저 정보, data2는 텍스트
