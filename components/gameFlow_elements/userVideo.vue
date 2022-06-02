@@ -101,8 +101,12 @@ export default {
       voteLoading: null,
       checkResult: null,
       checkLoading: null,
+      voteEmit: false,
       punishmentResult: null,
-      punishmentLoading: null,
+      punishLoading: null,
+      punishmentCount: null,
+      punishmentNum: null,
+      punishmentEmit: null,
       myVideo: null,
       myCanvas: null,
       myCtx: null,
@@ -170,47 +174,44 @@ export default {
     // ! 만약 타이머가 종료됐을 경우, 투표를 안한 사람만 넘겨줘야 한다.
     // ! 투표 한 사람이 중복으로 넘겨주면 안됨!!
     this.$nuxt.$on("voteTimeFinish", (data) => {
-      if (this.skillTrue === false && this.checkNum !== true) {
-        console.log('vote time finish', data);
-        clearInterval(this.voteLoading);
-        this.vStatus = false;
-        this.vote = false;
-        this.cStatus = false;
-        this.check = false;
-        this.$emit("voteNumEmit", null);
-        this.voteLoading = null;
-        this.checkLoading = null;
-      }
+      console.log('vote time finish', data);
+      if(!this.voteEmit) this.$emit("voteNumEmit", null);
+      if(this.voteLoading) clearInterval(this.voteLoading);
+      if(this.checkLoading) clearInterval(this.checkLoading);
+      this.vStatus = false;
+      this.vote = false;
+      this.cStatus = false;
+      this.check = false;
+      this.voteEmit = false;
+      this.voteLoading = null;
+      this.checkLoading = null;
+      this.voteNum = null;
     });
     this.$nuxt.$on("punishmentTimeFinish", (data) => {
-      if (this.punishmentEmit === null) {
-        console.log(data);
-        clearInterval(this.punishLoading);
-        this.pStatus = false;
-        this.punishment = false;
-        this.$emit("punishmentEmit", null);
-        this.punishLoading = null;
-      }
+      console.log('punishmentTimeFinish', data);
+      if(!this.punishmentEmit) this.$emit("punishmentEmit", null);
+      if(this.punishLoading) clearInterval(this.punishLoading);
+      this.pStatus = false;
+      this.punishment = false;
+      this.punishLoading = null;
+      this.punishmentNum = null;
+      this.punishmentCount = null;
+      this.punishmentEmit = false;
     }),
-      this.$nuxt.$on("skillTimeFinish", (data) => {
-        if (this.skillTrue === true && this.checkNum !== true) {
-          console.log(data);
-          clearInterval(this.voteLoading);
-          this.vStatus = false;
-          this.vote = false;
-          this.cStatus = false;
-          this.check = false;
-          this.$emit(
-            "skillNumEmit", null
-            // "skillNumEmit skillTrue" +
-            //   this.skillTrue +
-            //   " skillTrue " +
-            //   this.checkNum
-          );
-          this.voteLoading = null;
-          this.checkLoading = null;
-        }
-      });
+    this.$nuxt.$on("skillTimeFinish", (data) => {
+      console.log('vote time finish', data);
+      if(!this.voteEmit) this.$emit("skillNumEmit", null);
+      if(this.voteLoading) clearInterval(this.voteLoading);
+      if(this.checkLoading) clearInterval(this.checkLoading);
+      this.vStatus = false;
+      this.vote = false;
+      this.cStatus = false;
+      this.check = false;
+      this.voteEmit = false;
+      this.voteLoading = null;
+      this.checkLoading = null;
+      this.voteNum = null;
+    });
   },
   async mounted() {
     this.myVideo = document.getElementById(`remote${this.myInfo.profile.id}`);
@@ -241,13 +242,13 @@ export default {
     },
     checkResult: function (newCheckResult) {
       console.log("Check Result", newCheckResult);
-      if(newCheckResult && newCheckResult === this.checkNum) return;
+      if(typeof newCheckResult === 'boolean' && newCheckResult === this.checkNum) return;
       this.checkNum = newCheckResult;
       this.changeCheckResult();
     },
     punishmentResult: function (newPunishmentResult) {
       console.log("Punishment Result", newPunishmentResult);
-      if(newPunishmentResult && newPunishmentResult === this.punishmentNum) return;
+      if(typeof newPunishmentResult === 'boolean' && newPunishmentResult === this.punishmentNum) return;
       this.punishmentNum = newPunishmentResult;
       this.punishmentCheckResult();
     },
@@ -261,6 +262,12 @@ export default {
     },
     isNotSkill() {
       return this.skillTrue === false && this.checkNum === true;
+    },
+    cancelVoteDecision() {
+      return this.skillTrue === false && this.checkNum === false
+    },
+    cancelSkillDecision() {
+      return this.skillTrue === true && this.checkNum === false
     },
     startVoteMotion() {
       this.mediaStatus = true;
@@ -333,7 +340,7 @@ export default {
       this.checkCount = 0;
       clearInterval(this.checkLoading);
       this.checkLoading = setInterval(() => {
-        if (this.checkCount < 3 && this.checkNum) {
+        if (this.checkCount < 3 && typeof this.checkNum === 'boolean') {
           this.checkCount += 1;
           console.log(this.checkCount);
         }
@@ -346,6 +353,7 @@ export default {
           // 스킬 사용이 아니고, 체크했을 경우
           if (this.isNotSkill()) {
             this.$emit("voteNumEmit", this.voteNum);
+            this.voteEmit = true;
 
             this.$swal({
               icon: "success",
@@ -362,13 +370,11 @@ export default {
               }
             });
 
-            this.checkLoading = null;
-            this.checkNum = null;
-            this.voteNum = null;
             console.log("투표 값 넘겨줌" + this.voteNum);
             // 스킬 사용이고, 체크했을 경우
           } else if (this.isSkill()) {
             this.$emit("skillNumEmit", this.voteNum);
+            this.voteEmit = true;
 
             this.$swal({
               icon: "success",
@@ -385,11 +391,9 @@ export default {
               }
             });
 
-            this.checkNum = null;
-            this.checkLoading = null;
             console.log("스킬 값 넘겨줌" + this.voteNum);
             // 만약 모션 취소를 할 경우 다시 선택하는걸로 되돌아간다.
-          } else if (this.skillTrue === false && this.checkNum === false) {
+          } else if (this.cancelVoteDecision()) {
             this.$swal({
               icon: "error",
               title: "유저 지목 취소",
@@ -399,16 +403,13 @@ export default {
             }).then((result) => {
               /* Read more about handling dismissals below */
               if (result.dismiss === this.$swal.DismissReason.timer) {
-                console.log("skill 결과 출력");
+                console.log("skill아닐 경우 결과 출력");
               }
             });
 
-            this.checkNum = null;
-            this.checkLoading = null;
-            this.voteNum = null;
             this.startVoteMotion();
             console.log("투표 다시");
-          } else if (this.skillTrue === true && this.checkNum === false) {
+          } else if (this.cancelSkillDecision()) {
             this.$swal({
               icon: "error",
               title: "유저 지목 취소",
@@ -421,13 +422,12 @@ export default {
                 console.log("skill 결과 출력");
               }
             });
-
-            this.checkNum = null;
-            this.checkLoading = null;
-            this.voteNum = null;
             this.skillMotion();
             console.log("스킬 다시");
           }
+          this.checkLoading = null;
+          this.checkNum = null;
+          this.voteNum = null;
         }
       }, 1000);
     },
@@ -436,16 +436,16 @@ export default {
       clearInterval(this.punishLoading);
       this.punishLoading = setInterval(() => {
         // this.punishLoading의 주소값이 계속 업데이트
-        if (this.punishmentCount < 3 && this.punishmentNum !== null ) {
+        if (this.punishmentCount < 3 && typeof this.punishmentNum === 'boolean'){
           this.punishmentCount += 1;
           console.log(this.punishmentCount);
-        } else if (this.punishmentCount === 3) {
+        }
+        if (this.punishmentCount === 3) {
           clearInterval(this.punishLoading);
-          // this.mediaStatus = null
-          this.pStatus = false;
-          this.punishment = false;
-          this.punishmentEmit = this.punishmentNum;
-          if (this.punishmentEmit === true) {
+          this.$emit("punishmentEmit", this.punishmentNum);
+          // 죽음 값을 완벽히 인식했을 때만 가능
+
+          if (this.punishmentNum === true) {
             this.$swal({
               icon: "success",
               title: "찬성",
@@ -472,10 +472,13 @@ export default {
               }
             });
           }
-          this.$emit("punishmentEmit", this.punishmentEmit);
-          // 죽음 값을 완벽히 인식했을 때만 가능
-          console.log(this.punishmentEmit + "죽음 투표");
+          console.log(this.punishmentNum + "죽음 투표");
+          this.punishmentEmit = true;
+          this.pStatus = false;
+          this.punishment = false;
           this.punishLoading = null;
+          this.punishmentNum = null;
+          this.punishmentCount = null;
         }
       }, 1000);
     },

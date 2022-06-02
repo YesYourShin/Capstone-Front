@@ -183,21 +183,19 @@ export const mutations = {
   },
   // 유저의 죽음 처리
   killMember(state, data) {
-    for (let i = 0; i < state.roomMembers.length; i++) {
-      console.log(state.roomMembers[i].nickname)
+    for(const player of state.roomMembers) {
+      if(player.id !== data.id) continue;
+      console.log(player.nickname)
       console.log(data)
-      if (state.roomMembers[i].nickname === data.nickname) {
-        state.roomMembers[i].die = data.die
-        stopMediaStream(state.roomMembers[i].stream);
-        break;
-      }
+      player.die = data.die
+      stopMediaStream(player.stream);
     }
   },
   // 죽은 유저를 카운트하여 승패를 판별
   surviveMemberCheck(state) {
     state.surviveMembers = state.roomMembers.length
     for (let member of state.roomMembers) {
-      if (member.death === true) {
+      if (member.death) {
         state.surviveMembers--
       }
     }

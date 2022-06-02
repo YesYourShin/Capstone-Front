@@ -142,8 +142,8 @@ export default {
       console.log("직업사용 결과 받음");
       console.log(data.message);
 
-      if (data.user !== null) {
-        // data.user는 유ㅈ의 정보
+      if (data.result && data.user.die) {
+        // data.user는 유저의 정보
         this.$store.commit("stream/killMember", data.user);
         this.$store.commit("stream/surviveMemberCheck");
         this.$swal({
@@ -159,6 +159,23 @@ export default {
           /* Read more about handling dismissals below */
           if (result.dismiss === this.$swal.DismissReason.timer) {
             console.log('유저 사망')
+            this.$emit("victorySearch");
+          }
+        })
+      } else if (data.result && !data.user.die) {
+        this.$swal({
+          icon : 'success',
+          title: `의사가 ${data.user.nickname} 유저를 마피아로부터 살렸습니다`,
+          html: data.message,
+          timer: 2000,
+          showConfirmButton: false,
+          showClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          },
+        }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === this.$swal.DismissReason.timer) {
+            console.log('유저 살림')
             this.$emit("victorySearch");
           }
         })
