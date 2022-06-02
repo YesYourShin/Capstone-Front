@@ -82,10 +82,17 @@ export default {
         }
       }
 
+
       this.messageLogs.splice(this.messageLogs.length, 0, message);
       this.$forceUpdate();
 
-      result ? this.$emit("punishmentVote") : this.$emit("victorySearch");
+      if(!result) {
+        this.$emit("victorySearch");
+        return;
+      }
+      this.highPlayer = voteResult[0].userNum;
+      this.$emit("punishmentVote");
+
     });
     // 유저의 punishment 결과를 빌보드에 알려준다.
 
